@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class ChatTextBox : MonoBehaviourPunCallbacks
 {
-	[SerializeField] private Transform m_chatParent;
 	private TMP_InputField m_setText;
+	private int m_textId;
 
 	private void Start()
 	{
@@ -19,12 +19,11 @@ public class ChatTextBox : MonoBehaviourPunCallbacks
 		if (!string.IsNullOrEmpty(m_setText.text) || photonView.ControllerActorNr == 0)
 		{
 			Debug.Log("文字が中に入っている");
-			GameObject text = PhotonNetwork.Instantiate("Chat", new Vector2(0, 0), Quaternion.identity);
-			text.transform.SetParent(m_chatParent);
 
-			// プレイヤー名とテキストを表示
-			text.GetComponent<TextMeshProUGUI>().text =
-				$"{PhotonNetwork.NickName}" + $"({photonView.ControllerActorNr}) :" + m_setText.text;
+			m_textId = PhotonNetwork.Instantiate("Chat", new Vector2(0, 0), Quaternion.identity).GetComponent<PhotonView>().ViewID;
+			UpdateText(
+				$"{PhotonNetwork.NickName}" + $"({photonView.ControllerActorNr}) :" + m_setText.text,
+				m_textId);
 			m_setText.DeactivateInputField();
 		}
 		else
@@ -32,6 +31,25 @@ public class ChatTextBox : MonoBehaviourPunCallbacks
 			Debug.Log("文字が中に入っていない");
 		}
 	}
+
+	// テキストを変更する関数
+    public void UpdateText(string newText, int id)
+	{
+		photonView.RPC(nameof(RPC_UpdateText), RpcTarget.All, newText, id);
+    }
+
+    // 全クライアントで呼ばれるRPC
+    [PunRPC]
+    void RPC_UpdateText(string newText, int id)
+    {
+		Transform parent = GameObject.FindWithTag("Content").transform;
+		PhotonView view = PhotonView.Find(id);
+		GameObject m_text = view.gameObject;
+		m_text.transform.SetParent(parent);
+		m_text.transform.localScale = Vector3.one;
+        m_text.GetComponent<TextMeshProUGUI>().text = newText;
+		m_text = null;
+    }
 
 	private void Update()
 	{
