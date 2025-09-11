@@ -4,10 +4,16 @@ using TMPro;
 // MonoBehaviourPunCallbacksを継承して、photonViewプロパティを使えるようにする
 public class AvatarNameDisplay : MonoBehaviourPunCallbacks
 {
+	private TextMeshPro nameLabel;
+
 	private void Start()
 	{
-		var nameLabel = GetComponent<TextMeshPro>();
+		nameLabel = GetComponent<TextMeshPro>();
+	}
+
+	void Update()
+	{
 		// プレイヤー名とプレイヤーIDを表示する
-		nameLabel.text = $"{photonView.Owner.NickName}({photonView.OwnerActorNr})";
+		nameLabel.text = $"{photonView.Owner.NickName}";
 	}
 }

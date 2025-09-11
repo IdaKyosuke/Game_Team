@@ -1,10 +1,13 @@
 using Photon.Pun;
 using Photon.Realtime;
+using System.Collections.Generic;
 using UnityEngine;
 
 // MonoBehaviourPunCallbacksを継承して、PUNのコールバックを受け取れるようにする
 public class SampleScene : MonoBehaviourPunCallbacks
 {
+	private static List<GameObject> player = new List<GameObject>();
+
 	private void Start()
 	{
 		// プレイヤー自身の名前を"Player"に設定する
@@ -26,6 +29,11 @@ public class SampleScene : MonoBehaviourPunCallbacks
 	{
 		// ランダムな座標に自身のアバター（ネットワークオブジェクト）を生成する
 		var position = new Vector3(Random.Range(-3f, 3f), Random.Range(-3f, 3f));
-		PhotonNetwork.Instantiate("Avatar", position, Quaternion.identity);
+		player.Add(PhotonNetwork.Instantiate("Avatar", position, Quaternion.identity));
+	}
+
+	public static List<GameObject> GetPlayerList
+	{
+		get {  return player; }
 	}
 }

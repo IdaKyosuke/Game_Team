@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using Photon.Pun;
 using UnityEngine;
 using UnityEngine.Rendering;
@@ -13,16 +14,31 @@ public class AvatarController : MonoBehaviourPunCallbacks
 			var input = new Vector3(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"), 0f);
 			transform.Translate(6f * Time.deltaTime * input.normalized);
 		}
-
-		if (photonView.Owner.IsMasterClient)
-		{
-			//Debug.Log($"{photonView.Owner.NickName}({photonView.OwnerActorNr})");
-		}
 	}
 
 	private void OnCollisionEnter(Collision collision)
 	{
 		Debug.Log("‚Ô‚Â‚©‚Á‚½");
+	}
+
+	public void ChangeName(string name)
+	{
+		if (photonView.IsMine)
+		{
+			photonView.Owner.NickName = name;
+		}
+	}
+
+	public string GetName()
+	{
+		if (photonView.IsMine)
+		{
+			return photonView.Owner.NickName;
+		}
+		else
+		{
+			return null;
+		}
 	}
 
 	private void OnCollisionExit(Collision collision)

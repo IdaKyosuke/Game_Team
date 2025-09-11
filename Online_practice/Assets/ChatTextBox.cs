@@ -1,4 +1,5 @@
 using Photon.Pun;
+using System.Text.RegularExpressions;
 using TMPro;
 using UnityEngine;
 
@@ -15,15 +16,34 @@ public class ChatTextBox : MonoBehaviourPunCallbacks
 
 	public void SetText()
     {
+		if (m_setText.text.Substring(0, 1) == "\\")
+		{
+			// 一文字目がバックスラッシュの場合その後の文字列をプレイヤーのニックネームにする
+			foreach (GameObject player in SampleScene.GetPlayerList)
+			{
+				player.GetComponent<AvatarController>().ChangeName(m_setText.text.Substring(1));
+			}		
+		}
+
 		// テキストに文字が入っているとき
 		if (!string.IsNullOrEmpty(m_setText.text) || photonView.ControllerActorNr == 0)
 		{
 			Debug.Log("文字が中に入っている");
 
 			m_textId = PhotonNetwork.Instantiate("Chat", new Vector2(0, 0), Quaternion.identity).GetComponent<PhotonView>().ViewID;
-			UpdateText(
-				$"{PhotonNetwork.NickName}" + $"({photonView.ControllerActorNr}) :" + m_setText.text,
-				m_textId);
+			
+			foreach (GameObject player in SampleScene.GetPlayerList)
+			{
+				string name = player.GetComponent<AvatarController>().GetName();
+				if (name != null)
+				{
+					UpdateText(
+					$"{name} :" + m_setText.text,
+					m_textId);
+				}
+			}
+			
+			
 			m_setText.DeactivateInputField();
 		}
 		else
