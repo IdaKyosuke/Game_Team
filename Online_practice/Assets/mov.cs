@@ -16,7 +16,7 @@ public class AvatarController : MonoBehaviourPunCallbacks
 
 		if (photonView.Owner.IsMasterClient)
 		{
-			Debug.Log($"{photonView.Owner.NickName}({photonView.OwnerActorNr})");
+			//Debug.Log($"{photonView.Owner.NickName}({photonView.OwnerActorNr})");
 		}
 	}
 
