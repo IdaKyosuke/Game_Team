@@ -41,6 +41,10 @@ public class Move : MonoBehaviourPunCallbacks
 			// ‰¡‰ñ“]
 			transform.Rotate(0, mouseX, 0);
 		}
+		else
+		{
+			m_rb.isKinematic = true;
+		}
     }
 
 	public void ChangeName(string name)
