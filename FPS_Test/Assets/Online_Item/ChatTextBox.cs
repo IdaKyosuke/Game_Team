@@ -18,7 +18,7 @@ public class ChatTextBox : MonoBehaviourPunCallbacks
 		if (!string.IsNullOrEmpty(m_setText.text) && m_setText.text.Substring(0, 1) == "\\")
 		{
 			// 一文字目がバックスラッシュの場合その後の文字列をプレイヤーのニックネームにする
-			foreach (GameObject player in SampleScene.GetPlayerList)
+			foreach (GameObject player in CreateAvatar.GetPlayerList)
 			{
 				player.GetComponent<Move>().ChangeName(m_setText.text.Substring(1));
 			}		
@@ -31,7 +31,7 @@ public class ChatTextBox : MonoBehaviourPunCallbacks
 
 			m_textId = PhotonNetwork.Instantiate("Chat", new Vector2(0, 0), Quaternion.identity).GetComponent<PhotonView>().ViewID;
 			
-			foreach (GameObject player in SampleScene.GetPlayerList)
+			foreach (GameObject player in CreateAvatar.GetPlayerList)
 			{
 				string name = player.GetComponent<Move>().GetName();
 				if (name != null)

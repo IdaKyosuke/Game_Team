@@ -1,3 +1,4 @@
+using Photon.Pun;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -12,6 +13,12 @@ public class GameManager : SingletonBase<GameManager>
     {
 		// 最初にロビーシーンを読み込む
 		SceneManager.LoadSceneAsync(m_lobbyScene, LoadSceneMode.Additive);
+
+		// プレイヤー自身の名前を"Player"に設定する
+		PhotonNetwork.NickName = "Player";
+
+		// PhotonServerSettingsの設定内容を使ってマスターサーバーへ接続する
+		PhotonNetwork.ConnectUsingSettings();
 	}
 
     // Update is called once per frame
