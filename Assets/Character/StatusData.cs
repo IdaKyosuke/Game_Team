@@ -9,11 +9,19 @@ public class StatusData : ScriptableObject
     public class Parameters
     {
         [SerializeField] private int level;
+
         public int hp;
         public int mp;
-        public int power;
-        public int defense;
-        public int speed;
+
+        public int physicalPower;
+        public int magicPower;
+
+        public int physicalDefense;
+        public int magicDefense;
+
+        public int moveSpeed;
+        public int openSpeed;
+
         public int requiredExp;
 
         public Parameters(int level)

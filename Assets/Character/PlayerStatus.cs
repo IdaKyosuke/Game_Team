@@ -3,15 +3,17 @@ using UnityEngine.Events;
 
 public class PlayerStatus : MonoBehaviour
 {
-    enum Job
+    public enum JobType
     {
         Warrior,
         Wizard,
         Cleric,
         Thief,
+
+        Length,
     }
 
-    [SerializeField] Job m_job;
+    [SerializeField] JobType m_job;
     [SerializeField] StatusData m_statusData;
     [SerializeField] UnityEvent m_onDamage;
     [SerializeField] UnityEvent m_onDeath;
@@ -20,6 +22,26 @@ public class PlayerStatus : MonoBehaviour
     private int m_level;
     private int m_health;
     private int m_exp;
+
+    public StatusData.Parameters Value
+    {
+        get { return m_status; }
+    }
+
+    public int Level
+    {
+        get { return m_level; }
+    }
+
+    public int Health
+    {
+        get { return m_health; }
+    }
+
+    public JobType Job
+    {
+        get { return m_job; }
+    }
 
     private void Start()
     {
@@ -31,7 +53,7 @@ public class PlayerStatus : MonoBehaviour
         m_health = m_status.hp;
     }
 
-    private void LevelUp(int exp)
+    public void LevelUp(int exp)
     {
         //既にレベルマックスなら何もしない
         if (m_statusData.MaxLevel <= m_level) return;
@@ -56,7 +78,7 @@ public class PlayerStatus : MonoBehaviour
         if (m_health <= 0) return;
 
         //ダメージ計算
-        int damage = (power * 2) - (m_status.defense / 3);
+        int damage = (power * 2);// - (m_status.defense / 3);
 
         //マイナスのダメージは与えない
         if (damage <= 0) return;
