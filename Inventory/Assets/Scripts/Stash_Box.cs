@@ -1,39 +1,37 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using Unity.VisualScripting;
 using UnityEngine;
 
-public class Inventory_City : MonoBehaviour
+public class Stash_Box : MonoBehaviour
 {
-	// シングルトン（インベントリをどこからでも呼び出せるようにする）
-	public static Inventory_City instance;
-	private InventoryUi_City m_inventoryUi;
+	// アイテムボックスのシングルトン
+	public static Stash_Box instance;
+	[SerializeField] PlayerStatus playerStatus;	// プレイヤーのscriptableObject
 
 	// アイテムの最大数
-	const int MaxItemNum = 25;
+	private const int MaxItemNum = 50;
 
-	// アイテムリスト
-	[SerializeField] PlayerStatus m_playerStatus;	// インベントリを内容を保存する用
+	// アイテムボックスのアイテムリスト
 	public List<Test_Item> items = new List<Test_Item>();
+
+	private StashUi_Box m_inventoryUi;
 
 	private void Awake()
 	{
-		if (instance == null)
+		if(!instance)
 		{
 			instance = this;
 		}
-
-		// 最初に現状の持ち物を埋める(参照渡し)
-		items = m_playerStatus.itemList;
+		// 参照で受け取る
+		items = playerStatus.stashList;
 	}
 
 	// Start is called before the first frame update
 	void Start()
-	{
-		m_inventoryUi = GetComponent<InventoryUi_City>();
+    {
+		m_inventoryUi = GetComponent<StashUi_Box>();
 		m_inventoryUi.UpdateUi();
-	}
+    }
 
 	// アイテムを追加
 	public bool AddItem(Test_Item item)
@@ -58,10 +56,10 @@ public class Inventory_City : MonoBehaviour
 		m_inventoryUi.UpdateUi();
 	}
 
-	// 今の手持ちからアイテムを探す
+	// アイテムボックスからアイテムを探す
 	public bool SearchInventory(Test_Item item)
 	{
-		for(int i = 0; i < items.Count; i++)
+		for (int i = 0; i < items.Count; i++)
 		{
 			if (items[i].Equals(item)) return true;
 		}
