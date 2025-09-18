@@ -93,7 +93,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1196624914312567281
 RectTransform:
   m_ObjectHideFlags: 0
@@ -111,7 +111,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 50, y: 50}
+  m_SizeDelta: {x: 53, y: 53}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &349073723000339404
 MonoBehaviour:
@@ -125,23 +125,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Delegates:
-  - eventID: 2
-    callback:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 6323068885332014403}
-          m_TargetAssemblyTypeName: Slot_Stash, Assembly-CSharp
-          m_MethodName: PutInInventory
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
+  m_Delegates: []
 --- !u!222 &1540648829486083734
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -191,7 +175,7 @@ GameObject:
   - component: {fileID: 4101559764078540786}
   - component: {fileID: 1007318820882778901}
   - component: {fileID: 5718284538703307115}
-  - component: {fileID: 6323068885332014403}
+  - component: {fileID: 8083674802779398176}
   m_Layer: 5
   m_Name: Slot_Stash
   m_TagString: Untagged
@@ -216,9 +200,9 @@ RectTransform:
   - {fileID: 1196624914312567281}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 41.5, y: -35}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -420.5, y: 225}
   m_SizeDelta: {x: 50, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1007318820882778901
@@ -259,7 +243,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &6323068885332014403
+--- !u!114 &8083674802779398176
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -268,12 +252,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 7016135914689259731}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 26d3710c5da2a0343972214215385c06, type: 3}
+  m_Script: {fileID: 11500000, guid: c79a920853f66454ca9b1e351f8161c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  icon: {fileID: 7832397595342786926}
-  m_playerStatus: {fileID: 0}
-  Collider: {fileID: 6472639333537709007}
+  icon1: {fileID: 530933039591660347}
+  icon2: {fileID: 7832397595342786926}
+  m_collider: {fileID: 349073723000339404}
 --- !u!1 &8842396563192953979
 GameObject:
   m_ObjectHideFlags: 0
