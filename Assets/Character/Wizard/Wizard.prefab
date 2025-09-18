@@ -119,9 +119,8 @@ GameObject:
   - component: {fileID: 3723017611738218261}
   - component: {fileID: 5867373364075893468}
   - component: {fileID: 1088925375209549949}
-  - component: {fileID: 4131316474878116981}
-  - component: {fileID: 1277925602733069570}
   - component: {fileID: 3610951839185543242}
+  - component: {fileID: 1277925602733069570}
   m_Layer: 0
   m_Name: Wizard
   m_TagString: Untagged
@@ -198,7 +197,7 @@ CharacterController:
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &4131316474878116981
+--- !u!114 &3610951839185543242
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -207,7 +206,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 2639877282668995358}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7b0e004530a4ad8488c427f580c22aef, type: 3}
+  m_Script: {fileID: 11500000, guid: fe7fcf3b4358eae429027e0845cc8621, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_job: 1
@@ -271,18 +270,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
---- !u!114 &3610951839185543242
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2639877282668995358}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe7fcf3b4358eae429027e0845cc8621, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &4007558759218149698
 GameObject:
   m_ObjectHideFlags: 0

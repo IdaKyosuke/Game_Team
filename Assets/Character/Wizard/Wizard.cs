@@ -1,8 +1,8 @@
 using UnityEngine;
 
-public class Wizard : MonoBehaviour
+public class Wizard : PlayerStatus
 {
-    public void UniqueSkill()
+    public override void UniqueSkill()
     {
         Debug.Log("Wizard UniqueSkill");
     }

@@ -1,11 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class Thief : MonoBehaviour
+public class Thief : PlayerStatus
 {
-    public void UniqueSkill()
-    { 
+    public override void UniqueSkill()
+    {
         Debug.Log("Thief UniqueSkill");
     }
 }

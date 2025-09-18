@@ -11,9 +11,8 @@ GameObject:
   - component: {fileID: 930184182836152801}
   - component: {fileID: 9213148335649020922}
   - component: {fileID: 6384626920157407080}
-  - component: {fileID: 7887276809683083943}
-  - component: {fileID: 5206348285938454505}
   - component: {fileID: 8791565508962515209}
+  - component: {fileID: 5206348285938454505}
   m_Layer: 0
   m_Name: Cleric
   m_TagString: Untagged
@@ -90,7 +89,7 @@ CharacterController:
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &7887276809683083943
+--- !u!114 &8791565508962515209
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -99,7 +98,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1071323652705616771}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7b0e004530a4ad8488c427f580c22aef, type: 3}
+  m_Script: {fileID: 11500000, guid: 9ae9b0dc045518345ab22224dc860ef0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_job: 2
@@ -163,18 +162,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
---- !u!114 &8791565508962515209
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1071323652705616771}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9ae9b0dc045518345ab22224dc860ef0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &3199914253519941724
 GameObject:
   m_ObjectHideFlags: 0

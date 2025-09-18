@@ -119,9 +119,8 @@ GameObject:
   - component: {fileID: 8309462977160738362}
   - component: {fileID: 8725266777825669224}
   - component: {fileID: 1468125594201271780}
-  - component: {fileID: 6567410872981838296}
-  - component: {fileID: 6343460419604353228}
   - component: {fileID: 545411651013535794}
+  - component: {fileID: 6343460419604353228}
   m_Layer: 0
   m_Name: Warrior
   m_TagString: Untagged
@@ -198,7 +197,7 @@ CharacterController:
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &6567410872981838296
+--- !u!114 &545411651013535794
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -207,7 +206,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 7029958375003328860}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7b0e004530a4ad8488c427f580c22aef, type: 3}
+  m_Script: {fileID: 11500000, guid: aae3343e3c9e1d14db13121d6e136223, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_job: 0
@@ -271,18 +270,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
---- !u!114 &545411651013535794
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7029958375003328860}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aae3343e3c9e1d14db13121d6e136223, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &8504407233502340848
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,10 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class Cleric : MonoBehaviour
+public class Cleric : PlayerStatus
 {
-    public void UniqueSkill()
+    public override void UniqueSkill()
     { 
         Debug.Log("Cleric UniqueSkill");
     }

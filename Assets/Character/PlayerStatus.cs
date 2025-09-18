@@ -53,6 +53,8 @@ public class PlayerStatus : MonoBehaviour
         m_health = m_status.hp;
     }
 
+    public virtual void UniqueSkill() { }
+
     public void LevelUp(int exp)
     {
         //既にレベルマックスなら何もしない

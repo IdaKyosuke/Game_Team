@@ -1,10 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class Warrior : MonoBehaviour
+public class Warrior : PlayerStatus
 {
-    public void UniqueSkill()
+    public override void UniqueSkill()
     {
         Debug.Log("Warrior UniqueSkill");
     }
