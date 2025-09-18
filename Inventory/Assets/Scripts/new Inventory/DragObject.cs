@@ -36,26 +36,26 @@ public class DragObject : MonoBehaviour,IPointerDownHandler
 	// ドラッグ開始時の処理
 	public void OnPointerDown(PointerEventData eventData)
 	{
-		m_manager.TakeObject(m_setUiPos);
+		m_manager.TakeObject(m_setUiPos, m_iconType);
+		// 描画順を最後尾
 		transform.SetAsLastSibling();
 
+		// 現時点の親を保存
 		iconParent = transform.parent;
+		// 一度親をキャンバスに変更
 		transform.SetParent(m_canvs);
 		m_manager.SetDragObject(this);
-		//Debug.Log(m_data.width + "×" + m_data.height);
 		// ドラッグ前の位置を記憶しておく
-		// RectTransformの場合はpositionではなくanchoredPositionを使う
 		prevPos = rectTransform.anchoredPosition;
+
+		// 移動中に設定して当たり判定を一時的に消す
 		m_IsDragging = true;
 		m_image.raycastTarget = false;
-		//Debug.Log(m_objectData.width + ":" + m_objectData.height);
 	}
 
 	// ドラッグ中の処理
 	private void Update()
 	{
-		// eventData.positionから、親に従うlocalPositionへの変換を行う
-		// オブジェクトの位置をlocalPositionに変更する
 		if (m_IsDragging)
 		{
 			Vector2 localPosition = GetLocalPosition(Input.mousePosition);
@@ -63,6 +63,7 @@ public class DragObject : MonoBehaviour,IPointerDownHandler
 
 			if (Input.GetMouseButtonUp(0))
 			{
+				// 設置するアイコンを取得
 				var icon = m_manager.GetIcon();
 				if (icon != null)
 				{
@@ -70,6 +71,7 @@ public class DragObject : MonoBehaviour,IPointerDownHandler
 				}
 				else
 				{
+					// 適切な設置場所じゃない場合元の位置に戻す
 					m_IsDragging = false;
 					m_image.raycastTarget = true;
 					rectTransform.anchoredPosition = prevPos;
@@ -83,12 +85,11 @@ public class DragObject : MonoBehaviour,IPointerDownHandler
 	public void DragEnd(bool isEmpty, Vector2 position, Transform icon, List<Vector2Int> posList, Icon.IconType iconType)
 	{
 		m_iconType = iconType;
-		Debug.Log(rectTransform.parent.InverseTransformPoint(position));
-		// オブジェクトをドラッグ前の位置に戻す
 		m_IsDragging = false;
 		m_image.raycastTarget = true;
 		if (isEmpty)
 		{
+			// 設置ができる場合ポジションと親を設定する
 			float tmpZ = rectTransform.localPosition.z;
 			rectTransform.localPosition = rectTransform.parent.InverseTransformPoint(position);
 			rectTransform.localPosition = new Vector3(rectTransform.localPosition.x, rectTransform.localPosition.y, tmpZ);
@@ -97,7 +98,10 @@ public class DragObject : MonoBehaviour,IPointerDownHandler
 		}
 		else
 		{
+			// 設置できない場合元の位置に戻してCheck関数で元の位置のフラグも立てる
 			rectTransform.anchoredPosition = prevPos;
+			transform.SetParent(iconParent);
+			InventoryManager.Check(iconParent.GetComponent<Icon>(), m_iconType);
 		}
 	}
 

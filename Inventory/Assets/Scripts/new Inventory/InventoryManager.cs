@@ -8,21 +8,21 @@ using UnityEngine.UI;
 
 public class InventoryManager : MonoBehaviour
 {
+	// マウスが乗っているIconを取得するための変数
 	private GraphicRaycaster raycaster;
 	[SerializeField] private EventSystem eventSystem;
 
-	/// <summary>
-	/// マウスが乗っているUIのGameObjectを返す（なければnull）
-	/// </summary>
-
-
+	// マウスが掴んでいるオブジェクト
 	static private DragObject m_dragObject;
+	// インベントリとスタッシュのサイズ
 	static private readonly Vector2Int InventorySize = new Vector2Int(5, 5);
 	static private readonly Vector2Int StashSize = new Vector2Int(5, 10);
 
+	// インベントリとスタッシュのオブジェクトを入れるリスト
 	[SerializeField] List<GameObject> m_inventoryList;
 	[SerializeField] List<GameObject> m_stashList;
 
+	// リストを二次元配列に変換
 	static private GameObject[,] m_inventory = new GameObject[InventorySize.x, InventorySize.y];
 	static private GameObject[,] m_stash = new GameObject[StashSize.x, StashSize.y];
 	private void Awake()
@@ -46,6 +46,7 @@ public class InventoryManager : MonoBehaviour
 		}
 	}
 
+	// マウスが乗っているIconを取得する
 	public Icon GetIcon()
 	{
 		// PointerEventDataを作成
@@ -61,7 +62,6 @@ public class InventoryManager : MonoBehaviour
 		// 何かに当たっていれば一番上のUIを返す
 		if (results.Count > 0)
 		{
-			Debug.Log(results[0].gameObject.transform.parent);
 			if (results[0].gameObject.transform.parent.TryGetComponent(out Icon icon))
 			{
 				return icon;
@@ -72,100 +72,94 @@ public class InventoryManager : MonoBehaviour
 		return null;
 	}
 
+	// マウスが持っているオブジェクトを取得
 	public void SetDragObject(DragObject obj)
 	{
 		m_dragObject = obj;
 	}
 
+	// オブジェクトを置こうとしている個所に空きがあるか確認
 	static public void Check(Icon icon, Icon.IconType iconType)
+	{
+		bool empty = true;
+		List<Icon> icons = new List<Icon>();
+		List<Vector2Int> posList = new List<Vector2Int>();
+
+		Vector2Int Inventory_StashSize = iconType == Icon.IconType.Inventory ?
+			InventorySize : StashSize;
+
+		GameObject[,] IconList = iconType == Icon.IconType.Inventory ?
+			m_inventory : m_stash;
+
+		// 今回の基点になるIconの座標を取得
+		Vector2Int inventory_stashPos = new Vector2Int(-1, -1);
+		for (int y = 0; y < Inventory_StashSize.y; ++y)
+		{
+			for (int x = 0; x < Inventory_StashSize.x; ++x)
+			{
+				if (IconList[x, y] == icon.gameObject)
+				{
+					inventory_stashPos.x = x;
+					inventory_stashPos.y = y;
+					break;
+				}
+			}
+			if (inventory_stashPos.x != -1) break;
+		}
+
+		for (int y = 0; y < m_dragObject.GetSize().y; ++y)
+		{
+			for (int x = 0; x < m_dragObject.GetSize().x; ++x)
+			{
+				// 枠外
+				if (inventory_stashPos.x + x >= Inventory_StashSize.x ||
+					inventory_stashPos.y + y >= Inventory_StashSize.y)
+				{
+					empty = false;
+					break;
+				}
+
+				Icon newIcon = IconList[inventory_stashPos.x + x, inventory_stashPos.y + y].GetComponent<Icon>();
+				// どこか一つにでも入っていたらfalse
+				if (newIcon.GetOnFillUi())
+				{
+					empty = false;
+				}
+				icons.Add(newIcon);
+				posList.Add(new Vector2Int(inventory_stashPos.x + x, inventory_stashPos.y + y));
+			}
+			if (!empty) break;
+		}
+
+		// 全部の場所が開いている
+		if (empty)
+		{
+			foreach (Icon newIcon in icons)
+			{
+				newIcon.SetUi(true);
+			}
+		}
+		m_dragObject.DragEnd(empty, icon.GetComponent<RectTransform>().position, icon.transform, posList, iconType);
+	}
+
+	// インベントリ等からドラッグで取ったとき
+	public void TakeObject(List<Vector2Int> posList, Icon.IconType iconType)
 	{
 		switch (iconType)
 		{
 			case Icon.IconType.Inventory:
-				/*
-				for (int y = 0; y < InventorySize.y; ++y)
+				foreach (Vector2Int pos in posList)
 				{
-					for (int x = 0; x < InventorySize.x; ++x)
-					{
-						// 今回マウスが乗っているIcon
-						if (m_inventory[x, y] == icon)
-						{
-
-
-							return;
-						}
-					}
+					m_inventory[pos.x, pos.y].GetComponent<Icon>().SetUi(false);
 				}
-				*/
-				break;
+			break;
 
 			case Icon.IconType.Stash:
-
-				Vector2Int stashPos = new Vector2Int(-1, -1);
-				for (int y = 0; y < StashSize.y; ++y)
+				foreach (Vector2Int pos in posList)
 				{
-					for (int x = 0; x < StashSize.x; ++x)
-					{
-						if (m_stash[x, y] == icon.gameObject)
-						{
-							stashPos.x = x;
-							stashPos.y = y;
-						}
-					}
+					m_stash[pos.x, pos.y].GetComponent<Icon>().SetUi(false);
 				}
-				if (stashPos.x == -1 && stashPos.y == -1)
-				{
-					Debug.Log("ばぐってるよ");
-				}
-
-				bool empty = true;
-				List<Icon> icons = new List<Icon>();
-				List<Vector2Int> posList = new List<Vector2Int>();
-
-				for (int y = 0; y < m_dragObject.GetSize().y; ++y)
-				{
-					for (int x = 0; x < m_dragObject.GetSize().x; ++x)
-					{
-						// 枠外
-						if (stashPos.x + x >= StashSize.x || stashPos.y + y >= StashSize.y)
-						{
-							empty = false;
-							break;
-						}
-
-						Debug.Log((stashPos.x + x) + ":" + (stashPos.y + y));
-						Icon newIcon = m_stash[stashPos.x + x, stashPos.y + y].GetComponent<Icon>();
-						// どこか一つにでも入っていたらfalse
-						if (newIcon.GetOnFillUi())
-						{
-							empty = false;
-						}
-						icons.Add(newIcon);
-						posList.Add(new Vector2Int(stashPos.x + x, stashPos.y + y));
-					}
-					if (!empty) break;
-				}
-				
-				// 全部の場所が開いている
-				if (empty)
-				{
-					foreach (Icon newIcon in icons)
-					{
-						newIcon.SetUi(true);
-					}
-				}
-				m_dragObject.DragEnd(empty, icon.GetComponent<RectTransform>().position, icon.transform, posList, iconType);
-
 			break;
-		}
-	}
-
-	// インベントリ等からドラッグで取ったとき
-	public void TakeObject(List<Vector2Int> posList)
-	{
-		foreach (Vector2Int pos in posList)
-		{
-			m_stash[pos.x, pos.y].GetComponent<Icon>().SetUi(false);
 		}
 	}
 }

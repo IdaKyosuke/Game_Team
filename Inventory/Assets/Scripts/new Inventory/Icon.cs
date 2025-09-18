@@ -9,6 +9,7 @@ public class Icon : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 	Image icon;
 	[SerializeField] Image icon1;
 	[SerializeField] Image icon2;
+	[SerializeField] Image icon3;
 	public enum IconType
 	{
 		Inventory,
@@ -31,9 +32,10 @@ public class Icon : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
 	private void Update()
 	{
-		icon.enabled = 
+		icon.enabled = !m_fillUi;
 		icon1.enabled = !m_fillUi;
 		icon2.enabled = !m_fillUi;
+		icon3.enabled = !m_fillUi;
 	}
 
 	public void MouseUp()
