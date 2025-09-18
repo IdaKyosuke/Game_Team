@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 8
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fbbc6a4b6a42d44caf2d345ff2eb70f, type: 3}
+  m_Name: GauntletData
+  m_EditorClassIdentifier: 
+  GauntletAbility:
+  - id: 0
+    level: 1
+    physicalDefense: 50
+    magicDefense: 40
+    openSpeed: 100
+  - id: 1
+    level: 2
+    physicalDefense: 80
+    magicDefense: 60
+    openSpeed: 150
