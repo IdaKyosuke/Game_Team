@@ -9,6 +9,7 @@ public class DragObject : MonoBehaviour,IPointerDownHandler
 {
 	[SerializeField] private ExcelData m_excelData;
 	[SerializeField] private int m_id;
+	[SerializeField] private Vector2Int m_positon;
 	List<Vector2Int> m_setUiPos = new List<Vector2Int>();
 	Transform m_canvs;
 	Transform iconParent;
@@ -30,6 +31,12 @@ public class DragObject : MonoBehaviour,IPointerDownHandler
 		m_image = GetComponent<Image>();
 		parentRectTransform = rectTransform.parent as RectTransform;
 		m_manager = GameObject.Find("InventoryManager").GetComponent<InventoryManager>();
+	}
+
+	private void Start()
+	{ 
+		m_manager.SetDragObject(this);
+		InventoryManager.Check(InventoryManager.GetIcon(m_positon, Icon.IconType.Inventory), Icon.IconType.Inventory);
 	}
 
 
@@ -84,17 +91,13 @@ public class DragObject : MonoBehaviour,IPointerDownHandler
 
 	public void DragEnd(bool isEmpty, Vector2 position, Transform icon, List<Vector2Int> posList, Icon.IconType iconType)
 	{
-		m_iconType = iconType;
-		m_IsDragging = false;
-		m_image.raycastTarget = true;
 		if (isEmpty)
 		{
 			// 設置ができる場合ポジションと親を設定する
-			float tmpZ = rectTransform.localPosition.z;
-			rectTransform.localPosition = rectTransform.parent.InverseTransformPoint(position);
-			rectTransform.localPosition = new Vector3(rectTransform.localPosition.x, rectTransform.localPosition.y, tmpZ);
+			rectTransform.localPosition = (Vector2)rectTransform.parent.InverseTransformPoint(position);
 			transform.SetParent(icon);
 			m_setUiPos = posList;
+			m_iconType = iconType;
 		}
 		else
 		{
@@ -103,6 +106,8 @@ public class DragObject : MonoBehaviour,IPointerDownHandler
 			transform.SetParent(iconParent);
 			InventoryManager.Check(iconParent.GetComponent<Icon>(), m_iconType);
 		}
+		m_IsDragging = false;
+		m_image.raycastTarget = true;
 	}
 
 	// ScreenPositionからlocalPositionへの変換関数

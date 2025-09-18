@@ -24,7 +24,7 @@ public class Icon : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 	// UIにオブジェクトがのっているかどうか
 	private bool m_fillUi = false;
 
-	private void Start()
+	private void Awake()
 	{
 		icon = GetComponent<Image>();
 		m_iconType = transform.parent.name == "Grid" ? IconType.Inventory : IconType.Stash;

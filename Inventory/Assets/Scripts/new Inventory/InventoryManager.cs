@@ -72,6 +72,14 @@ public class InventoryManager : MonoBehaviour
 		return null;
 	}
 
+	static public Icon GetIcon(Vector2Int pos, Icon.IconType iconType)
+	{
+		GameObject[,] iconList = iconType == Icon.IconType.Inventory ? 
+			m_inventory : m_stash;
+
+		return iconList[pos.x, pos.y].GetComponent<Icon>();
+	}
+
 	// マウスが持っているオブジェクトを取得
 	public void SetDragObject(DragObject obj)
 	{
@@ -113,7 +121,7 @@ public class InventoryManager : MonoBehaviour
 			{
 				// 枠外
 				if (inventory_stashPos.x + x >= Inventory_StashSize.x ||
-					inventory_stashPos.y + y >= Inventory_StashSize.y)
+					inventory_stashPos.y + y >= Inventory_StashSize.y )
 				{
 					empty = false;
 					break;
