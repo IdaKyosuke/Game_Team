@@ -106,6 +106,4 @@ public class PlayerStatus : MonoBehaviour
         //‰ñ•œ
         m_health += value;
     }
-
-
 }

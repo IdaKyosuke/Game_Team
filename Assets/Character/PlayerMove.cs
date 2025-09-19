@@ -1,11 +1,13 @@
 using UnityEngine;
 using UnityEngine.Events;
+using static Condition;
 
 public class PlayerMove : MonoBehaviour
 {
     [SerializeField] float m_jumpPower;
     [SerializeField] float m_gravity;
     [SerializeField] UnityEvent m_onUniqueSkill;
+    [SerializeField] ConditionType m_conditionType;
 
     private Vector3 m_moveDirection;
     private CharacterController m_controller;
@@ -28,8 +30,9 @@ public class PlayerMove : MonoBehaviour
         {
             m_onUniqueSkill?.Invoke();
 
-            //âŒèùèÛë‘
-            m_condition.ApplyCondition(Condition.ConditionType.Burn, gameObject);
+            //èÛë‘àŸèÌ
+            if(m_conditionType == ConditionType.None) return;
+            m_condition.ApplyCondition(m_conditionType, gameObject);
         }
     }
 
