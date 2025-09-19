@@ -26,8 +26,7 @@ public class Icon : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
 	private void Awake()
 	{
-		icon = GetComponent<Image>();
-		m_iconType = transform.parent.name == "Grid" ? IconType.Inventory : IconType.Stash;
+		icon = GetComponent<Image>();m_iconType = transform.parent.transform.CompareTag("InventoryParent") ? IconType.Inventory : IconType.Stash;
 	}
 
 	private void Update()
@@ -64,5 +63,10 @@ public class Icon : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 	public void SetUi(bool value)
 	{
 		m_fillUi = value;
+	}
+
+	public void SetType(IconType type)
+	{
+		m_iconType = type;
 	}
 }

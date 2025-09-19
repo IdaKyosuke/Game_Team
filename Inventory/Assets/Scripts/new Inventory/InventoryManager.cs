@@ -34,6 +34,7 @@ public class InventoryManager : MonoBehaviour
 			for (int x = 0; x < InventorySize.x; ++x)
 			{
 				m_inventory[x, y] = m_inventoryList[y * InventorySize.x + x];
+				m_inventory[x, y].GetComponent<Icon>().SetType(Icon.IconType.Inventory);
 			}
 		}
 
@@ -42,6 +43,7 @@ public class InventoryManager : MonoBehaviour
 			for (int x = 0; x < StashSize.x; ++x)
 			{
 				m_stash[x, y] = m_stashList[y * StashSize.x + x];
+				m_stash[x, y].GetComponent<Icon>().SetType(Icon.IconType.Stash);
 			}
 		}
 	}
