@@ -17,7 +17,7 @@ public class Create_Maze : MonoBehaviour
 	[SerializeField] int m_frameSize = 7;
 	private List<List<bool>> m_map = new List<List<bool>>();
 
-	[SerializeField] GameObject m_mapPrefab;
+	[SerializeField] List<GameObject> m_mapPrefab;
 
 	private int m_size = 45;
 
@@ -85,7 +85,7 @@ public class Create_Maze : MonoBehaviour
 			{
 				if (m_map[i][j])
 				{
-					Instantiate(m_mapPrefab, new Vector3(m_size * i, 0, m_size * j), Quaternion.identity);
+					Instantiate(m_mapPrefab[Random.Range(0, m_mapPrefab.Count)], new Vector3(m_size * i, 0, m_size * j), Quaternion.identity);
 				}
 			}
 		}
