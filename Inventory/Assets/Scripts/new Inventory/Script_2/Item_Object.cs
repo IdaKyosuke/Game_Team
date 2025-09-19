@@ -17,7 +17,14 @@ public class Item_Object : MonoBehaviour
 	Transform iconParent;
 
 	private Transform m_moveItemTransform;  // 移動時に格納されるオブジェクト
-	[SerializeField] GameObject m_collider;	// 当たり判定用の画像
+	[SerializeField] GameObject m_collider; // 当たり判定用の画像
+
+	// 配列のマス目
+	private Vector2Int m_pos;
+
+	private GameObject m_inventoryManager;
+
+	private GridType m_gridType = GridType.Inventory;
 
 	// Start is called before the first frame update
 	void Start()
@@ -29,6 +36,8 @@ public class Item_Object : MonoBehaviour
 
 		// 移動中に格納される場所
 		m_moveItemTransform = GameObject.FindWithTag("moveItemTransform").transform;
+
+		m_inventoryManager = GameObject.FindWithTag("inventoryManager");
 	}
 
     // Update is called once per frame
@@ -59,6 +68,7 @@ public class Item_Object : MonoBehaviour
 		m_isPointerEnter = false;
 	}
 
+	// アイテムを持ち上げる際の動き
 	public void PointerDown()
 	{
 		// 当たり判定用の画像を非アクティブにする
@@ -71,6 +81,9 @@ public class Item_Object : MonoBehaviour
 		SetParentTransform(m_moveItemTransform);
 		// マウスカーソルの追従開始
 		m_isDrag = true;
+
+		// これまで入っていたマス目を解放
+		m_inventoryManager.GetComponent<StashManager>().MoveItem(m_pos, GetSize(), false, m_gridType);
 	}
 
 	public void PointerUp(bool canSet, Transform nextPos = null)
@@ -83,19 +96,18 @@ public class Item_Object : MonoBehaviour
 			// 移動可能
 			// 移動先の枠を親オブジェクトに設定
 			SetParentTransform(nextPos);
-			rectTransform.anchoredPosition = prevPos;
-			// 当たり判定用の画像をアクティブにする
-			m_collider.SetActive(true);
 		}
 		else
 		{
 			// 移動不可能
 			// 元あった位置に戻る
 			SetParentTransform(iconParent);
-			rectTransform.anchoredPosition = prevPos;
-			// 当たり判定用の画像をアクティブにする
-			m_collider.SetActive(true);
+			// 解放したマス目を埋めなおす
+			m_inventoryManager.GetComponent<StashManager>().MoveItem(m_pos, GetSize(), true, m_gridType);
 		}
+		rectTransform.anchoredPosition = prevPos;
+		// 当たり判定用の画像をアクティブにする
+		m_collider.SetActive(true);
 	}
 
 	// ScreenPositionからlocalPositionへの変換関数
@@ -120,5 +132,16 @@ public class Item_Object : MonoBehaviour
 		transform.SetParent(parent);
 		rectTransform = GetComponent<RectTransform>();
 		parentRectTransform = rectTransform.parent as RectTransform;
+	}
+
+	// 選択された配列のインデックスを覚える
+	public void SetIndex(Vector2Int index)
+	{
+		m_pos = index;
+	}
+
+	public void SetType(GridType type)
+	{
+		m_gridType = type;
 	}
 }
