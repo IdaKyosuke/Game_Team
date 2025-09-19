@@ -121,6 +121,7 @@ GameObject:
   - component: {fileID: 5469448527469009145}
   - component: {fileID: 6446398010582609158}
   - component: {fileID: 2095040568815370759}
+  - component: {fileID: -3789269296722319712}
   m_Layer: 0
   m_Name: Thief
   m_TagString: Untagged
@@ -270,6 +271,19 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &-3789269296722319712
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3185807306260644935}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ebb306ca5e0f7cf4bb9a9b64235e80ec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_conditionData: {fileID: 11400000, guid: fc2d75826be22ac478e86c72b8a7b0e2, type: 2}
 --- !u!1 &5829053189762721207
 GameObject:
   m_ObjectHideFlags: 0

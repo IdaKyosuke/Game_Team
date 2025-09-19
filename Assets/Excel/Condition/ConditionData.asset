@@ -16,18 +16,18 @@ MonoBehaviour:
   - id: 0
     conditionType: Burn
     grantRate: 15
-    triggerCount: 3
-    triggerInterval: 5
-    triggerValue: 10
+    triggerCount: 2
+    triggerInterval: 3
+    triggerValue: 7
   - id: 1
     conditionType: Frost
-    grantRate: 30
+    grantRate: 20
     triggerCount: 1
-    triggerInterval: 0
+    triggerInterval: 10
     triggerValue: 40
   - id: 2
     conditionType: Poison
-    grantRate: 50
+    grantRate: 30
     triggerCount: 100
     triggerInterval: 2
     triggerValue: 5
@@ -35,11 +35,11 @@ MonoBehaviour:
     conditionType: Shock
     grantRate: 15
     triggerCount: 5
-    triggerInterval: 2
-    triggerValue: 50
+    triggerInterval: 5
+    triggerValue: 70
   - id: 4
     conditionType: Regen
     grantRate: 100
-    triggerCount: 10
-    triggerInterval: 5
-    triggerValue: 50
+    triggerCount: 50
+    triggerInterval: 1
+    triggerValue: 10

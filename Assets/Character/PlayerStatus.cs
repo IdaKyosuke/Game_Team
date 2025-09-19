@@ -80,13 +80,13 @@ public class PlayerStatus : MonoBehaviour
         if (m_health <= 0) return;
 
         //ダメージ計算
-        int damage = (power * 2);// - (m_status.defense / 3);
+        //int damage = (power * 2) - (m_status.defense / 3);
 
         //マイナスのダメージは与えない
-        if (damage <= 0) return;
+        if (power <= 0) return;
 
         //ダメージ
-        m_health -= damage;
+        m_health -= power;
 
         //体力の確認
         if (m_health <= 0)
@@ -100,4 +100,12 @@ public class PlayerStatus : MonoBehaviour
             m_onDamage?.Invoke();
         }
     }
+
+    public void Heal(int value)
+    {
+        //回復
+        m_health += value;
+    }
+
+
 }

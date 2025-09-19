@@ -11,11 +11,13 @@ public class PlayerMove : MonoBehaviour
     private CharacterController m_controller;
 
     private PlayerStatus m_playerStatus;
+    private Condition m_condition;
 
     void Start()
     {
         m_controller = GetComponent<CharacterController>();
         m_playerStatus = GetComponent<PlayerStatus>();
+        m_condition = GetComponent<Condition>();
         m_moveDirection = Vector3.zero;
     }
 
@@ -25,6 +27,9 @@ public class PlayerMove : MonoBehaviour
         if (Input.GetKeyDown("q"))
         {
             m_onUniqueSkill?.Invoke();
+
+            //âŒèùèÛë‘
+            m_condition.ApplyCondition(Condition.ConditionType.Burn, gameObject);
         }
     }
 
