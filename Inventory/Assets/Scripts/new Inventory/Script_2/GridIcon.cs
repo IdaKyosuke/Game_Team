@@ -20,9 +20,7 @@ public class GridIcon : MonoBehaviour
 	private bool m_fillUi = false;
 	private bool m_pastInfo;
 
-	// アイテムが入ったときに消すUI
-	[SerializeField] List<Image> m_images = new List<Image>();
-
+	Image m_image;
 	// 自分のタイプ
 	private GridType m_type; 
 
@@ -30,6 +28,7 @@ public class GridIcon : MonoBehaviour
 	void Start()
     {
 		m_pastInfo = m_fillUi;
+		m_image = GetComponent<Image>();
 	}
 
     // Update is called once per frame
@@ -40,15 +39,13 @@ public class GridIcon : MonoBehaviour
 		{
 			GameObject.FindWithTag("inventoryManager").GetComponent<StashManager>().StartSet(m_type);
 		}
-
+		/*
 		if (m_pastInfo != m_fillUi)
 		{
-			foreach(var g in m_images)
-			{
-				g.enabled = !m_fillUi;
-			}
+			gameObject.SetActive(false);
 			m_pastInfo = m_fillUi;
 		}
+		*/
     }
 
 	// ポインターの状態を設定
@@ -72,6 +69,7 @@ public class GridIcon : MonoBehaviour
 	public void SetUi(bool value)
 	{
 		m_fillUi = value;
+		m_image.enabled = !value;
 	}
 
 	// タイプをセットする
