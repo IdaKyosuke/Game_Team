@@ -19,11 +19,14 @@ public class Create_Maze : MonoBehaviour
 
 	[SerializeField] List<GameObject> m_mapPrefab;
 
+	[SerializeField] GameObject m_wallOutSide;
+
 	private int m_size = 45;
 
 	// Start is called before the first frame update
 	void Start()
     {
+		/*
 		// 探索用マップを作成
 		for(int i = 0; i < m_frameSize; i++)
 		{
@@ -44,6 +47,8 @@ public class Create_Maze : MonoBehaviour
 
 		// マップ配置
 		SetPrefab();
+		*/
+		SetMap();
 	}
 
 	private void MakeMap(int x, int y)
@@ -52,25 +57,25 @@ public class Create_Maze : MonoBehaviour
 		m_map[x][y] = true;
 
 		// 右隣りが同じ色？
-		if (x + 2 < m_frameSize && !m_map[x + 2][y])  // if文は左から判断されていく
+		if (x + 2 < m_frameSize && !m_map[x + 2][y])
 		{
 			m_map[x + 1][y] = true;
 			MakeMap(x + 2, y);
 		}
 		// 左隣りが同じ色？
-		if (x - 2 >= 0 && !m_map[x - 2][y])  // if文は左から判断されていく
+		if (x - 2 >= 0 && !m_map[x - 2][y])
 		{
 			m_map[x - 1][y] = true;
 			MakeMap(x - 2, y);
 		}
 		// 下隣りが同じ色？
-		if (y + 2 < m_frameSize && !m_map[x][y + 2]) // if文は左から判断されていく
+		if (y + 2 < m_frameSize && !m_map[x][y + 2])
 		{
 			m_map[x][y + 1] = true;
 			MakeMap(x, y + 2);
 		}
 		// 上隣りが同じ色？
-		if (y - 2 >= 0 && !m_map[x][y - 2])  // if文は左から判断されていく
+		if (y - 2 >= 0 && !m_map[x][y - 2])
 		{
 			m_map[x][y - 1] = true;
 			MakeMap(x, y - 2);
@@ -89,5 +94,18 @@ public class Create_Maze : MonoBehaviour
 				}
 			}
 		}
+	}
+
+	private void SetMap()
+	{
+		for (int i = 0; i < m_frameSize; i++)
+		{
+			for (int j = 0; j < m_frameSize; j++)
+			{
+				Instantiate(m_mapPrefab[Random.Range(0, m_mapPrefab.Count)], new Vector3(m_size * i, 0, m_size * j), Quaternion.identity);
+			}
+		}
+
+		Instantiate(m_wallOutSide);
 	}
 }
