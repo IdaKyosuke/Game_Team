@@ -8,6 +8,7 @@ public enum GridType
 {
 	Inventory,
 	Stash,
+	Empty,
 
 	Length,
 }
@@ -34,6 +35,7 @@ public class GridIcon : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+		// ©•ª‚Ìã‚Åƒhƒƒbƒv‚³‚ê‚½‚Æ‚«
 		if(Input.GetMouseButtonUp(0) && m_onPointer)
 		{
 			GameObject.FindWithTag("inventoryManager").GetComponent<StashManager>().StartSet(m_type);
