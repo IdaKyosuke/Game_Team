@@ -2,8 +2,13 @@ using UnityEngine;
 
 public class Warrior : PlayerStatus
 {
-    public override void UniqueSkill()
+    public override void Identity()
     {
-        Debug.Log("Warrior UniqueSkill");
+        Debug.Log("Warrior Identity");
+
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            Debug.Log("ƒoƒt•t—^");
+        }
     }
 }

@@ -2,8 +2,13 @@ using UnityEngine;
 
 public class Thief : PlayerStatus
 {
-    public override void UniqueSkill()
+    public override void Identity()
     {
-        Debug.Log("Thief UniqueSkill");
+        Debug.Log("Thief Identity");
+        
+        if(Input.GetKeyDown(KeyCode.Q))
+        {
+            Debug.Log("㩂�ݒu");
+        }
     }
 }

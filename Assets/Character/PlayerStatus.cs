@@ -53,7 +53,7 @@ public class PlayerStatus : MonoBehaviour
         m_health = m_status.hp;
     }
 
-    public virtual void UniqueSkill() { }
+    public virtual void Identity() {}
 
     public void LevelUp(int exp)
     {

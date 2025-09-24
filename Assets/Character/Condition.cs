@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -16,19 +17,34 @@ public class Condition : MonoBehaviour
     [SerializeField] ConditionData m_conditionData;
 
     private ConditionType m_condition;
+    private PlayerStatus m_status;
     private int m_count;
     private int m_interval;
     private int m_value;
 
+    private Action[] m_onConditions;
+
     private void Awake()
     {
+        m_status = GetComponent<PlayerStatus>();
+
         m_condition = ConditionType.None;
         m_count = 0;
         m_interval = 0;
         m_value = 0;
+
+        //状態異常の処理を登録
+        m_onConditions = new Action[(int)ConditionType.None]
+        {
+            () => StartCoroutine(Burn()),
+            () => StartCoroutine(Frost()),
+            () => StartCoroutine(Poison()),
+            () => StartCoroutine(Shock()),
+            () => StartCoroutine(Regen()),
+        };
     }
 
-    public void ApplyCondition(ConditionType conditionType, GameObject other)
+    public void Init(ConditionType conditionType)
     {
         //状態異常のデータを取得
         m_condition = conditionType;
@@ -36,42 +52,13 @@ public class Condition : MonoBehaviour
         m_interval = m_conditionData.ConditionAbility[(int)m_condition].triggerInterval;
         m_value = m_conditionData.ConditionAbility[(int)m_condition].triggerValue;
 
-        Debug.Log(other.GetComponent<PlayerStatus>().Health);
+        Debug.Log(GetComponent<PlayerStatus>().Health);
 
-        switch (m_condition)
-        { 
-            case ConditionType.Burn:
-                StartCoroutine(Burn(other));
-                break;
-
-            case ConditionType.Frost:
-                StartCoroutine(Frost(other));
-                break;
-
-            case ConditionType.Poison:
-                StartCoroutine(Poison(other));
-                break;
-
-            case ConditionType.Shock:
-                StartCoroutine(Shock(other));
-                break;
-
-            case ConditionType.Regen:
-                StartCoroutine(Regen(other));
-                break;
-
-            case ConditionType.None:
-                //何もしない
-                break;
-
-            default:
-                Debug.Log("存在しない状態異常 : Condition.cs");
-                break;
-
-        }    
+        //状態異常の処理
+        m_onConditions[(int)m_condition]?.Invoke();
     }
 
-    private IEnumerator Burn(GameObject other)
+    private IEnumerator Burn()
     {
         //残りHPダメージに対する割合ダメージ
         for (int i = 0; i < m_count; ++i)
@@ -80,58 +67,58 @@ public class Condition : MonoBehaviour
             yield return new WaitForSeconds(m_interval);
 
             //割合ダメージ
-            int damage = other.GetComponent<PlayerStatus>().Health / m_value;
-            other.GetComponent<PlayerStatus>().Damage(damage);
+            int damage = m_status.Health / m_value;
+            m_status.Damage(damage);
 
-            Debug.Log("Burn : HP = " + other.GetComponent<PlayerStatus>().Health);
+            Debug.Log("Burn : HP = " + m_status.Health);
         }
     }
 
-    private IEnumerator Frost(GameObject other)
+    private IEnumerator Frost()
     {
         //移動速度低下
-        other.GetComponent<PlayerStatus>().Value.moveSpeed -= m_value;
+        m_status.Value.moveSpeed -= m_value;
 
         //一定時間待機
         yield return new WaitForSeconds(m_interval);
 
         //移動速度を元に戻す
-        other.GetComponent<PlayerStatus>().Value.moveSpeed += m_value;
+        m_status.Value.moveSpeed += m_value;
     }
 
-    private IEnumerator Poison(GameObject other)
+    private IEnumerator Poison()
     {
         //一定時間ごとにダメージ
         for (int i = 0; i < m_count; ++i)
         {
             yield return new WaitForSeconds(m_interval);
-            other.GetComponent<PlayerStatus>().Damage(m_value);
 
-            Debug.Log("Poison : HP = " + other.GetComponent<PlayerStatus>().Health);
+            m_status.Damage(m_value);
+            Debug.Log("Poison : HP = " + m_status.Health);
         }
     }
 
-    private IEnumerator Shock(GameObject other)
+    private IEnumerator Shock()
     {
         //一定時間ごとにダメージ
         for (int i = 0; i < m_count; ++i)
         {
             yield return new WaitForSeconds(m_interval);
-            other.GetComponent<PlayerStatus>().Damage(m_value);
 
-            Debug.Log("Shock : HP = " + other.GetComponent<PlayerStatus>().Health);
+            m_status.Damage(m_value);
+            Debug.Log("Shock : HP = " + m_status.Health);
         }
     }
 
-    private IEnumerator Regen(GameObject other)
+    private IEnumerator Regen()
     {
         //一定時間ごとに回復
         for (int i = 0; i < m_count; ++i)
         {
             yield return new WaitForSeconds(m_interval);
-            other.GetComponent<PlayerStatus>().Heal(m_value);
-
-            Debug.Log("Regen : HP = " + other.GetComponent<PlayerStatus>().Health);
+            
+            m_status.Heal(m_value);
+            Debug.Log("Regen : HP = " + m_status.Health);
         }
     }
 }

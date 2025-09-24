@@ -6,7 +6,7 @@ public class PlayerMove : MonoBehaviour
 {
     [SerializeField] float m_jumpPower;
     [SerializeField] float m_gravity;
-    [SerializeField] UnityEvent m_onUniqueSkill;
+    [SerializeField] UnityEvent m_onPassiveSkill;
     [SerializeField] ConditionType m_conditionType;
 
     private Vector3 m_moveDirection;
@@ -25,14 +25,10 @@ public class PlayerMove : MonoBehaviour
 
     void Update()
     {
-        //ユニークスキル
-        if (Input.GetKeyDown("q"))
+        //状態異常(デバッグ用)
+        if (Input.GetKeyDown(KeyCode.F1))
         {
-            m_onUniqueSkill?.Invoke();
-
-            //状態異常
-            if(m_conditionType == ConditionType.None) return;
-            m_condition.ApplyCondition(m_conditionType, gameObject);
+            ChangeCondition(m_conditionType);
         }
     }
 
@@ -66,6 +62,12 @@ public class PlayerMove : MonoBehaviour
                 0.2f
             );
         }
+    }
+
+    public void ChangeCondition(ConditionType conditionType)
+    {
+        m_conditionType = conditionType;
+        m_condition.Init(m_conditionType);
     }
 
     public void OnDamage()
