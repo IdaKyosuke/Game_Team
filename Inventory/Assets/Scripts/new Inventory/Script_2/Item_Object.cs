@@ -26,6 +26,9 @@ public class Item_Object : MonoBehaviour
 
 	private GridType m_gridType = GridType.Inventory;
 
+	// ‘•”õ‚©‚Ç‚¤‚© & ‘•”õ‚Ìƒ^ƒCƒv‚Í
+	[SerializeField] EquipmentType m_equipmentType = EquipmentType.None;
+
 	// Start is called before the first frame update
 	void Start()
     {
@@ -143,5 +146,10 @@ public class Item_Object : MonoBehaviour
 	public void SetType(GridType type)
 	{
 		m_gridType = type;
+	}
+
+	public EquipmentType GetWeaponType()
+	{
+		return m_equipmentType;
 	}
 }
