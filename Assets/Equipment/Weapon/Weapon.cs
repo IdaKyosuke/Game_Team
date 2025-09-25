@@ -8,7 +8,5 @@ public class Weapon : EquipmentStatus
         Magical,
     }
 
-    [SerializeField] AttackType m_attackType;
-    [SerializeField] float m_attackSpeed;
-    [SerializeField] WeaponData m_weaponData;
+    [SerializeField] AttackType m_attackType;  
 }

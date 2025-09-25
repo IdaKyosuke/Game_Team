@@ -23,25 +23,8 @@ public class PlayerStatus : MonoBehaviour
     private int m_health;
     private int m_exp;
 
-    public StatusData.Parameters Value
-    {
-        get { return m_status; }
-    }
-
-    public int Level
-    {
-        get { return m_level; }
-    }
-
-    public int Health
-    {
-        get { return m_health; }
-    }
-
-    public JobType Job
-    {
-        get { return m_job; }
-    }
+    public StatusData.Parameters Value => m_status;
+    public int Health => m_health;
 
     private void Start()
     {

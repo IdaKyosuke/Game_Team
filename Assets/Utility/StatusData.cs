@@ -33,10 +33,11 @@ public class StatusData : ScriptableObject
     //レベルごとのパラメータ
     [SerializeField] private List<Parameters> parameters;
 
-    public int MaxLevel
-    { 
-        get { return parameters.Count + 1; }
-    }
+    //指定レベルのステータスを取得
+    public Parameters GetStatus(int level) => parameters[level - 1];
+
+    //最大レベルの取得
+    public int MaxLevel => parameters.Count + 1;
 
     //インスペクター上で変更があればレベルを更新
     private void OnValidate()
@@ -53,8 +54,4 @@ public class StatusData : ScriptableObject
         }
     }
 
-    public Parameters GetStatus(int level)
-    { 
-        return parameters[level - 1];
-    }
 }
