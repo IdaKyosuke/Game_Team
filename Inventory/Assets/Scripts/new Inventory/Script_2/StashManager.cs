@@ -100,9 +100,9 @@ public class StashManager : MonoBehaviour
 
 		// インベントリ用配列を作成
 		count = 0;
-		for (int i = 0; i < m_inventoryWidth; i++)
+		for (int i = 0; i < m_inventoryHeight; i++)
 		{
-			for (int j = 0; j < m_inventoryHeight; j++)
+			for (int j = 0; j < m_inventoryWidth; j++)
 			{
 				// オブジェクトを追加
 				GameObject g = m_inventoryGridParent.transform.GetChild(count).gameObject;
