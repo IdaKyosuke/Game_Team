@@ -39,13 +39,6 @@ public class GridIcon : MonoBehaviour
 		{
 			GameObject.FindWithTag("inventoryManager").GetComponent<StashManager>().StartSet(m_type);
 		}
-		/*
-		if (m_pastInfo != m_fillUi)
-		{
-			gameObject.SetActive(false);
-			m_pastInfo = m_fillUi;
-		}
-		*/
     }
 
 	// ポインターの状態を設定

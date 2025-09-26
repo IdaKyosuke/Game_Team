@@ -32,6 +32,10 @@ public class GridIcon_Equipment : MonoBehaviour
 	void Start()
 	{
 		m_pastInfo = m_fillUi;
+		if(!m_moveItemTransform)
+		{
+			m_moveItemTransform = GameObject.FindWithTag("moveItemTransform");
+		}
 	}
 
 	// Update is called once per frame
@@ -40,6 +44,7 @@ public class GridIcon_Equipment : MonoBehaviour
 		// 自分の上でドロップされたとき
 		if (Input.GetMouseButtonUp(0) && m_onPointer)
 		{
+			Debug.Log("in");
 			// 移動中のアイテムがないときは無視
 			if (m_moveItemTransform.transform.childCount == 0) return;
 
@@ -48,17 +53,21 @@ public class GridIcon_Equipment : MonoBehaviour
 			if (
 				o.GetComponent<Item_Object>().GetWeaponType() == EquipmentType.None ||
 				o.GetComponent<Item_Object>().GetWeaponType() != m_type
-			)
+				)
 			{
 				o.GetComponent<Item_Object>().PointerUp(false);
 			}
-
-			if (this.transform.childCount != 0)
+			else
 			{
 				// すでに中身が設定されている時、一旦中身を取り出す
-				this.transform.GetChild(0).transform.SetParent(m_moveItemTransform.transform);
-			}
+				if (transform.childCount != 0)
+				{
+					transform.GetChild(0).transform.SetParent(m_moveItemTransform.transform);
+				}
 
+				// 新しく装備する
+				o.GetComponent<Item_Object>().PointerUp(true, transform);
+			}
 
 		}
 	}

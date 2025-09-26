@@ -7,12 +7,11 @@ public enum WeaponStatusType
 	Atk,
 	Def,
 	Spd,
-	Number,
 
 	Length,
 }
 
-[CreateAssetMenu(fileName = "New Item", menuName = "ScriptableObject/Info ItemSize")]
+[CreateAssetMenu(fileName = "New Item", menuName = "ScriptableObject/Info Equipment")]
 
 public class Info_Equipment : ScriptableObject
 {

@@ -29,6 +29,9 @@ public class Item_Object : MonoBehaviour
 	// 装備かどうか & 装備のタイプは
 	[SerializeField] EquipmentType m_equipmentType = EquipmentType.None;
 
+	// 装備の情報
+	[SerializeField] Info_Equipment m_equipmentInfo;
+
 	// Start is called before the first frame update
 	void Start()
     {
@@ -151,5 +154,11 @@ public class Item_Object : MonoBehaviour
 	public EquipmentType GetWeaponType()
 	{
 		return m_equipmentType;
+	}
+
+	// 装備の場合に性能を返す
+	public int GetEquipmentInfo(Info_Equipment.WeaponStatusType type)
+	{
+		return m_equipmentInfo.GetInfo(type);
 	}
 }

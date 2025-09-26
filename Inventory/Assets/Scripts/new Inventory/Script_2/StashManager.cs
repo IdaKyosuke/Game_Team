@@ -200,9 +200,6 @@ public class StashManager : MonoBehaviour
 	// アイテムが入るスペースを確認
 	private bool CheckSpace(Vector2Int startGrid, Vector2Int size)
 	{
-		Debug.Log(startGrid.x + (size.x - 1));
-		Debug.Log(startGrid.y + (size.y - 1));
-
 		Grid[,] list = null;
 		int height = 0;
 		int width = 0;
