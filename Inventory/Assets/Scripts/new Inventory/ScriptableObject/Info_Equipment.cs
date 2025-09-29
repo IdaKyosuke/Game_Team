@@ -15,16 +15,6 @@ public enum WeaponStatusType
 
 public class Info_Equipment : ScriptableObject
 {
-	public enum WeaponStatusType
-	{
-		Hp,
-		Atk,
-		Def,
-		Spd,
-
-		Length,
-	}
-
 	// 武器のステータス（仮）
 	[SerializeField] int m_hp;
 	[SerializeField] int m_atk;

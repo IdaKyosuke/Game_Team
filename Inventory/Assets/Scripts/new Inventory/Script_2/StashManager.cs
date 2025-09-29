@@ -368,8 +368,10 @@ public class StashManager : MonoBehaviour
 						);
 					// 基点のインデックスを保持
 					item.GetComponent<Item_Object>().SetIndex(new Vector2Int(j, i));
+
+					GridType m = (GridType)((int)m_checkType + 1 > 1 ? 0 : 1);
 					// 現在の枠のgridtypeを保管
-					item.GetComponent<Item_Object>().SetType(m_checkType);
+					item.GetComponent<Item_Object>().SetType(m);
 
 					// --- アイテムリストの管理 ---
 					if (m_checkType == GridType.Inventory)

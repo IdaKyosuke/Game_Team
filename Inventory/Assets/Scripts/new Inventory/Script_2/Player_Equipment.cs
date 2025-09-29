@@ -49,7 +49,7 @@ public class Player_Equipment : MonoBehaviour
 				Item_Object info = item.transform.GetChild(0).GetComponent<Item_Object>();
 				for (int i = 0; i < (int)WeaponStatusType.Length; i++)
 				{
-					m_weaponStatus[i] += info.GetEquipmentInfo((Info_Equipment.WeaponStatusType)i);
+					m_weaponStatus[i] += info.GetEquipmentInfo((WeaponStatusType)i);
 				}
 			}
 		}
