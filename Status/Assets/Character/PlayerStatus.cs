@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -15,9 +16,11 @@ public class PlayerStatus : MonoBehaviour
 
     [SerializeField] JobType m_job;
     [SerializeField] StatusData m_statusData;
+    [SerializeField] List<GameObject> m_equipment;  //装備枠
     [SerializeField] UnityEvent m_onDamage;
     [SerializeField] UnityEvent m_onDeath;
 
+    private int[] m_equipmentStatus = new int[(int)StatusType.Length];  //実数値
     private StatusData.Parameters m_status;
     private int m_level;
     private int m_health;
@@ -34,6 +37,37 @@ public class PlayerStatus : MonoBehaviour
 
         //体力
         m_health = m_status.hp;
+    }
+
+    private void Update()
+    {
+        // 数値をリセット
+        for (int i = 0; i < (int)StatusType.Length; i++)
+        {
+            m_equipmentStatus[i] = 0;
+        }
+
+        // 装備枠分回す
+        foreach (GameObject item in m_equipment)
+        {
+            // 装備枠が空の場合0を加算していく
+            if (item.transform.childCount == 0)
+            {
+                for (int i = 0; i < (int)StatusType.Length; i++)
+                {
+                    m_equipmentStatus[i] += 0;
+                }
+            }
+            else
+            {
+                // 装備のステータスを加算
+                Equipment info = item.transform.GetChild(0).GetComponent<Equipment>();
+                for (int i = 0; i < (int)StatusType.Length; i++)
+                {
+                    m_equipmentStatus[i] += info.GetInfo((StatusType)i);
+                }
+            }
+        }
     }
 
     public virtual void Identity() {}

@@ -9,16 +9,18 @@ public class EquipmentStatus : MonoBehaviour
         Armor,
         Gauntlet,
         Shoes,
+
+        Length,
     }
 
     [SerializeField] EquipmentType m_equipmentType;     //装備の種類
-    [SerializeField] EquipmentParameter m_statusData;   //装備の基礎ステータス
+    [SerializeField] Equipment m_statusData;            //装備の基礎ステータス
     [SerializeField] EquipmentData m_passiveSkillData;  //装備のパッシブスキル
     [SerializeField] int m_level;
 
-    private EquipmentParameter m_totalStatus;           //装備の総合ステータス
+    private Equipment m_totalStatus;                    //装備の総合ステータス
 
-    public EquipmentParameter TotalStatus => m_totalStatus;
+    public Equipment TotalStatus => m_totalStatus;
 
     private void Awake()
     {
@@ -31,14 +33,6 @@ public class EquipmentStatus : MonoBehaviour
         }
 
         //装備の総合ステータスを計算
-        m_totalStatus.hp = m_statusData.hp + m_passiveSkillData.EquipmentAbility[id].hp;
-        m_totalStatus.mp = m_statusData.mp + m_passiveSkillData.EquipmentAbility[id].mp;
-        m_totalStatus.physicalPower = m_statusData.physicalPower + m_passiveSkillData.EquipmentAbility[id].physicalPower;
-        m_totalStatus.magicPower = m_statusData.magicPower + m_passiveSkillData.EquipmentAbility[id].magicPower;
-        m_totalStatus.physicalDefense = m_statusData.physicalDefense + m_passiveSkillData.EquipmentAbility[id].physicalDefense;
-        m_totalStatus.magicDefense = m_statusData.magicDefense + m_passiveSkillData.EquipmentAbility[id].magicDefense;
-        m_totalStatus.moveSpeed = m_statusData.moveSpeed + m_passiveSkillData.EquipmentAbility[id].moveSpeed;
-        m_totalStatus.openSpeed = m_statusData.openSpeed + m_passiveSkillData.EquipmentAbility[id].openSpeed;
-        m_totalStatus.attackSpeed = m_statusData.attackSpeed + m_passiveSkillData.EquipmentAbility[id].attackSpeed;
+        m_totalStatus = m_statusData;
     }
 }
