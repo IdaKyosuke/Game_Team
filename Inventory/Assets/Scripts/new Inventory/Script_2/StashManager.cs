@@ -211,25 +211,45 @@ public class StashManager : MonoBehaviour
 	}
 
 	// アイテムが入るスペースを確認
-	private bool CheckSpace(Vector2Int startGrid, Vector2Int size)
+	private bool CheckSpace(Vector2Int startGrid, Vector2Int size, bool isQuickMove = false)
 	{
 		Grid[,] list = null;
 		int height = 0;
 		int width = 0;
 
-		switch(m_checkType)
+		if (isQuickMove)
 		{
-			case GridType.Stash:
-				list = m_stashGridList;
-				height = m_stashHeight;
-				width = m_stashWidth;
-				break;
+			switch (m_checkType)
+			{
+				case GridType.Inventory:
+					list = m_stashGridList;
+					height = m_stashHeight;
+					width = m_stashWidth;
+					break;
 
-			case GridType.Inventory:
-				list = m_inventoryGridList;
-				height = m_inventoryHeight;
-				width = m_inventoryWidth;
-				break;
+				case GridType.Stash:
+					list = m_inventoryGridList;
+					height = m_inventoryHeight;
+					width = m_inventoryWidth;
+					break;
+			}
+		}
+		else
+		{
+			switch (m_checkType)
+			{
+				case GridType.Stash:
+					list = m_stashGridList;
+					height = m_stashHeight;
+					width = m_stashWidth;
+					break;
+
+				case GridType.Inventory:
+					list = m_inventoryGridList;
+					height = m_inventoryHeight;
+					width = m_inventoryWidth;
+					break;
+			}
 		}
 
 		// 枠外にはみ出すときはそもそも確認しない
@@ -308,6 +328,7 @@ public class StashManager : MonoBehaviour
 		if (m_moveItemTransform.childCount <= 0) return;
 		// アイテム移動用のオブジェクトの中身を確認
 		GameObject item = m_moveItemTransform.GetChild(0).gameObject;
+		Vector2Int size = item.GetComponent<Item_Object>().GetSize();
 
 		// アイテムの入っているマス目のタイプに応じて探索する枠を変える
 		m_checkType = type;
@@ -317,15 +338,16 @@ public class StashManager : MonoBehaviour
 		int height = 0;
 		int width = 0;
 
+		// アイテムの現在の枠タイプと違うタイプの枠を探索
 		switch (m_checkType)
 		{
-			case GridType.Stash:
+			case GridType.Inventory:
 				list = m_stashGridList;
 				height = m_stashHeight;
 				width = m_stashWidth;
 				break;
 
-			case GridType.Inventory:
+			case GridType.Stash:
 				list = m_inventoryGridList;
 				height = m_inventoryHeight;
 				width = m_inventoryWidth;
@@ -337,7 +359,7 @@ public class StashManager : MonoBehaviour
 		{
 			for (int j = 0; j < width; j++)
 			{
-				if (CheckSpace(new Vector2Int(j, i), item.GetComponent<Item_Object>().GetSize()))
+				if (CheckSpace(new Vector2Int(j, i), size, true))
 				{
 					// 移動先の子オブジェクトに設定する or 元の位置に戻す
 					item.GetComponent<Item_Object>().PointerUp(
@@ -346,7 +368,7 @@ public class StashManager : MonoBehaviour
 						);
 					// 基点のインデックスを保持
 					item.GetComponent<Item_Object>().SetIndex(new Vector2Int(j, i));
-					// 現在のgridtypeを保管
+					// 現在の枠のgridtypeを保管
 					item.GetComponent<Item_Object>().SetType(m_checkType);
 
 					// --- アイテムリストの管理 ---
@@ -358,15 +380,12 @@ public class StashManager : MonoBehaviour
 					{
 						m_itemList.Remove(item);
 					}
+					return;
 				}
-				else
-				{
-					// 元の位置に戻す
-					item.GetComponent<Item_Object>().PointerUp(false);
-				}
-
-				return;
 			}
 		}
+
+		// アイテムが入るスペースがないので元の位置に戻す
+		item.GetComponent<Item_Object>().PointerUp(false);
 	}
 }

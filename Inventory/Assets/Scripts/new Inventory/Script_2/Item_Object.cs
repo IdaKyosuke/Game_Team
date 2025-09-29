@@ -9,7 +9,8 @@ public class Item_Object : MonoBehaviour
 {
 	[SerializeField] Info_ItemSize m_info;
 	private bool m_isPointerEnter = false;
-	private bool m_isDrag = false;
+	private bool m_isDrag = false;		// カーソルを追従しているか
+	private bool m_quickMove = false;	// ショートカット移動をしているか
 
 	private RectTransform rectTransform; // 移動したいオブジェクトのRectTransform
 	private RectTransform parentRectTransform; // 移動したいオブジェクトの親(Panel)のRectTransform
@@ -49,26 +50,17 @@ public class Item_Object : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-		// アイテムを掴んでいる時
-        if(m_isDrag)
+		// ショートカット移動
+		if (m_quickMove)
 		{
+			QuickMove();
+		}
+		else if (m_isDrag)
+		{
+			// アイテムを掴んでいる時
 			// マウスカーソルを掴んでいるアイテムが追従する
 			Vector2 localPosition = GetLocalPosition(Input.mousePosition);
 			rectTransform.anchoredPosition = localPosition;
-		}
-
-		// LCtrl && LMB(ショートカット)
-		if (Input.GetKeyDown("left ctrl") && Input.GetMouseButtonDown(0))
-		{
-			// 現時点の親を保存
-			iconParent = transform.parent;
-			// ドラッグ前の位置を記憶しておく
-			prevPos = rectTransform.anchoredPosition;
-			// 移動中用のオブジェクトを親に変更
-			SetParentTransform(m_moveItemTransform);
-
-			// 現在の自分の入っている枠のタイプに応じて入れ替える
-			GameObject.FindWithTag("inventoryManager").GetComponent<StashManager>().QuickMoveItem(m_gridType);
 		}
 	}
 
@@ -88,6 +80,22 @@ public class Item_Object : MonoBehaviour
 		m_isPointerEnter = false;
 	}
 
+	// ショートカット移動
+	private void QuickMove()
+	{
+		// 現時点の親を保存
+		iconParent = transform.parent;
+		// ドラッグ前の位置を記憶しておく
+		prevPos = rectTransform.anchoredPosition;
+		// 移動中用のオブジェクトを親に変更
+		SetParentTransform(m_moveItemTransform);
+		// これまで入っていたマス目を解放
+		m_inventoryManager.GetComponent<StashManager>().MoveItem(m_pos, GetSize(), false, m_gridType);
+		// 現在の自分の入っている枠のタイプに応じて入れ替える
+		GameObject.FindWithTag("inventoryManager").GetComponent<StashManager>().QuickMoveItem(m_gridType);
+		m_quickMove = false;
+	}
+
 	// アイテムを持ち上げる際の動き
 	public void PointerDown()
 	{
@@ -99,8 +107,16 @@ public class Item_Object : MonoBehaviour
 		prevPos = rectTransform.anchoredPosition;
 		// 移動中用のオブジェクトを親に変更
 		SetParentTransform(m_moveItemTransform);
-		// マウスカーソルの追従開始
-		m_isDrag = true;
+		if(Input.GetKey("left ctrl"))
+		{
+			// ショートカット開始
+			m_quickMove = true;
+		}
+		else
+		{
+			// マウスカーソルの追従開始
+			m_isDrag = true;
+		}
 
 		// これまで入っていたマス目を解放
 		m_inventoryManager.GetComponent<StashManager>().MoveItem(m_pos, GetSize(), false, m_gridType);
@@ -116,12 +132,7 @@ public class Item_Object : MonoBehaviour
 			// 移動可能
 			// 移動先の枠を親オブジェクトに設定
 			SetParentTransform(nextPos);
-			
-			if(nextPos.gameObject.CompareTag("inventory"))
-			{
-				// 枠タイプを変更
-				m_gridType = nextPos.gameObject.GetComponent<GridIcon>().GetGridType();
-			}
+			rectTransform.anchoredPosition = Vector2.zero;
 		}
 		else
 		{
@@ -130,8 +141,8 @@ public class Item_Object : MonoBehaviour
 			SetParentTransform(iconParent);
 			// 解放したマス目を埋めなおす
 			m_inventoryManager.GetComponent<StashManager>().MoveItem(m_pos, GetSize(), true, m_gridType);
+			rectTransform.anchoredPosition = prevPos;
 		}
-		rectTransform.anchoredPosition = prevPos;
 		// 当たり判定用の画像をアクティブにする
 		m_collider.SetActive(true);
 	}
