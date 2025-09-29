@@ -36,34 +36,34 @@ public class Equipment : ScriptableObject
         switch (type)
         { 
             case StatusType.Id:
-                return m_id;
+                return id;
 
             case StatusType.Hp: 
-                return m_hp;
+                return hp;
 
             case StatusType.Mp: 
-                return m_mp;
+                return mp;
 
             case StatusType.PhysicalPower: 
-                return m_physicalPower;
+                return physicalPower;
 
             case StatusType.MagicPower: 
-                return m_magicPower;
+                return magicPower;
 
             case StatusType.PhysicalDefense: 
-                return m_physicalDefense;
+                return physicalDefense;
 
             case StatusType.MagicDefense: 
-                return m_magicDefense;
+                return magicDefense;
 
             case StatusType.MoveSpeed: 
-                return m_moveSpeed;
+                return moveSpeed;
 
             case StatusType.AttackSpeed: 
-                return m_attackSpeed;
+                return attackSpeed;
 
             case StatusType.OpenSpeed: 
-                return m_openSpeed;
+                return openSpeed;
 
             default: return 0;
         }  
