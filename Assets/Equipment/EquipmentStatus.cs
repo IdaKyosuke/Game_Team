@@ -11,36 +11,34 @@ public class EquipmentStatus : MonoBehaviour
         Shoes,
     }
 
-    [SerializeField] EquipmentType m_equipmentType;
-    [SerializeField] EquipmentData m_statusData;
-    [SerializeField] StatusData m_status;
+    [SerializeField] EquipmentType m_equipmentType;     //装備の種類
+    [SerializeField] EquipmentParameter m_statusData;   //装備の基礎ステータス
+    [SerializeField] EquipmentData m_passiveSkillData;  //装備のパッシブスキル
     [SerializeField] int m_level;
 
-    private StatusData.Parameters m_parameters;
-    private int m_attackSpeed;  
+    private EquipmentParameter m_totalStatus;           //装備の総合ステータス
 
-    public StatusData.Parameters Value => m_parameters;
+    public EquipmentParameter TotalStatus => m_totalStatus;
 
     private void Awake()
     {
-        //装備のパッシブステータスをランダムに決定
-        int id = Random.Range(0, 3);
+        //ランダムでパッシブスキルを設定
+        int id = Random.Range(0, 2);
+        if (id == 1)
+        {
+            id = Random.Range(0, m_passiveSkillData.EquipmentAbility.Count);
+            m_statusData.id = id;
+        }
 
-        //装備のパッシブステータスを設定
-        m_parameters = m_status.GetStatus(m_level);
-
-        m_parameters.hp += m_statusData.EquipmentAbility[id].hp;
-        m_parameters.mp += m_statusData.EquipmentAbility[id].mp;
-        
-        m_parameters.physicalPower += m_statusData.EquipmentAbility[id].physicalPower;
-        m_parameters.magicPower += m_statusData.EquipmentAbility[id].magicPower;
-        
-        m_parameters.physicalDefense += m_statusData.EquipmentAbility[id].physicalDefense;
-        m_parameters.magicDefense += m_statusData.EquipmentAbility[id].magicDefense;
-        
-        m_parameters.moveSpeed += m_statusData.EquipmentAbility[id].moveSpeed;
-        m_parameters.openSpeed += m_statusData.EquipmentAbility[id].openSpeed;
-
-        m_attackSpeed = m_statusData.EquipmentAbility[id].attackSpeed;
+        //装備の総合ステータスを計算
+        m_totalStatus.hp = m_statusData.hp + m_passiveSkillData.EquipmentAbility[id].hp;
+        m_totalStatus.mp = m_statusData.mp + m_passiveSkillData.EquipmentAbility[id].mp;
+        m_totalStatus.physicalPower = m_statusData.physicalPower + m_passiveSkillData.EquipmentAbility[id].physicalPower;
+        m_totalStatus.magicPower = m_statusData.magicPower + m_passiveSkillData.EquipmentAbility[id].magicPower;
+        m_totalStatus.physicalDefense = m_statusData.physicalDefense + m_passiveSkillData.EquipmentAbility[id].physicalDefense;
+        m_totalStatus.magicDefense = m_statusData.magicDefense + m_passiveSkillData.EquipmentAbility[id].magicDefense;
+        m_totalStatus.moveSpeed = m_statusData.moveSpeed + m_passiveSkillData.EquipmentAbility[id].moveSpeed;
+        m_totalStatus.openSpeed = m_statusData.openSpeed + m_passiveSkillData.EquipmentAbility[id].openSpeed;
+        m_totalStatus.attackSpeed = m_statusData.attackSpeed + m_passiveSkillData.EquipmentAbility[id].attackSpeed;
     }
 }
