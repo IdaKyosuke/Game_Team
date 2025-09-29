@@ -15,6 +15,7 @@ public enum EquipmentType
 	Length,
 }
 
+[DefaultExecutionOrder(-99)]
 public class GridIcon_Equipment : MonoBehaviour
 {
 	private bool m_onPointer = false;
@@ -44,7 +45,6 @@ public class GridIcon_Equipment : MonoBehaviour
 		// 自分の上でドロップされたとき
 		if (Input.GetMouseButtonUp(0) && m_onPointer)
 		{
-			Debug.Log("in");
 			// 移動中のアイテムがないときは無視
 			if (m_moveItemTransform.transform.childCount == 0) return;
 
@@ -64,7 +64,6 @@ public class GridIcon_Equipment : MonoBehaviour
 				{
 					transform.GetChild(0).transform.SetParent(m_moveItemTransform.transform);
 				}
-
 				// 新しく装備する
 				o.GetComponent<Item_Object>().PointerUp(true, transform);
 			}
@@ -93,5 +92,10 @@ public class GridIcon_Equipment : MonoBehaviour
 	public void SetUi(bool value)
 	{
 		m_fillUi = value;
+	}
+
+	public EquipmentType GetEquipmentType()
+	{
+		return m_type;
 	}
 }

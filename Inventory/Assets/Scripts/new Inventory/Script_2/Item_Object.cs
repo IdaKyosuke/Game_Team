@@ -56,7 +56,21 @@ public class Item_Object : MonoBehaviour
 			Vector2 localPosition = GetLocalPosition(Input.mousePosition);
 			rectTransform.anchoredPosition = localPosition;
 		}
-    }
+
+		// LCtrl && LMB(ショートカット)
+		if (Input.GetKeyDown("left ctrl") && Input.GetMouseButtonDown(0))
+		{
+			// 現時点の親を保存
+			iconParent = transform.parent;
+			// ドラッグ前の位置を記憶しておく
+			prevPos = rectTransform.anchoredPosition;
+			// 移動中用のオブジェクトを親に変更
+			SetParentTransform(m_moveItemTransform);
+
+			// 現在の自分の入っている枠のタイプに応じて入れ替える
+			GameObject.FindWithTag("inventoryManager").GetComponent<StashManager>().QuickMoveItem(m_gridType);
+		}
+	}
 
 	// アイテムのサイズ情報を取得
 	public Vector2Int GetSize()
@@ -102,6 +116,12 @@ public class Item_Object : MonoBehaviour
 			// 移動可能
 			// 移動先の枠を親オブジェクトに設定
 			SetParentTransform(nextPos);
+			
+			if(nextPos.gameObject.CompareTag("inventory"))
+			{
+				// 枠タイプを変更
+				m_gridType = nextPos.gameObject.GetComponent<GridIcon>().GetGridType();
+			}
 		}
 		else
 		{

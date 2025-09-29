@@ -54,7 +54,7 @@ public class Player_Equipment : MonoBehaviour
 			}
 		}
 
-		// テキストの編集
+		// テキストの編集(デバッグ用)
 		for (int i = 0; i < (int)WeaponStatusType.Length; i++)
 		{
 			m_texts[i].SetText("{0}", m_weaponStatus[i]);

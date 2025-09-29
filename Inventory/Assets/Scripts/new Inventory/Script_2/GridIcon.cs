@@ -13,6 +13,7 @@ public enum GridType
 	Length,
 }
 
+[DefaultExecutionOrder(-99)]
 public class GridIcon : MonoBehaviour
 {
 	private bool m_onPointer = false;
@@ -69,5 +70,11 @@ public class GridIcon : MonoBehaviour
 	public void SetType(GridType type)
 	{
 		m_type = type;
+	}
+
+	// ƒ^ƒCƒv‚ðŽæ“¾‚·‚é
+	public GridType GetGridType()
+	{
+		return m_type;
 	}
 }

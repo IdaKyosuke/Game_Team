@@ -70,6 +70,9 @@ public class StashManager : MonoBehaviour
 	private Transform m_moveItemTransform;
 	private GridType m_checkType;
 
+	// アイテムリスト
+	private List<GameObject> m_itemList = new List<GameObject>();
+
 	// Start is called before the first frame update
 	void Start()
     {
@@ -181,6 +184,16 @@ public class StashManager : MonoBehaviour
 						item.GetComponent<Item_Object>().SetIndex(new Vector2Int(j, i));
 						// 現在のgridtypeを保管
 						item.GetComponent<Item_Object>().SetType(m_checkType);
+
+						// --- アイテムリストの管理 ---
+						if(m_checkType == GridType.Inventory)
+						{
+							m_itemList.Add(item);
+						}
+						else
+						{
+							m_itemList.Remove(item);
+						}
 					}
 					else
 					{
@@ -279,5 +292,81 @@ public class StashManager : MonoBehaviour
 	public void StartSet(GridType type)
 	{
 		m_checkType = type;
+	}
+
+	// インベントリのアイテムリストを返す
+	public List<GameObject> GetItemList()
+	{
+		return m_itemList;
+	}
+
+	// --- ショートカット ---
+	// インベントリ ⇔ スタッシュ（空き枠を探して自動で入れ替える）
+	public void QuickMoveItem(GridType type)
+	{
+		// 移動中のアイテムがないときは無視
+		if (m_moveItemTransform.childCount <= 0) return;
+		// アイテム移動用のオブジェクトの中身を確認
+		GameObject item = m_moveItemTransform.GetChild(0).gameObject;
+
+		// アイテムの入っているマス目のタイプに応じて探索する枠を変える
+		m_checkType = type;
+
+		// 全マス探索
+		Grid[,] list = null;
+		int height = 0;
+		int width = 0;
+
+		switch (m_checkType)
+		{
+			case GridType.Stash:
+				list = m_stashGridList;
+				height = m_stashHeight;
+				width = m_stashWidth;
+				break;
+
+			case GridType.Inventory:
+				list = m_inventoryGridList;
+				height = m_inventoryHeight;
+				width = m_inventoryWidth;
+				break;
+		}
+
+		// リストを回す
+		for (int i = 0; i < height; i++)
+		{
+			for (int j = 0; j < width; j++)
+			{
+				if (CheckSpace(new Vector2Int(j, i), item.GetComponent<Item_Object>().GetSize()))
+				{
+					// 移動先の子オブジェクトに設定する or 元の位置に戻す
+					item.GetComponent<Item_Object>().PointerUp(
+						true,
+						list[j, i].GetTransform()
+						);
+					// 基点のインデックスを保持
+					item.GetComponent<Item_Object>().SetIndex(new Vector2Int(j, i));
+					// 現在のgridtypeを保管
+					item.GetComponent<Item_Object>().SetType(m_checkType);
+
+					// --- アイテムリストの管理 ---
+					if (m_checkType == GridType.Inventory)
+					{
+						m_itemList.Add(item);
+					}
+					else
+					{
+						m_itemList.Remove(item);
+					}
+				}
+				else
+				{
+					// 元の位置に戻す
+					item.GetComponent<Item_Object>().PointerUp(false);
+				}
+
+				return;
+			}
+		}
 	}
 }
