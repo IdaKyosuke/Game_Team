@@ -173,9 +173,14 @@ public class StashManager : MonoBehaviour
 				// カーソルの重なっているマスが空の時
 				if (list[j, i].OnPointer() && !list[j, i].GetInfo())
 				{
-					if (CheckSpace(new Vector2Int(j, i), item.GetComponent<Item_Object>().GetSize()))
+					if (CheckSpace(
+						new Vector2Int(j, i), 
+						item.GetComponent<Item_Object>().GetSize(),
+						item.GetComponent<Item_Object>().GetEquipValue(), 
+						false
+						))
 					{
-						// 移動先の子オブジェクトに設定する or 元の位置に戻す
+						// 移動先の子オブジェクトに設定する
 						item.GetComponent<Item_Object>().PointerUp(
 							true,
 							list[j, i].GetTransform()
@@ -184,9 +189,11 @@ public class StashManager : MonoBehaviour
 						item.GetComponent<Item_Object>().SetIndex(new Vector2Int(j, i));
 						// 現在のgridtypeを保管
 						item.GetComponent<Item_Object>().SetType(m_checkType);
+						// 装備の状態を変更
+						item.GetComponent<Item_Object>().SetEquipValue(false);
 
 						// --- アイテムリストの管理 ---
-						if(m_checkType == GridType.Inventory)
+						if (m_checkType == GridType.Inventory)
 						{
 							m_itemList.Add(item);
 						}
@@ -211,46 +218,57 @@ public class StashManager : MonoBehaviour
 	}
 
 	// アイテムが入るスペースを確認
-	private bool CheckSpace(Vector2Int startGrid, Vector2Int size, bool isQuickMove = false)
+	private bool CheckSpace(Vector2Int startGrid, Vector2Int size, bool isEquip, bool isQuickMove = false)
 	{
 		Grid[,] list = null;
 		int height = 0;
 		int width = 0;
 
-		if (isQuickMove)
+		// 装備品をショートカットで外す場合はインベントリに入る
+		if(isEquip && isQuickMove)
 		{
-			switch (m_checkType)
-			{
-				case GridType.Inventory:
-					list = m_stashGridList;
-					height = m_stashHeight;
-					width = m_stashWidth;
-					break;
-
-				case GridType.Stash:
-					list = m_inventoryGridList;
-					height = m_inventoryHeight;
-					width = m_inventoryWidth;
-					break;
-			}
+			list = m_inventoryGridList;
+			height = m_inventoryHeight;
+			width = m_inventoryWidth;
 		}
 		else
 		{
-			switch (m_checkType)
+			if (isQuickMove)
 			{
-				case GridType.Stash:
-					list = m_stashGridList;
-					height = m_stashHeight;
-					width = m_stashWidth;
-					break;
+				switch (m_checkType)
+				{
+					case GridType.Inventory:
+						list = m_stashGridList;
+						height = m_stashHeight;
+						width = m_stashWidth;
+						break;
 
-				case GridType.Inventory:
-					list = m_inventoryGridList;
-					height = m_inventoryHeight;
-					width = m_inventoryWidth;
-					break;
+					case GridType.Stash:
+						list = m_inventoryGridList;
+						height = m_inventoryHeight;
+						width = m_inventoryWidth;
+						break;
+				}
+			}
+			else
+			{
+				switch (m_checkType)
+				{
+					case GridType.Stash:
+						list = m_stashGridList;
+						height = m_stashHeight;
+						width = m_stashWidth;
+						break;
+
+					case GridType.Inventory:
+						list = m_inventoryGridList;
+						height = m_inventoryHeight;
+						width = m_inventoryWidth;
+						break;
+				}
 			}
 		}
+		
 
 		// 枠外にはみ出すときはそもそも確認しない
 		if (startGrid.x + (size.x - 1) >= width) return false;
@@ -354,21 +372,10 @@ public class StashManager : MonoBehaviour
 		}
 		else
 		{
-			// 装備されている => アイテムの現在の枠タイプと同じタイプの枠を探索
-			switch (m_checkType)
-			{
-				case GridType.Stash:
-					list = m_stashGridList;
-					height = m_stashHeight;
-					width = m_stashWidth;
-					break;
-
-				case GridType.Inventory:
-					list = m_inventoryGridList;
-					height = m_inventoryHeight;
-					width = m_inventoryWidth;
-					break;
-			}
+			// 装備されている => インベントリに入れる
+			list = m_inventoryGridList;
+			height = m_inventoryHeight;
+			width = m_inventoryWidth;
 		}
 			
 
@@ -377,9 +384,9 @@ public class StashManager : MonoBehaviour
 		{
 			for (int j = 0; j < width; j++)
 			{
-				if (CheckSpace(new Vector2Int(j, i), size, !isEquip))
+				if (CheckSpace(new Vector2Int(j, i), size, isEquip, true))
 				{
-					// 移動先の子オブジェクトに設定する or 元の位置に戻す
+					// 移動先の子オブジェクトに設定する
 					item.GetComponent<Item_Object>().PointerUp(
 						true,
 						list[j, i].GetTransform()
@@ -387,11 +394,15 @@ public class StashManager : MonoBehaviour
 					// 基点のインデックスを保持
 					item.GetComponent<Item_Object>().SetIndex(new Vector2Int(j, i));
 
-
+					// 装備をショートカットで外すとき
 					if(item.GetComponent<Item_Object>().GetEquipValue())
 					{
 						// 装備されていたら装備状態を解除する
 						item.GetComponent<Item_Object>().SetEquipValue(false);
+						// アイテムリストに追加する
+						m_itemList.Add(item);
+						// gridTypeをインベントリに変更する
+						item.GetComponent<Item_Object>().SetType(GridType.Inventory);
 					}
 					else
 					{
@@ -408,7 +419,6 @@ public class StashManager : MonoBehaviour
 							m_itemList.Remove(item);
 						}
 					}
-
 					return;
 				}
 			}
