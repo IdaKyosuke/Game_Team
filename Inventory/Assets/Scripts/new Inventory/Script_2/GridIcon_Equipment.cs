@@ -32,6 +32,7 @@ public class GridIcon_Equipment : MonoBehaviour
 	// Start is called before the first frame update
 	void Start()
 	{
+		GameObject.FindWithTag("equipmentManager").GetComponent<Player_Equipment>().SetSlot(gameObject);
 		m_pastInfo = m_fillUi;
 		if(!m_moveItemTransform)
 		{
@@ -45,29 +46,7 @@ public class GridIcon_Equipment : MonoBehaviour
 		// 自分の上でドロップされたとき
 		if (Input.GetMouseButtonUp(0) && m_onPointer)
 		{
-			// 移動中のアイテムがないときは無視
-			if (m_moveItemTransform.transform.childCount == 0) return;
-
-			GameObject o = m_moveItemTransform.transform.GetChild(0).gameObject;
-			// アイテムが装備じゃないとき || 装備枠に対応した装備じゃないときは無視
-			if (
-				o.GetComponent<Item_Object>().GetWeaponType() == EquipmentType.None ||
-				o.GetComponent<Item_Object>().GetWeaponType() != m_type
-				)
-			{
-				o.GetComponent<Item_Object>().PointerUp(false);
-			}
-			else
-			{
-				// すでに中身が設定されている時、一旦中身を取り出す
-				if (transform.childCount != 0)
-				{
-					transform.GetChild(0).transform.SetParent(m_moveItemTransform.transform);
-				}
-				// 新しく装備する
-				o.GetComponent<Item_Object>().PointerUp(true, transform);
-			}
-
+			Equip();
 		}
 	}
 
@@ -94,8 +73,57 @@ public class GridIcon_Equipment : MonoBehaviour
 		m_fillUi = value;
 	}
 
+	// 装備枠のタイプを取得
 	public EquipmentType GetEquipmentType()
 	{
 		return m_type;
+	}
+
+	// 装備可能か確認 => 可能なら装備
+	private void Equip()
+	{
+		// 移動中のアイテムがないときは無視
+		if (m_moveItemTransform.transform.childCount == 0) return;
+
+		GameObject o = m_moveItemTransform.transform.GetChild(0).gameObject;
+		// アイテムが装備じゃないとき || 装備枠に対応した装備じゃないときは無視
+		if (
+			o.GetComponent<Item_Object>().GetWeaponType() == EquipmentType.None ||
+			o.GetComponent<Item_Object>().GetWeaponType() != m_type
+			)
+		{
+			o.GetComponent<Item_Object>().PointerUp(false);
+		}
+		else
+		{
+			if (transform.childCount != 0)
+			{
+				//transform.GetChild(0).transform.SetParent(m_moveItemTransform.transform);
+				// すでに中身が設定されている時、新しく追加したものを元の場所に戻す
+				o.GetComponent<Item_Object>().PointerUp(false);
+			}
+			else
+			{
+				// 新しく装備する
+				o.GetComponent<Item_Object>().PointerUp(true, transform);
+				// 新しく装備された物を装備状態にする
+				o.GetComponent<Item_Object>().SetEquipValue(true);
+			}
+		}
+	}
+
+	public void QuickEquip(GameObject item)
+	{
+		// 中身があるときは飛ばす
+		if (transform.childCount != 0)
+		{
+			item.GetComponent<Item_Object>().PointerUp(false);
+			return;
+		}
+
+		// 装備を枠に入れる
+		item.GetComponent<Item_Object>().PointerUp(true, transform);
+		// 装備状態にする
+		item.GetComponent<Item_Object>().SetEquipValue(true);
 	}
 }

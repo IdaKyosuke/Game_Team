@@ -11,7 +11,7 @@ public class Item_Object : MonoBehaviour
 	private bool m_isPointerEnter = false;
 	private bool m_isDrag = false;		// カーソルを追従しているか
 	private bool m_quickMove = false;	// ショートカット移動をしているか
-	private bool m_quickEquipment = false;	// 高速装備を行う
+	private bool m_quickEquip = false;	// 高速装備を行う
 
 	private RectTransform rectTransform; // 移動したいオブジェクトのRectTransform
 	private RectTransform parentRectTransform; // 移動したいオブジェクトの親(Panel)のRectTransform
@@ -30,6 +30,7 @@ public class Item_Object : MonoBehaviour
 
 	// 装備かどうか & 装備のタイプは
 	[SerializeField] EquipmentType m_equipmentType = EquipmentType.None;
+	private bool m_isEquip = false;		// 現在装備されているか
 
 	// 装備の情報
 	[SerializeField] Info_Equipment m_equipmentInfo;
@@ -55,6 +56,10 @@ public class Item_Object : MonoBehaviour
 		if (m_quickMove)
 		{
 			QuickMove();
+		}
+		else if(m_quickEquip)
+		{
+			QuickEquip();
 		}
 		else if (m_isDrag)
 		{
@@ -84,37 +89,20 @@ public class Item_Object : MonoBehaviour
 	// ショートカット移動
 	private void QuickMove()
 	{
-		// 現時点の親を保存
-		iconParent = transform.parent;
-		// ドラッグ前の位置を記憶しておく
-		prevPos = rectTransform.anchoredPosition;
-		// 移動中用のオブジェクトを親に変更
-		SetParentTransform(m_moveItemTransform);
-		// これまで入っていたマス目を解放
-		m_inventoryManager.GetComponent<StashManager>().MoveItem(m_pos, GetSize(), false, m_gridType);
 		// 現在の自分の入っている枠のタイプに応じて入れ替える
-		GameObject.FindWithTag("inventoryManager").GetComponent<StashManager>().QuickMoveItem(m_gridType);
+		GameObject.FindWithTag("inventoryManager").GetComponent<StashManager>().QuickMoveItem(m_gridType, gameObject, m_isEquip);
 	}
 
-	// アイテムを持ち上げる際の動き
-	public void PointerDown()
+	// 高速装備する
+	private void QuickEquip()
 	{
-		if (m_quickMove || m_isDrag) return;
+		// 現在の自分の入っている枠のタイプに応じて入れ替える
+		GameObject.FindWithTag("equipmentManager").GetComponent<Player_Equipment>().QuickEquip(gameObject);
+	}
 
-		if(Input.GetKey("left ctrl"))
-		{
-			// ショートカット開始
-			m_quickMove = true;
-		}
-		else if(Input.GetKey("left alt") && m_equipmentType != EquipmentType.None)
-		{
-
-		}
-		else
-		{
-			// マウスカーソルの追従開始
-			m_isDrag = true;
-		}
+	// アイテムを移動させる前の準備
+	private void ReadyMove()
+	{
 		// 当たり判定用の画像を非アクティブにする
 		m_collider.SetActive(false);
 		// 現時点の親を保存
@@ -123,17 +111,45 @@ public class Item_Object : MonoBehaviour
 		prevPos = rectTransform.anchoredPosition;
 		// 移動中用のオブジェクトを親に変更
 		SetParentTransform(m_moveItemTransform);
+		// 装備枠に入っていないとき
+		if(!m_isEquip)
+		{
+			// これまで入っていたマス目を解放
+			m_inventoryManager.GetComponent<StashManager>().MoveItem(m_pos, GetSize(), false, m_gridType);
+		}
+	}
 
-		// これまで入っていたマス目を解放
-		m_inventoryManager.GetComponent<StashManager>().MoveItem(m_pos, GetSize(), false, m_gridType);
+	// アイテムを持ち上げる際の動き
+	public void PointerDown()
+	{
+		if (m_quickMove || m_isDrag || m_quickEquip) return;
+
+		if(Input.GetKey("left ctrl"))
+		{
+			// ショートカット開始
+			m_quickMove = true;
+		}
+		else if(Input.GetKey("left alt") && m_equipmentType != EquipmentType.None)
+		{
+			// 高速装備する
+			m_quickEquip = true;
+		}
+		else
+		{
+			// マウスカーソルの追従開始
+			m_isDrag = true;
+		}
+		ReadyMove();
 	}
 
 	public void PointerUp(bool canSet, Transform nextPos = null)
 	{
 		// マウスカーソルの追従を終了
 		m_isDrag = false;
-		// クイック移動状態を解除
+		// クイック移動状態を終了
 		m_quickMove = false;
+		// クイック装備状態を終了
+		m_quickEquip = false;
 
 		if (canSet)
 		{
@@ -199,5 +215,16 @@ public class Item_Object : MonoBehaviour
 	public int GetEquipmentInfo(WeaponStatusType type)
 	{
 		return m_equipmentInfo.GetInfo(type);
+	}
+
+	// 装備状態の変更
+	public void SetEquipValue(bool value)
+	{
+		m_isEquip = value;
+	}
+	// 装備状態を取得する
+	public bool GetEquipValue()
+	{
+		return m_isEquip;
 	}
 }

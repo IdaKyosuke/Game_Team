@@ -322,12 +322,8 @@ public class StashManager : MonoBehaviour
 
 	// --- ショートカット ---
 	// インベントリ ⇔ スタッシュ（空き枠を探して自動で入れ替える）
-	public void QuickMoveItem(GridType type)
+	public void QuickMoveItem(GridType type, GameObject item, bool isEquip)
 	{
-		// 移動中のアイテムがないときは無視
-		if (m_moveItemTransform.childCount <= 0) return;
-		// アイテム移動用のオブジェクトの中身を確認
-		GameObject item = m_moveItemTransform.GetChild(0).gameObject;
 		Vector2Int size = item.GetComponent<Item_Object>().GetSize();
 
 		// アイテムの入っているマス目のタイプに応じて探索する枠を変える
@@ -338,28 +334,50 @@ public class StashManager : MonoBehaviour
 		int height = 0;
 		int width = 0;
 
-		// アイテムの現在の枠タイプと違うタイプの枠を探索
-		switch (m_checkType)
+		if(!isEquip)
 		{
-			case GridType.Inventory:
-				list = m_stashGridList;
-				height = m_stashHeight;
-				width = m_stashWidth;
-				break;
+			// 装備されていない => アイテムの現在の枠タイプと違うタイプの枠を探索
+			switch (m_checkType)
+			{
+				case GridType.Inventory:
+					list = m_stashGridList;
+					height = m_stashHeight;
+					width = m_stashWidth;
+					break;
 
-			case GridType.Stash:
-				list = m_inventoryGridList;
-				height = m_inventoryHeight;
-				width = m_inventoryWidth;
-				break;
+				case GridType.Stash:
+					list = m_inventoryGridList;
+					height = m_inventoryHeight;
+					width = m_inventoryWidth;
+					break;
+			}
 		}
+		else
+		{
+			// 装備されている => アイテムの現在の枠タイプと同じタイプの枠を探索
+			switch (m_checkType)
+			{
+				case GridType.Stash:
+					list = m_stashGridList;
+					height = m_stashHeight;
+					width = m_stashWidth;
+					break;
+
+				case GridType.Inventory:
+					list = m_inventoryGridList;
+					height = m_inventoryHeight;
+					width = m_inventoryWidth;
+					break;
+			}
+		}
+			
 
 		// リストを回す
 		for (int i = 0; i < height; i++)
 		{
 			for (int j = 0; j < width; j++)
 			{
-				if (CheckSpace(new Vector2Int(j, i), size, true))
+				if (CheckSpace(new Vector2Int(j, i), size, !isEquip))
 				{
 					// 移動先の子オブジェクトに設定する or 元の位置に戻す
 					item.GetComponent<Item_Object>().PointerUp(
@@ -369,19 +387,28 @@ public class StashManager : MonoBehaviour
 					// 基点のインデックスを保持
 					item.GetComponent<Item_Object>().SetIndex(new Vector2Int(j, i));
 
-					GridType m = (GridType)((int)m_checkType + 1 > 1 ? 0 : 1);
-					// 現在の枠のgridtypeを保管
-					item.GetComponent<Item_Object>().SetType(m);
 
-					// --- アイテムリストの管理 ---
-					if (m_checkType == GridType.Inventory)
+					if(item.GetComponent<Item_Object>().GetEquipValue())
 					{
-						m_itemList.Add(item);
+						// 装備されていたら装備状態を解除する
+						item.GetComponent<Item_Object>().SetEquipValue(false);
 					}
 					else
 					{
-						m_itemList.Remove(item);
+						// 現在の枠のgridtypeを保管
+						GridType m = (GridType)((int)m_checkType + 1 > 1 ? 0 : 1);
+						item.GetComponent<Item_Object>().SetType(m);
+						// --- アイテムリストの管理 ---
+						if (m_checkType == GridType.Inventory)
+						{
+							m_itemList.Add(item);
+						}
+						else
+						{
+							m_itemList.Remove(item);
+						}
 					}
+
 					return;
 				}
 			}
