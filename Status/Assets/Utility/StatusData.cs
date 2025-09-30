@@ -2,39 +2,14 @@ using UnityEngine;
 using System;
 using System.Collections.Generic;
 
-[CreateAssetMenu(menuName = "Status")]
+[CreateAssetMenu(menuName = "ScriptableObject/CharacterData")]
 public class StatusData : ScriptableObject
 {
-    [Serializable]
-    public class Parameters
-    {
-        [SerializeField] private int level;
-
-        public int hp;
-        public int mp;
-
-        public int physicalPower;
-        public int magicPower;
-
-        public int physicalDefense;
-        public int magicDefense;
-
-        public int moveSpeed;
-        public int openSpeed;
-
-        public int requiredExp;
-
-        public Parameters(int level)
-        {
-            this.level = level;
-        }
-    }
-
     //レベルごとのパラメータ
-    [SerializeField] private List<Parameters> parameters;
+    [SerializeField] List<PlayerParameter> parameters;
 
     //指定レベルのステータスを取得
-    public Parameters GetStatus(int level) => parameters[level - 1];
+    public PlayerParameter GetStatus(int level) => parameters[level - 1];
 
     //最大レベルの取得
     public int MaxLevel => parameters.Count + 1;
@@ -45,7 +20,7 @@ public class StatusData : ScriptableObject
         for (int i = 0; i < parameters.Count; i++)
         {
             //新規作成
-            if (parameters[i] == null) parameters[i] = new Parameters(i + 1);
+            if (parameters[i] == null) parameters[i] = new PlayerParameter(i + 1);
 
             //レベルの指定
             parameters[i].GetType()
@@ -53,5 +28,4 @@ public class StatusData : ScriptableObject
                 ?.SetValue(parameters[i], i + 1);
         }
     }
-
 }

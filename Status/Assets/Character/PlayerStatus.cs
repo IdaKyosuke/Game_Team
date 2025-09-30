@@ -20,13 +20,17 @@ public class PlayerStatus : MonoBehaviour
     [SerializeField] UnityEvent m_onDamage;
     [SerializeField] UnityEvent m_onDeath;
 
-    private int[] m_equipmentStatus = new int[(int)StatusType.Length];  //実数値
-    private StatusData.Parameters m_status;
+    private EquipmentParameter m_totalEquipmentStatus;  //装備のステータスの実数値(合計値)
+    private PlayerParameter m_status;                   //自身の基礎ステータス
+    private PlayerParameter m_totalStatus;              //合計ステータス
     private int m_level;
     private int m_health;
     private int m_exp;
 
-    public StatusData.Parameters Value => m_status;
+    public PlayerParameter Value => m_status;
+
+    public PlayerParameter TotalStatus => m_totalStatus;
+
     public int Health => m_health;
 
     private void Start()
@@ -42,32 +46,23 @@ public class PlayerStatus : MonoBehaviour
     private void Update()
     {
         // 数値をリセット
-        for (int i = 0; i < (int)StatusType.Length; i++)
-        {
-            m_equipmentStatus[i] = 0;
-        }
+        m_totalStatus = new PlayerParameter(0);
+        m_totalEquipmentStatus = new EquipmentParameter();
 
         // 装備枠分回す
         foreach (GameObject item in m_equipment)
         {
-            // 装備枠が空の場合0を加算していく
-            if (item.transform.childCount == 0)
-            {
-                for (int i = 0; i < (int)StatusType.Length; i++)
-                {
-                    m_equipmentStatus[i] += 0;
-                }
-            }
-            else
-            {
-                // 装備のステータスを加算
-                Equipment info = item.transform.GetChild(0).GetComponent<Equipment>();
-                for (int i = 0; i < (int)StatusType.Length; i++)
-                {
-                    m_equipmentStatus[i] += info.GetInfo((StatusType)i);
-                }
-            }
+            // 装備枠が空の場合は次へ
+            //if (item.transform.childCount == 0) continue;
+
+            // 装備のステータスを加算
+            // EquipmentStatus info = item.transform.GetChild(0).GetComponent<EquipmentStatus>();
+            EquipmentStatus info = item.GetComponent<EquipmentStatus>();
+            m_totalEquipmentStatus += info.TotalStatus;
         }
+
+        //自身のステータスに装備のステータスを加算
+        m_totalStatus = m_status + m_totalEquipmentStatus;
     }
 
     public virtual void Identity() {}

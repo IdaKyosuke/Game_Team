@@ -1,9 +1,10 @@
 using System;
+using UnityEngine;
 
 [Serializable]
-public class EquipmentParameter
+public class PlayerParameter
 {
-    public int id;
+    [SerializeField] private int level;
 
     public int hp;
     public int mp;
@@ -18,7 +19,46 @@ public class EquipmentParameter
     public int moveSpeed;
     public int openSpeed;
 
-    public static EquipmentParameter operator+ (EquipmentParameter a, EquipmentParameter b)
+    public int requiredExp;
+
+    public int Level => level;
+
+    public PlayerParameter(int level)
+    {
+        this.level = level;
+    }
+
+    static public PlayerParameter operator +(PlayerParameter a, PlayerParameter b)
+    {
+        PlayerParameter result = new PlayerParameter(a.level);
+        result.hp = a.hp + b.hp;
+        result.mp = a.mp + b.mp;
+        result.physicalPower = a.physicalPower + b.physicalPower;
+        result.magicPower = a.magicPower + b.magicPower;
+        result.physicalDefense = a.physicalDefense + b.physicalDefense;
+        result.magicDefense = a.magicDefense + b.magicDefense;
+        result.moveSpeed = a.moveSpeed + b.moveSpeed;
+        result.openSpeed = a.openSpeed + b.openSpeed;
+        result.requiredExp = a.requiredExp + b.requiredExp;
+        return result;
+    }
+
+    static public PlayerParameter operator -(PlayerParameter a, PlayerParameter b)
+    {
+        PlayerParameter result = new PlayerParameter(a.level);
+        result.hp = a.hp - b.hp;
+        result.mp = a.mp - b.mp;
+        result.physicalPower = a.physicalPower - b.physicalPower;
+        result.magicPower = a.magicPower - b.magicPower;
+        result.physicalDefense = a.physicalDefense - b.physicalDefense;
+        result.magicDefense = a.magicDefense - b.magicDefense;
+        result.moveSpeed = a.moveSpeed - b.moveSpeed;
+        result.openSpeed = a.openSpeed - b.openSpeed;
+        result.requiredExp = a.requiredExp - b.requiredExp;
+        return result;
+    }
+
+    public static EquipmentParameter operator +(EquipmentParameter a, PlayerParameter b)
     {
         EquipmentParameter result = new EquipmentParameter();
         result.id = a.id; 
@@ -28,13 +68,13 @@ public class EquipmentParameter
         result.magicPower = a.magicPower + b.magicPower;
         result.physicalDefense = a.physicalDefense + b.physicalDefense;
         result.magicDefense = a.magicDefense + b.magicDefense;
+        result.attackSpeed = a.attackSpeed + b.attackSpeed;
         result.moveSpeed = a.moveSpeed + b.moveSpeed;
         result.openSpeed = a.openSpeed + b.openSpeed;
-        result.attackSpeed = a.attackSpeed + b.attackSpeed;
         return result;
     }
 
-    public static EquipmentParameter operator- (EquipmentParameter a, EquipmentParameter b)
+    public static EquipmentParameter operator -(EquipmentParameter a, PlayerParameter b)
     {
         EquipmentParameter result = new EquipmentParameter();
         result.id = a.id; 
@@ -44,41 +84,9 @@ public class EquipmentParameter
         result.magicPower = a.magicPower - b.magicPower;
         result.physicalDefense = a.physicalDefense - b.physicalDefense;
         result.magicDefense = a.magicDefense - b.magicDefense;
+        result.attackSpeed = a.attackSpeed - b.attackSpeed;
         result.moveSpeed = a.moveSpeed - b.moveSpeed;
         result.openSpeed = a.openSpeed - b.openSpeed;
-        result.attackSpeed = a.attackSpeed - b.attackSpeed;
-        return result;
-    }
-
-    static public PlayerParameter operator+ (PlayerParameter a, EquipmentParameter b)
-    {
-        PlayerParameter result = new PlayerParameter(a.Level);
-        result.hp = a.hp + b.hp;
-        result.mp = a.mp + b.mp;
-        result.physicalPower = a.physicalPower + b.physicalPower;
-        result.magicPower = a.magicPower + b.magicPower;
-        result.physicalDefense = a.physicalDefense + b.physicalDefense;
-        result.magicDefense = a.magicDefense + b.magicDefense;
-        result.moveSpeed = a.moveSpeed + b.moveSpeed;
-        result.openSpeed = a.openSpeed + b.openSpeed;
-        result.attackSpeed = a.attackSpeed + b.attackSpeed;
-        result.requiredExp = a.requiredExp; 
-        return result;
-    }
-
-    public static PlayerParameter operator- (PlayerParameter a, EquipmentParameter b)
-    {
-        PlayerParameter result = new PlayerParameter(a.Level);
-        result.hp = a.hp - b.hp;
-        result.mp = a.mp - b.mp;
-        result.physicalPower = a.physicalPower - b.physicalPower;
-        result.magicPower = a.magicPower - b.magicPower;
-        result.physicalDefense = a.physicalDefense - b.physicalDefense;
-        result.magicDefense = a.magicDefense - b.magicDefense;
-        result.moveSpeed = a.moveSpeed - b.moveSpeed;
-        result.openSpeed = a.openSpeed - b.openSpeed;
-        result.attackSpeed = a.attackSpeed - b.attackSpeed;
-        result.requiredExp = a.requiredExp; 
         return result;
     }
 }
