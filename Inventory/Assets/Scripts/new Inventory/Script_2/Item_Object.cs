@@ -163,9 +163,12 @@ public class Item_Object : MonoBehaviour
 			// 移動不可能
 			// 元あった位置に戻る
 			SetParentTransform(iconParent);
-			// 解放したマス目を埋めなおす
-			m_inventoryManager.GetComponent<StashManager>().MoveItem(m_pos, GetSize(), true, m_gridType);
 			rectTransform.anchoredPosition = prevPos;
+			if(!m_isEquip)
+			{
+				// 解放したマス目を埋めなおす
+				m_inventoryManager.GetComponent<StashManager>().MoveItem(m_pos, GetSize(), true, m_gridType);
+			}
 		}
 		// 当たり判定用の画像をアクティブにする
 		m_collider.SetActive(true);
