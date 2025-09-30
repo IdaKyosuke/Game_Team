@@ -21,7 +21,7 @@ public class Create_Maze : MonoBehaviour
 
 	[SerializeField] GameObject m_wallOutSide;
 
-	private int m_size = 45;
+	private int m_size = 42;
 
 	// Start is called before the first frame update
 	void Start()
@@ -98,14 +98,25 @@ public class Create_Maze : MonoBehaviour
 
 	private void SetMap()
 	{
-		for (int i = 0; i < m_frameSize; i++)
+		List<SendMapData> mapdatas = new List<SendMapData>();
+		for (int y  = 0; y < 3;++y)
 		{
-			for (int j = 0; j < m_frameSize; j++)
+			for (int i = 0; i < m_frameSize; i++)
 			{
-				Instantiate(m_mapPrefab[Random.Range(0, m_mapPrefab.Count)], new Vector3(m_size * i, 0, m_size * j), Quaternion.identity);
+				for (int j = 0; j < m_frameSize; j++)
+				{
+					mapdatas.Add(Instantiate(m_mapPrefab[Random.Range(0, m_mapPrefab.Count)], new Vector3(m_size * i, y * 4.5f, m_size * j), Quaternion.identity).GetComponent<SendMapData>());
+				}
 			}
 		}
 
 		Instantiate(m_wallOutSide);
+
+		CreateStairs(mapdatas);
+	}
+
+	private void CreateStairs(List<SendMapData> madDatas)
+	{
+
 	}
 }
