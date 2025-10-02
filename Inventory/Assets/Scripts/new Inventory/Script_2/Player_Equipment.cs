@@ -1,68 +1,58 @@
-using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.ShaderKeywordFilter;
 using UnityEngine;
-using TMPro;
 
 public class Player_Equipment : MonoBehaviour
 {
 	// 装備枠のリスト
 	[SerializeField] List<GameObject> m_equipments = new List<GameObject>();
+
+    // プレイヤーのステータス
+    [SerializeField] StatusData m_status;
+
 	// 実数値のリスト
-	private int[] m_weaponStatus = new int[(int)WeaponStatusType.Length];
-	// 数値表示用のテキスト
-	[SerializeField] List<TextMeshProUGUI> m_texts;
+	private EquipmentParameter m_weaponStatus;
 
     // Start is called before the first frame update
     void Start()
     {
 		// 数値をリセット
-		for(int i = 0; i < (int)WeaponStatusType.Length; i++)
-		{
-			m_weaponStatus[i] = 0;
-		}
-	}
+		m_weaponStatus = new EquipmentParameter();
+    }
 
     // Update is called once per frame
     void Update()
     {
 		// 数値をリセット
-		for (int i = 0; i < (int)WeaponStatusType.Length; i++)
-		{
-			m_weaponStatus[i] = 0;
-		}
+		m_weaponStatus = new EquipmentParameter();
 
-		// 装備枠分回す
-		foreach (GameObject slot in m_equipments)
+        // 装備枠分回す
+        foreach (GameObject slot in m_equipments)
 		{
 			// 装備枠が空の場合0を加算していく
-			if (slot.transform.childCount == 0)
-			{
-				for (int i = 0; i < (int)WeaponStatusType.Length; i++)
-				{
-					m_weaponStatus[i] += 0;
-				}
-			}
-			else
-			{
-				// 装備のステータスを加算
-				Item_Object info = slot.transform.GetChild(0).GetComponent<Item_Object>();
-				for (int i = 0; i < (int)WeaponStatusType.Length; i++)
-				{
-					m_weaponStatus[i] += info.GetEquipmentInfo((WeaponStatusType)i);
-				}
-			}
-		}
+			if (slot.transform.childCount == 0) continue;
 
-		// テキストの編集(デバッグ用)
-		for (int i = 0; i < (int)WeaponStatusType.Length; i++)
-		{
-			m_texts[i].SetText("{0}", m_weaponStatus[i]);
-		}
-	}
+            // 装備のステータスを加算
+            Item_Object info = slot.transform.GetChild(0).GetComponent<Item_Object>();
+			m_weaponStatus += info.GetEquipmentInfo();
+        }
 
-	// 装備枠を確認 => 空いていたら装備
-	public void QuickEquip(GameObject item)
+        // デバッグ表示
+        Debug.Log(
+            $"id:{m_weaponStatus.id}," +
+			$"hp:{m_weaponStatus.hp}, " +
+			$"mp:{m_weaponStatus.mp}, " +
+            $"physicalPower:{m_weaponStatus.physicalPower}, " +
+			$"magicPower:{m_weaponStatus.magicPower}, " +
+            $"physicalDefense:{m_weaponStatus.physicalDefense}," +
+			$"magicDefense:{m_weaponStatus.magicDefense}, " +
+            $"attackSpeed:{m_weaponStatus.attackSpeed}, " +
+			$"moveSpeed:{m_weaponStatus.moveSpeed}," +
+			$"openSpeed:{m_weaponStatus.openSpeed}"
+        );
+    }
+
+    // 装備枠を確認 => 空いていたら装備
+    public void QuickEquip(GameObject item)
 	{
 		foreach (GameObject slot in m_equipments)
 		{

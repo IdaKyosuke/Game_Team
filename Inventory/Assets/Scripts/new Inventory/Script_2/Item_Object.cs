@@ -33,13 +33,15 @@ public class Item_Object : MonoBehaviour
 	private bool m_isEquip = false;		// 現在装備されているか
 
 	// 装備の情報
-	[SerializeField] Info_Equipment m_equipmentInfo;
+	private EquipmentStatus m_equipmentInfo;
 
 	// Start is called before the first frame update
 	void Start()
     {
 		rectTransform = GetComponent<RectTransform>();
-		parentRectTransform = rectTransform.parent as RectTransform;        
+		m_equipmentInfo = GetComponent<EquipmentStatus>();
+
+        parentRectTransform = rectTransform.parent as RectTransform;        
 		// 現時点の親を保存
 		iconParent = transform.parent;
 
@@ -97,7 +99,7 @@ public class Item_Object : MonoBehaviour
 	private void QuickEquip()
 	{
 		// 現在の自分の入っている枠のタイプに応じて入れ替える
-		GameObject.FindWithTag("equipmentManager").GetComponent<Player_Equipment>().QuickEquip(gameObject);
+		GameObject.FindWithTag("equipmentManager").GetComponent<PlayerStatus>().QuickEquip(gameObject);
 	}
 
 	// アイテムを移動させる前の準備
@@ -215,9 +217,10 @@ public class Item_Object : MonoBehaviour
 	}
 
 	// 装備の場合に性能を返す
-	public int GetEquipmentInfo(WeaponStatusType type)
+	public EquipmentParameter GetEquipmentInfo()
 	{
-		return m_equipmentInfo.GetInfo(type);
+		m_equipmentInfo.SetPassve();
+        return m_equipmentInfo.TotalStatus;
 	}
 
 	// 装備状態の変更
