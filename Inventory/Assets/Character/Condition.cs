@@ -24,6 +24,8 @@ public class Condition : MonoBehaviour
 
     private Action[] m_onConditions;
 
+    public ConditionType CurrentCondition => m_condition;
+
     private void Awake()
     {
         m_status = GetComponent<PlayerStatus>();
@@ -72,6 +74,9 @@ public class Condition : MonoBehaviour
 
             Debug.Log("Burn : HP = " + m_status.Health);
         }
+
+        //状態異常を解除
+        m_condition = ConditionType.None;
     }
 
     private IEnumerator Frost()
@@ -84,6 +89,9 @@ public class Condition : MonoBehaviour
 
         //移動速度を元に戻す
         m_status.Value.moveSpeed += m_value;
+
+        //状態異常を解除
+        m_condition = ConditionType.None;
     }
 
     private IEnumerator Poison()
@@ -96,18 +104,23 @@ public class Condition : MonoBehaviour
             m_status.Damage(m_value);
             Debug.Log("Poison : HP = " + m_status.Health);
         }
+
+        //状態異常を解除
+        m_condition = ConditionType.None;
     }
 
     private IEnumerator Shock()
     {
-        //一定時間ごとにダメージ
-        for (int i = 0; i < m_count; ++i)
-        {
-            yield return new WaitForSeconds(m_interval);
+        //ダメージを与えて一定時間移動不可
 
-            m_status.Damage(m_value);
-            Debug.Log("Shock : HP = " + m_status.Health);
-        }
+        //自身のレベルに応じた即時ダメージ
+        m_status.Damage(m_value * m_status.Value.Level / 100);
+
+        //一定時間待機
+        yield return new WaitForSeconds(m_interval);
+
+        //状態異常を解除
+        m_condition = ConditionType.None;
     }
 
     private IEnumerator Regen()
@@ -120,5 +133,8 @@ public class Condition : MonoBehaviour
             m_status.Heal(m_value);
             Debug.Log("Regen : HP = " + m_status.Health);
         }
+
+        //状態異常を解除
+        m_condition = ConditionType.None;
     }
 }

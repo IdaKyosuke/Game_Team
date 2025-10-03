@@ -7,7 +7,6 @@ public class PlayerMove : MonoBehaviour
     [SerializeField] float m_jumpPower;
     [SerializeField] float m_gravity;
     [SerializeField] UnityEvent m_onPassiveSkill;
-    [SerializeField] ConditionType m_conditionType;
 
     private Vector3 m_moveDirection;
     private CharacterController m_controller;
@@ -23,19 +22,13 @@ public class PlayerMove : MonoBehaviour
         m_moveDirection = Vector3.zero;
     }
 
-    void Update()
-    {
-        //状態異常(デバッグ用)
-        if (Input.GetKeyDown(KeyCode.F1))
-        {
-            ChangeCondition(m_conditionType);
-        }
-    }
-
     void FixedUpdate()
     {
         //自由落下
         m_moveDirection.y -= m_gravity * Time.deltaTime;
+
+        //感電状態は移動不可
+        if (m_condition.CurrentCondition == ConditionType.Shock) return;
 
         //移動量の取得
         m_moveDirection = new Vector3(Input.GetAxis("Horizontal"), m_moveDirection.y, Input.GetAxis("Vertical"));
@@ -62,12 +55,6 @@ public class PlayerMove : MonoBehaviour
                 0.2f
             );
         }
-    }
-
-    public void ChangeCondition(ConditionType conditionType)
-    {
-        m_conditionType = conditionType;
-        m_condition.Init(m_conditionType);
     }
 
     public void OnDamage()

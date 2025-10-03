@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 
 [Serializable]
-[CreateAssetMenu(menuName = "ScriptableObject/EquipmentData")]
+[CreateAssetMenu(menuName = "ScriptableObject/Info EquipmentData")]
 public class EquipmentParameter : ScriptableObject
 {
     public int id;
@@ -22,7 +22,7 @@ public class EquipmentParameter : ScriptableObject
 
     public static EquipmentParameter operator+ (EquipmentParameter a, EquipmentParameter b)
     {
-        EquipmentParameter result = new EquipmentParameter();
+        EquipmentParameter result = CreateInstance<EquipmentParameter>();
         result.id = a.id; 
         result.hp = a.hp + b.hp;
         result.mp = a.mp + b.mp;
@@ -38,7 +38,7 @@ public class EquipmentParameter : ScriptableObject
 
     public static EquipmentParameter operator- (EquipmentParameter a, EquipmentParameter b)
     {
-        EquipmentParameter result = new EquipmentParameter();
+        EquipmentParameter result = CreateInstance<EquipmentParameter>();
         result.id = a.id; 
         result.hp = a.hp - b.hp;
         result.mp = a.mp - b.mp;

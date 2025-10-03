@@ -70,6 +70,10 @@ public class StashManager : MonoBehaviour
 	private Transform m_moveItemTransform;
 	private GridType m_checkType;
 
+	//確認用
+	[SerializeField] GameObject m_stashUi;
+
+
 	// アイテムリスト
 	private List<GameObject> m_itemList = new List<GameObject>();
 
@@ -118,7 +122,7 @@ public class StashManager : MonoBehaviour
 		}
 
 		m_checkType = GridType.Empty;
-	}
+    }
 
     // Update is called once per frame
     void Update()

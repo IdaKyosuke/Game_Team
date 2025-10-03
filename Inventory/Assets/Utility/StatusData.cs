@@ -2,7 +2,7 @@ using UnityEngine;
 using System;
 using System.Collections.Generic;
 
-[CreateAssetMenu(menuName = "ScriptableObject/PlayerData")]
+[CreateAssetMenu(menuName = "ScriptableObject/Info PlayerData")]
 public class StatusData : ScriptableObject
 {
     //レベルごとのパラメータ

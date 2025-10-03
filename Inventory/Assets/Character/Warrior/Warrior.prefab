@@ -212,6 +212,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_job: 0
   m_statusData: {fileID: 11400000, guid: 01ed2263679667b408bc6dce5c21cf88, type: 2}
+  m_equipments: []
   m_onDamage:
     m_PersistentCalls:
       m_Calls:
@@ -256,21 +257,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_jumpPower: 10
   m_gravity: 34
-  m_onUniqueSkill:
+  m_onPassiveSkill:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 545411651013535794}
-        m_TargetAssemblyTypeName: Warrior, Assembly-CSharp
-        m_MethodName: UniqueSkill
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
+  m_stashUI: {fileID: 0}
 --- !u!114 &-4990783294508849730
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -212,6 +212,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_job: 1
   m_statusData: {fileID: 11400000, guid: 0f77786e30a2f874e8a1c32b898098ce, type: 2}
+  m_equipments: []
   m_onDamage:
     m_PersistentCalls:
       m_Calls:
@@ -256,21 +257,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_jumpPower: 10
   m_gravity: 34
-  m_onUniqueSkill:
+  m_onPassiveSkill:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 3610951839185543242}
-        m_TargetAssemblyTypeName: Wizard, Assembly-CSharp
-        m_MethodName: UniqueSkill
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
+  m_stashUI: {fileID: 0}
 --- !u!114 &-4782108060782466662
 MonoBehaviour:
   m_ObjectHideFlags: 0
