@@ -5,18 +5,16 @@ using UnityEngine.UIElements;
 
 public class SendMapData : MonoBehaviour
 {
-	[SerializeField] List<Transform> m_stairsPos;		// ŠK’i
-	[SerializeField] List<Transform> m_enemyPos;		// “G
-	[SerializeField] List<Transform> m_treasurePos;     // •ó” 
-	[SerializeField] List<Transform> m_spawnPos;		// ƒvƒŒƒCƒ„[¶¬
+	[SerializeField] List<Transform> m_enemyPos;			// “G
+	[SerializeField] List<Transform> m_playerTreasurePos;	// •ó” 
 
     void Update()
     {
         
     }
 
-	public List<Transform> SendStairsPos()
+	public List<Transform> GetSpawnPos()
 	{
-		return m_stairsPos;
+		return m_playerTreasurePos;
 	}
 }
