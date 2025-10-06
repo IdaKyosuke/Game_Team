@@ -8,10 +8,10 @@ public class SendMapData : MonoBehaviour
 	[SerializeField] List<Transform> m_enemyPos;			// “G
 	[SerializeField] List<Transform> m_playerTreasurePos;	// •ó” 
 
-    void Update()
-    {
-        
-    }
+	public List<Transform> GetEnemyPos()
+	{
+		return m_enemyPos;
+	}
 
 	public List<Transform> GetSpawnPos()
 	{

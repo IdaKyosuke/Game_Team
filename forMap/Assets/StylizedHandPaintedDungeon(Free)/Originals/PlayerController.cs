@@ -11,7 +11,6 @@ public class PlayerController : MonoBehaviour
 	[SerializeField] private float moveSpeed;  //ˆÚ“®‘¬“x
 	[SerializeField] private float sensX = 2f;
 	[SerializeField] private float sensY = 2f;
-	[SerializeField] private float rayOffset = 0.28f;
 	private float rotationY, rotationX;
 	bool m_isGrounded;
 

@@ -14,11 +14,16 @@ public class Create_Maze : MonoBehaviour
 
 		Length,
 	}
-	
+
 	[SerializeField] GameObject m_stairsMap;
+	[SerializeField] GameObject m_enemy;
 	[SerializeField] GameObject m_treasure;
 	[SerializeField] int m_frameSize = 7;
 	[SerializeField] int m_mapHeight = 3;
+
+	[SerializeField] int m_playerSpawnPosAmount = 20;
+	[SerializeField] int m_treasureAmount = 20;
+	[SerializeField] int m_enemyAmount = 200;
 	private List<List<bool>> m_map = new List<List<bool>>();
 
 	[SerializeField] List<GameObject> m_mapPrefab;
@@ -26,6 +31,8 @@ public class Create_Maze : MonoBehaviour
 	[SerializeField] GameObject m_wallOutSide;
 
 	private int m_size = 42;
+
+	private List<Transform> m_playerSpawnPosList = new List<Transform>();
 
 	// Start is called before the first frame update
 	void Start()
@@ -130,6 +137,8 @@ public class Create_Maze : MonoBehaviour
 		Instantiate(m_wallOutSide);
 
 		SetPlayerTreasure(mapdatas);
+
+		SetEnemy(mapdatas);
 	}
 
 	private void SetPlayerTreasure(List<SendMapData> mapData)
@@ -144,43 +153,46 @@ public class Create_Maze : MonoBehaviour
 			}
 		}
 
-		for (int i = 0; i < 20; ++i)
+		for (int i = 0; i < m_playerSpawnPosAmount; ++i)
+		{
+			int index = Random.Range(0, spawnPos.Count);
+			m_playerSpawnPosList.Add(spawnPos[index]);
+			spawnPos.RemoveAt(index);
+		}
+
+		for (int i = 0; i < m_treasureAmount; ++i)
 		{
 			// プレイヤーは一度無視する
 			int index = Random.Range(0, spawnPos.Count);
-			Instantiate(m_treasure, spawnPos[index].position, spawnPos[index].rotation);
+			Instantiate(m_treasure, 
+				spawnPos[index].position,
+				spawnPos[index].rotation);
 			spawnPos.RemoveAt(index);
 		}
 	}
 
-	/*
-	private void CreateStairs(List<SendMapData> mapDatas)
+	private void SetEnemy(List<SendMapData> mapData)
 	{
-		int oneFloorSize = (int)Mathf.Pow(m_frameSize, 2);
-		// 階層ごと
-		for (int y = 0; y < m_mapHeight; ++y)
+		List<Transform> spawnPos = new List<Transform>();
+		foreach (SendMapData data in mapData)
 		{
-			// その階層の階段の位置場所を決める引数リスト
-			List<int> nums = new List<int>();
-			for (int i = oneFloorSize * y; i < oneFloorSize * (y + 1); ++i)
+			foreach (Transform t in data.GetEnemyPos())
 			{
-				nums.Add(i);
-			}
-
-			for (int i = 0; i < 3; ++i)
-			{
-				int index = nums[Random.Range(0, nums.Count)];
-				Transform stairTransform = mapDatas[index].SendStairsPos()[0];
-				Instantiate(m_stairs, stairTransform.position, stairTransform.rotation);
-				nums.Remove(index);
-			}
-
-			for (int i = 0; i < nums.Count; ++i)
-			{
-				Transform ceilingTransform = mapDatas[nums[i]].SendStairsPos()[0];
-				Instantiate(m_ceiling, ceilingTransform.position, ceilingTransform.rotation);
+				// 敵のスポーンポジションを全部入れる
+				spawnPos.Add(t);
 			}
 		}
+
+		for (int i = 0; i < m_enemyAmount; ++i)
+		{
+			int index = Random.Range(0, spawnPos.Count);
+			Instantiate(m_enemy, spawnPos[index].position, spawnPos[index].rotation);
+			spawnPos.RemoveAt(index);
+		}
 	}
-	*/
+
+	public List<Transform> GetPlayerSpawnPos()
+	{
+		return m_playerSpawnPosList;
+	}
 }
