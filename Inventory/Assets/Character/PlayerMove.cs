@@ -1,12 +1,12 @@
 using UnityEngine;
 using UnityEngine.Events;
-using static Condition;
 
 public class PlayerMove : MonoBehaviour
 {
     [SerializeField] float m_jumpPower;
     [SerializeField] float m_gravity;
     [SerializeField] UnityEvent m_onPassiveSkill;
+    
 
     private Vector3 m_moveDirection;
     private CharacterController m_controller;
@@ -28,7 +28,7 @@ public class PlayerMove : MonoBehaviour
         m_moveDirection.y -= m_gravity * Time.deltaTime;
 
         //Š´“dó‘Ô‚ÍˆÚ“®•s‰Â
-        if (m_condition.CurrentCondition == ConditionType.Shock) return;
+        if (m_condition.CurrentCondition == Condition.ConditionType.Shock) return;
 
         //ˆÚ“®—Ê‚Ìæ“¾
         m_moveDirection = new Vector3(Input.GetAxis("Horizontal"), m_moveDirection.y, Input.GetAxis("Vertical"));

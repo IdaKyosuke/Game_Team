@@ -32,7 +32,7 @@ public class GridIcon_Equipment : MonoBehaviour
 	// Start is called before the first frame update
 	void Start()
 	{
-		GameObject.FindWithTag("equipmentManager").GetComponent<PlayerStatus>().SetSlot(gameObject);
+		//GameObject.FindWithTag("equipmentManager").GetComponent<PlayerStatus>().SetSlot(gameObject);
 		m_pastInfo = m_fillUi;
 		if(!m_moveItemTransform)
 		{

@@ -1,12 +1,12 @@
 using UnityEngine;
 
+public enum AttackType
+{
+    Physical,
+    Magical,
+}
+
 public class Weapon : EquipmentStatus
 {
-    public enum AttackType
-    {
-        Physical,
-        Magical,
-    }
-
     [SerializeField] AttackType m_attackType;  
 }

@@ -55,6 +55,7 @@ public class PlayerStatus : MonoBehaviour
         // 装備枠分回す
         foreach (GameObject slot in m_equipments)
         {
+            Debug.Log(m_equipments.Count);
             // 装備枠が空の場合0を加算していく
             if (slot.transform.childCount == 0) continue;
 
@@ -104,13 +105,23 @@ public class PlayerStatus : MonoBehaviour
         m_status = m_statusData.GetStatus(m_level);
     }
 
-    public void Damage(int power)
+    public void Damage(int power, AttackType attackType)
     {
         //既に死んでいるならダメージを与えない
         if (m_health <= 0) return;
 
-        //ダメージ計算
-        //int damage = (power * 2) - (m_status.defense / 3);
+        //防御力を考慮したダメージ計算
+        int damage;
+        switch (attackType)
+        { 
+            case AttackType.Physical:
+                damage = (power * 2) - (m_status.physicalDefense / 3);
+                break;
+                    
+            case AttackType.Magical:
+                damage = (power * 2) - (m_status.magicDefense / 3);
+                break;
+        }
 
         //マイナスのダメージは与えない
         if (power <= 0) return;

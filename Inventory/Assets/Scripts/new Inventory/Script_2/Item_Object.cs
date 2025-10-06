@@ -77,8 +77,14 @@ public class Item_Object : MonoBehaviour
 	{
 		return m_info.GetSize();
 	}
-	
-	public void PointerEnter()
+
+    // アイテムのインデックスを取得
+	public Vector2Int GetIndex()
+	{
+		return m_pos;
+    }
+
+    public void PointerEnter()
 	{
 		m_isPointerEnter = true;
 	}

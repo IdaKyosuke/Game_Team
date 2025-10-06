@@ -29,7 +29,10 @@ public class GridIcon : MonoBehaviour
 	void Start()
     {
 		m_pastInfo = m_fillUi;
-		m_image = GetComponent<Image>();
+		if(!m_image)
+		{
+			m_image = GetComponent<Image>();
+		}
 	}
 
     // Update is called once per frame
@@ -63,7 +66,11 @@ public class GridIcon : MonoBehaviour
 	public void SetUi(bool value)
 	{
 		m_fillUi = value;
-		m_image.enabled = !value;
+        if (!m_image)
+        {
+            m_image = GetComponent<Image>();
+        }
+        m_image.enabled = !value;
 	}
 
 	// タイプをセットする
