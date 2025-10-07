@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEditor.EventSystems;
 using UnityEngine;
 using UnityEngine.Events;
@@ -20,6 +21,10 @@ public class PlayerMove : MonoBehaviour
 
     public Info_InventorySize InventortSize => m_inventortSize;
 
+
+	// レイの当たった敵を保管する用
+	private GameObject m_rayTarget;
+
     void Start()
     {
         m_controller = GetComponent<CharacterController>();
@@ -36,15 +41,39 @@ public class PlayerMove : MonoBehaviour
             //プレイヤー以外は無視
             if (!hit.transform.gameObject.CompareTag("Player")) return;
 
-            Debug.Log("Hit!!!!!!!!!!!!");
+			// レイの当たった敵を保管
+			m_rayTarget = hit.transform.gameObject;
+
+			Debug.Log("Hit!!!!!!!!!!!!");
 
             //Eキーが押されていなければ無視
-            if (!Input.GetKeyDown("e")) return;
-
-            //インベントリUIの表示
-            m_stashManager.GetComponent<StashManager>().CreateStashUi(hit.transform.GetComponent<PlayerMove>().InventortSize);
+            if (Input.GetKeyDown("e"))
+			{
+				m_stashManager.GetComponent<StashManager>().IsScavenger(true);
+				//インベントリUIの表示
+				m_stashManager.GetComponent<StashManager>().CreateStashUi(
+					m_rayTarget.GetComponent<Inventory_Info>().GetInfo(),
+					m_rayTarget.GetComponent<StashManager>().GetItemList()
+					);
+			}
         }
-    }
+
+		if (Input.GetKeyDown("tab"))
+		{
+			m_stashManager.GetComponent<StashManager>().ManageUiActiveInfo();
+		}
+
+		if (Input.GetKeyDown("1"))
+		{
+			Debug.Log("Add 1");
+			m_stashManager.GetComponent<StashManager>().AddItemInventory();
+		}
+		else if (Input.GetKeyDown("2"))
+		{
+			Debug.Log("Add 2");
+			m_stashManager.GetComponent<StashManager>().AddItemStash();
+		}
+	}
 
     void FixedUpdate()
     {
@@ -90,4 +119,15 @@ public class PlayerMove : MonoBehaviour
     {
         Debug.Log("Death!!!!!!!");
     }
+
+	// 変更後のアイテムリストを返す
+	public void ReturnItemList(List<GameObject> items)
+	{
+		if (!m_rayTarget) return;
+
+		Debug.Log(items.Count);
+		m_rayTarget.GetComponent<StashManager>().CopyItemList(items);
+		// ターゲットを空にする
+		m_rayTarget = null;
+	}
 }

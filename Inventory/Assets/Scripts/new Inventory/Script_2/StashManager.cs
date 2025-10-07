@@ -68,7 +68,7 @@ public class StashManager : MonoBehaviour
 	private Grid[,] m_stashGridList;
 	private Grid[,] m_inventoryGridList;
 	private Transform m_moveItemTransform;
-	private GridType m_checkType;
+	private GridType m_checkType = GridType.Empty;
 	
 	[SerializeField] GameObject m_stashUiParent;
 
@@ -90,7 +90,7 @@ public class StashManager : MonoBehaviour
 	[SerializeField] Transform m_stashPos;
 
     // 自分以外のアイテムリスト
-    List<GameObject> m_otherItemList = new List<GameObject>();
+    private List<GameObject> m_otherItemList = new List<GameObject>();
 
 	// テスト用
 	[SerializeField] Info_InventorySize info1;
@@ -98,47 +98,36 @@ public class StashManager : MonoBehaviour
 
 	// デバッグ用アイテムリスト
 	[SerializeField] List<GameObject> items = new List<GameObject>();
+	// 自分の親を保管
+	[SerializeField] GameObject m_parent;
+
+
+	// テスト用
+	[SerializeField] bool m_isPlayer = true;
+	private bool m_isScavenger = false;
 
     // Start is called before the first frame update
     void Start()
     {
+		if (!m_isPlayer) return;
 		// アイテム移動用のオブジェクト
 		m_moveItemTransform = GameObject.FindWithTag("moveItemTransform").transform;
 
-        CriateInventory(GridType.Stash);
-		CriateInventory(GridType.Inventory);
-
-        m_checkType = GridType.Empty;
+		CreateInventory(GridType.Stash, GridType.Stash);
+		CreateInventory(GridType.Inventory, GridType.Inventory);
     }
 
     // Update is called once per frame
     void Update()
     {
-		if(Input.GetMouseButtonUp(0))
+		if (!m_isPlayer) return;
+
+		if (Input.GetMouseButtonUp(0))
 		{
 			SetItem();
 			// 未選択状態に戻す
 			m_checkType = GridType.Empty;
 		}
-
-		if(Input.GetKeyDown("tab"))
-		{
-            ManageUiActiveInfo();
-        }
-
-		if(Input.GetKeyDown("1"))
-		{
-			GameObject item = Instantiate(items[Random.Range(0, items.Count)], m_moveItemTransform);
-			item.GetComponent<Item_Object>().ChangeParent(m_moveItemTransform);
-			AddItem(GridType.Inventory, item);
-        }
-		else if(Input.GetKeyDown("2"))
-		{
-			if (!m_stashUi) return;
-            GameObject item = Instantiate(items[Random.Range(0, items.Count)], m_moveItemTransform);
-            item.GetComponent<Item_Object>().ChangeParent(m_moveItemTransform);
-			AddItem(GridType.Stash, item);
-        }
     }
 
 	// アイテムを空き枠にセットする
@@ -146,10 +135,8 @@ public class StashManager : MonoBehaviour
 	{
 		// 移動中のアイテムがないときは無視
 		if (m_moveItemTransform.childCount <= 0) return;
-
 		// アイテム移動用のオブジェクトの中身を確認
 		GameObject item = m_moveItemTransform.GetChild(0).gameObject;
-
 		Grid[,] list = null;
 		int height = 0;
 		int width = 0;
@@ -169,7 +156,7 @@ public class StashManager : MonoBehaviour
 				break;
 
 			// GridType.Empty
-			default:
+			case GridType.Empty:
 				// マス目を選択していないとき
 				item.GetComponent<Item_Object>().PointerUp(false);
 				return;
@@ -206,10 +193,12 @@ public class StashManager : MonoBehaviour
 						if (m_checkType == GridType.Inventory)
 						{
 							m_itemList.Add(item);
+							m_otherItemList.Remove(item);
 						}
 						else
 						{
 							m_itemList.Remove(item);
+							m_otherItemList.Add(item);
 						}
 					}
 					else
@@ -339,6 +328,7 @@ public class StashManager : MonoBehaviour
 	public void StartSet(GridType type)
 	{
 		m_checkType = type;
+		Debug.Log(m_checkType);
 	}
 
 	// インベントリのアイテムリストを返す
@@ -386,25 +376,11 @@ public class StashManager : MonoBehaviour
 			height = m_inventoryHeight;
 			width = m_inventoryWidth;
 		}
-		Debug.Log("ready");
-
 		// リストを回す
 		for (int i = 0; i < height; i++)
 		{
 			for (int j = 0; j < width; j++)
 			{
-				// 枠外にはみ出すときはそもそも確認しない
-				if (j + (size.x - 1) >= width)
-				{
-					Debug.Log("over x");
-					return false;
-				}
-				if (i + (size.y - 1) >= height)
-                {
-                    Debug.Log("over y");
-                    return false; 
-				}
-
                 if (CheckSpace(new Vector2Int(j, i), size, isEquip, true))
 				{
 					// 移動先の子オブジェクトに設定する
@@ -434,10 +410,18 @@ public class StashManager : MonoBehaviour
 						if (m_checkType == GridType.Inventory)
 						{
 							m_itemList.Add(item);
+							if(m_isScavenger)
+							{
+								m_otherItemList.Remove(item);
+							}
 						}
 						else
 						{
 							m_itemList.Remove(item);
+							if (m_isScavenger)
+							{
+								m_otherItemList.Add(item);
+							}
 						}
 					}
 					return true;
@@ -467,8 +451,9 @@ public class StashManager : MonoBehaviour
 	// アイテムリストをコピーする
 	public void CopyItemList(List<GameObject> list)
 	{
-		m_itemList = new List<GameObject>(list);
-    }
+		m_itemList = new List<GameObject>(list); 
+		Debug.Log(m_itemList.Count);
+	}
 
 	// インベントリの種類とサイズの情報を渡す
 	public Info_InventorySize GetInventoryInfo()
@@ -477,7 +462,7 @@ public class StashManager : MonoBehaviour
     }
 
     // アイテム欄を作成する
-    public void CreateStashUi(Info_InventorySize info)
+    public void CreateStashUi(Info_InventorySize info, List<GameObject> itemList)
 	{
 		if(m_stashUi)
 		{
@@ -489,8 +474,8 @@ public class StashManager : MonoBehaviour
 		{
 			case Info_InventorySize.InventoryType.Inventory:
 				m_stashUi = Instantiate(m_inventoryUiPrefab, m_stashPos);
-                //m_otherItemList = null;
-                break;
+				m_otherItemList = itemList;
+				break;
 
 			case Info_InventorySize.InventoryType.Stash:
                 m_stashUi = Instantiate(m_stashUiPrefab, m_stashPos);
@@ -499,8 +484,8 @@ public class StashManager : MonoBehaviour
 		m_stashHeight = info.GetSize.x;
         m_stashWidth = info.GetSize.y;
         m_stashGridParent = m_stashUi.GetComponent<Inventory_Parent>().GetContent;
-        // スタッシュを作成
-        CriateInventory(GridType.Stash);
+		// スタッシュを作成
+		CreateInventory(GridType.Stash, GridType.Stash);
 		// リストをUIに反映
 		foreach(var item in m_otherItemList)
 		{
@@ -512,7 +497,8 @@ public class StashManager : MonoBehaviour
 			else
 			{
 				// 普通のアイテム
-				MoveItem(item.GetComponent<Item_Object>().GetIndex(),
+				MoveItem(
+					item.GetComponent<Item_Object>().GetIndex(),
 					item.GetComponent<Item_Object>().GetSize(),
 					true,
 					GridType.Stash
@@ -523,13 +509,13 @@ public class StashManager : MonoBehaviour
     }
 
 	// 内部的なインベントリを作成する
-	private void CriateInventory(GridType type)
+	private void CreateInventory(GridType uiType, GridType gridType)
 	{
 		Grid[,] list = null;
 		int height = 0;
 		int width = 0;
 		GameObject parent = null;
-        switch (type)
+        switch (uiType)
 		{
 			case GridType.Inventory:
 				// インベントリ用マス目の配列を作成
@@ -563,18 +549,20 @@ public class StashManager : MonoBehaviour
                 count++;
                 // 中身を空にする
                 list[j, i].SetInfo(false);
-                list[j, i].SetGridType(type);
+                list[j, i].SetGridType(gridType);
             }
         }
-
     }
 
     // インベントリのUIを開閉(Tab用)
-	private void ManageUiActiveInfo()
+	public void ManageUiActiveInfo()
 	{
 		if (m_stashUiParent.activeSelf)
 		{
             m_stashUiParent.SetActive(false);
+			// 閉じるときにスタッシュの変更を相手に渡す
+			m_parent.GetComponent<PlayerMove>().ReturnItemList(m_otherItemList);
+			IsScavenger(false);
         }
 		else
 		{
@@ -586,4 +574,25 @@ public class StashManager : MonoBehaviour
 	{
         m_stashUiParent.SetActive(true);
     }
+
+	// デバッグ用関数
+	public void AddItemInventory()
+	{
+		GameObject item = Instantiate(items[Random.Range(0, items.Count)], m_moveItemTransform);
+		item.GetComponent<Item_Object>().ChangeParent(m_moveItemTransform);
+		AddItem(GridType.Inventory, item);
+	}
+
+	public void AddItemStash()
+	{
+		if (!m_stashUi) return;
+		GameObject item = Instantiate(items[Random.Range(0, items.Count)], m_moveItemTransform);
+		item.GetComponent<Item_Object>().ChangeParent(m_moveItemTransform);
+		AddItem(GridType.Stash, item);
+	}
+
+	public void IsScavenger(bool value)
+	{
+		m_isScavenger = value;
+	}
 }
