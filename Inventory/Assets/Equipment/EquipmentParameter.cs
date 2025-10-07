@@ -16,13 +16,13 @@ public class EquipmentParameter : ScriptableObject
     public int physicalDefense;
     public int magicDefense;
 
-    public int attackSpeed;
     public int moveSpeed;
     public int openSpeed;
+    public int attackSpeed;
 
     public static EquipmentParameter operator+ (EquipmentParameter a, EquipmentParameter b)
     {
-        EquipmentParameter result = CreateInstance<EquipmentParameter>();
+        EquipmentParameter result = new EquipmentParameter ();
         result.id = a.id; 
         result.hp = a.hp + b.hp;
         result.mp = a.mp + b.mp;
@@ -38,7 +38,7 @@ public class EquipmentParameter : ScriptableObject
 
     public static EquipmentParameter operator- (EquipmentParameter a, EquipmentParameter b)
     {
-        EquipmentParameter result = CreateInstance<EquipmentParameter>();
+        EquipmentParameter result = new EquipmentParameter();
         result.id = a.id; 
         result.hp = a.hp - b.hp;
         result.mp = a.mp - b.mp;

@@ -234,7 +234,6 @@ public class Item_Object : MonoBehaviour
 	// ‘•”õ‚Ìê‡‚É«”\‚ğ•Ô‚·
 	public EquipmentParameter GetEquipmentInfo()
 	{
-		m_equipmentInfo.SetPassve();
         return m_equipmentInfo.TotalStatus;
 	}
 

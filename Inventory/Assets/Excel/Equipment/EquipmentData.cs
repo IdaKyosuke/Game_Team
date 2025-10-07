@@ -4,5 +4,5 @@ using UnityEngine;
 [ExcelAsset]
 public class EquipmentData : ScriptableObject
 {
-    public List<EquipmentParameter> EquipmentAbility;
+    public List<EquipmentPassive> EquipmentAbility;
 }
