@@ -124,7 +124,7 @@ GameObject:
   - component: {fileID: -4782108060782466662}
   m_Layer: 0
   m_Name: Wizard
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -260,7 +260,8 @@ MonoBehaviour:
   m_onPassiveSkill:
     m_PersistentCalls:
       m_Calls: []
-  m_stashUI: {fileID: 0}
+  m_stashManager: {fileID: 0}
+  m_inventortSize: {fileID: 11400000, guid: 84e296e4b3b983a4d8436ec81f82a876, type: 2}
 --- !u!114 &-4782108060782466662
 MonoBehaviour:
   m_ObjectHideFlags: 0

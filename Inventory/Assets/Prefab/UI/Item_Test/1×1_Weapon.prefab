@@ -149,6 +149,7 @@ GameObject:
   - component: {fileID: 5234990495531110268}
   - component: {fileID: 5480193534937253911}
   - component: {fileID: 7885398735693034721}
+  - component: {fileID: 1661365772623069853}
   m_Layer: 5
   m_Name: "1\xD71_Weapon"
   m_TagString: Untagged
@@ -163,7 +164,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6859240578938640855}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -229,4 +230,17 @@ MonoBehaviour:
   m_info: {fileID: 11400000, guid: d38d197981950f849b45a27dd11732d9, type: 2}
   m_collider: {fileID: 4149542976945477391}
   m_equipmentType: 4
-  m_equipmentInfo: {fileID: 11400000, guid: 4bc6fdec183354348923733c9f9d3e3c, type: 2}
+--- !u!114 &1661365772623069853
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6859240578938640855}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 48b580700f62afc4e9ca2630569fcadf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_statusData: {fileID: 11400000, guid: 4588732995d3737469b2c71e55a364d6, type: 2}
+  m_passiveSkillData: {fileID: 11400000, guid: 9da5a32f20d4af4498c127b1660f103d, type: 2}

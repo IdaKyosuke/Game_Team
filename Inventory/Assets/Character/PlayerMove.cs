@@ -1,12 +1,16 @@
+using UnityEditor.EventSystems;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.EventSystems;
 
 public class PlayerMove : MonoBehaviour
 {
     [SerializeField] float m_jumpPower;
     [SerializeField] float m_gravity;
     [SerializeField] UnityEvent m_onPassiveSkill;
-    
+    [SerializeField] GameObject m_stashManager;
+    [SerializeField] Info_InventorySize m_inventortSize;
+
 
     private Vector3 m_moveDirection;
     private CharacterController m_controller;
@@ -14,12 +18,32 @@ public class PlayerMove : MonoBehaviour
     private PlayerStatus m_playerStatus;
     private Condition m_condition;
 
+    public Info_InventorySize InventortSize => m_inventortSize;
+
     void Start()
     {
         m_controller = GetComponent<CharacterController>();
         m_playerStatus = GetComponent<PlayerStatus>();
         m_condition = GetComponent<Condition>();
         m_moveDirection = Vector3.zero;
+    }
+
+    private void Update()
+    {
+        //前方にRayを飛ばす
+        if (Physics.Raycast(transform.position, transform.forward, out var hit))
+        {
+            //プレイヤー以外は無視
+            if (!hit.transform.gameObject.CompareTag("Player")) return;
+
+            Debug.Log("Hit!!!!!!!!!!!!");
+
+            //Eキーが押されていなければ無視
+            if (!Input.GetKeyDown("e")) return;
+
+            //インベントリUIの表示
+            m_stashManager.GetComponent<StashManager>().CreateStashUi(hit.transform.GetComponent<PlayerMove>().InventortSize);
+        }
     }
 
     void FixedUpdate()

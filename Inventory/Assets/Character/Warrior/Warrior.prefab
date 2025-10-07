@@ -124,7 +124,7 @@ GameObject:
   - component: {fileID: -4990783294508849730}
   m_Layer: 0
   m_Name: Warrior
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -260,7 +260,8 @@ MonoBehaviour:
   m_onPassiveSkill:
     m_PersistentCalls:
       m_Calls: []
-  m_stashUI: {fileID: 0}
+  m_stashManager: {fileID: 0}
+  m_inventortSize: {fileID: 0}
 --- !u!114 &-4990783294508849730
 MonoBehaviour:
   m_ObjectHideFlags: 0

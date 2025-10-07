@@ -49,7 +49,10 @@ public class Item_Object : MonoBehaviour
 		m_moveItemTransform = GameObject.FindWithTag("moveItemTransform").transform;
 
 		m_inventoryManager = GameObject.FindWithTag("inventoryManager");
-	}
+
+		// スケールを1にする
+		rectTransform.localScale = Vector3.one;
+    }
 
     // Update is called once per frame
     void Update()
@@ -206,8 +209,14 @@ public class Item_Object : MonoBehaviour
 		parentRectTransform = rectTransform.parent as RectTransform;
 	}
 
-	// 選択された配列のインデックスを覚える
-	public void SetIndex(Vector2Int index)
+	// 外部から親を変更する
+	public void ChangeParent(Transform parent)
+	{
+		SetParentTransform(parent);
+    }
+
+    // 選択された配列のインデックスを覚える
+    public void SetIndex(Vector2Int index)
 	{
 		m_pos = index;
 	}
@@ -238,5 +247,10 @@ public class Item_Object : MonoBehaviour
 	public bool GetEquipValue()
 	{
 		return m_isEquip;
+	}
+
+	public void Remove()
+	{
+		Destroy(gameObject);
 	}
 }

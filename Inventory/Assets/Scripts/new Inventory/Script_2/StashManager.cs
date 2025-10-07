@@ -96,8 +96,8 @@ public class StashManager : MonoBehaviour
 	[SerializeField] Info_InventorySize info1;
 	[SerializeField] Info_InventorySize info2;
 
-
-
+	// デバッグ用アイテムリスト
+	[SerializeField] List<GameObject> items = new List<GameObject>();
 
     // Start is called before the first frame update
     void Start()
@@ -128,11 +128,16 @@ public class StashManager : MonoBehaviour
 
 		if(Input.GetKeyDown("1"))
 		{
-			CreateStashUi(info1);
+			GameObject item = Instantiate(items[Random.Range(0, items.Count)], m_moveItemTransform);
+			item.GetComponent<Item_Object>().ChangeParent(m_moveItemTransform);
+			AddItem(GridType.Inventory, item);
         }
 		else if(Input.GetKeyDown("2"))
 		{
-            CreateStashUi(info2);
+			if (!m_stashUi) return;
+            GameObject item = Instantiate(items[Random.Range(0, items.Count)], m_moveItemTransform);
+            item.GetComponent<Item_Object>().ChangeParent(m_moveItemTransform);
+			AddItem(GridType.Stash, item);
         }
     }
 
@@ -344,7 +349,7 @@ public class StashManager : MonoBehaviour
 
 	// --- ショートカット ---
 	// インベントリ ⇔ スタッシュ（空き枠を探して自動で入れ替える）
-	public void QuickMoveItem(GridType type, GameObject item, bool isEquip)
+	public bool QuickMoveItem(GridType type, GameObject item, bool isEquip, bool isAdd = false)
 	{
 		Vector2Int size = item.GetComponent<Item_Object>().GetSize();
 
@@ -381,14 +386,26 @@ public class StashManager : MonoBehaviour
 			height = m_inventoryHeight;
 			width = m_inventoryWidth;
 		}
-		
+		Debug.Log("ready");
 
 		// リストを回す
 		for (int i = 0; i < height; i++)
 		{
 			for (int j = 0; j < width; j++)
 			{
-				if (CheckSpace(new Vector2Int(j, i), size, isEquip, true))
+				// 枠外にはみ出すときはそもそも確認しない
+				if (j + (size.x - 1) >= width)
+				{
+					Debug.Log("over x");
+					return false;
+				}
+				if (i + (size.y - 1) >= height)
+                {
+                    Debug.Log("over y");
+                    return false; 
+				}
+
+                if (CheckSpace(new Vector2Int(j, i), size, isEquip, true))
 				{
 					// 移動先の子オブジェクトに設定する
 					item.GetComponent<Item_Object>().PointerUp(
@@ -423,19 +440,28 @@ public class StashManager : MonoBehaviour
 							m_itemList.Remove(item);
 						}
 					}
-					return;
+					return true;
 				}
 			}
 		}
 
-		// アイテムが入るスペースがないので元の位置に戻す
-		item.GetComponent<Item_Object>().PointerUp(false);
-	}
+		if(isAdd)
+		{
+            item.GetComponent<Item_Object>().Remove();
+        }
+		else
+		{
+            // アイテムが入るスペースがないので元の位置に戻す
+            item.GetComponent<Item_Object>().PointerUp(false);
+        }
+
+		return false;
+    }
 
 	// アイテムを外部から追加する
-	public void AddItem(GameObject item)
+	public void AddItem(GridType type, GameObject item)
 	{
-		m_itemList.Add(item);
+		QuickMoveItem(type, item, false, true);
     }
 
 	// アイテムリストをコピーする
@@ -473,7 +499,6 @@ public class StashManager : MonoBehaviour
 		m_stashHeight = info.GetSize.x;
         m_stashWidth = info.GetSize.y;
         m_stashGridParent = m_stashUi.GetComponent<Inventory_Parent>().GetContent;
-		Debug.Log(m_stashGridParent.name);
         // スタッシュを作成
         CriateInventory(GridType.Stash);
 		// リストをUIに反映
@@ -494,7 +519,7 @@ public class StashManager : MonoBehaviour
 					);
 			}
 		}
-		ManageUiActiveInfo();
+		OpenUi();
     }
 
 	// 内部的なインベントリを作成する
@@ -525,7 +550,6 @@ public class StashManager : MonoBehaviour
                 break;
         }
 
-		Debug.Log(list.Length);
         // スタッシュ用配列を作成
         // 配列とマス目の状態を合わせる
         int count = 0;
@@ -545,18 +569,21 @@ public class StashManager : MonoBehaviour
 
     }
 
-    // インベントリのUIを開閉
+    // インベントリのUIを開閉(Tab用)
 	private void ManageUiActiveInfo()
 	{
 		if (m_stashUiParent.activeSelf)
 		{
             m_stashUiParent.SetActive(false);
-			Debug.Log("Close");
         }
 		else
 		{
 			m_stashUiParent.SetActive(true);
-			Debug.Log("Open");
         }
+    }
+
+	private void OpenUi()
+	{
+        m_stashUiParent.SetActive(true);
     }
 }
