@@ -5,26 +5,17 @@ using UnityEngine;
 
 public class Create_Maze : MonoBehaviour
 {
-	enum Direction
-	{
-		Up,
-		Down,
-		Left,
-		Right,
-
-		Length,
-	}
-
 	[SerializeField] GameObject m_stairsMap;
 	[SerializeField] GameObject m_enemy;
-	[SerializeField] GameObject m_treasure;
+	[SerializeField] GameObject m_portal;
+	[SerializeField] GameObject[] m_treasure = new GameObject[4];
 	[SerializeField] int m_frameSize = 7;
 	[SerializeField] int m_mapHeight = 3;
 
 	[SerializeField] int m_playerSpawnPosAmount = 20;
-	[SerializeField] int m_treasureAmount = 20;
+	[SerializeField] int m_treasureAmount = 50;
+	[SerializeField] int m_portalPosAmount = 5;
 	[SerializeField] int m_enemyAmount = 200;
-	private List<List<bool>> m_map = new List<List<bool>>();
 
 	[SerializeField] List<GameObject> m_mapPrefab;
 
@@ -37,74 +28,7 @@ public class Create_Maze : MonoBehaviour
 	// Start is called before the first frame update
 	void Start()
     {
-		/*
-		// 探索用マップを作成
-		for(int i = 0; i < m_frameSize; i++)
-		{
-			m_map.Add(new List<bool>());
-
-			for(int j = 0; j < m_frameSize; j++)
-			{
-				m_map[i].Add(false);
-			}
-		}
-
-		// 偶数マスを選択（スタートする座標）
-		int x = 0 + Random.Range(0, m_frameSize / 2) * 2;
-		int y = 0 + Random.Range(0, m_frameSize / 2) * 2;
-
-		// マップ作成
-		MakeMap(x, y);
-
-		// マップ配置
-		SetPrefab();
-		*/
 		SetMap();
-	}
-
-	private void MakeMap(int x, int y)
-	{
-		// 道をtrueにする
-		m_map[x][y] = true;
-
-		// 右隣りが同じ色？
-		if (x + 2 < m_frameSize && !m_map[x + 2][y])
-		{
-			m_map[x + 1][y] = true;
-			MakeMap(x + 2, y);
-		}
-		// 左隣りが同じ色？
-		if (x - 2 >= 0 && !m_map[x - 2][y])
-		{
-			m_map[x - 1][y] = true;
-			MakeMap(x - 2, y);
-		}
-		// 下隣りが同じ色？
-		if (y + 2 < m_frameSize && !m_map[x][y + 2])
-		{
-			m_map[x][y + 1] = true;
-			MakeMap(x, y + 2);
-		}
-		// 上隣りが同じ色？
-		if (y - 2 >= 0 && !m_map[x][y - 2])
-		{
-			m_map[x][y - 1] = true;
-			MakeMap(x, y - 2);
-		}
-	}
-
-	private void SetPrefab()
-	{
-		for(int i = 0; i < m_frameSize; i++)
-		{
-			for (int j = 0; j < m_frameSize; j++)
-			{
-				if (m_map[i][j])
-				{
-					Instantiate(m_mapPrefab[Random.Range(0, m_mapPrefab.Count)], new Vector3(m_size * i, 0, m_size * j), Quaternion.identity);
-				}
-			}
-		}
 	}
 
 	private void SetMap()
@@ -138,7 +62,7 @@ public class Create_Maze : MonoBehaviour
 
 		SetPlayerTreasure(mapdatas);
 
-		SetEnemy(mapdatas);
+		SetEnemyReturn(mapdatas);
 	}
 
 	private void SetPlayerTreasure(List<SendMapData> mapData)
@@ -162,25 +86,37 @@ public class Create_Maze : MonoBehaviour
 
 		for (int i = 0; i < m_treasureAmount; ++i)
 		{
+			int treasureType =
+				i < 20 ? 0 :
+				i < 35 ? 1 :
+				i < 45 ? 2 : 3;
+
 			// プレイヤーは一度無視する
 			int index = Random.Range(0, spawnPos.Count);
-			Instantiate(m_treasure, 
+			Instantiate(m_treasure[treasureType], 
 				spawnPos[index].position,
 				spawnPos[index].rotation);
 			spawnPos.RemoveAt(index);
 		}
 	}
 
-	private void SetEnemy(List<SendMapData> mapData)
+	private void SetEnemyReturn(List<SendMapData> mapData)
 	{
 		List<Transform> spawnPos = new List<Transform>();
 		foreach (SendMapData data in mapData)
 		{
-			foreach (Transform t in data.GetEnemyPos())
+			foreach (Transform t in data.GetEnemyPortalPos())
 			{
-				// 敵のスポーンポジションを全部入れる
+				// 敵と帰還場所のスポーンポジションを全部入れる
 				spawnPos.Add(t);
 			}
+		}
+
+		for (int i = 0; i < m_portalPosAmount; ++i)
+		{
+			int index = Random.Range(0, spawnPos.Count);
+			Instantiate(m_portal, spawnPos[index].position, spawnPos[index].rotation);
+			spawnPos.RemoveAt(index);
 		}
 
 		for (int i = 0; i < m_enemyAmount; ++i)

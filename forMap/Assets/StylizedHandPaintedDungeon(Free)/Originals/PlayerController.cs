@@ -1,3 +1,4 @@
+using UnityEditorInternal.Profiling.Memory.Experimental;
 using UnityEngine;
 using UnityEngine.Rendering;
 
@@ -23,9 +24,18 @@ public class PlayerController : MonoBehaviour
 		Cursor.visible = false;
 	}
 
-	private void FixedUpdate()
+	void TreasureOpen()
 	{
-		m_isGrounded = CheckGrounded();
+		RaycastHit hit;
+		// ÉåÉCÇîÚÇŒÇ∑
+		if (Physics.Raycast(transform.position, transform.forward, out hit, 20))
+		{
+			if (Input.GetMouseButtonDown(0) && hit.transform.TryGetComponent(out TreasureBoxItem treasure))
+			{
+				treasure.GetItem();
+				hit.transform.GetComponent<TreasureAnime>().Open();
+			}
+		}
 	}
 
 	private bool CheckGrounded()
@@ -45,6 +55,10 @@ public class PlayerController : MonoBehaviour
 	{
 		// ÉQÅ[ÉÄÇÃèIóπ
 		EndGame();
+		
+		m_isGrounded = CheckGrounded();
+
+		TreasureOpen();
 
 		Vector2 mouseInput = new Vector2(Input.GetAxis("Mouse X") * sensX,
 			Input.GetAxis("Mouse Y") * sensY);

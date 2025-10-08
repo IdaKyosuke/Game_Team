@@ -23,7 +23,6 @@ public class TreasureBoxItem : MonoBehaviour
 	[SerializeField] TreasureType m_treasureType;
 	private List<ObjectEntity> m_treasureList = new List<ObjectEntity>();
 
-	// Start is called before the first frame update
 	void Start()
 	{
 		// ’Š‘I‰ï”‚ğİ’è
@@ -32,7 +31,12 @@ public class TreasureBoxItem : MonoBehaviour
 			m_excelData.treasureBox[(int)m_treasureType].itemMax + 1);
 
 		SelectTreasureItem(selectAmount);
+	}
 
+	public void GetItem()
+	{
+		TryGetComponent(out TreasureAnime treasure);
+		if (treasure.opentreasure) return;
 		for (int i = 0; i < m_treasureList.Count; i++)
 		{
 			Debug.Log(m_treasureList[i].displayName);

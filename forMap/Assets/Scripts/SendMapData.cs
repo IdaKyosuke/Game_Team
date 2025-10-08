@@ -5,12 +5,12 @@ using UnityEngine.UIElements;
 
 public class SendMapData : MonoBehaviour
 {
-	[SerializeField] List<Transform> m_enemyPos;			// “G
+	[SerializeField] List<Transform> m_enemyPortalPos;		// “G
 	[SerializeField] List<Transform> m_playerTreasurePos;	// •ó” 
 
-	public List<Transform> GetEnemyPos()
+	public List<Transform> GetEnemyPortalPos()
 	{
-		return m_enemyPos;
+		return m_enemyPortalPos;
 	}
 
 	public List<Transform> GetSpawnPos()
