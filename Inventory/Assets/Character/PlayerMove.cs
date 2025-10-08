@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEditor.EventSystems;
 using UnityEngine;
 using UnityEngine.Events;
@@ -40,14 +41,12 @@ public class PlayerMove : MonoBehaviour
         {
             //プレイヤー以外は無視
             if (!hit.transform.gameObject.CompareTag("Player")) return;
-
 			// レイの当たった敵を保管
 			m_rayTarget = hit.transform.gameObject;
 
 			//Debug.Log("Hit!!!!!!!!!!!!");
-
-            //Eキーが押されていなければ無視
-            if (Input.GetKeyDown("e"))
+			//Eキーが押されていなければ無視
+			if (Input.GetKeyDown("e"))
 			{
 				m_stashManager.GetComponent<StashManager>().IsScavenger(true);
 				//インベントリUIの表示
@@ -65,12 +64,10 @@ public class PlayerMove : MonoBehaviour
 
 		if (Input.GetKeyDown("1"))
 		{
-			Debug.Log("Add 1");
 			m_stashManager.GetComponent<StashManager>().AddItemInventory();
 		}
 		else if (Input.GetKeyDown("2"))
 		{
-			Debug.Log("Add 2");
 			m_stashManager.GetComponent<StashManager>().AddItemStash();
 		}
 	}
@@ -125,8 +122,13 @@ public class PlayerMove : MonoBehaviour
 	{
 		if (!m_rayTarget) return;
 
-		Debug.Log("相手に返すリストのサイズ : " + items.Count); 
-		m_rayTarget.GetComponent<StashManager>().CopyItemList(items);
+		List<GameObject> list = new List<GameObject>();
+		if (items != null && items.Count != 0)
+		{
+			Debug.Log(items[0]);
+			list = new List<GameObject>(items);
+			m_rayTarget.GetComponent<StashManager>().CopyItemList(list);
+		}
 		// ターゲットを空にする
 		m_rayTarget = null;
 	}

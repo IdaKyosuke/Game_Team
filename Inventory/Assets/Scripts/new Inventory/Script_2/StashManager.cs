@@ -84,13 +84,13 @@ public class StashManager : MonoBehaviour
 
     // アイテムリスト
     private List<GameObject> m_itemList = new List<GameObject>();
+    // 自分以外のアイテムリスト
+    private List<GameObject> m_otherItemList = new List<GameObject>();
 
 	// UIを表示するときの座標用
 	[SerializeField] Transform m_inventoryPos;
 	[SerializeField] Transform m_stashPos;
 
-    // 自分以外のアイテムリスト
-    private List<GameObject> m_otherItemList = new List<GameObject>();
 
 	// テスト用
 	[SerializeField] Info_InventorySize info1;
@@ -101,10 +101,11 @@ public class StashManager : MonoBehaviour
 	// 自分の親を保管
 	[SerializeField] GameObject m_parent;
 
-
 	// テスト用
 	[SerializeField] bool m_isPlayer = true;
 	private bool m_isScavenger = false;
+	// アイテムリスト
+	[SerializeField] List<ItemList> m_itemListMine = new List<ItemList>();
 
     // Start is called before the first frame update
     void Start()
@@ -122,7 +123,7 @@ public class StashManager : MonoBehaviour
     {
 		if (!m_isPlayer) return;
 
-		if (m_otherItemList.Count != 0 && !m_otherItemList[0]) Debug.Log("null");
+		if (m_otherItemList != null && m_otherItemList.Count != 0 && !m_otherItemList[0]) Debug.Log("null");
 
 		if (Input.GetMouseButtonUp(0))
 		{
@@ -300,20 +301,22 @@ public class StashManager : MonoBehaviour
 	}
 
 	// 指定したマスの状態を変更する
-	public void MoveItem(Vector2Int basePos, Vector2Int size, bool info, GridType type)
+	public void MoveItem(GameObject item, Vector2Int basePos, Vector2Int size, bool info, GridType type, bool changeList = false)
 	{
 		// アドレスコピー
 		Grid[,] list = null;
+		List<GameObject> items = new List<GameObject> ();
 
-		Debug.Log(type);
 		switch (type)
 		{
 			case GridType.Stash:
 				list = m_stashGridList;
+				items = m_otherItemList;
 				break;
 
 			case GridType.Inventory:
 				list = m_inventoryGridList;
+				items = m_itemList;
 				break;
 		}
 
@@ -324,6 +327,13 @@ public class StashManager : MonoBehaviour
 			{
 				list[i, j].SetInfo(info);
 			}
+		}
+
+		// ショートカットで装備をした時にリストの内容を変更する
+		if(changeList)
+		{
+			if(info) { items.Add(item); }
+			else { items.Remove(item); }
 		}
 	}
 
@@ -415,7 +425,6 @@ public class StashManager : MonoBehaviour
 							if(isTest)
 							{
 								m_otherItemList.Add(item);
-								Debug.Log("Add Inventory");
 							}
 							else
 							{
@@ -431,7 +440,6 @@ public class StashManager : MonoBehaviour
 							if(isTest)
 							{
 								m_itemList.Add(item);
-								Debug.Log("Add Stash");
 							}
 							else
 							{
@@ -470,12 +478,10 @@ public class StashManager : MonoBehaviour
 	// アイテムリストをコピーする
 	public void CopyItemList(List<GameObject> list)
 	{
-		//m_itemList = new List<GameObject>(list); 
-		m_itemList = list;
+		m_itemList = new List<GameObject>(list);
+		//m_itemList = list;
 
-		
-
-		Debug.Log("渡したリストのサイズ : " + m_itemList.Count);
+		if (m_itemList != null && m_itemList.Count != 0) Debug.Log(m_itemList[0]);
 	}
 
 	// インベントリの種類とサイズの情報を渡す
@@ -487,23 +493,19 @@ public class StashManager : MonoBehaviour
     // アイテム欄を作成する
     public void CreateStashUi(Info_InventorySize info, List<GameObject> itemList)
 	{
-		if(m_stashUi)
-		{
-			Destroy(m_stashUi.gameObject);
-        }
-
-        // UIを表示
-        switch (info.GetInventoryType)
+		// UIを表示
+		switch (info.GetInventoryType)
 		{
 			case Info_InventorySize.InventoryType.Inventory:
 				m_stashUi = Instantiate(m_inventoryUiPrefab, m_stashPos);
 				break;
 
 			case Info_InventorySize.InventoryType.Stash:
-                m_stashUi = Instantiate(m_stashUiPrefab, m_stashPos);
+				m_stashUi = Instantiate(m_stashUiPrefab, m_stashPos);
 				break;
-        }
+		}
 
+		if (itemList != null && itemList.Count != 0) Debug.Log(itemList[0]);
 		m_otherItemList = new List<GameObject>(itemList);
 		m_stashHeight = info.GetSize.x;
         m_stashWidth = info.GetSize.y;
@@ -511,7 +513,6 @@ public class StashManager : MonoBehaviour
 		
 		// スタッシュを作成
 		CreateInventory(GridType.Stash);
-		Debug.Log(m_otherItemList.Count);
 		// リストをUIに反映
 		foreach (var item in m_otherItemList)
 		{
@@ -524,6 +525,7 @@ public class StashManager : MonoBehaviour
 			{
 				// 普通のアイテムのマス目を埋める
 				MoveItem(
+					item, 
 					item.GetComponent<Item_Object>().GetIndex(),
 					item.GetComponent<Item_Object>().GetSize(),
 					true,
@@ -535,11 +537,10 @@ public class StashManager : MonoBehaviour
 					item.GetComponent<Item_Object>().GetPrefab(),
 					m_stashGridList[item.GetComponent<Item_Object>().GetIndex().x, item.GetComponent<Item_Object>().GetIndex().y].GetTransform());
 			}
-
-			Debug.Log(item);
 		}
 		OpenUi();
-    }
+		if (m_otherItemList != null && m_otherItemList.Count != 0) Debug.Log(m_otherItemList[0]);
+	}
 
 	// 内部的なインベントリを作成する
 	private void CreateInventory(GridType type)
@@ -596,6 +597,11 @@ public class StashManager : MonoBehaviour
 			m_parent.GetComponent<PlayerMove>().ReturnItemList(m_otherItemList);
             m_stashUiParent.SetActive(false);
 			IsScavenger(false);
+			m_otherItemList = null;
+			if (m_stashUi)
+			{
+				Destroy(m_stashUi.gameObject);
+			}
         }
 		else
 		{
@@ -627,5 +633,20 @@ public class StashManager : MonoBehaviour
 	public void IsScavenger(bool value)
 	{
 		m_isScavenger = value;
+	}
+
+	// 自身のリストに追加する
+	private void AddItemList(GameObject item)
+	{
+		ItemList info = new ItemList();
+		// マス目座標を保存
+		info.SetGridIndex(item.GetComponent<Item_Object>().GetIndex());
+		// プレハブを取得
+		info.SetPrefab(item.GetComponent<Item_Object>().GetPrefab());
+
+		// アイテムリストに保存
+		m_itemListMine.Add(info);
+		// リストのインデックスを保存
+		item.GetComponent<Item_Object>().ChangeIndex(m_itemListMine.Count);
 	}
 }

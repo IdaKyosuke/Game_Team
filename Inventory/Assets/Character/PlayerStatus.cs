@@ -167,5 +167,4 @@ public class PlayerStatus : MonoBehaviour
     {
         m_equipments.Add(slot);
     }
-
 }

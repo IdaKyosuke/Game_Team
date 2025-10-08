@@ -38,6 +38,9 @@ public class Item_Object : MonoBehaviour
 	// デバッグ用
 	[SerializeField] GameObject m_mine;
 
+	// テスト用（自分のリストのindex）
+	private int m_index;
+
 	// Start is called before the first frame update
 	void Start()
     {
@@ -55,6 +58,11 @@ public class Item_Object : MonoBehaviour
 
 		// スケールを1にする
 		rectTransform.localScale = Vector3.one;
+
+
+		// デバッグ用
+		Debug.Log(gameObject.name + "が追加された");
+
     }
 
     // Update is called once per frame
@@ -129,7 +137,14 @@ public class Item_Object : MonoBehaviour
 		if(!m_isEquip)
 		{
 			// これまで入っていたマス目を解放
-			m_inventoryManager.GetComponent<StashManager>().MoveItem(m_pos, GetSize(), false, m_gridType);
+			m_inventoryManager.GetComponent<StashManager>().MoveItem(
+				gameObject,
+				m_pos, 
+				GetSize(),
+				false, 
+				m_gridType,
+				true
+				);
 		}
 	}
 
@@ -181,7 +196,14 @@ public class Item_Object : MonoBehaviour
 			if(!m_isEquip)
 			{
 				// 解放したマス目を埋めなおす
-				m_inventoryManager.GetComponent<StashManager>().MoveItem(m_pos, GetSize(), true, m_gridType);
+				m_inventoryManager.GetComponent<StashManager>().MoveItem(
+					gameObject, 
+					m_pos, 
+					GetSize(), 
+					true,
+					m_gridType,
+					true
+					);
 			}
 		}
 		// 当たり判定用の画像をアクティブにする
@@ -260,5 +282,16 @@ public class Item_Object : MonoBehaviour
 	public GameObject GetPrefab()
 	{
 		return m_mine;
+	}
+
+	// ---- デバッグ用 ----
+	private void OnDestroy()
+	{
+
+	}
+
+	public void ChangeIndex(int index)
+	{
+		m_index = index;
 	}
 }
