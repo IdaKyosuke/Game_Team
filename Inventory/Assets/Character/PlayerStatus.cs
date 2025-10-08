@@ -55,7 +55,7 @@ public class PlayerStatus : MonoBehaviour
         // 装備枠分回す
         foreach (GameObject slot in m_equipments)
         {
-            Debug.Log(m_equipments.Count);
+            //Debug.Log(m_equipments.Count);
             // 装備枠が空の場合0を加算していく
             if (slot.transform.childCount == 0) continue;
 
@@ -71,17 +71,17 @@ public class PlayerStatus : MonoBehaviour
         m_totalStatus += m_status;
 
         // デバッグ表示
-        Debug.Log(
-            $"hp:{m_totalStatus.hp}, " +
-            $"mp:{m_totalStatus.mp}, " +
-            $"physicalPower:{m_totalStatus.physicalPower}, " +
-            $"magicPower:{m_totalStatus.magicPower}, " +
-            $"physicalDefense:{m_totalStatus.physicalDefense}," +
-            $"magicDefense:{m_totalStatus.magicDefense}, " +
-            $"attackSpeed:{m_totalStatus.attackSpeed}, " +
-            $"moveSpeed:{m_totalStatus.moveSpeed}," +
-            $"openSpeed:{m_totalStatus.openSpeed}"
-        );
+        //Debug.Log(
+        //    $"hp:{m_totalStatus.hp}, " +
+        //    $"mp:{m_totalStatus.mp}, " +
+        //    $"physicalPower:{m_totalStatus.physicalPower}, " +
+        //    $"magicPower:{m_totalStatus.magicPower}, " +
+        //    $"physicalDefense:{m_totalStatus.physicalDefense}," +
+        //    $"magicDefense:{m_totalStatus.magicDefense}, " +
+        //    $"attackSpeed:{m_totalStatus.attackSpeed}, " +
+        //    $"moveSpeed:{m_totalStatus.moveSpeed}," +
+        //    $"openSpeed:{m_totalStatus.openSpeed}"
+        //);
     }
 
     public virtual void Identity() {}

@@ -44,7 +44,7 @@ public class PlayerMove : MonoBehaviour
 			// レイの当たった敵を保管
 			m_rayTarget = hit.transform.gameObject;
 
-			Debug.Log("Hit!!!!!!!!!!!!");
+			//Debug.Log("Hit!!!!!!!!!!!!");
 
             //Eキーが押されていなければ無視
             if (Input.GetKeyDown("e"))
@@ -125,7 +125,7 @@ public class PlayerMove : MonoBehaviour
 	{
 		if (!m_rayTarget) return;
 
-		Debug.Log(items.Count);
+		Debug.Log("相手に返すリストのサイズ : " + items.Count); 
 		m_rayTarget.GetComponent<StashManager>().CopyItemList(items);
 		// ターゲットを空にする
 		m_rayTarget = null;

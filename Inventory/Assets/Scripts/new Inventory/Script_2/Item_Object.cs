@@ -35,6 +35,9 @@ public class Item_Object : MonoBehaviour
 	// 装備の情報
 	private EquipmentStatus m_equipmentInfo;
 
+	// デバッグ用
+	[SerializeField] GameObject m_mine;
+
 	// Start is called before the first frame update
 	void Start()
     {
@@ -251,5 +254,11 @@ public class Item_Object : MonoBehaviour
 	public void Remove()
 	{
 		Destroy(gameObject);
+	}
+
+
+	public GameObject GetPrefab()
+	{
+		return m_mine;
 	}
 }
