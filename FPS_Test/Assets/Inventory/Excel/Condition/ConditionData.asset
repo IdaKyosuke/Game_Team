@@ -1,0 +1,45 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 8
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 31ae67e1c7fddbe449e2e6e43d807fba, type: 3}
+  m_Name: ConditionData
+  m_EditorClassIdentifier: 
+  ConditionAbility:
+  - id: 0
+    conditionType: Burn
+    grantRate: 15
+    triggerCount: 2
+    triggerInterval: 3
+    triggerValue: 7
+  - id: 1
+    conditionType: Frost
+    grantRate: 30
+    triggerCount: 1
+    triggerInterval: 10
+    triggerValue: 40
+  - id: 2
+    conditionType: Poison
+    grantRate: 15
+    triggerCount: 100
+    triggerInterval: 2
+    triggerValue: 5
+  - id: 3
+    conditionType: Shock
+    grantRate: 5
+    triggerCount: 1
+    triggerInterval: 1
+    triggerValue: 50
+  - id: 4
+    conditionType: Regen
+    grantRate: 100
+    triggerCount: 50
+    triggerInterval: 1
+    triggerValue: 10

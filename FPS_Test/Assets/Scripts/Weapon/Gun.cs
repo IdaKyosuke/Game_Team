@@ -1,7 +1,7 @@
 using Photon.Pun;
 using UnityEngine;
 
-public class Weapon : MonoBehaviourPunCallbacks
+public class Gun : MonoBehaviourPunCallbacks
 {
     [SerializeField] Transform m_muzzle;   // eŒû
     [SerializeField] float m_rate;  // ”­Ë‘Ò‹@ŠÔ
