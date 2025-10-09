@@ -5,11 +5,10 @@ public class EquipmentStatus : MonoBehaviour
 {
     [SerializeField] EquipmentParameter m_statusData;   //装備の基礎ステータス(ScriptableObject)
     [SerializeField] EquipmentData m_passiveSkillData;  //装備のパッシブスキル
+    [SerializeField] Condition m_condition;             
 
     private Item_Object m_itemObject;                   //アイテムデータ
     private EquipmentParameter m_totalStatus;           //装備の総合ステータス
-
-    private ConditionType m_condition;                  //付与可能な状態異常
 
     public EquipmentParameter TotalStatus => m_totalStatus;
 
@@ -26,10 +25,9 @@ public class EquipmentStatus : MonoBehaviour
         }
 
         //武器なら状態異常付与のスキルを取得
-        m_condition = ConditionType.None;
         if (m_itemObject.GetWeaponType() == EquipmentType.Weapon)
         {
-            m_condition = (ConditionType)m_passiveSkillData.EquipmentAbility[id].condition;
+            m_condition.Grant = (ConditionType)m_passiveSkillData.EquipmentAbility[id].condition;
         }
 
         //装備の総合ステータスを計算

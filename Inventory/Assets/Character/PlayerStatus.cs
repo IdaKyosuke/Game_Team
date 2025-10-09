@@ -84,7 +84,7 @@ public class PlayerStatus : MonoBehaviour
         //);
     }
 
-    public virtual void Identity() {}
+    public virtual void Identity() { }
 
     public void LevelUp(int exp)
     {
@@ -105,22 +105,31 @@ public class PlayerStatus : MonoBehaviour
         m_status = m_statusData.GetStatus(m_level);
     }
 
-    public void Damage(int power, AttackType attackType)
+    public void Damage(int power, AttackType attackType, ConditionType type)
     {
         //既に死んでいるならダメージを与えない
         if (m_health <= 0) return;
 
-        //防御力を考慮したダメージ計算
+        //ダメージ計算
         int damage;
-        switch (attackType)
-        { 
-            case AttackType.Physical:
-                damage = (power * 2) - (m_status.physicalDefense / 3);
-                break;
-                    
-            case AttackType.Magical:
-                damage = (power * 2) - (m_status.magicDefense / 3);
-                break;
+        if (type == ConditionType.None)
+        {
+            //攻撃のダメージは防御力を考慮する
+            switch (attackType)
+            {
+                case AttackType.Physical:
+                    damage = (power * 2) - (m_status.physicalDefense / 3);
+                    break;
+
+                case AttackType.Magical:
+                    damage = (power * 2) - (m_status.magicDefense / 3);
+                    break;
+            }
+        }
+        else
+        {
+            //状態異常のダメ―ジは防御力を無視する
+            damage = power;
         }
 
         //マイナスのダメージは与えない

@@ -27,12 +27,18 @@ public class Condition : MonoBehaviour
 
     public ConditionType Current => m_condition;
 
-    public ConditionType Grant => m_grantCondition;
+    public ConditionType Grant
+    { 
+        get { return m_grantCondition;  }
+        set { m_grantCondition = value; }
+    }
 
     private void Awake()
     {
         m_status = GetComponent<PlayerStatus>();
 
+        m_condition = ConditionType.None;
+        m_grantCondition = ConditionType.None;
         m_count = 0;
         m_interval = 0;
         m_value = 0;

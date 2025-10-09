@@ -12,4 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 171d6959cb4b94b4fa15cb1edc4f6fea, type: 3}
   m_Name: ClericStatus
   m_EditorClassIdentifier: 
-  parameters: []
+  parameters:
+  - level: 1
+    hp: 600
+    mp: 200
+    physicalPower: 60
+    magicPower: 30
+    physicalDefense: 70
+    magicDefense: 70
+    attackSpeed: 20
+    moveSpeed: 4
+    openSpeed: 10
+    requiredExp: 999

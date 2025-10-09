@@ -1,9 +1,6 @@
 using System.Collections.Generic;
-using Unity.VisualScripting;
-using UnityEditor.EventSystems;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.EventSystems;
 
 public class PlayerMove : MonoBehaviour
 {
@@ -13,7 +10,6 @@ public class PlayerMove : MonoBehaviour
     [SerializeField] GameObject m_stashManager;
     [SerializeField] Info_InventorySize m_inventortSize;
 
-
     private Vector3 m_moveDirection;
     private CharacterController m_controller;
 
@@ -21,7 +17,6 @@ public class PlayerMove : MonoBehaviour
     private Condition m_condition;
 
     public Info_InventorySize InventortSize => m_inventortSize;
-
 
 	// ƒŒƒC‚Ì“–‚½‚Á‚½“G‚ğ•ÛŠÇ‚·‚é—p
 	private GameObject m_rayTarget;
