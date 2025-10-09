@@ -203,7 +203,7 @@ Transform:
   m_GameObject: {fileID: 4500212241198224305}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -72.57604, y: -19.168653, z: -0.028766632}
+  m_LocalPosition: {x: -72.81, y: -5.6686535, z: 0.2}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -3528,15 +3528,25 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 2972544850732142960, guid: bdb1faa003bc5264d8c0210bdd8f967b,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 50
+      objectReference: {fileID: 0}
     - target: {fileID: 7243739497726254191, guid: bdb1faa003bc5264d8c0210bdd8f967b,
         type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.6999999
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7243739497726254191, guid: bdb1faa003bc5264d8c0210bdd8f967b,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7243739497726254191, guid: bdb1faa003bc5264d8c0210bdd8f967b,
         type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.6999999
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7243739497726254191, guid: bdb1faa003bc5264d8c0210bdd8f967b,
         type: 3}
@@ -3546,7 +3556,7 @@ PrefabInstance:
     - target: {fileID: 7243739497726254191, guid: bdb1faa003bc5264d8c0210bdd8f967b,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.88
+      value: 1.353
       objectReference: {fileID: 0}
     - target: {fileID: 7243739497726254191, guid: bdb1faa003bc5264d8c0210bdd8f967b,
         type: 3}
@@ -3587,6 +3597,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7243739497726254191, guid: bdb1faa003bc5264d8c0210bdd8f967b,
+        type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9122353693366068059, guid: bdb1faa003bc5264d8c0210bdd8f967b,
+        type: 3}
+      propertyPath: far clip plane
+      value: 100
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

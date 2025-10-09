@@ -53,7 +53,10 @@ public class Create_Maze : MonoBehaviour
 							continue;
 						}
 					}
-					mapdatas.Add(Instantiate(m_mapPrefab[Random.Range(0, m_mapPrefab.Count)], new Vector3(m_size * i, y * 4.5f, m_size * j), Quaternion.identity).GetComponent<SendMapData>());
+					GameObject map = Instantiate(m_mapPrefab[Random.Range(0, m_mapPrefab.Count)], new Vector3(m_size * i, y * 4.5f, m_size * j), Quaternion.identity);
+					// マップのレイヤーを分ける(仮置きだからマジックナンバー)
+					GameObjectExtensions.SetLayerRecursively(map.transform, y + 6);
+					mapdatas.Add(map.GetComponent<SendMapData>());
 				}
 			}
 		}

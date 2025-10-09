@@ -1,3 +1,5 @@
+using System.Security.Cryptography;
+using UnityEditor.Experimental.GraphView;
 using UnityEditorInternal.Profiling.Memory.Experimental;
 using UnityEngine;
 using UnityEngine.Rendering;
@@ -6,7 +8,7 @@ public class PlayerController : MonoBehaviour
 {
 	private CharacterController characterController;  // CharacterController型の変数
 	private Vector3 moveVelocity;  // キャラクターコントローラーを動かすためのVector3型の変数
-	[SerializeField] private Animator animator;
+	[SerializeField] private Camera m_mapCamera;
 	[SerializeField] private Transform verRot;  //縦の視点移動の変数(カメラに合わせる)
 	[SerializeField] private Transform horRot;  //横の視点移動の変数(プレイヤーに合わせる)
 	[SerializeField] private float moveSpeed;  //移動速度
@@ -51,11 +53,19 @@ public class PlayerController : MonoBehaviour
 		return characterController.isGrounded;
 	}
 
+	private void MiniMap()
+	{
+		int layer = transform.position.y < 10 ? transform.position.y < 5 ? 1 << 6 : 1 << 7 : 1 << 8;
+		m_mapCamera.cullingMask = layer | (1 << 10);
+	}
+
 	void Update()
 	{
 		// ゲームの終了
 		EndGame();
-		
+
+		MiniMap();
+
 		m_isGrounded = CheckGrounded();
 
 		TreasureOpen();
