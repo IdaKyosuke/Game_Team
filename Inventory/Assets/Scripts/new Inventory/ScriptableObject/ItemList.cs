@@ -15,6 +15,11 @@ public class ItemList : ScriptableObject
 	public float m_attack;
 	// プレハブ
 	[SerializeField] GameObject m_prefab;
+	// 装備されているか
+	private bool m_isEquip;
+	// インスタンス化されているオブジェクト
+	private GameObject m_activeObject;
+
 
 	// マス目取得
 	public Vector2Int GetGridIndex()
@@ -38,4 +43,26 @@ public class ItemList : ScriptableObject
 	{
 		m_prefab = prefab;
 	}
+
+	// 装備状態の変更
+	public void SetEquipInfo(bool value)
+	{
+		m_isEquip = value;
+	}
+	// 装備状態の取得
+	public bool IsEquip()
+	{
+		return m_isEquip;
+	}
+	// アクティブなオブジェクトを保存
+	public void SetActiveObject(GameObject obj)
+	{
+		m_activeObject = obj;
+	}
+	// アクティブなオブジェクトのインデックスを変更する
+	public void ChangeIndex(int index)
+	{
+		m_activeObject.GetComponent<Item_Object>().ChangeIndex(index);
+	}
+	
 }

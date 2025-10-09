@@ -118,17 +118,12 @@ public class PlayerMove : MonoBehaviour
     }
 
 	// 変更後のアイテムリストを返す
-	public void ReturnItemList(List<GameObject> items)
+	public void ReturnItemList(List<ItemList> items)
 	{
 		if (!m_rayTarget) return;
 
-		List<GameObject> list = new List<GameObject>();
-		if (items != null && items.Count != 0)
-		{
-			Debug.Log(items[0]);
-			list = new List<GameObject>(items);
-			m_rayTarget.GetComponent<StashManager>().CopyItemList(list);
-		}
+		List<ItemList> list = new List<ItemList>(items);
+		m_rayTarget.GetComponent<StashManager>().CopyItemList(list);
 		// ターゲットを空にする
 		m_rayTarget = null;
 	}

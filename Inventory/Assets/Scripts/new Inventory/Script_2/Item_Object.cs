@@ -58,11 +58,6 @@ public class Item_Object : MonoBehaviour
 
 		// スケールを1にする
 		rectTransform.localScale = Vector3.one;
-
-
-		// デバッグ用
-		Debug.Log(gameObject.name + "が追加された");
-
     }
 
     // Update is called once per frame
@@ -93,7 +88,7 @@ public class Item_Object : MonoBehaviour
 	}
 
     // アイテムのインデックスを取得
-	public Vector2Int GetIndex()
+	public Vector2Int GetGridIndex()
 	{
 		return m_pos;
     }
@@ -241,7 +236,7 @@ public class Item_Object : MonoBehaviour
     }
 
     // 選択された配列のインデックスを覚える
-    public void SetIndex(Vector2Int index)
+    public void SetGridIndex(Vector2Int index)
 	{
 		m_pos = index;
 	}
@@ -289,9 +284,14 @@ public class Item_Object : MonoBehaviour
 	{
 
 	}
-
+	// 自分と紐づくリストのインデックスを変更
 	public void ChangeIndex(int index)
 	{
 		m_index = index;
+	}
+	// リストのインデックスを取得
+	public int GetIndex()
+	{
+		return m_index;
 	}
 }
