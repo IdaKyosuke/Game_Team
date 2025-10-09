@@ -78,7 +78,7 @@ public class PlayerMove : MonoBehaviour
         m_moveDirection.y -= m_gravity * Time.deltaTime;
 
         //Š´“dó‘Ô‚ÍˆÚ“®•s‰Â
-        if (m_condition.CurrentCondition == Condition.ConditionType.Shock) return;
+        if (m_condition.Current == ConditionType.Shock) return;
 
         //ˆÚ“®—Ê‚Ìæ“¾
         m_moveDirection = new Vector3(Input.GetAxis("Horizontal"), m_moveDirection.y, Input.GetAxis("Vertical"));

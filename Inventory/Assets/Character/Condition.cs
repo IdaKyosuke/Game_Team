@@ -2,21 +2,22 @@ using System;
 using System.Collections;
 using UnityEngine;
 
+public enum ConditionType
+{
+    Burn,      //火傷
+    Frost,     //凍傷
+    Poison,    //猛毒
+    Shock,     //感電
+    Regen,     //再生
+    None,      //通常
+}
+
 public class Condition : MonoBehaviour
 {
-    public enum ConditionType
-    {
-        Burn,      //火傷
-        Frost,     //凍傷
-        Poison,    //猛毒
-        Shock,     //感電
-        Regen,     //再生
-        None,      //通常
-    }
-
     [SerializeField] ConditionData m_conditionData;
 
-    private ConditionType m_condition;
+    private ConditionType m_condition;      //自身の状態
+    private ConditionType m_grantCondition; //相手に付与可能な状態異常
     private PlayerStatus m_status;
     private int m_count;
     private int m_interval;
@@ -24,13 +25,14 @@ public class Condition : MonoBehaviour
 
     private Action[] m_onConditions;
 
-    public ConditionType CurrentCondition => m_condition;
+    public ConditionType Current => m_condition;
+
+    public ConditionType Grant => m_grantCondition;
 
     private void Awake()
     {
         m_status = GetComponent<PlayerStatus>();
 
-        m_condition = ConditionType.None;
         m_count = 0;
         m_interval = 0;
         m_value = 0;
@@ -54,8 +56,6 @@ public class Condition : MonoBehaviour
         m_interval = m_conditionData.ConditionAbility[(int)m_condition].triggerInterval;
         m_value = m_conditionData.ConditionAbility[(int)m_condition].triggerValue;
 
-        Debug.Log(GetComponent<PlayerStatus>().Health);
-
         //状態異常の処理
         m_onConditions[(int)m_condition]?.Invoke();
     }
@@ -75,7 +75,6 @@ public class Condition : MonoBehaviour
             Debug.Log("Burn : HP = " + m_status.Health);
         }
 
-        //状態異常を解除
         m_condition = ConditionType.None;
     }
 
@@ -90,7 +89,6 @@ public class Condition : MonoBehaviour
         //移動速度を元に戻す
         m_status.Value.moveSpeed += m_value;
 
-        //状態異常を解除
         m_condition = ConditionType.None;
     }
 
@@ -105,7 +103,6 @@ public class Condition : MonoBehaviour
             Debug.Log("Poison : HP = " + m_status.Health);
         }
 
-        //状態異常を解除
         m_condition = ConditionType.None;
     }
 
@@ -119,7 +116,6 @@ public class Condition : MonoBehaviour
         //一定時間待機
         yield return new WaitForSeconds(m_interval);
 
-        //状態異常を解除
         m_condition = ConditionType.None;
     }
 
@@ -134,7 +130,6 @@ public class Condition : MonoBehaviour
             Debug.Log("Regen : HP = " + m_status.Health);
         }
 
-        //状態異常を解除
         m_condition = ConditionType.None;
     }
 }
