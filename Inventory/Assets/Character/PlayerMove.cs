@@ -126,6 +126,7 @@ public class PlayerMove : MonoBehaviour
     public void OnDeath()
     {
         Debug.Log("Death!!!!!!!");
+        m_animator.SetBool("Death", true);
     }
 
 	// 変更後のアイテムリストを返す

@@ -99,7 +99,7 @@ public class PlayerStatus : MonoBehaviour
         if (m_health <= 0) return;
 
         //ダメージ計算
-        int damage;
+        int damage = 0;
         switch (attackType)
         {
             case AttackType.Physical:
@@ -112,10 +112,11 @@ public class PlayerStatus : MonoBehaviour
         }
 
         //マイナスのダメージは与えない
-        if (power <= 0) return;
+        if (damage <= 0) return;
 
         //ダメージ
-        m_health -= power;
+        m_health -= damage;
+        Debug.Log(damage);
 
         //状態異常付与の抽選
         ConditionType conditionType = condition.Grant;
