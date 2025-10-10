@@ -27,6 +27,8 @@ public class Condition : MonoBehaviour
 
     public ConditionType Current => m_condition;
 
+    public int Rate(ConditionType type) => m_conditionData.ConditionAbility[(int)type].grantRate;
+
     public ConditionType Grant
     { 
         get { return m_grantCondition;  }
@@ -76,7 +78,7 @@ public class Condition : MonoBehaviour
 
             //割合ダメージ
             int damage = m_status.Health / m_value;
-            m_status.Damage(damage, AttackType.Physical, ConditionType.Burn);
+            m_status.ConditionDamage(damage);
 
             Debug.Log("Burn : HP = " + m_status.Health);
         }
@@ -105,7 +107,7 @@ public class Condition : MonoBehaviour
         {
             yield return new WaitForSeconds(m_interval);
 
-            m_status.Damage(m_value, AttackType.Physical, ConditionType.Poison);
+            m_status.ConditionDamage(m_value);
             Debug.Log("Poison : HP = " + m_status.Health);
         }
 
@@ -117,7 +119,7 @@ public class Condition : MonoBehaviour
         //ダメージを与えて一定時間移動不可
 
         //自身のレベルに応じた即時ダメージ
-        m_status.Damage(m_value * m_status.Value.Level / 100, AttackType.Physical, ConditionType.Shock);
+        m_status.ConditionDamage(m_value * m_status.Value.Level);
 
         //一定時間待機
         yield return new WaitForSeconds(m_interval);

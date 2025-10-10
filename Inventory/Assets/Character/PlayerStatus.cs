@@ -20,6 +20,7 @@ public class PlayerStatus : MonoBehaviour
     [SerializeField] UnityEvent m_onDamage;
     [SerializeField] UnityEvent m_onDeath;
 
+    private Condition m_condition;
     private EquipmentParameter m_totalEquipmentStatus;  //装備のステータスの実数値(合計値)
     private PlayerParameter m_status;                   //自身の基礎ステータス
     private PlayerParameter m_totalStatus;              //合計ステータス
@@ -44,6 +45,8 @@ public class PlayerStatus : MonoBehaviour
 
         //合計ステータスの初期化
         m_totalStatus = new PlayerParameter(m_level);
+
+        m_condition = GetComponent<Condition>();
     }
 
     private void Update()
@@ -69,22 +72,7 @@ public class PlayerStatus : MonoBehaviour
 
         //基礎ステータスを加算
         m_totalStatus += m_status;
-
-        // デバッグ表示
-        //Debug.Log(
-        //    $"hp:{m_totalStatus.hp}, " +
-        //    $"mp:{m_totalStatus.mp}, " +
-        //    $"physicalPower:{m_totalStatus.physicalPower}, " +
-        //    $"magicPower:{m_totalStatus.magicPower}, " +
-        //    $"physicalDefense:{m_totalStatus.physicalDefense}," +
-        //    $"magicDefense:{m_totalStatus.magicDefense}, " +
-        //    $"attackSpeed:{m_totalStatus.attackSpeed}, " +
-        //    $"moveSpeed:{m_totalStatus.moveSpeed}," +
-        //    $"openSpeed:{m_totalStatus.openSpeed}"
-        //);
     }
-
-    public virtual void Identity() { }
 
     public void LevelUp(int exp)
     {
@@ -105,31 +93,22 @@ public class PlayerStatus : MonoBehaviour
         m_status = m_statusData.GetStatus(m_level);
     }
 
-    public void Damage(int power, AttackType attackType, ConditionType type)
+    public void Damage(int power, AttackType attackType, Condition condition)
     {
         //既に死んでいるならダメージを与えない
         if (m_health <= 0) return;
 
         //ダメージ計算
         int damage;
-        if (type == ConditionType.None)
+        switch (attackType)
         {
-            //攻撃のダメージは防御力を考慮する
-            switch (attackType)
-            {
-                case AttackType.Physical:
-                    damage = (power * 2) - (m_status.physicalDefense / 3);
-                    break;
+            case AttackType.Physical:
+                damage = (power * 2) - (m_status.physicalDefense / 3);
+                break;
 
-                case AttackType.Magical:
-                    damage = (power * 2) - (m_status.magicDefense / 3);
-                    break;
-            }
-        }
-        else
-        {
-            //状態異常のダメ―ジは防御力を無視する
-            damage = power;
+            case AttackType.Magical:
+                damage = (power * 2) - (m_status.magicDefense / 3);
+                break;
         }
 
         //マイナスのダメージは与えない
@@ -137,6 +116,40 @@ public class PlayerStatus : MonoBehaviour
 
         //ダメージ
         m_health -= power;
+
+        //状態異常付与の抽選
+        ConditionType conditionType = condition.Grant;
+        if (conditionType != ConditionType.None)
+        {
+            if (condition.Rate(conditionType) >= Random.Range(0, 100))
+            {
+                m_condition.Init(conditionType);
+            }
+        }
+
+        //体力の確認
+        if (m_health <= 0)
+        {
+            //死亡通知
+            m_onDeath?.Invoke();
+        }
+        else
+        {
+            //被弾通知
+            m_onDamage?.Invoke();
+        }
+    }
+
+    public void ConditionDamage(int value)
+    {
+        //既に死んでいるならダメージを与えない
+        if (m_health <= 0) return;
+
+        //マイナスのダメージは与えない
+        if (value <= 0) return;
+
+        //ダメージ
+        m_health -= value;
 
         //体力の確認
         if (m_health <= 0)

@@ -1,5 +1,4 @@
 using UnityEngine;
-using static Condition;
 
 public class EquipmentStatus : MonoBehaviour
 {

@@ -2,9 +2,9 @@ using UnityEngine;
 
 public class Warrior : PlayerStatus
 {
-    public override void Identity()
+    public void UniqueSkill()
     {
-        Debug.Log("Warrior Identity");
+        Debug.Log("Warrior UniqueSkill");
 
         if (Input.GetKeyDown(KeyCode.Q))
         {

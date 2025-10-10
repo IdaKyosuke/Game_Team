@@ -2,13 +2,13 @@ using UnityEngine;
 
 public class Cleric : PlayerStatus
 {
-    public override void Identity()
+    public void UniqueSkill()
     { 
         Debug.Log("Cleric Identity");
 
         if (Input.GetKeyDown(KeyCode.Q))
         {
-            Debug.Log("•Ší‚Ì‚¿‘Ö‚¦");
+
         }
     }
 }

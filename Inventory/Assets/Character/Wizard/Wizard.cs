@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class Wizard : PlayerStatus
 {
-    public override void Identity()
+    public void UniqueSkill()
     {
         Debug.Log("Wizard Identity");
 

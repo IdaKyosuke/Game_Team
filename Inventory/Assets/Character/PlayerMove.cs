@@ -4,10 +4,11 @@ using UnityEngine.Events;
 
 public class PlayerMove : MonoBehaviour
 {
+    [SerializeField] Animator m_animator;
     [SerializeField] float m_jumpPower;
     [SerializeField] float m_gravity;
-    [SerializeField] UnityEvent m_onPassiveSkill;
-    [SerializeField] GameObject m_stashManager;
+    [SerializeField] UnityEvent m_onUniqueSkill;
+    [SerializeField] StashManager m_stashManager;
     [SerializeField] Info_InventorySize m_inventortSize;
 
     private Vector3 m_moveDirection;
@@ -23,6 +24,7 @@ public class PlayerMove : MonoBehaviour
 
     void Start()
     {
+        m_stashManager = GetComponent<StashManager>();
         m_controller = GetComponent<CharacterController>();
         m_playerStatus = GetComponent<PlayerStatus>();
         m_condition = GetComponent<Condition>();
@@ -43,32 +45,41 @@ public class PlayerMove : MonoBehaviour
 			//Eキーが押されていなければ無視
 			if (Input.GetKeyDown("e"))
 			{
-				m_stashManager.GetComponent<StashManager>().IsScavenger(true);
+				m_stashManager.IsScavenger(true);
 				//インベントリUIの表示
-				m_stashManager.GetComponent<StashManager>().CreateStashUi(
+				m_stashManager.CreateStashUi(
 					m_rayTarget.GetComponent<Inventory_Info>().GetInfo(),
 					m_rayTarget.GetComponent<StashManager>().GetItemList()
 					);
 			}
         }
 
+        //攻撃
+        if (Input.GetMouseButtonDown(0))
+        {
+            m_animator.SetBool("Attack", true);
+        }
+
 		if (Input.GetKeyDown("tab"))
 		{
-			m_stashManager.GetComponent<StashManager>().ManageUiActiveInfo();
+			m_stashManager.ManageUiActiveInfo();
 		}
 
 		if (Input.GetKeyDown("1"))
 		{
-			m_stashManager.GetComponent<StashManager>().AddItemInventory();
+			m_stashManager.AddItemInventory();
 		}
 		else if (Input.GetKeyDown("2"))
 		{
-			m_stashManager.GetComponent<StashManager>().AddItemStash();
+			m_stashManager.AddItemStash();
 		}
 	}
 
     void FixedUpdate()
     {
+        //移動したかどうか
+        bool isMove = false;
+
         //自由落下
         m_moveDirection.y -= m_gravity * Time.deltaTime;
 
@@ -99,7 +110,12 @@ public class PlayerMove : MonoBehaviour
                 Quaternion.LookRotation(move.normalized),
                 0.2f
             );
+
+            isMove = true;
         }
+
+        //移動アニメーション
+        m_animator.SetBool("Move", isMove);
     }
 
     public void OnDamage()

@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 6446398010582609158}
   - component: {fileID: 2095040568815370759}
   - component: {fileID: -3789269296722319712}
+  - component: {fileID: -8611036880274618486}
   m_Layer: 0
   m_Name: Thief
   m_TagString: Player
@@ -146,9 +147,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 70668a2119dc26b439738f36c64f9ca2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_animator: {fileID: 0}
   m_jumpPower: 10
   m_gravity: 34
-  m_onPassiveSkill:
+  m_onUniqueSkill:
     m_PersistentCalls:
       m_Calls: []
   m_stashManager: {fileID: 0}
@@ -166,3 +168,36 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_conditionData: {fileID: 11400000, guid: fc2d75826be22ac478e86c72b8a7b0e2, type: 2}
+--- !u!114 &-8611036880274618486
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3185807306260644935}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 181d7e91f9efde746b0112b2d94cd263, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_stashWidth: 5
+  m_stashHeight: 10
+  m_inventoryWidth: 5
+  m_inventoryHeight: 5
+  m_stashGridParent: {fileID: 0}
+  m_inventoryGridParent: {fileID: 0}
+  m_stashUiParent: {fileID: 0}
+  m_stashUi: {fileID: 0}
+  m_inventoryUi: {fileID: 0}
+  m_stashUiPrefab: {fileID: 0}
+  m_inventoryUiPrefab: {fileID: 0}
+  m_inventoryInfo: {fileID: 0}
+  m_inventoryPos: {fileID: 0}
+  m_stashPos: {fileID: 0}
+  info1: {fileID: 0}
+  info2: {fileID: 0}
+  items: []
+  m_parent: {fileID: 0}
+  m_isPlayer: 1
+  m_itemListMine: []
+  m_data: {fileID: 0}
