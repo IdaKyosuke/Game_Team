@@ -64,14 +64,6 @@ public class Item_Object : MonoBehaviour
 
 		// スケールを1にする
 		rectTransform.localScale = Vector3.one;
-		Debug.Log(transform.name);
-		/*
-		Loader.LoadGameObjectAsync(m_name).Completed += op =>
-		{
-			m_mine = op.Result;
-			Addressables.Release(op);
-		};
-		*/
 	}
 
     // Update is called once per frame
@@ -151,8 +143,7 @@ public class Item_Object : MonoBehaviour
 				m_pos, 
 				GetSize(),
 				false, 
-				m_gridType,
-				true
+				m_gridType
 				);
 		}
 	}
@@ -180,7 +171,7 @@ public class Item_Object : MonoBehaviour
 		ReadyMove();
 	}
 
-	public void PointerUp(bool canSet, Transform nextPos = null)
+	public void PointerUp(bool canSet, Transform nextPos = null, bool delete = false)
 	{
 		// マウスカーソルの追従を終了
 		m_isDrag = false;
@@ -195,6 +186,12 @@ public class Item_Object : MonoBehaviour
 			// 移動先の枠を親オブジェクトに設定
 			SetParentTransform(nextPos);
 			rectTransform.anchoredPosition = Vector2.zero;
+			if(delete)
+			{
+				// 装備したときに元のリストから削除する
+				m_inventoryManager.GetComponent<StashManager>().SelectRemoveItemList(gameObject);
+				m_gridType = GridType.Equipment;
+			}
 		}
 		else
 		{
@@ -210,8 +207,7 @@ public class Item_Object : MonoBehaviour
 					m_pos, 
 					GetSize(), 
 					true,
-					m_gridType,
-					true
+					m_gridType
 					);
 			}
 		}
@@ -253,6 +249,12 @@ public class Item_Object : MonoBehaviour
     public void SetGridIndex(Vector2Int index)
 	{
 		m_pos = index;
+	}
+
+	// マス目のタイプを取得
+	public GridType GetGridType()
+	{
+		return m_gridType;
 	}
 
 	public void SetType(GridType type)

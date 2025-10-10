@@ -23,13 +23,13 @@ public class EquipmentStatus : MonoBehaviour
             id = Random.Range(0, m_passiveSkillData.EquipmentAbility.Count);
             m_statusData.id = id;
         }
-
+		/*
         //武器なら状態異常付与のスキルを取得
         if (m_itemObject.GetWeaponType() == EquipmentType.Weapon)
         {
             m_condition.Grant = (ConditionType)m_passiveSkillData.EquipmentAbility[id].condition;
         }
-
+		*/
         //装備の総合ステータスを計算
         m_totalStatus = m_statusData;
         m_totalStatus += m_passiveSkillData.EquipmentAbility[id];

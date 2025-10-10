@@ -32,7 +32,6 @@ public class GridIcon_Equipment : MonoBehaviour
 	// Start is called before the first frame update
 	void Start()
 	{
-		//GameObject.FindWithTag("equipmentManager").GetComponent<PlayerStatus>().SetSlot(gameObject);
 		m_pastInfo = m_fillUi;
 		if(!m_moveItemTransform)
 		{
@@ -105,7 +104,7 @@ public class GridIcon_Equipment : MonoBehaviour
 			else
 			{
 				// V‚µ‚­‘•”õ‚·‚é
-				o.GetComponent<Item_Object>().PointerUp(true, transform);
+				o.GetComponent<Item_Object>().PointerUp(true, transform, true);
 				// V‚µ‚­‘•”õ‚³‚ê‚½•¨‚ğ‘•”õó‘Ô‚É‚·‚é
 				o.GetComponent<Item_Object>().SetEquipValue(true);
 			}
@@ -122,7 +121,7 @@ public class GridIcon_Equipment : MonoBehaviour
 		}
 
 		// ‘•”õ‚ğ˜g‚É“ü‚ê‚é
-		item.GetComponent<Item_Object>().PointerUp(true, transform);
+		item.GetComponent<Item_Object>().PointerUp(true, transform, true);
 		// ‘•”õó‘Ô‚É‚·‚é
 		item.GetComponent<Item_Object>().SetEquipValue(true);
 	}
