@@ -234,7 +234,7 @@ public class Item_Object : MonoBehaviour
 	// 自身の親が変更されたときに、RectTransformも一緒に変更する
 	private void SetParentTransform(Transform parent)
 	{
-		transform.SetParent(parent);
+		transform.SetParent(parent, false);
 		rectTransform = GetComponent<RectTransform>();
 		parentRectTransform = rectTransform.parent as RectTransform;
 	}

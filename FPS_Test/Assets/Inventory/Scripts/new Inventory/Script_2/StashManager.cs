@@ -1,10 +1,8 @@
-using System.Collections;
+using Photon.Pun;
 using System.Collections.Generic;
-using System.Xml.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
-using static UnityEditor.Progress;
 
 
 public struct Grid
@@ -55,7 +53,7 @@ public struct Grid
 	}
 }
 
-public class StashManager : MonoBehaviour
+public class StashManager : MonoBehaviourPunCallbacks
 {
 	// スタッシュ用サイズ
 	[SerializeField] int m_stashWidth = 5;
@@ -114,6 +112,8 @@ public class StashManager : MonoBehaviour
 	[SerializeField] ExcelData m_data;
 	private int m_id;
 
+	private bool m_isInventoryOpen = false;
+
 	// Start is called before the first frame update
 	void Start()
     {
@@ -128,9 +128,7 @@ public class StashManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-		if (!m_isPlayer) return;
-
-		if (m_otherItemList != null && m_otherItemList.Count != 0 && !m_otherItemList[0]) Debug.Log("null");
+		if (!photonView.IsMine) return;
 
 		if (Input.GetMouseButtonUp(0))
 		{
@@ -403,6 +401,12 @@ public class StashManager : MonoBehaviour
 	// インベントリのアイテムリストを返す
 	public List<ItemList> GetItemList()
 	{
+		if(m_itemList.Count != 0)
+		{
+			Debug.Log(m_itemList[0].GetPrefabName());
+			Debug.Log(m_itemList.Count);
+		}
+
 		return m_itemList;
 	}
 
@@ -532,7 +536,7 @@ public class StashManager : MonoBehaviour
     }
 
 	// アイテムリストをコピーする
-	public void CopyItemList(List<ItemList> list)
+	public void CopyItemList(ItemList[] list)
 	{
 		m_itemList = new List<ItemList>(list);
 	}
@@ -544,8 +548,10 @@ public class StashManager : MonoBehaviour
     }
 
     // アイテム欄を作成する
-    public void CreateStashUi(Info_InventorySize info, List<ItemList> itemList)
+    public void CreateStashUi(Info_InventorySize info, ItemList[] itemList)
 	{
+		if (m_isInventoryOpen) return;
+
 		// UIを表示
 		switch (info.GetInventoryType)
 		{
@@ -573,41 +579,45 @@ public class StashManager : MonoBehaviour
 		// リストをUIに反映
 		foreach (ItemList item in m_otherItemList)
 		{
-			// リストからオブジェクトを生成
-			GameObject obj = Instantiate(
-				item.GetPrefab(),
-				m_moveItemTransform
-				);
-
-			if (item.IsEquip())
+			Loader.LoadGameObjectAsync(item.GetPrefabName()).Completed += op =>
 			{
-				// 装備されていたアイテム
-				m_stashUi.GetComponent<Inventory_Parent>().GetEquipments.GetComponent<Player_Equipment>().QuickEquip(obj);
-            }
-			else
-			{
-				// 自分が入っている枠のタイプを設定
-				obj.GetComponent<Item_Object>().SetType( GridType.Stash );
-				// マス目を記憶
-				obj.GetComponent<Item_Object>().SetGridIndex(item.GetGridIndex());
-				// 普通のアイテムのマス目を埋める
-				MoveItem(
-					obj,
-					item.GetGridIndex(),
-					obj.GetComponent<Item_Object>().GetSize(),
-					true,
-					GridType.Stash
+				// リストからオブジェクトを生成
+				GameObject obj = Instantiate(
+					op.Result,
+					m_moveItemTransform
 					);
-				// UIを移動
-				obj.GetComponent<Item_Object>().PointerUp(true, m_stashGridList[item.GetGridIndex().x, item.GetGridIndex().y].GetTransform());
-				// リストのアクティブなオブジェクトを保存
-				item.SetActiveObject( obj );
-			}
 
-			item.ChangeIndex(count);
-			count++;
+				if (item.IsEquip())
+				{
+					// 装備されていたアイテム
+					m_stashUi.GetComponent<Inventory_Parent>().GetEquipments.GetComponent<Player_Equipment>().QuickEquip(obj);
+				}
+				else
+				{
+					// 自分が入っている枠のタイプを設定
+					obj.GetComponent<Item_Object>().SetType(GridType.Stash);
+					// マス目を記憶
+					obj.GetComponent<Item_Object>().SetGridIndex(item.GetGridIndex());
+					// 普通のアイテムのマス目を埋める
+					MoveItem(
+						obj,
+						item.GetGridIndex(),
+						obj.GetComponent<Item_Object>().GetSize(),
+						true,
+						GridType.Stash
+						);
+					// UIを移動
+					obj.GetComponent<Item_Object>().PointerUp(true, m_stashGridList[item.GetGridIndex().x, item.GetGridIndex().y].GetTransform());
+					// リストのアクティブなオブジェクトを保存
+					item.SetActiveObject(obj);
+				}
+
+				item.ChangeIndex(count);
+				count++;
+				Addressables.Release(op);
+			};
 		}
-		OpenUi();
+		ManageUiActiveInfo();
 	}
 
 	// 内部的なインベントリを作成する
@@ -670,11 +680,13 @@ public class StashManager : MonoBehaviour
 			{
 				Destroy(m_stashUi.gameObject);
 			}
+			m_isInventoryOpen = false;
         }
 		else
 		{
 			m_stashUiParent.SetActive(true);
-        }
+			m_isInventoryOpen = true;
+		}
     }
 
 	private void OpenUi()
@@ -688,6 +700,7 @@ public class StashManager : MonoBehaviour
 		m_id = Random.Range(0, items.Count);
 		GameObject item = Instantiate(items[m_id], m_moveItemTransform);
 		item.GetComponent<Item_Object>().ChangeParent(m_moveItemTransform);
+		item.transform.localPosition = Vector3.zero;
 		AddItem(GridType.Stash, item, true);
 	}
 
@@ -696,6 +709,7 @@ public class StashManager : MonoBehaviour
 		if (!m_stashUi) return;
 		m_id = Random.Range(0, items.Count);
 		GameObject item = Instantiate(items[m_id], m_moveItemTransform);
+		item.transform.localPosition = Vector3.zero;
 		item.GetComponent<Item_Object>().ChangeParent(m_moveItemTransform);
 		AddItem(GridType.Inventory, item, true);
 	}

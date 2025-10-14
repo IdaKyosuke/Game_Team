@@ -43,6 +43,7 @@ public class GridIcon : MonoBehaviour
 		if(Input.GetMouseButtonUp(0) && m_onPointer)
 		{
 			GameObject.FindWithTag("inventoryManager").GetComponent<StashManager>().StartSet(m_type);
+			Debug.Log(m_type);
 		}
     }
 

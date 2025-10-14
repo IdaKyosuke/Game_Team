@@ -1,7 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using static UnityEditor.Progress;
 
 public enum EquipmentType
 {
@@ -27,7 +24,7 @@ public class GridIcon_Equipment : MonoBehaviour
 	[SerializeField] EquipmentType m_type;
 
 	// アイテム移動用の仮置きオブジェクト
-	[SerializeField] GameObject m_moveItemTransform;
+	GameObject m_moveItemTransform;
 
 	// Start is called before the first frame update
 	void Start()

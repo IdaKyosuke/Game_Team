@@ -1,7 +1,9 @@
 using Photon.Pun;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Rendering.Universal;
 
 public class PlayerMove : MonoBehaviourPunCallbacks
 {
@@ -13,6 +15,7 @@ public class PlayerMove : MonoBehaviourPunCallbacks
 
     private Vector3 m_moveDirection;
     private CharacterController m_controller;
+	private Rigidbody m_rb;
 
     private PlayerStatus m_playerStatus;
     private Condition m_condition;
@@ -21,10 +24,16 @@ public class PlayerMove : MonoBehaviourPunCallbacks
 
 	// レイの当たった敵を保管する用
 	private GameObject m_rayTarget;
+	[SerializeField] StashManager m_manager;
+
+
+	[SerializeField] bool m_isPlayer = true;
 
     void Start()
     {
+		if (!m_isPlayer) return;
         m_controller = GetComponent<CharacterController>();
+		m_rb = GetComponent<Rigidbody>();
         m_playerStatus = GetComponent<PlayerStatus>();
         m_condition = GetComponent<Condition>();
         m_moveDirection = Vector3.zero;
@@ -32,6 +41,7 @@ public class PlayerMove : MonoBehaviourPunCallbacks
 
     private void Update()
 	{
+		if (!m_isPlayer) return;
 		// 自身が生成したオブジェクトだけに移動処理を行う
 		if (photonView.IsMine)
 		{
@@ -48,11 +58,11 @@ public class PlayerMove : MonoBehaviourPunCallbacks
 				if (Input.GetKeyDown("e"))
 				{
 					m_stashManager.GetComponent<StashManager>().IsScavenger(true);
-					//インベントリUIの表示
-					m_stashManager.GetComponent<StashManager>().CreateStashUi(
-						m_rayTarget.GetComponent<Inventory_Info>().GetInfo(),
-						m_rayTarget.GetComponent<StashManager>().GetItemList()
-						);
+
+					PhotonView view = m_rayTarget.GetComponent<PhotonView>();
+					Debug.Log("Eをおした" + view);
+					// rayが当たっているオブジェクトに自分へ情報を送るようリクエストする
+					view.RPC(nameof(RequestInventoryData), view.Owner, photonView.ViewID);				
 				}
 			}
 
@@ -70,10 +80,40 @@ public class PlayerMove : MonoBehaviourPunCallbacks
 				m_stashManager.GetComponent<StashManager>().AddItemStash();
 			}
 		}
+		else
+		{
+			m_rb.isKinematic = true;
+		}
 	}
 
-    void FixedUpdate()
+	// プレイヤーからリクエストをもらってデータを送り返す
+	[PunRPC]
+	void RequestInventoryData(int requesterId)
 	{
+		PhotonView view = PhotonView.Find(requesterId);
+		Info_InventorySize info = GetComponent<Inventory_Info>().GetInfo();
+		List<ItemList> dataList = GetManager().GetItemList();
+		Debug.Log(GetManager().transform.parent.GetComponent<PhotonView>().ViewID);
+		ItemList[] data = new ItemList[dataList.Count];
+		for (int i = 0; i < dataList.Count; ++i)
+		{
+			data[i] = dataList[i];
+		}
+
+		view.RPC(nameof(ReceiveInventoryData), view.Owner, info, data);
+	}
+
+	[PunRPC]
+	void ReceiveInventoryData(Info_InventorySize info, ItemList[] data)
+	{
+		Debug.Log("Receive");
+		//インベントリUIの表示
+		m_stashManager.GetComponent<StashManager>().CreateStashUi(info, data);
+	}
+
+	void FixedUpdate()
+	{
+		if (!m_isPlayer) return;
 		// 自身が生成したオブジェクトだけに移動処理を行う
 		if (photonView.IsMine)
 		{
@@ -126,9 +166,27 @@ public class PlayerMove : MonoBehaviourPunCallbacks
 	{
 		if (!m_rayTarget || items == null) return;
 
-		List<ItemList> list = new List<ItemList>(items);
-		m_rayTarget.GetComponent<StashManager>().CopyItemList(list);
+		ItemList[] list = new ItemList[items.Count];
+
+		for (int i = 0; i <  list.Length; i++)
+		{
+			list[i] = items[i];
+		}
+
+		PhotonView view = m_rayTarget.GetComponent<PhotonView>();
+		view.RPC(nameof(RequestCopyItemList), view.Owner,list);
 		// ターゲットを空にする
 		m_rayTarget = null;
+	}
+
+	[PunRPC]
+	void RequestCopyItemList(ItemList[] list)
+	{
+		GetManager().CopyItemList(list);
+	}
+
+	public StashManager GetManager()
+	{
+		return m_manager;
 	}
 }

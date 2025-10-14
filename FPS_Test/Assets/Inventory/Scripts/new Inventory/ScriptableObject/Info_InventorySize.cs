@@ -19,8 +19,17 @@ public class Info_InventorySize : ScriptableObject
     [SerializeField] int width;
 
     public Vector2Int GetSize => new Vector2Int(height, width);
+	public void SetSize(int y, int x)
+	{
+		height = y;
+		width = x;
+	}
 
-    public InventoryType GetInventoryType => inventoryType;
+	public InventoryType GetInventoryType => inventoryType;
+	public void SetInventoryType(int num)
+	{
+		inventoryType = (InventoryType)num;
+	}
 
     //[Serializable]
     //public class InventorySizeDictionary
