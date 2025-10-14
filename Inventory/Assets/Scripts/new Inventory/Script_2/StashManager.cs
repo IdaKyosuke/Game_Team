@@ -705,4 +705,10 @@ public class StashManager : MonoBehaviour
 	{
 		list.Remove(list[item.GetComponent<Item_Object>().GetIndex()]);
 	}
+
+	// インベントリが開いているかを取得
+	public bool IsOpen()
+	{
+		return m_stashUiParent.activeSelf;
+	}
 }

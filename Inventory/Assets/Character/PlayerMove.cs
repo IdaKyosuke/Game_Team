@@ -10,6 +10,7 @@ public class PlayerMove : MonoBehaviour
     [SerializeField] UnityEvent m_onUniqueSkill;
     [SerializeField] StashManager m_stashManager;
     [SerializeField] Info_InventorySize m_inventortSize;
+	[SerializeField] PlayerAnime m_playerAnim;		// アニメーション管理用オブジェクト
 
     private Vector3 m_moveDirection;
     private CharacterController m_controller;
@@ -57,7 +58,7 @@ public class PlayerMove : MonoBehaviour
         //攻撃
         if (Input.GetMouseButtonDown(0))
         {
-            m_animator.SetBool("Attack", true);
+			m_animator.SetTrigger("Attack1");
         }
 
 		if (Input.GetKeyDown("tab"))
@@ -65,6 +66,7 @@ public class PlayerMove : MonoBehaviour
 			m_stashManager.ManageUiActiveInfo();
 		}
 
+		// デバッグ用
 		if (Input.GetKeyDown("1"))
 		{
 			m_stashManager.AddItemInventory();
@@ -98,21 +100,24 @@ public class PlayerMove : MonoBehaviour
         Vector3 moveVelocity = cameraForward * m_moveDirection.z + Camera.main.transform.right * m_moveDirection.x;
         moveVelocity = new Vector3(moveVelocity.x * m_playerStatus.Value.moveSpeed, m_moveDirection.y, moveVelocity.z * m_playerStatus.Value.moveSpeed);
 
-        //移動
-        m_controller.Move(moveVelocity * Time.deltaTime);
+		// 攻撃中は移動できない
+		if(!m_playerAnim.IsAttack())
+		{
+			//移動
+			m_controller.Move(moveVelocity * Time.deltaTime);
+			//移動していれば回転させる
+			Vector3 move = new Vector3(m_moveDirection.x, 0, m_moveDirection.z);
+			if (move != Vector3.zero)
+			{
+				transform.rotation = Quaternion.Slerp(
+					transform.rotation,
+					Quaternion.LookRotation(move.normalized),
+					0.2f
+				);
 
-        //移動していれば回転させる
-        Vector3 move = new Vector3(m_moveDirection.x, 0, m_moveDirection.z);
-        if (move != Vector3.zero)
-        {
-            transform.rotation = Quaternion.Slerp(
-                transform.rotation,
-                Quaternion.LookRotation(move.normalized),
-                0.2f
-            );
-
-            isMove = true;
-        }
+				isMove = true;
+			}
+		}
 
         //移動アニメーション
         m_animator.SetBool("Move", isMove);
