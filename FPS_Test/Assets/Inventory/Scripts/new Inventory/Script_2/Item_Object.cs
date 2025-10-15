@@ -20,13 +20,18 @@ public class Item_Object : MonoBehaviour
 	private Vector2 prevPos; //保存しておく初期position
 	Transform iconParent;
 
-	private Transform m_moveItemTransform;  // 移動時に格納されるオブジェクト
+	[SerializeField] Transform m_moveItemTransform;  // 移動時に格納されるオブジェクト
 	[SerializeField] GameObject m_collider; // 当たり判定用の画像
 
 	// 配列のマス目
 	private Vector2Int m_pos;
 
-	private GameObject m_inventoryManager;
+	// マネージャー
+	[SerializeField] GameObject m_inventoryManager;
+	[SerializeField] PlayerStatus m_equipmentManager;
+
+	// カメラ
+	private Camera m_camera;
 
 	private GridType m_gridType = GridType.Inventory;
 
@@ -44,6 +49,9 @@ public class Item_Object : MonoBehaviour
 	// テスト用（自分のリストのindex）
 	private int m_index;
 
+	// inventoryManagerとtransformが設定されているか
+	private bool m_isSetManager = false;
+
 	// Start is called before the first frame update
 	void Start()
     {
@@ -57,10 +65,10 @@ public class Item_Object : MonoBehaviour
 			iconParent = transform.parent;
 		}
 
-		// 移動中に格納される場所
-		m_moveItemTransform = GameObject.FindWithTag("moveItemTransform").transform;
-
-		m_inventoryManager = GameObject.FindWithTag("inventoryManager");
+		//if(!m_isSetManager)
+		//{
+		//	SetBaseInfo();
+		//}
 
 		// スケールを1にする
 		rectTransform.localScale = Vector3.one;
@@ -112,15 +120,16 @@ public class Item_Object : MonoBehaviour
 	// ショートカット移動
 	private void QuickMove()
 	{
+		Debug.Log(m_inventoryManager);
 		// 現在の自分の入っている枠のタイプに応じて入れ替える
-		GameObject.FindWithTag("inventoryManager").GetComponent<StashManager>().QuickMoveItem(m_gridType, gameObject, m_isEquip);
+		m_inventoryManager.GetComponent<StashManager>().QuickMoveItem(m_gridType, gameObject, m_isEquip);
 	}
 
 	// 高速装備する
 	private void QuickEquip()
 	{
 		// 現在の自分の入っている枠のタイプに応じて入れ替える
-		GameObject.FindWithTag("equipmentManager").GetComponent<PlayerStatus>().QuickEquip(gameObject);
+		m_equipmentManager.QuickEquip(gameObject);
 	}
 
 	// アイテムを移動させる前の準備
@@ -224,7 +233,7 @@ public class Item_Object : MonoBehaviour
 		RectTransformUtility.ScreenPointToLocalPointInRectangle(
 			parentRectTransform, 
 			screenPosition, 
-			Camera.main, 
+			m_camera, 
 			out result
 			);
 
@@ -315,5 +324,25 @@ public class Item_Object : MonoBehaviour
 	public string GetName()
 	{
 		return m_name;
+	}
+
+	// 生成時にstashManagerとmoveTransformを設定する
+	public void SetBaseInfo()
+	{
+		// 親オブジェクトからマネージャーを取得
+		m_inventoryManager = transform.parent.GetComponent<MoveItemTransform>().GetStashManager();
+		Debug.Log(m_inventoryManager);
+		// 移動中に格納される場所
+		m_moveItemTransform = m_inventoryManager.GetComponent<StashManager>().GetMoveItemTransform();
+
+		// カメラを設定
+		m_camera = transform.parent.GetComponent<MoveItemTransform>().GetCamera();
+
+		if (m_equipmentType != EquipmentType.None)
+		{
+			m_equipmentManager = transform.parent.GetComponent<MoveItemTransform>().GetEquipmentManager().GetComponent<PlayerStatus>();
+		}
+
+		m_isSetManager = true;
 	}
 }

@@ -68,7 +68,8 @@ public class StashManager : MonoBehaviourPunCallbacks
 
 	private Grid[,] m_stashGridList;
 	private Grid[,] m_inventoryGridList;
-	private Transform m_moveItemTransform;
+	// アイテムを一旦除ける用の場所
+	[SerializeField] Transform m_moveItemTransform;
 	private GridType m_checkType = GridType.Empty;
 	
 	[SerializeField] GameObject m_stashUiParent;
@@ -91,7 +92,6 @@ public class StashManager : MonoBehaviourPunCallbacks
 	// UIを表示するときの座標用
 	[SerializeField] Transform m_inventoryPos;
 	[SerializeField] Transform m_stashPos;
-
 
 	// テスト用
 	[SerializeField] Info_InventorySize info1;
@@ -117,18 +117,19 @@ public class StashManager : MonoBehaviourPunCallbacks
 	// Start is called before the first frame update
 	void Start()
     {
-		if (!m_isPlayer) return;
-		// アイテム移動用のオブジェクト
-		m_moveItemTransform = GameObject.FindWithTag("moveItemTransform").transform;
+		if (m_isPlayer)
+		{
+			CreateInventory(GridType.Stash);
+			CreateInventory(GridType.Inventory);
+		}
 
-		CreateInventory(GridType.Stash);
-		CreateInventory(GridType.Inventory);
-    }
+		m_stashUiParent.SetActive(false);
+	}
 
     // Update is called once per frame
     void Update()
     {
-		if (!photonView.IsMine) return;
+		if (!photonView.IsMine || !m_isPlayer) return;
 
 		if (Input.GetMouseButtonUp(0))
 		{
@@ -148,6 +149,8 @@ public class StashManager : MonoBehaviourPunCallbacks
 		Grid[,] list = null;
 		int height = 0;
 		int width = 0;
+
+		Debug.Log(m_checkType);
 
 		switch(m_checkType)
 		{
@@ -564,6 +567,8 @@ public class StashManager : MonoBehaviourPunCallbacks
 				break;
 		}
 
+		m_stashUi.GetComponent<Inventory_Parent>().SetStashManager(this);
+
 		// アイテムリストをコピー
 		m_otherItemList = new List<ItemList>(itemList);
 		// インベントリの情報を取得
@@ -586,6 +591,8 @@ public class StashManager : MonoBehaviourPunCallbacks
 					op.Result,
 					m_moveItemTransform
 					);
+				
+				obj.GetComponent<Item_Object>().SetBaseInfo();
 
 				if (item.IsEquip())
 				{
@@ -699,6 +706,7 @@ public class StashManager : MonoBehaviourPunCallbacks
 	{
 		m_id = Random.Range(0, items.Count);
 		GameObject item = Instantiate(items[m_id], m_moveItemTransform);
+		item.GetComponent<Item_Object>().SetBaseInfo();
 		item.GetComponent<Item_Object>().ChangeParent(m_moveItemTransform);
 		item.transform.localPosition = Vector3.zero;
 		AddItem(GridType.Stash, item, true);
@@ -709,6 +717,7 @@ public class StashManager : MonoBehaviourPunCallbacks
 		if (!m_stashUi) return;
 		m_id = Random.Range(0, items.Count);
 		GameObject item = Instantiate(items[m_id], m_moveItemTransform);
+		item.GetComponent<Item_Object>().SetBaseInfo();
 		item.transform.localPosition = Vector3.zero;
 		item.GetComponent<Item_Object>().ChangeParent(m_moveItemTransform);
 		AddItem(GridType.Inventory, item, true);
@@ -766,5 +775,17 @@ public class StashManager : MonoBehaviourPunCallbacks
 		}
 
 		RemoveItemList(item, list);
+	}
+
+	// インベントリを開いているかを取得
+	public bool IsOpenInventory()
+	{
+		return m_isInventoryOpen;
+	}
+
+	// アイテムを一旦除ける用の場所を返す
+	public Transform GetMoveItemTransform()
+	{
+		return m_moveItemTransform;
 	}
 }

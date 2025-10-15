@@ -24,7 +24,10 @@ public class GridIcon : MonoBehaviour
 
 	Image m_image;
 	// 自分のタイプ
-	private GridType m_type; 
+	private GridType m_type;
+
+	[SerializeField] GameObject m_parent;
+	private StashManager m_stashManager; 
 
 	// Start is called before the first frame update
 	void Start()
@@ -34,6 +37,7 @@ public class GridIcon : MonoBehaviour
 		{
 			m_image = GetComponent<Image>();
 		}
+		m_stashManager = m_parent.GetComponent<Inventory_Parent>().GetStashManager();
 	}
 
     // Update is called once per frame
@@ -42,7 +46,8 @@ public class GridIcon : MonoBehaviour
 		// 自分の上でドロップされたとき
 		if(Input.GetMouseButtonUp(0) && m_onPointer)
 		{
-			GameObject.FindWithTag("inventoryManager").GetComponent<StashManager>().StartSet(m_type);
+			//GameObject.FindWithTag("inventoryManager").GetComponent<StashManager>().StartSet(m_type);
+			m_stashManager.StartSet(m_type);
 			Debug.Log(m_type);
 		}
     }

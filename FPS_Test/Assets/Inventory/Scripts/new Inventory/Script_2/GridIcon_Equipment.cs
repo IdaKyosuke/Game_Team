@@ -24,7 +24,10 @@ public class GridIcon_Equipment : MonoBehaviour
 	[SerializeField] EquipmentType m_type;
 
 	// アイテム移動用の仮置きオブジェクト
-	GameObject m_moveItemTransform;
+	Transform m_moveItemTransform;
+
+	// stashManagerを貰うための親
+	[SerializeField] GameObject m_parent;
 
 	// Start is called before the first frame update
 	void Start()
@@ -32,7 +35,7 @@ public class GridIcon_Equipment : MonoBehaviour
 		m_pastInfo = m_fillUi;
 		if(!m_moveItemTransform)
 		{
-			m_moveItemTransform = GameObject.FindWithTag("moveItemTransform");
+			m_moveItemTransform = m_parent.GetComponent<Inventory_Parent>().GetStashManager().GetMoveItemTransform();
 		}
 	}
 
@@ -79,9 +82,9 @@ public class GridIcon_Equipment : MonoBehaviour
 	private void Equip()
 	{
 		// 移動中のアイテムがないときは無視
-		if (m_moveItemTransform.transform.childCount == 0) return;
+		if (m_moveItemTransform.childCount == 0) return;
 
-		GameObject o = m_moveItemTransform.transform.GetChild(0).gameObject;
+		GameObject o = m_moveItemTransform.GetChild(0).gameObject;
 		// アイテムが装備じゃないとき || 装備枠に対応した装備じゃないときは無視
 		if (
 			o.GetComponent<Item_Object>().GetWeaponType() == EquipmentType.None ||
@@ -94,7 +97,6 @@ public class GridIcon_Equipment : MonoBehaviour
 		{
 			if (transform.childCount != 0)
 			{
-				//transform.GetChild(0).transform.SetParent(m_moveItemTransform.transform);
 				// すでに中身が設定されている時、新しく追加したものを元の場所に戻す
 				o.GetComponent<Item_Object>().PointerUp(false);
 			}
