@@ -105,8 +105,6 @@ public class StashManager : MonoBehaviourPunCallbacks
 	// テスト用
 	[SerializeField] bool m_isPlayer = true;
 	private bool m_isScavenger = false;
-	// アイテムリスト
-	[SerializeField] List<ItemList> m_itemListMine = new List<ItemList>();
 
 	// アイテムのエクセルデータ
 	[SerializeField] ExcelData m_data;
@@ -413,6 +411,18 @@ public class StashManager : MonoBehaviourPunCallbacks
 		return m_itemList;
 	}
 
+	// インベントリのアイテムリストを返す
+	public ItemList GetItemListOne()
+	{
+		if (m_itemList.Count != 0)
+		{
+			Debug.Log(m_itemList[0].GetPrefabName());
+			Debug.Log(m_itemList.Count);
+		}
+
+		return m_itemList[0];
+	}
+
 	// --- ショートカット ---
 	// インベントリ ⇔ スタッシュ（空き枠を探して自動で入れ替える）
 	public bool QuickMoveItem(GridType type, GameObject item, bool isEquip, bool isAdd = false, bool isTest = false)
@@ -539,7 +549,7 @@ public class StashManager : MonoBehaviourPunCallbacks
     }
 
 	// アイテムリストをコピーする
-	public void CopyItemList(ItemList[] list)
+	public void CopyItemList(List<ItemList> list)
 	{
 		m_itemList = new List<ItemList>(list);
 	}
@@ -551,8 +561,9 @@ public class StashManager : MonoBehaviourPunCallbacks
     }
 
     // アイテム欄を作成する
-    public void CreateStashUi(Info_InventorySize info, ItemList[] itemList)
+    public void CreateStashUi(Info_InventorySize info, List<ItemList> itemList)
 	{
+		Debug.Log("Receive");
 		if (m_isInventoryOpen) return;
 
 		// UIを表示
@@ -731,7 +742,7 @@ public class StashManager : MonoBehaviourPunCallbacks
 	// リストに追加する
 	private void AddItemList(GameObject item, List<ItemList> list)
 	{
-		ItemList info = new ItemList();
+		ItemList info = ScriptableObject.CreateInstance<ItemList>();
 		// マス目座標を保存
 		info.SetGridIndex(item.GetComponent<Item_Object>().GetGridIndex());
 		// プレハブを取得

@@ -26,8 +26,8 @@ public class PlayerMove : MonoBehaviourPunCallbacks
 	private GameObject m_rayTarget;
 	[SerializeField] StashManager m_manager;
 
-
 	[SerializeField] bool m_isPlayer = true;
+	
 
     void Start()
     {
@@ -48,21 +48,23 @@ public class PlayerMove : MonoBehaviourPunCallbacks
 			//前方にRayを飛ばす
 			if (Physics.Raycast(transform.position, transform.forward, out var hit))
 			{
-				//プレイヤー以外は無視
-				if (!hit.transform.gameObject.CompareTag("Player")) return;
-				// レイの当たった敵を保管
-				m_rayTarget = hit.transform.gameObject;
-
 				//Debug.Log("Hit!!!!!!!!!!!!");
 				//Eキーが押されていなければ無視
 				if (Input.GetKeyDown("e"))
 				{
+					//プレイヤー以外は無視
+					if (!hit.transform.gameObject.CompareTag("Player")) return;
+					// レイの当たった敵を保管
+					m_rayTarget = hit.transform.gameObject;
+
 					m_stashManager.GetComponent<StashManager>().IsScavenger(true);
 
-					PhotonView view = m_rayTarget.GetComponent<PhotonView>();
-					Debug.Log("Eをおした" + view);
-					// rayが当たっているオブジェクトに自分へ情報を送るようリクエストする
-					view.RPC(nameof(RequestInventoryData), view.Owner, photonView.ViewID);				
+					if (m_rayTarget.TryGetComponent(out PhotonView view))
+					{ 
+						Debug.Log("Eをおした" + view);
+						// rayが当たっているオブジェクトに自分へ情報を送るようリクエストする
+						view.RPC(nameof(RequestInventoryData), view.Owner, photonView.ViewID);				
+					}
 				}
 			}
 
@@ -91,31 +93,37 @@ public class PlayerMove : MonoBehaviourPunCallbacks
 
 	// プレイヤーからリクエストをもらってデータを送り返す
 	[PunRPC]
-	void RequestInventoryData(int requesterId)
+	void RequestInventoryData(int requestId)
 	{
-		PhotonView view = PhotonView.Find(requesterId);
+		PhotonView view = PhotonView.Find(requestId);
+
+		/*
 		Info_InventorySize info = GetComponent<Inventory_Info>().GetInfo();
 		List<ItemList> dataList = GetManager().GetItemList();
-		Debug.Log(GetManager().transform.parent.GetComponent<PhotonView>().ViewID);
 		ItemList[] data = new ItemList[dataList.Count];
+		//Debug.Log(view.Owner);
 		for (int i = 0; i < dataList.Count; ++i)
 		{
 			data[i] = dataList[i];
 		}
+		*/
 
-		view.RPC(nameof(ReceiveInventoryData), view.Owner, info, data);
+		Debug.Log("view.RPC s : " + view);
+		view.RPC(nameof(ReceiveInventoryData), view.Owner, GetComponent<Inventory_Info>().GetInfo(), GetManager().GetItemList());
+		Debug.Log("view.RPC e");
 	}
 
 	[PunRPC]
-	void ReceiveInventoryData(Info_InventorySize info, ItemList[] data)
+	void ReceiveInventoryData(Info_InventorySize info, List<ItemList> list)
 	{
-		Debug.Log("Receive");
+		Debug.Log("PUNRPC : " + list.Count);
 		//インベントリUIの表示
-		m_stashManager.GetComponent<StashManager>().CreateStashUi(info, data);
+		m_stashManager.transform.GetComponent<StashManager>().CreateStashUi(info, list);
 	}
 
 	void FixedUpdate()
 	{
+		/*
 		if (!m_isPlayer) return;
 		// 自身が生成したオブジェクトだけに移動処理を行う
 		if (photonView.IsMine)
@@ -152,6 +160,7 @@ public class PlayerMove : MonoBehaviourPunCallbacks
 				);
 			}
 		}
+		*/
     }
 
     public void OnDamage()
@@ -169,22 +178,38 @@ public class PlayerMove : MonoBehaviourPunCallbacks
 	{
 		if (!m_rayTarget || items == null) return;
 
+		/*
 		ItemList[] list = new ItemList[items.Count];
-
 		for (int i = 0; i <  list.Length; i++)
 		{
 			list[i] = items[i];
 		}
+		*/
 
-		PhotonView view = m_rayTarget.GetComponent<PhotonView>();
-		view.RPC(nameof(RequestCopyItemList), view.Owner,list);
-		// ターゲットを空にする
-		m_rayTarget = null;
+		/*
+		if (m_rayTarget.TryGetComponent(out PhotonView view))
+		{ 
+			Debug.Log("Eをおした" + view);
+			// rayが当たっているオブジェクトに自分へ情報を送るようリクエストする
+			view.RPC(nameof(RequestInventoryData), view.Owner, photonView.ViewID);				
+		}
+		*/
+		if (m_rayTarget.TryGetComponent(out PhotonView view))
+		{
+			view.RPC(nameof(RequestCopyItemList), view.Owner, items);
+//			view.RPC(nameof(RequestCopyItemList), view.Owner, 1, items.ToArray());
+//			view.RPC(nameof(RequestCopyItemList), view.Owner, 1);
+			// ターゲットを空にする
+			m_rayTarget = null;
+		}
 	}
 
 	[PunRPC]
-	void RequestCopyItemList(ItemList[] list)
+	void RequestCopyItemList(List<ItemList> list)
+//	void RequestCopyItemList(int hoge, ItemList[] list)
+//	void RequestCopyItemList(int list)
 	{
+		Debug.Log("RequestCopyItemList : " + list.Count);
 		GetManager().CopyItemList(list);
 	}
 

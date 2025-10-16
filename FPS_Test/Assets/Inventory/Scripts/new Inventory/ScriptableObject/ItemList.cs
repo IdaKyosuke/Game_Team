@@ -36,7 +36,7 @@ public class ItemList : ScriptableObject
 	// プレハブを取得する
 	public string GetPrefabName()
 	{
-		return m_prefab.name;
+		return m_prefabName;
 	}
 
 	// プレハブを設定する
