@@ -1,5 +1,6 @@
 using Photon.Pun;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
@@ -580,8 +581,15 @@ public class StashManager : MonoBehaviourPunCallbacks
 
 		m_stashUi.GetComponent<Inventory_Parent>().SetStashManager(this);
 
+		int count1 = 0;
+		foreach (ItemList item in itemList)
+		{
+			Debug.Log("itemList[" + count1 + "] " + item.GetGridIndex().x + " , " + item.GetGridIndex().y);
+			count1++;
+		}
 		// アイテムリストをコピー
 		m_otherItemList = new List<ItemList>(itemList);
+
 		// インベントリの情報を取得
 		m_stashHeight = info.GetSize.x;
         m_stashWidth = info.GetSize.y;
@@ -595,47 +603,56 @@ public class StashManager : MonoBehaviourPunCallbacks
 		// リストをUIに反映
 		foreach (ItemList item in m_otherItemList)
 		{
-			Loader.LoadGameObjectAsync(item.GetPrefabName()).Completed += op =>
-			{
-				// リストからオブジェクトを生成
-				GameObject obj = Instantiate(
-					op.Result,
-					m_moveItemTransform
-					);
-				
-				obj.GetComponent<Item_Object>().SetBaseInfo();
-
-				if (item.IsEquip())
-				{
-					// 装備されていたアイテム
-					m_stashUi.GetComponent<Inventory_Parent>().GetEquipments.GetComponent<Player_Equipment>().QuickEquip(obj);
-				}
-				else
-				{
-					// 自分が入っている枠のタイプを設定
-					obj.GetComponent<Item_Object>().SetType(GridType.Stash);
-					// マス目を記憶
-					obj.GetComponent<Item_Object>().SetGridIndex(item.GetGridIndex());
-					// 普通のアイテムのマス目を埋める
-					MoveItem(
-						obj,
-						item.GetGridIndex(),
-						obj.GetComponent<Item_Object>().GetSize(),
-						true,
-						GridType.Stash
-						);
-					// UIを移動
-					obj.GetComponent<Item_Object>().PointerUp(true, m_stashGridList[item.GetGridIndex().x, item.GetGridIndex().y].GetTransform());
-					// リストのアクティブなオブジェクトを保存
-					item.SetActiveObject(obj);
-				}
-
-				item.ChangeIndex(count);
-				count++;
-				Addressables.Release(op);
-			};
+			Debug.Log("m_otherItemList[" + count + "] " + item.GetGridIndex().x + " , " + item.GetGridIndex().y);
+			CreateItem(count, item);
+			count++;
 		}
 		ManageUiActiveInfo();
+	}
+
+	private void CreateItem(int count, ItemList item)
+	{
+		Loader.LoadGameObjectAsync(item.GetPrefabName()).Completed += op =>
+		{
+			Debug.Log("[LoadGameObjectAsync][" + count + "] "  + item.GetGridIndex().x + " , " + item.GetGridIndex().y);
+
+
+			// リストからオブジェクトを生成
+			GameObject obj = Instantiate(
+				op.Result,
+				m_moveItemTransform
+				);
+				
+			obj.GetComponent<Item_Object>().SetBaseInfo();
+
+			if (item.IsEquip())
+			{
+				// 装備されていたアイテム
+				m_stashUi.GetComponent<Inventory_Parent>().GetEquipments.GetComponent<Player_Equipment>().QuickEquip(obj);
+			}
+			else
+			{
+				// 自分が入っている枠のタイプを設定
+				obj.GetComponent<Item_Object>().SetType(GridType.Stash);
+				// マス目を記憶
+				obj.GetComponent<Item_Object>().SetGridIndex(item.GetGridIndex());
+				// 普通のアイテムのマス目を埋める
+				MoveItem(
+					obj,
+					item.GetGridIndex(),
+					obj.GetComponent<Item_Object>().GetSize(),
+					true,
+					GridType.Stash
+					);
+				// UIを移動
+				obj.GetComponent<Item_Object>().PointerUp(true, m_stashGridList[item.GetGridIndex().x, item.GetGridIndex().y].GetTransform());
+				// リストのアクティブなオブジェクトを保存
+				item.SetActiveObject(obj);
+			}
+
+			item.ChangeIndex(count);
+			Addressables.Release(op);
+		};
 	}
 
 	// 内部的なインベントリを作成する

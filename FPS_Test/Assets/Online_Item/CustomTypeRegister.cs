@@ -64,7 +64,7 @@ public class CustomTypeRegister : MonoBehaviour
 				Protocol.Serialize((short)b, bytes, ref offset);
 			}
 
-			Debug.Log("dataList[" + c + "] : " + data.GetGridIndex().x + ", " + data.GetGridIndex().y + " " + data.m_id);
+			Debug.Log("dataList[" + c + "] : " + data.GetGridIndex().x + ", " + data.GetGridIndex().y + " " + data.m_id + " " + data.GetPrefabName());
 			c++;
 		}
 
@@ -138,7 +138,6 @@ public class CustomTypeRegister : MonoBehaviour
 	{
 		Debug.Log("DeserializeItemList s");
 
-		ItemList data = ScriptableObject.CreateInstance<ItemList>();
 		int offset = 0;
 
 		string strBytes = "";
@@ -155,6 +154,8 @@ public class CustomTypeRegister : MonoBehaviour
 		List<ItemList> items = new List<ItemList>();
 		for(int i=0; i<count;i++)
 		{
+			ItemList data = ScriptableObject.CreateInstance<ItemList>();
+
 			int x, y;
 			Protocol.Deserialize(out x, bytes, ref offset);
 			Protocol.Deserialize(out y, bytes, ref offset);
@@ -181,7 +182,7 @@ public class CustomTypeRegister : MonoBehaviour
 
 			items.Add(data);
 
-			Debug.Log("dataList[" + c + "] : " + data.GetGridIndex().x + ", " + data.GetGridIndex().y + " " + data.m_id);
+			Debug.Log("dataList[" + c + "] : " + data.GetGridIndex().x + ", " + data.GetGridIndex().y + " " + data.m_id + " "  + data.GetPrefabName());
 			c++;
 		}
 

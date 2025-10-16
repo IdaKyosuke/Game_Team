@@ -22,7 +22,7 @@ public class EquipmentParameter : ScriptableObject
 
     public static EquipmentParameter operator+ (EquipmentParameter a, EquipmentParameter b)
     {
-        EquipmentParameter result = new EquipmentParameter ();
+        EquipmentParameter result = ScriptableObject.CreateInstance<EquipmentParameter>();
         result.id = a.id; 
         result.hp = a.hp + b.hp;
         result.mp = a.mp + b.mp;
@@ -37,9 +37,9 @@ public class EquipmentParameter : ScriptableObject
     }
 
     public static EquipmentParameter operator- (EquipmentParameter a, EquipmentParameter b)
-    {
-        EquipmentParameter result = new EquipmentParameter();
-        result.id = a.id; 
+	{
+		EquipmentParameter result = ScriptableObject.CreateInstance<EquipmentParameter>();
+		result.id = a.id; 
         result.hp = a.hp - b.hp;
         result.mp = a.mp - b.mp;
         result.physicalPower = a.physicalPower - b.physicalPower;
