@@ -45,9 +45,12 @@ public class Weapon_Collider : MonoBehaviour
 			// 初めて当たったときは相手のIDを登録
 			m_hitMasterInfo[id] = true;
 
-			////// 当たった場所にエフェクトを表示
-			////Vector3 hitPos = other.ClosestPointOnBounds(GetComponent<BoxCollider>().bounds.center);
-			////GameObject effect = Instantiate(m_hitEffect, hitPos, Quaternion.identity);
+			// 当たった場所にエフェクトを表示
+			Vector3 hitPos = other.ClosestPointOnBounds(GetComponent<BoxCollider>().bounds.center);
+			Quaternion quaternion = Quaternion.identity;
+			quaternion.x = hitPos.x - other.transform.position.x;
+			quaternion.z = hitPos.z - other.transform.position.z;
+			GameObject effect = Instantiate(m_hitEffect, hitPos, quaternion);
 		}
 	}
 }

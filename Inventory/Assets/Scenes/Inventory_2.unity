@@ -501,7 +501,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5194c8a246eb1c645837a2a9bcbbde32, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_hitEffect: {fileID: 0}
+  m_hitEffect: {fileID: 2831086357519358652, guid: e4e796eaa88a78749bd0fac837e5c728,
+    type: 3}
   m_parentPlayer: {fileID: 7029958375474915916}
 --- !u!4 &420811385 stripped
 Transform:
@@ -1347,6 +1348,21 @@ PrefabInstance:
         type: 3}
     - target: {fileID: 8309462977160738362, guid: 670f34e8cf8828146b7c2ebc4c3d421b,
         type: 3}
+      propertyPath: m_LocalScale.x
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8309462977160738362, guid: 670f34e8cf8828146b7c2ebc4c3d421b,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8309462977160738362, guid: 670f34e8cf8828146b7c2ebc4c3d421b,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8309462977160738362, guid: 670f34e8cf8828146b7c2ebc4c3d421b,
+        type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
@@ -1394,6 +1410,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8309462977160738362, guid: 670f34e8cf8828146b7c2ebc4c3d421b,
+        type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8714408481995552239, guid: 670f34e8cf8828146b7c2ebc4c3d421b,
         type: 3}
