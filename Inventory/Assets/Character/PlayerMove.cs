@@ -10,7 +10,9 @@ public class PlayerMove : MonoBehaviour
     [SerializeField] UnityEvent m_onUniqueSkill;
     [SerializeField] StashManager m_stashManager;
     [SerializeField] Info_InventorySize m_inventortSize;
-	[SerializeField] PlayerAnime m_playerAnim;		// アニメーション管理用オブジェクト
+	[SerializeField] PlayerAnime m_playerAnim;      // アニメーション管理用オブジェクト
+
+	[SerializeField, Range(0.1f, 10.0f)] float m_sightSpeedRatioVertial = 1.0f;	// 視点移動速度の倍率(XZ平面)
 
     private Vector3 m_moveDirection;
     private CharacterController m_controller;
@@ -92,8 +94,12 @@ public class PlayerMove : MonoBehaviour
         //感電状態は移動不可
         if (m_condition.Current == ConditionType.Shock) return;
 
-        //移動量の取得
-        m_moveDirection = new Vector3(Input.GetAxis("Horizontal"), m_moveDirection.y, Input.GetAxis("Vertical"));
+		// 視点移動
+		float mouseX = Input.GetAxis("Mouse X");
+		float mouseY = Input.GetAxis("Mouse Y");
+
+		//移動量の取得
+		m_moveDirection = new Vector3(Input.GetAxis("Horizontal"), m_moveDirection.y, Input.GetAxis("Vertical"));
         if (m_controller.isGrounded)
         {
             if (Input.GetButton("Jump")) m_moveDirection.y = m_jumpPower;
@@ -113,11 +119,11 @@ public class PlayerMove : MonoBehaviour
 			Vector3 move = new Vector3(m_moveDirection.x, 0, m_moveDirection.z);
 			if (move != Vector3.zero)
 			{
-				transform.rotation = Quaternion.Slerp(
-					transform.rotation,
-					Quaternion.LookRotation(move.normalized),
-					0.2f
-				);
+				//transform.rotation = Quaternion.Slerp(
+				//	transform.rotation,
+				//	Quaternion.LookRotation(move.normalized),
+				//	0.2f
+				//);
 
 				isMove = true;
 			}
@@ -125,7 +131,10 @@ public class PlayerMove : MonoBehaviour
 
         //移動アニメーション
         m_animator.SetBool("Move", isMove);
-    }
+
+		// 横回転
+		transform.Rotate(0, mouseX * m_sightSpeedRatioVertial, 0);
+	}
 
     public void OnDamage()
     {
