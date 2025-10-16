@@ -58,7 +58,11 @@ public class PlayerMove : MonoBehaviour
         //UŒ‚
         if (Input.GetMouseButtonDown(0))
         {
-			m_animator.SetTrigger("Attack1");
+			// UŒ‚’†‚Í–³‹
+			if (!m_playerAnim.IsAttack())
+			{
+				m_animator.SetTrigger("Attack1");
+			}
         }
 
 		if (Input.GetKeyDown("tab"))

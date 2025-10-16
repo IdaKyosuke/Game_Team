@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class PlayerAnime : MonoBehaviour
 {
-    [SerializeField] GameObject m_collider; //UŒ‚—p‚Ì“–‚½‚è”»’è
+    [SerializeField] Weapon_Collider m_collider; //UŒ‚—p‚Ì“–‚½‚è”»’è
 
     private Animator m_animator;
 	private bool m_isAttack = false;
@@ -16,7 +16,7 @@ public class PlayerAnime : MonoBehaviour
     {
 		// UŒ‚’†‚Í–³‹
 		if (m_isAttack) return;
-		m_collider.SetActive(true);
+		m_collider.StartAttack();
 		m_isAttack = true;
     }
 
@@ -24,7 +24,7 @@ public class PlayerAnime : MonoBehaviour
     {
 		// UŒ‚’†ˆÈŠO‚Í–³‹
 		if (!m_isAttack) return;
-		m_collider.SetActive(false);
+		m_collider.EndAttack();
 		m_isAttack = false;
     }
 

@@ -444,6 +444,7 @@ GameObject:
   m_Component:
   - component: {fileID: 267376543}
   - component: {fileID: 267376542}
+  - component: {fileID: 267376544}
   m_Layer: 0
   m_Name: Collider
   m_TagString: Untagged
@@ -466,9 +467,9 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 3
   m_Size: {x: 19.965717, y: 1.8321861, z: 2.000616}
   m_Center: {x: 0.0000006810863, y: -0.08930965, z: 0.0003075083}
@@ -488,6 +489,20 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1060268491}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &267376544
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 267376541}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5194c8a246eb1c645837a2a9bcbbde32, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_hitEffect: {fileID: 0}
+  m_parentPlayer: {fileID: 7029958375474915916}
 --- !u!4 &420811385 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: d6e5db27c3e59be43930f27775ac6dac,
@@ -661,7 +676,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ba37a72a4220321459a01c8f73e57ae0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_collider: {fileID: 267376541}
+  m_collider: {fileID: 267376544}
 --- !u!1 &485111369
 GameObject:
   m_ObjectHideFlags: 0
@@ -814,12 +829,12 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.3, y: 1.5, z: 0.3}
-  m_Center: {x: 0, y: 0.8, z: 0}
+  m_Size: {x: 0.35, y: 1.5, z: 0.37}
+  m_Center: {x: 0, y: 0.79999995, z: 0.030290894}
 --- !u!1 &563039603
 GameObject:
   m_ObjectHideFlags: 0
@@ -1192,7 +1207,7 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -1268,6 +1283,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1468125594201271780, guid: 670f34e8cf8828146b7c2ebc4c3d421b,
+        type: 3}
+      propertyPath: m_Radius
+      value: 0.2
+      objectReference: {fileID: 0}
     - target: {fileID: 3508079244975943650, guid: 670f34e8cf8828146b7c2ebc4c3d421b,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1302,6 +1322,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Warrior
+      objectReference: {fileID: 0}
+    - target: {fileID: 7029958375003328860, guid: 670f34e8cf8828146b7c2ebc4c3d421b,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7356350997679471448, guid: 670f34e8cf8828146b7c2ebc4c3d421b,
         type: 3}
