@@ -64,11 +64,13 @@ public class PlayerMove : MonoBehaviour
         //UŒ‚
         if (Input.GetMouseButtonDown(0))
         {
-			// UŒ‚’†‚Í–³‹
-			if (!m_playerAnim.IsAttack())
-			{
-				m_animator.SetTrigger("Attack1");
-			}
+            // UŒ‚’†‚Í–³‹
+            if (m_playerAnim.IsAttack()) return;
+
+            //ƒWƒƒƒ“ƒv’†‚Í–³‹
+            if(!m_controller.isGrounded) return;
+
+            m_animator.SetTrigger("Attack1");
         }
 
 		if (Input.GetKeyDown("tab"))
@@ -121,6 +123,9 @@ public class PlayerMove : MonoBehaviour
 
     private void LateUpdate()
     {
+        //UŒ‚’†‚Í‰ñ“]‚µ‚È‚¢
+        if (m_playerAnim.IsAttack()) return;
+
         // ‹“_ˆÚ“®
         float mouseX = Input.GetAxis("Mouse X") * MouseSensitivity * Time.deltaTime;
         float mouseY = Input.GetAxis("Mouse Y") * MouseSensitivity * Time.deltaTime;
