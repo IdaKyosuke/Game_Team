@@ -29,6 +29,9 @@ public class GridIcon_Equipment : MonoBehaviour
 	// stashManagerを貰うための親
 	[SerializeField] GameObject m_parent;
 
+	// 自分の装備枠かどうか
+	[SerializeField] bool m_isMine = false;
+
 	// Start is called before the first frame update
 	void Start()
 	{
@@ -103,25 +106,28 @@ public class GridIcon_Equipment : MonoBehaviour
 			else
 			{
 				// 新しく装備する
-				o.GetComponent<Item_Object>().PointerUp(true, transform, true);
+				o.GetComponent<Item_Object>().PointerUp(true, transform);
 				// 新しく装備された物を装備状態にする
-				o.GetComponent<Item_Object>().SetEquipValue(true);
+				o.GetComponent<Item_Object>().SetEquipValue(true, m_isMine);
 			}
 		}
 	}
 
-	public void QuickEquip(GameObject item)
+	public void QuickEquip(GameObject item, bool firstSetItemFlg = true)
 	{
 		// 中身があるときは飛ばす
 		if (transform.childCount != 0)
 		{
 			item.GetComponent<Item_Object>().PointerUp(false);
+			Debug.Log("中身を入れられなかった");
 			return;
 		}
 
 		// 装備を枠に入れる
-		item.GetComponent<Item_Object>().PointerUp(true, transform, true);
+		item.GetComponent<Item_Object>().PointerUp(true, transform);
 		// 装備状態にする
-		item.GetComponent<Item_Object>().SetEquipValue(true);
+		item.GetComponent<Item_Object>().SetEquipValue(true, m_isMine, firstSetItemFlg);
+
+		Debug.Log("装備完了");
 	}
 }

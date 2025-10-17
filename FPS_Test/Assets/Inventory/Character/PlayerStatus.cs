@@ -158,7 +158,7 @@ public class PlayerStatus : MonoBehaviour
     }
 
     // ‘•”õ˜g‚ðŠm”F => ‹ó‚¢‚Ä‚¢‚½‚ç‘•”õ
-    public void QuickEquip(GameObject item)
+    public void QuickEquip(GameObject item, bool firstSetItemFlg = false)
     {
         foreach (GameObject slot in m_equipments)
         {
@@ -166,7 +166,7 @@ public class PlayerStatus : MonoBehaviour
             if (slot.GetComponent<GridIcon_Equipment>().GetEquipmentType() == item.GetComponent<Item_Object>().GetWeaponType())
             {
                 // ‘•”õ˜g‚ðŠm”F
-                slot.GetComponent<GridIcon_Equipment>().QuickEquip(item);
+                slot.GetComponent<GridIcon_Equipment>().QuickEquip(item, !firstSetItemFlg);
             }
         }
     }

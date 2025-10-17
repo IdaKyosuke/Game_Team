@@ -149,8 +149,6 @@ public class StashManager : MonoBehaviourPunCallbacks
 		int height = 0;
 		int width = 0;
 
-		Debug.Log(m_checkType);
-
 		switch(m_checkType)
 		{
 			case GridType.Stash:
@@ -195,22 +193,12 @@ public class StashManager : MonoBehaviourPunCallbacks
 						// 基点のインデックスを保持
 						item.GetComponent<Item_Object>().SetGridIndex(new Vector2Int(j, i));
 
-						if(item.GetComponent<Item_Object>().GetGridType() == GridType.Equipment)
+						if(item.GetComponent<Item_Object>().GetEquipValue())
 						{
-							// 装備枠 => インベントリ
-							// --- アイテムリストの管理 ---
-							if (m_checkType == GridType.Inventory)
-							{
-								AddItemList(item, m_itemList);
-							}
-							else
-							{
-								AddItemList(item, m_otherItemList);
-							}
-							// 現在のgridtypeを保管
-							item.GetComponent<Item_Object>().SetType(m_checkType);
 							// 装備されていたら装備状態を解除する
-							item.GetComponent<Item_Object>().SetEquipValue(false);
+							item.GetComponent<Item_Object>().SetEquipValue(false, item.GetComponent<Item_Object>().GetGridType() == GridType.Inventory);
+							// 現在のgridtypeを保管
+							//item.GetComponent<Item_Object>().SetType(m_checkType);
 						}
 						else if (m_checkType != item.GetComponent<Item_Object>().GetGridType())
 						{
@@ -244,7 +232,7 @@ public class StashManager : MonoBehaviourPunCallbacks
 							}
 
 							// 装備の状態を変更
-							item.GetComponent<Item_Object>().SetEquipValue(false);
+							item.GetComponent<Item_Object>().SetEquipValue(false, item.GetComponent<Item_Object>().GetGridType() == GridType.Inventory);
 						}
 					}
 					else
@@ -482,11 +470,11 @@ public class StashManager : MonoBehaviourPunCallbacks
 					if(item.GetComponent<Item_Object>().GetEquipValue())
 					{
 						// 装備されていたら装備状態を解除する
-						item.GetComponent<Item_Object>().SetEquipValue(false);
+						item.GetComponent<Item_Object>().SetEquipValue(false, item.GetComponent<Item_Object>().GetGridType() == GridType.Inventory);
 						// アイテムリストに追加する
-						AddItemList(item, m_itemList);
+						//AddItemList(item, m_itemList);
 						// gridTypeをインベントリに変更する
-						item.GetComponent<Item_Object>().SetType(GridType.Inventory);
+						//item.GetComponent<Item_Object>().SetType(GridType.Inventory);
 					}
 					else
 					{
@@ -623,17 +611,18 @@ public class StashManager : MonoBehaviourPunCallbacks
 				m_moveItemTransform
 				);
 				
-			obj.GetComponent<Item_Object>().SetBaseInfo();
+			obj.GetComponent<Item_Object>().SetBaseInfo();     
+			
+			// 自分が入っている枠のタイプを設定
+			obj.GetComponent<Item_Object>().SetType(GridType.Stash);
 
 			if (item.IsEquip())
 			{
 				// 装備されていたアイテム
-				m_stashUi.GetComponent<Inventory_Parent>().GetEquipments.GetComponent<Player_Equipment>().QuickEquip(obj);
+				m_stashUi.GetComponent<Inventory_Parent>().GetEquipments.GetComponent<PlayerStatus>().QuickEquip(obj, true);
 			}
 			else
 			{
-				// 自分が入っている枠のタイプを設定
-				obj.GetComponent<Item_Object>().SetType(GridType.Stash);
 				// マス目を記憶
 				obj.GetComponent<Item_Object>().SetGridIndex(item.GetGridIndex());
 				// 普通のアイテムのマス目を埋める
@@ -646,9 +635,10 @@ public class StashManager : MonoBehaviourPunCallbacks
 					);
 				// UIを移動
 				obj.GetComponent<Item_Object>().PointerUp(true, m_stashGridList[item.GetGridIndex().x, item.GetGridIndex().y].GetTransform());
-				// リストのアクティブなオブジェクトを保存
-				item.SetActiveObject(obj);
 			}
+
+			// リストのアクティブなオブジェクトを保存
+			item.SetActiveObject(obj);
 
 			item.ChangeIndex(count);
 			Addressables.Release(op);
@@ -724,11 +714,6 @@ public class StashManager : MonoBehaviourPunCallbacks
 		}
     }
 
-	private void OpenUi()
-	{
-        m_stashUiParent.SetActive(true);
-    }
-
 	// ----- デバッグ用関数 -----
 	public void AddItemInventory()
 	{
@@ -759,6 +744,7 @@ public class StashManager : MonoBehaviourPunCallbacks
 	// リストに追加する
 	private void AddItemList(GameObject item, List<ItemList> list)
 	{
+		Debug.Log(item);
 		ItemList info = ScriptableObject.CreateInstance<ItemList>();
 		// マス目座標を保存
 		info.SetGridIndex(item.GetComponent<Item_Object>().GetGridIndex());
@@ -787,6 +773,7 @@ public class StashManager : MonoBehaviourPunCallbacks
 			list[i].ChangeIndex(i);
 		}
 	}
+
 	// リストから削除する(アイテムが今入っている枠のタイプを指定する)
 	public void SelectRemoveItemList(GameObject item)
 	{
@@ -815,5 +802,37 @@ public class StashManager : MonoBehaviourPunCallbacks
 	public Transform GetMoveItemTransform()
 	{
 		return m_moveItemTransform;
+	}
+
+	// 装備枠のアイテムを設定する
+	public void SetEquipment(GameObject item, bool value, bool isMine = false)
+	{
+		// 誰の持ち物か判断する
+		List<ItemList> list = new List<ItemList>();
+		if (isMine) 
+		{
+			list = m_itemList; 
+			if(item.GetComponent<Item_Object>().GetGridType() == GridType.Stash)
+			{
+				RemoveItemList(item, m_otherItemList);
+				AddItemList(item, m_itemList);
+				item.GetComponent<Item_Object>().SetType(GridType.Inventory);
+				Debug.Log("add Inventory");
+			}
+		}
+		else 
+		{
+			list =  m_otherItemList;
+			if (item.GetComponent<Item_Object>().GetGridType() == GridType.Inventory)
+			{
+				RemoveItemList(item, m_itemList);
+				AddItemList(item, m_otherItemList);
+				item.GetComponent<Item_Object>().SetType(GridType.Stash);
+				Debug.Log("add Stash");
+			}
+		}
+
+		// リストに装備状況を保存
+		list[item.GetComponent<Item_Object>().GetIndex()].SetEquipInfo(value);
 	}
 }

@@ -9,7 +9,6 @@ public enum GridType
 	Inventory,
 	Stash,
 	Empty,
-	Equipment,
 
 	Length,
 }
@@ -48,7 +47,6 @@ public class GridIcon : MonoBehaviour
 		{
 			//GameObject.FindWithTag("inventoryManager").GetComponent<StashManager>().StartSet(m_type);
 			m_stashManager.StartSet(m_type);
-			Debug.Log(m_type);
 		}
     }
 

@@ -59,6 +59,7 @@ public class Player_Equipment : MonoBehaviour
 			// Œó•â‚Ìƒ^ƒCƒv‚Æˆê’v‚·‚é˜g‚ðŒ©‚Â‚¯‚½‚ç’†‚ðŠm”F => ‹ó‚¢‚Ä‚¢‚½‚ç‘•”õ
 			if (slot.GetComponent<GridIcon_Equipment>().GetEquipmentType() == item.GetComponent<Item_Object>().GetWeaponType())
 			{
+				Debug.Log("‘•”õ˜g‚ª‹ó‚¢‚Ä‚¢‚é");
 				// ‘•”õ˜g‚ðŠm”F
 				slot.GetComponent<GridIcon_Equipment>().QuickEquip(item);
 			}

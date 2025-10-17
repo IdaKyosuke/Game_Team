@@ -180,7 +180,7 @@ public class Item_Object : MonoBehaviour
 		ReadyMove();
 	}
 
-	public void PointerUp(bool canSet, Transform nextPos = null, bool delete = false)
+	public void PointerUp(bool canSet, Transform nextPos = null)
 	{
 		// マウスカーソルの追従を終了
 		m_isDrag = false;
@@ -195,12 +195,6 @@ public class Item_Object : MonoBehaviour
 			// 移動先の枠を親オブジェクトに設定
 			SetParentTransform(nextPos);
 			rectTransform.anchoredPosition = Vector2.zero;
-			if(delete)
-			{
-				// 装備したときに元のリストから削除する
-				m_inventoryManager.GetComponent<StashManager>().SelectRemoveItemList(gameObject);
-				m_gridType = GridType.Equipment;
-			}
 		}
 		else
 		{
@@ -283,9 +277,12 @@ public class Item_Object : MonoBehaviour
 	}
 
 	// 装備状態の変更
-	public void SetEquipValue(bool value)
+	public void SetEquipValue(bool value, bool isMine = false, bool isChangeList = true)
 	{
 		m_isEquip = value;
+
+		if (!isChangeList) return;
+		m_inventoryManager.GetComponent<StashManager>().SetEquipment(gameObject, value, isMine);
 	}
 	// 装備状態を取得する
 	public bool GetEquipValue()
