@@ -38,10 +38,13 @@ public class Weapon_Collider : MonoBehaviour
 		{
 			// 当たったオブジェクトのIDを貰ってくる
 			int id = other.gameObject.GetInstanceID();
+
 			// 自分の親と当たったときは無視する
 			if (id == m_parentID) return;
+
 			// すでに当たったオブジェクトの時は無視する
 			if (m_hitMasterInfo.ContainsKey(id)) return;
+
 			// 初めて当たったときは相手のIDを登録
 			m_hitMasterInfo[id] = true;
 
@@ -51,6 +54,13 @@ public class Weapon_Collider : MonoBehaviour
 			quaternion.x = hitPos.x - other.transform.position.x;
 			quaternion.z = hitPos.z - other.transform.position.z;
 			GameObject effect = Instantiate(m_hitEffect, hitPos, quaternion);
+
+			//ダメージを与える
+			other.TryGetComponent<PlayerStatus>(out var playerStatus);
+			playerStatus.Damage(
+				m_parentPlayer.GetComponent<PlayerStatus>().TotalStatus.physicalPower,
+				AttackType.Physical,
+				m_parentPlayer.GetComponent<Condition>());
 		}
 	}
 }
