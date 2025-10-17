@@ -4,6 +4,8 @@ using UnityEngine.Events;
 
 public class PlayerMove : MonoBehaviour
 {
+    private const float MouseSensitivity = 230.0f;
+
     [SerializeField] Animator m_animator;
     [SerializeField] float m_jumpPower;
     [SerializeField] float m_gravity;
@@ -11,9 +13,9 @@ public class PlayerMove : MonoBehaviour
     [SerializeField] StashManager m_stashManager;
     [SerializeField] Info_InventorySize m_inventortSize;
 	[SerializeField] PlayerAnime m_playerAnim;      // アニメーション管理用オブジェクト
+	[SerializeField] GameObject m_spine;
 
-	[SerializeField, Range(0.1f, 10.0f)] float m_sightSpeedRatioVertial = 1.0f;	// 視点移動速度の倍率(XZ平面)
-
+    private float xRotation;
     private Vector3 m_moveDirection;
     private CharacterController m_controller;
 
@@ -32,6 +34,8 @@ public class PlayerMove : MonoBehaviour
         m_playerStatus = GetComponent<PlayerStatus>();
         m_condition = GetComponent<Condition>();
         m_moveDirection = Vector3.zero;
+
+        Cursor.lockState = CursorLockMode.Locked;
     }
 
     private void Update()
@@ -94,16 +98,9 @@ public class PlayerMove : MonoBehaviour
         //感電状態は移動不可
         if (m_condition.Current == ConditionType.Shock) return;
 
-		// 視点移動
-		float mouseX = Input.GetAxis("Mouse X");
-		float mouseY = Input.GetAxis("Mouse Y");
-
 		//移動量の取得
 		m_moveDirection = new Vector3(Input.GetAxis("Horizontal"), m_moveDirection.y, Input.GetAxis("Vertical"));
-        if (m_controller.isGrounded)
-        {
-            if (Input.GetButton("Jump")) m_moveDirection.y = m_jumpPower;
-        }
+        if (m_controller.isGrounded && Input.GetButton("Jump")) m_moveDirection.y = m_jumpPower;
 
         //カメラの向きを考慮した移動量
         Vector3 cameraForward = Vector3.Scale(Camera.main.transform.forward, new Vector3(1, 0, 1)).normalized;
@@ -115,26 +112,28 @@ public class PlayerMove : MonoBehaviour
 		{
 			//移動
 			m_controller.Move(moveVelocity * Time.deltaTime);
-			//移動していれば回転させる
-			Vector3 move = new Vector3(m_moveDirection.x, 0, m_moveDirection.z);
-			if (move != Vector3.zero)
-			{
-				//transform.rotation = Quaternion.Slerp(
-				//	transform.rotation,
-				//	Quaternion.LookRotation(move.normalized),
-				//	0.2f
-				//);
-
-				isMove = true;
-			}
+            isMove = true;
 		}
 
         //移動アニメーション
         m_animator.SetBool("Move", isMove);
-
-		// 横回転
-		transform.Rotate(0, mouseX * m_sightSpeedRatioVertial, 0);
 	}
+
+    private void LateUpdate()
+    {
+        // 視点移動
+        float mouseX = Input.GetAxis("Mouse X") * MouseSensitivity * Time.deltaTime;
+        float mouseY = Input.GetAxis("Mouse Y") * MouseSensitivity * Time.deltaTime;
+
+        // 横回転
+        transform.Rotate(Vector3.up * mouseX);
+
+        // 腰の回転
+        xRotation -= mouseY;
+        xRotation = Mathf.Clamp(xRotation, -40.0f, 30.0f);
+        m_spine.transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
+        Camera.main.transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
+    }
 
     public void OnDamage()
     {
