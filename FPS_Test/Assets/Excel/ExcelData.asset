@@ -1,0 +1,174 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 8
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1798112e29559d8478ba00df06d757a8, type: 3}
+  m_Name: ExcelData
+  m_EditorClassIdentifier: 
+  common:
+  - id: 0
+    objectName: a
+    width: 1
+    height: 1
+    probability: 35
+    displayName: a
+  - id: 1
+    objectName: A
+    width: 1
+    height: 1
+    probability: 35
+    displayName: A
+  - id: 2
+    objectName: AA
+    width: 2
+    height: 1
+    probability: 30
+    displayName: AA
+  rare:
+  - id: 0
+    objectName: b
+    width: 2
+    height: 1
+    probability: 35
+    displayName: b
+  - id: 1
+    objectName: B
+    width: 2
+    height: 1
+    probability: 35
+    displayName: B
+  - id: 2
+    objectName: BB
+    width: 2
+    height: 2
+    probability: 30
+    displayName: BB
+  unique:
+  - id: 0
+    objectName: c
+    width: 2
+    height: 2
+    probability: 35
+    displayName: c
+  - id: 1
+    objectName: C
+    width: 2
+    height: 2
+    probability: 35
+    displayName: C
+  - id: 2
+    objectName: CC
+    width: 3
+    height: 2
+    probability: 30
+    displayName: CC
+  legendary:
+  - id: 0
+    objectName: d
+    width: 3
+    height: 2
+    probability: 35
+    displayName: d
+  - id: 1
+    objectName: D
+    width: 3
+    height: 2
+    probability: 35
+    displayName: D
+  - id: 2
+    objectName: DD
+    width: 2
+    height: 3
+    probability: 30
+    displayName: DD
+  treasureBox:
+  - id: 0
+    rarity: common
+    width: 5
+    height: 2
+    itemMin: 3
+    itemMax: 6
+    common: 89
+    rare: 10
+    unique: 1
+    legendary: 0
+  - id: 1
+    rarity: rare
+    width: 5
+    height: 3
+    itemMin: 4
+    itemMax: 7
+    common: 74
+    rare: 20
+    unique: 5
+    legendary: 1
+  - id: 2
+    rarity: unique
+    width: 5
+    height: 3
+    itemMin: 5
+    itemMax: 8
+    common: 60
+    rare: 30
+    unique: 5
+    legendary: 5
+  - id: 3
+    rarity: legendary
+    width: 5
+    height: 5
+    itemMin: 6
+    itemMax: 9
+    common: 45
+    rare: 40
+    unique: 10
+    legendary: 5
+  Object:
+  - id: 0
+    objectName: "1\xD71"
+    width: 1
+    height: 1
+    equipmentType: 5
+    typeName: None
+  - id: 1
+    objectName: "1\xD71_body"
+    width: 1
+    height: 1
+    equipmentType: 1
+    typeName: Armor
+  - id: 2
+    objectName: "1\xD71_gauntlet"
+    width: 1
+    height: 1
+    equipmentType: 2
+    typeName: Gauntlet
+  - id: 3
+    objectName: "1\xD71_head"
+    width: 1
+    height: 1
+    equipmentType: 0
+    typeName: Helmet
+  - id: 4
+    objectName: "1\xD71_shoes"
+    width: 1
+    height: 1
+    equipmentType: 3
+    typeName: Shoes
+  - id: 5
+    objectName: "1\xD71_Weapon"
+    width: 1
+    height: 1
+    equipmentType: 4
+    typeName: Weapon
+  - id: 6
+    objectName: "1\xD72"
+    width: 1
+    height: 2
+    equipmentType: 5
+    typeName: None

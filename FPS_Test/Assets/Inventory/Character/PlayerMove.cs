@@ -14,7 +14,6 @@ public class PlayerMove : MonoBehaviourPunCallbacks
     [SerializeField] Info_InventorySize m_inventortSize;
 
     private Vector3 m_moveDirection;
-    private CharacterController m_controller;
 	private Rigidbody m_rb;
 
     private PlayerStatus m_playerStatus;
@@ -32,7 +31,6 @@ public class PlayerMove : MonoBehaviourPunCallbacks
     void Start()
     {
 		if (!m_isPlayer) return;
-        m_controller = GetComponent<CharacterController>();
 		m_rb = GetComponent<Rigidbody>();
         m_playerStatus = GetComponent<PlayerStatus>();
         m_condition = GetComponent<Condition>();
@@ -97,17 +95,6 @@ public class PlayerMove : MonoBehaviourPunCallbacks
 	{
 		PhotonView view = PhotonView.Find(requestId);
 
-		/*
-		Info_InventorySize info = GetComponent<Inventory_Info>().GetInfo();
-		List<ItemList> dataList = GetManager().GetItemList();
-		ItemList[] data = new ItemList[dataList.Count];
-		//Debug.Log(view.Owner);
-		for (int i = 0; i < dataList.Count; ++i)
-		{
-			data[i] = dataList[i];
-		}
-		*/
-
 		Debug.Log("view.RPC s : " + view);
 		view.RPC(nameof(ReceiveInventoryData), view.Owner, GetComponent<Inventory_Info>().GetInfo(), GetManager().GetItemList());
 		Debug.Log("view.RPC e");
@@ -121,47 +108,6 @@ public class PlayerMove : MonoBehaviourPunCallbacks
 		m_stashManager.transform.GetComponent<StashManager>().CreateStashUi(info, list);
 	}
 
-	void FixedUpdate()
-	{
-		/*
-		if (!m_isPlayer) return;
-		// 自身が生成したオブジェクトだけに移動処理を行う
-		if (photonView.IsMine)
-		{
-			//自由落下
-			m_moveDirection.y -= m_gravity * Time.deltaTime;
-
-			//感電状態は移動不可
-			if (m_condition.Current == ConditionType.Shock) return;
-
-			//移動量の取得
-			m_moveDirection = new Vector3(Input.GetAxis("Horizontal"), m_moveDirection.y, Input.GetAxis("Vertical"));
-			if (m_controller.isGrounded)
-			{
-				if (Input.GetButton("Jump")) m_moveDirection.y = m_jumpPower;
-			}
-
-			//カメラの向きを考慮した移動量
-			Vector3 cameraForward = Vector3.Scale(Camera.main.transform.forward, new Vector3(1, 0, 1)).normalized;
-			Vector3 moveVelocity = cameraForward * m_moveDirection.z + Camera.main.transform.right * m_moveDirection.x;
-			moveVelocity = new Vector3(moveVelocity.x * m_playerStatus.Value.moveSpeed, m_moveDirection.y, moveVelocity.z * m_playerStatus.Value.moveSpeed);
-
-			//移動
-			m_controller.Move(moveVelocity * Time.deltaTime);
-
-			//移動していれば回転させる
-			Vector3 move = new Vector3(m_moveDirection.x, 0, m_moveDirection.z);
-			if (move != Vector3.zero)
-			{
-				transform.rotation = Quaternion.Slerp(
-					transform.rotation,
-					Quaternion.LookRotation(move.normalized),
-					0.2f
-				);
-			}
-		}
-		*/
-    }
 
     public void OnDamage()
     {
@@ -178,27 +124,9 @@ public class PlayerMove : MonoBehaviourPunCallbacks
 	{
 		if (!m_rayTarget || items == null) return;
 
-		/*
-		ItemList[] list = new ItemList[items.Count];
-		for (int i = 0; i <  list.Length; i++)
-		{
-			list[i] = items[i];
-		}
-		*/
-
-		/*
-		if (m_rayTarget.TryGetComponent(out PhotonView view))
-		{ 
-			Debug.Log("Eをおした" + view);
-			// rayが当たっているオブジェクトに自分へ情報を送るようリクエストする
-			view.RPC(nameof(RequestInventoryData), view.Owner, photonView.ViewID);				
-		}
-		*/
 		if (m_rayTarget.TryGetComponent(out PhotonView view))
 		{
 			view.RPC(nameof(RequestCopyItemList), view.Owner, items);
-//			view.RPC(nameof(RequestCopyItemList), view.Owner, 1, items.ToArray());
-//			view.RPC(nameof(RequestCopyItemList), view.Owner, 1);
 			// ターゲットを空にする
 			m_rayTarget = null;
 		}
@@ -206,8 +134,6 @@ public class PlayerMove : MonoBehaviourPunCallbacks
 
 	[PunRPC]
 	void RequestCopyItemList(List<ItemList> list)
-//	void RequestCopyItemList(int hoge, ItemList[] list)
-//	void RequestCopyItemList(int list)
 	{
 		Debug.Log("RequestCopyItemList : " + list.Count);
 		GetManager().CopyItemList(list);
