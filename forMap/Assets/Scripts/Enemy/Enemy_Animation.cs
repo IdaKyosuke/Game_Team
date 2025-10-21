@@ -1,0 +1,145 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+//using UniRx;
+//using UniRx.Triggers;
+using UnityEngine;
+
+public class Enemy_Animation : MonoBehaviour
+{
+	[SerializeField] int m_attackAnimNum;	// 攻撃アニメーションの数
+	private Animator m_anim;
+	private bool m_isAttack;    // 攻撃中か
+	private bool m_startCoolTime;   // 攻撃後の硬直時間のカウントを開始するか
+	[SerializeField] float m_coolTime;	// 攻撃後の硬直時間
+	private float m_countTime;
+	private Vector3 m_pastPos;  // 1フレーム前の座標
+	private bool m_isDeath; // 現在の状態
+	[SerializeField] GameObject m_weaponCol;	// 武器の当たり判定
+
+    // Start is called before the first frame update
+    void Start()
+    {
+		m_anim = GetComponent<Animator>();
+		m_isAttack = false;
+		m_startCoolTime = false;
+		m_pastPos = transform.position;
+		m_isDeath = false;
+		m_weaponCol.SetActive(false);	// 最初は当たり判定を消す
+
+		//// ---- UniRx ----
+		//ObservableStateMachineTrigger trigger =
+		//	m_anim.GetBehaviour<ObservableStateMachineTrigger>();
+
+		//// Stateの開始イベント
+		//IDisposable enterState = trigger
+		//	.OnStateEnterAsObservable()
+		//	.Subscribe(onStateInfo =>
+		//	{
+		//		AnimatorStateInfo info = onStateInfo.StateInfo;
+				
+		//	}).AddTo(this);
+
+		//// Stateの終了イベント
+		//IDisposable exitState = trigger
+		//	.OnStateExitAsObservable()
+		//	.Subscribe(onStateInfo =>
+		//	{
+		//		AnimatorStateInfo info = onStateInfo.StateInfo;
+
+		//	}).AddTo(this);
+	}
+
+	private void Update()
+	{
+		if (m_isDeath) return;
+
+		// 移動アニメーション
+		WalkAnim();
+
+		m_pastPos = transform.position;
+	}
+
+	private void FixedUpdate()
+	{
+		if (m_isDeath) return;
+
+		// クールタイムのカウント
+		if (m_startCoolTime)
+		{
+			m_countTime += Time.deltaTime;
+			if(m_countTime >= m_coolTime)
+			{
+				m_startCoolTime = false;
+				m_isAttack = false;
+				m_countTime = 0;
+				// 攻撃フラグを折る
+				GetComponent<Enemy_Nav>().FinishAttack();
+			}
+		}
+	}
+
+	// 攻撃アニメーションを指定する
+	public void AttackAnim()
+	{
+		// 攻撃中はモーションを再指定しない
+		if (!m_isAttack)
+		{
+			m_isAttack = true;
+			// 攻撃アニメーションを指定
+			m_anim.SetInteger("attack", UnityEngine.Random.Range(1, m_attackAnimNum + 1));
+		}
+	}
+
+	private void WalkAnim()
+	{
+		// 移動中
+		if(m_isAttack || m_pastPos == transform.position)
+		{
+			// 攻撃中
+			m_anim.SetBool("walk", false);
+		}
+		else
+		{
+			m_anim.SetBool("walk", true);
+		}
+	}
+
+	// 攻撃モーションの開始
+	public void StartAttackAnim()
+	{
+		m_anim.SetInteger("attack", 0);
+	}
+
+	// 攻撃モーションの終了(アニメーション用)
+	public void FinishAttackAnim()
+	{
+		// クールタイムカウントを開始する
+		m_startCoolTime = true;
+	}
+
+	// 攻撃中か
+	public bool IsAttack()
+	{
+		return m_isAttack;
+	}
+
+	// 死亡アニメーションの開始
+	public void IsDeath()
+	{
+		m_anim.SetTrigger("death");
+		m_isDeath = true;
+	}
+
+	// ----武器の当たり判定の管理----
+	// 有効にする
+	public void EnableCol()
+	{
+		m_weaponCol.SetActive(true);
+	}
+	// 無効にする
+	public void DisableCol()
+	{
+		m_weaponCol.SetActive(false);
+	}
+}

@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.AI.Navigation;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class Create_Maze : MonoBehaviour
 {
@@ -24,6 +26,11 @@ public class Create_Maze : MonoBehaviour
 	private int m_size = 42;
 
 	private List<Transform> m_playerSpawnPosList = new List<Transform>();
+
+	[SerializeField] GameObject m_mapParent;			// 生成したマップのプレハブを入れる
+	[SerializeField] Transform m_enemyParent;			// 生成した敵を入れる
+	[SerializeField] Transform m_treasureBoxParent;     // 生成した宝箱を入れる
+	[SerializeField] Transform m_portalParent;			// 生成した帰還用ポータルを入れる
 
 	// Start is called before the first frame update
 	void Start()
@@ -48,12 +55,23 @@ public class Create_Maze : MonoBehaviour
 						{
 							if (y == 0)
 							{
-								mapdatas.Add(Instantiate(m_stairsMap, new Vector3(m_size * i, y * 4.5f, m_size * j), Quaternion.identity).GetComponent<SendMapData>());
+								mapdatas.Add(
+									Instantiate(
+										m_stairsMap, 
+										new Vector3(m_size * i, y * 4.5f, m_size * j), 
+										Quaternion.identity,
+										m_mapParent.transform).GetComponent<SendMapData>()
+										);
 							}
 							continue;
 						}
 					}
-					GameObject map = Instantiate(m_mapPrefab[Random.Range(0, m_mapPrefab.Count)], new Vector3(m_size * i, y * 4.5f, m_size * j), Quaternion.identity);
+					GameObject map = Instantiate(
+						m_mapPrefab[Random.Range(0, m_mapPrefab.Count)], 
+						new Vector3(m_size * i, y * 4.5f, m_size * j), 
+						Quaternion.identity, 
+						m_mapParent.transform
+						);
 					// マップのレイヤーを分ける(仮置きだからマジックナンバー)
 					GameObjectExtensions.SetLayerRecursively(map.transform, y + 6);
 					mapdatas.Add(map.GetComponent<SendMapData>());
@@ -64,6 +82,9 @@ public class Create_Maze : MonoBehaviour
 		Instantiate(m_wallOutSide);
 
 		SetPlayerTreasure(mapdatas);
+
+		// 動的にnavMeshをbakeする
+		m_mapParent.GetComponent<NavMeshSurface>().BuildNavMesh();
 
 		SetEnemyReturn(mapdatas);
 	}
@@ -98,7 +119,8 @@ public class Create_Maze : MonoBehaviour
 			int index = Random.Range(0, spawnPos.Count);
 			Instantiate(m_treasure[treasureType], 
 				spawnPos[index].position,
-				spawnPos[index].rotation);
+				spawnPos[index].rotation, 
+				m_treasureBoxParent);
 			spawnPos.RemoveAt(index);
 		}
 	}
@@ -118,14 +140,14 @@ public class Create_Maze : MonoBehaviour
 		for (int i = 0; i < m_portalPosAmount; ++i)
 		{
 			int index = Random.Range(0, spawnPos.Count);
-			Instantiate(m_portal, spawnPos[index].position, spawnPos[index].rotation);
+			Instantiate(m_portal, spawnPos[index].position, spawnPos[index].rotation, m_portalParent);
 			spawnPos.RemoveAt(index);
 		}
 
 		for (int i = 0; i < m_enemyAmount; ++i)
 		{
 			int index = Random.Range(0, spawnPos.Count);
-			Instantiate(m_enemy, spawnPos[index].position, spawnPos[index].rotation);
+			Instantiate(m_enemy, spawnPos[index].position, spawnPos[index].rotation, m_enemyParent);
 			spawnPos.RemoveAt(index);
 		}
 	}
