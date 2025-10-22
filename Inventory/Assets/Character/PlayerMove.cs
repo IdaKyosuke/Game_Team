@@ -4,7 +4,7 @@ using UnityEngine.Events;
 
 public class PlayerMove : MonoBehaviour
 {
-    private const float MouseSensitivity = 230.0f;
+    private const float MouseSensitivity = 250.0f;
 
     [SerializeField] Animator m_animator;
     [SerializeField] float m_jumpPower;
@@ -83,11 +83,27 @@ public class PlayerMove : MonoBehaviour
 		{
 			m_stashManager.AddItemInventory();
 		}
-		else if (Input.GetKeyDown("2"))
+		if (Input.GetKeyDown("2"))
 		{
 			m_stashManager.AddItemStash();
 		}
-	}
+        if (Input.GetKeyDown("3"))
+        {
+            m_condition.Init(ConditionType.Burn);
+        }
+        if (Input.GetKeyDown("4"))
+        {
+            m_condition.Init(ConditionType.Frost);
+        }
+        if (Input.GetKeyDown("5"))
+        {
+            m_condition.Init(ConditionType.Poison);
+        }
+        if (Input.GetKeyDown("6"))
+        {
+            m_condition.Init(ConditionType.Shock);
+        }
+    }
 
     void FixedUpdate()
     {
