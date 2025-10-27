@@ -122,6 +122,7 @@ public class PlayerMove : MonoBehaviour
         //ƒJƒƒ‰‚ÌŒü‚«‚ğl—¶‚µ‚½ˆÚ“®—Ê
         Vector3 cameraForward = Vector3.Scale(Camera.main.transform.forward, new Vector3(1, 0, 1)).normalized;
         Vector3 moveVelocity = cameraForward * m_moveDirection.z + Camera.main.transform.right * m_moveDirection.x;
+        moveVelocity.Normalize();
         moveVelocity = new Vector3(moveVelocity.x * m_playerStatus.Value.moveSpeed, m_moveDirection.y, moveVelocity.z * m_playerStatus.Value.moveSpeed);
 
 		// UŒ‚’†‚ÍˆÚ“®‚Å‚«‚È‚¢
