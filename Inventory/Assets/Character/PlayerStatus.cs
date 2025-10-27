@@ -2,19 +2,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
+
+
 public class PlayerStatus : MonoBehaviour
 {
-    public enum JobType
-    {
-        Warrior,
-        Wizard,
-        Cleric,
-        Thief,
-
-        Length,
-    }
-
-    [SerializeField] JobType m_job;
     [SerializeField] StatusData m_statusData;
     [SerializeField] List<GameObject> m_equipments;  //装備枠
     [SerializeField] UnityEvent m_onDamage;
@@ -26,6 +17,7 @@ public class PlayerStatus : MonoBehaviour
     private PlayerParameter m_totalStatus;              //合計ステータス
     private int m_level;
     private int m_health;
+    private int m_mp;
     private int m_exp;
 
     public PlayerParameter Value => m_status;
@@ -33,6 +25,12 @@ public class PlayerStatus : MonoBehaviour
     public PlayerParameter TotalStatus => m_totalStatus;
 
     public int Health => m_health;
+
+    public int MP
+    { 
+        get { return m_mp; }
+        set { m_mp = value; }
+    }
 
     private void Start()
     {

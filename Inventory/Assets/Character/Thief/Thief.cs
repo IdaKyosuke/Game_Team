@@ -1,7 +1,9 @@
 using UnityEngine;
 
-public class Thief : PlayerStatus
+public class Thief : Job
 {
+    [SerializeField] GameObject m_trap;
+
     private Condition m_condition;
 
     private void Start()
@@ -11,13 +13,28 @@ public class Thief : PlayerStatus
         m_condition.Grant = ConditionType.Poison;
     }
 
-    public void UniqueSkill()
+    private void Update()
     {
-        Debug.Log("Thief Identity");
-
-        if(Input.GetKeyDown(KeyCode.Q))
+        //固有アクション
+        if (Input.GetKeyDown(KeyCode.Q))
         {
-            Debug.Log("罠を設置");
+            //罠の設置
+            Instantiate(m_trap, transform.position, Quaternion.identity);
         }
+    }
+
+    protected override void Passive1()
+    {
+
+    }
+
+    protected override void Passive2()
+    {
+
+    }
+
+    protected override void Passive3()
+    {
+
     }
 }

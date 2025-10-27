@@ -627,7 +627,7 @@ Transform:
   m_GameObject: {fileID: 442556251}
   serializedVersion: 2
   m_LocalRotation: {x: -0.0000000040109853, y: -1.1368684e-13, z: 1.293051e-12, w: 1}
-  m_LocalPosition: {x: 0, y: 1.7, z: 0.1}
+  m_LocalPosition: {x: 0, y: 1.7, z: 0.100000024}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1060,6 +1060,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: "\u30D0\u30B9\u30BF\u30FC\u30BD\u30FC\u30C9"
       objectReference: {fileID: 0}
+    - target: {fileID: 7622661218638243942, guid: d6e5db27c3e59be43930f27775ac6dac,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -1211,18 +1216,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebb306ca5e0f7cf4bb9a9b64235e80ec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &793698248 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 545411651013535794, guid: 670f34e8cf8828146b7c2ebc4c3d421b,
-    type: 3}
-  m_PrefabInstance: {fileID: 1877793994}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 793698244}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aae3343e3c9e1d14db13121d6e136223, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!65 &793698252
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1244,6 +1237,50 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.3, y: 1.5, z: 0.3}
   m_Center: {x: 0, y: 0.8, z: 0}
+--- !u!114 &793698254 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6343460419604353228, guid: 670f34e8cf8828146b7c2ebc4c3d421b,
+    type: 3}
+  m_PrefabInstance: {fileID: 1877793994}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 793698244}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 70668a2119dc26b439738f36c64f9ca2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &793698258
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 793698244}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b0e004530a4ad8488c427f580c22aef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_statusData: {fileID: 11400000, guid: 01ed2263679667b408bc6dce5c21cf88, type: 2}
+  m_equipments: []
+  m_onDamage:
+    m_PersistentCalls:
+      m_Calls: []
+  m_onDeath:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 793698254}
+        m_TargetAssemblyTypeName: PlayerMove, Assembly-CSharp
+        m_MethodName: OnDeath
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &853857549
 GameObject:
   m_ObjectHideFlags: 0
@@ -1786,7 +1823,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 32728f9ff9e9e024b96467bf39a0565c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_status: {fileID: 793698248}
+  m_status: {fileID: 0}
   m_condition: {fileID: 793698246}
 --- !u!1 &1612940892 stripped
 GameObject:
@@ -1925,7 +1962,7 @@ PrefabInstance:
     - target: {fileID: 7029958375003328860, guid: 670f34e8cf8828146b7c2ebc4c3d421b,
         type: 3}
       propertyPath: m_Name
-      value: Warrior
+      value: Warrior_Big
       objectReference: {fileID: 0}
     - target: {fileID: 7029958375003328860, guid: 670f34e8cf8828146b7c2ebc4c3d421b,
         type: 3}
@@ -2061,6 +2098,10 @@ PrefabInstance:
         type: 3}
       insertIndex: 3
       addedObject: {fileID: 793698252}
+    - targetCorrespondingSourceObject: {fileID: 7029958375003328860, guid: 670f34e8cf8828146b7c2ebc4c3d421b,
+        type: 3}
+      insertIndex: 5
+      addedObject: {fileID: 793698258}
     - targetCorrespondingSourceObject: {fileID: 8714408481995552239, guid: 670f34e8cf8828146b7c2ebc4c3d421b,
         type: 3}
       insertIndex: -1
@@ -2114,39 +2155,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aae3343e3c9e1d14db13121d6e136223, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_job: 0
-  m_statusData: {fileID: 11400000, guid: 01ed2263679667b408bc6dce5c21cf88, type: 2}
-  m_equipments: []
-  m_onDamage:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 6343460419002788828}
-        m_TargetAssemblyTypeName: PlayerMove, Assembly-CSharp
-        m_MethodName: OnDamage
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  m_onDeath:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 6343460419002788828}
-        m_TargetAssemblyTypeName: PlayerMove, Assembly-CSharp
-        m_MethodName: OnDeath
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+  m_jobType: 0
+  m_skillIndex: 2
 --- !u!224 &821680648443438719
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3157,11 +3167,12 @@ GameObject:
   - component: {fileID: 1468125594807654132}
   - component: {fileID: 505236162}
   - component: {fileID: 545411651619820322}
+  - component: {fileID: 8725266777224579961}
   - component: {fileID: 6343460419002788828}
   - component: {fileID: 4232588741878046382}
   - component: {fileID: 7356350997212135496}
   m_Layer: 0
-  m_Name: Warrior (1)
+  m_Name: Warrior
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3245,6 +3256,26 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &8725266777224579961
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7029958375474915916}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b0e004530a4ad8488c427f580c22aef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_statusData: {fileID: 11400000, guid: 01ed2263679667b408bc6dce5c21cf88, type: 2}
+  m_equipments: []
+  m_onDamage:
+    m_PersistentCalls:
+      m_Calls: []
+  m_onDeath:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1001 &8984267694615142705
 PrefabInstance:
   m_ObjectHideFlags: 0

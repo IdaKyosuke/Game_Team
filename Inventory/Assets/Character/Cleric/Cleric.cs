@@ -1,14 +1,17 @@
 using UnityEngine;
 
-public class Cleric : PlayerStatus
+public class Cleric : Job
 {
-    public void UniqueSkill()
-    { 
-        Debug.Log("Cleric Identity");
+    protected override void Passive1()
+    {
+        
+    }
+    protected override void Passive2()
+    {
+        
+    }
+    protected override void Passive3()
+    {
 
-        if (Input.GetKeyDown(KeyCode.Q))
-        {
-
-        }
     }
 }

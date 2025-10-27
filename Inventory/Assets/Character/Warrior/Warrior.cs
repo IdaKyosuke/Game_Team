@@ -1,14 +1,19 @@
 using UnityEngine;
 
-public class Warrior : PlayerStatus
+public class Warrior : Job
 {
-    public void UniqueSkill()
+    protected override void Passive1()
     {
-        Debug.Log("Warrior UniqueSkill");
+        base.Passive1();
+    }
 
-        if (Input.GetKeyDown(KeyCode.Q))
-        {
-            Debug.Log("ƒoƒt•t—^");
-        }
+    protected override void Passive2()
+    {
+        base.Passive2();
+    }
+
+    protected override void Passive3()
+    {
+        base.Passive3();    
     }
 }

@@ -48,7 +48,6 @@ public class PlayerMove : MonoBehaviour
 			// ƒŒƒC‚Ì“–‚½‚Á‚½“G‚ğ•ÛŠÇ
 			m_rayTarget = hit.transform.gameObject;
 
-			//Debug.Log("Hit!!!!!!!!!!!!");
 			//EƒL[‚ª‰Ÿ‚³‚ê‚Ä‚¢‚È‚¯‚ê‚Î–³‹
 			if (Input.GetKeyDown("e"))
 			{
