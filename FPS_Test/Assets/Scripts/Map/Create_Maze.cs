@@ -1,10 +1,11 @@
-using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.AI.Navigation;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.AI;
 
-public class Create_Maze : MonoBehaviourPunCallbacks
+public class Create_Maze : MonoBehaviour
 {
 	[SerializeField] GameObject m_stairsMap;
 	[SerializeField] GameObject m_enemy;
@@ -26,10 +27,15 @@ public class Create_Maze : MonoBehaviourPunCallbacks
 
 	private static List<Transform> m_playerSpawnPosList = new List<Transform>();
 
+	[SerializeField] GameObject m_mapParent;			// 生成したマップのプレハブを入れる
+	[SerializeField] Transform m_enemyParent;			// 生成した敵を入れる
+	[SerializeField] Transform m_treasureBoxParent;     // 生成した宝箱を入れる
+	[SerializeField] Transform m_portalParent;			// 生成した帰還用ポータルを入れる
+
 	// Start is called before the first frame update
 	void Start()
     {
-		if (PhotonNetwork.IsMasterClient) SetMap();
+		SetMap();
 	}
 
 	private void SetMap()
@@ -49,40 +55,41 @@ public class Create_Maze : MonoBehaviourPunCallbacks
 						{
 							if (y == 0)
 							{
-								Debug.Log(m_stairsMap.name);
 								mapdatas.Add(
-									PhotonNetwork.Instantiate(m_stairsMap.name, 
-									new Vector3(m_size * i, y * 4.5f, m_size * j),
-									Quaternion.identity).GetComponent<SendMapData>());
+									Instantiate(
+										m_stairsMap, 
+										new Vector3(m_size * i, y * 4.5f, m_size * j), 
+										Quaternion.identity,
+										m_mapParent.transform).GetComponent<SendMapData>()
+										);
 							}
 							continue;
 						}
 					}
-					GameObject map = PhotonNetwork.Instantiate(m_mapPrefab[Random.Range(0, m_mapPrefab.Count)].name, new Vector3(m_size * i, y * 4.5f, m_size * j), Quaternion.identity);
+					GameObject map = Instantiate(
+						m_mapPrefab[Random.Range(0, m_mapPrefab.Count)], 
+						new Vector3(m_size * i, y * 4.5f, m_size * j), 
+						Quaternion.identity, 
+						m_mapParent.transform
+						);
 					// マップのレイヤーを分ける(仮置きだからマジックナンバー)
-					photonView.RPC(nameof(RequestChangeLayer), RpcTarget.AllBuffered, y + 6, map.GetComponent<PhotonView>().ViewID);
+					GameObjectExtensions.SetLayerRecursively(map.transform, y + 6);
 					mapdatas.Add(map.GetComponent<SendMapData>());
 				}
 			}
 		}
 
-		// 生成位置の調整まだ
-        PhotonNetwork.Instantiate(m_wallOutSide.name, transform.position, Quaternion.identity);
+		Instantiate(m_wallOutSide);
 
 		SetPlayerTreasure(mapdatas);
+
+		// 動的にnavMeshをbakeする
+		m_mapParent.GetComponent<NavMeshSurface>().BuildNavMesh();
 
 		SetEnemyReturn(mapdatas);
 	}
 
-	[PunRPC]
-    void RequestChangeLayer(int layerNum, int viewId)
-	{
-		Transform map = PhotonView.Find(viewId).transform;	
-		GameObjectExtensions.SetLayerRecursively(map, layerNum);
-	}
-
-
-    private void SetPlayerTreasure(List<SendMapData> mapData)
+	private void SetPlayerTreasure(List<SendMapData> mapData)
 	{
 		List<Transform> spawnPos = new List<Transform>();
 		foreach (SendMapData data in mapData)
@@ -110,9 +117,10 @@ public class Create_Maze : MonoBehaviourPunCallbacks
 
 			// プレイヤーは一度無視する
 			int index = Random.Range(0, spawnPos.Count);
-            PhotonNetwork.Instantiate(m_treasure[treasureType].name, 
+			Instantiate(m_treasure[treasureType], 
 				spawnPos[index].position,
-				spawnPos[index].rotation);
+				spawnPos[index].rotation, 
+				m_treasureBoxParent);
 			spawnPos.RemoveAt(index);
 		}
 	}
@@ -132,14 +140,14 @@ public class Create_Maze : MonoBehaviourPunCallbacks
 		for (int i = 0; i < m_portalPosAmount; ++i)
 		{
 			int index = Random.Range(0, spawnPos.Count);
-            PhotonNetwork.Instantiate(m_portal.name, spawnPos[index].position, spawnPos[index].rotation);
+			Instantiate(m_portal, spawnPos[index].position, spawnPos[index].rotation, m_portalParent);
 			spawnPos.RemoveAt(index);
 		}
 
 		for (int i = 0; i < m_enemyAmount; ++i)
 		{
 			int index = Random.Range(0, spawnPos.Count);
-            PhotonNetwork.Instantiate(m_enemy.name, spawnPos[index].position, spawnPos[index].rotation);
+			Instantiate(m_enemy, spawnPos[index].position, spawnPos[index].rotation, m_enemyParent);
 			spawnPos.RemoveAt(index);
 		}
 	}
