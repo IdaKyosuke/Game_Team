@@ -1,3 +1,4 @@
+using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.AI.Navigation;
@@ -5,7 +6,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class Create_Maze : MonoBehaviour
+public class Create_Maze : MonoBehaviourPunCallbacks
 {
 	[SerializeField] GameObject m_stairsMap;
 	[SerializeField] GameObject m_enemy;
@@ -17,7 +18,7 @@ public class Create_Maze : MonoBehaviour
 	[SerializeField] int m_playerSpawnPosAmount = 20;
 	[SerializeField] int m_treasureAmount = 50;
 	[SerializeField] int m_portalPosAmount = 5;
-	[SerializeField] int m_enemyAmount = 200;
+	[SerializeField] int m_enemyAmount = 0;
 
 	[SerializeField] List<GameObject> m_mapPrefab;
 
@@ -28,14 +29,11 @@ public class Create_Maze : MonoBehaviour
 	private static List<Transform> m_playerSpawnPosList = new List<Transform>();
 
 	[SerializeField] GameObject m_mapParent;			// 生成したマップのプレハブを入れる
-	[SerializeField] Transform m_enemyParent;			// 生成した敵を入れる
-	[SerializeField] Transform m_treasureBoxParent;     // 生成した宝箱を入れる
-	[SerializeField] Transform m_portalParent;			// 生成した帰還用ポータルを入れる
 
 	// Start is called before the first frame update
-	void Start()
+	void Awake()
     {
-		SetMap();
+		if (PhotonNetwork.IsMasterClient) SetMap();
 	}
 
 	private void SetMap()
@@ -56,30 +54,33 @@ public class Create_Maze : MonoBehaviour
 							if (y == 0)
 							{
 								mapdatas.Add(
-									Instantiate(
-										m_stairsMap, 
+									PhotonNetwork.Instantiate(
+										m_stairsMap.name, 
 										new Vector3(m_size * i, y * 4.5f, m_size * j), 
-										Quaternion.identity,
-										m_mapParent.transform).GetComponent<SendMapData>()
+										Quaternion.identity).GetComponent<SendMapData>()
 										);
 							}
 							continue;
 						}
 					}
-					GameObject map = Instantiate(
-						m_mapPrefab[Random.Range(0, m_mapPrefab.Count)], 
+					GameObject map = PhotonNetwork.Instantiate(
+						m_mapPrefab[Random.Range(0, m_mapPrefab.Count)].name, 
 						new Vector3(m_size * i, y * 4.5f, m_size * j), 
-						Quaternion.identity, 
-						m_mapParent.transform
+						Quaternion.identity
 						);
 					// マップのレイヤーを分ける(仮置きだからマジックナンバー)
-					GameObjectExtensions.SetLayerRecursively(map.transform, y + 6);
+					photonView.RPC(nameof(RequestChangeLayer), RpcTarget.AllBuffered, y + 6, map.GetComponent<PhotonView>().ViewID);
 					mapdatas.Add(map.GetComponent<SendMapData>());
 				}
 			}
 		}
 
-		Instantiate(m_wallOutSide);
+		foreach (SendMapData map in mapdatas)
+		{
+			map.ReqestSetParent();
+		}
+
+		PhotonNetwork.Instantiate(m_wallOutSide.name, transform.position, Quaternion.identity);
 
 		SetPlayerTreasure(mapdatas);
 
@@ -87,6 +88,13 @@ public class Create_Maze : MonoBehaviour
 		m_mapParent.GetComponent<NavMeshSurface>().BuildNavMesh();
 
 		SetEnemyReturn(mapdatas);
+	}
+
+	[PunRPC]
+	void RequestChangeLayer(int layerNum, int viewId)
+	{
+		Transform map = PhotonView.Find(viewId).transform;
+		GameObjectExtensions.SetLayerRecursively(map, layerNum);
 	}
 
 	private void SetPlayerTreasure(List<SendMapData> mapData)
@@ -105,7 +113,7 @@ public class Create_Maze : MonoBehaviour
 		{
 			int index = Random.Range(0, spawnPos.Count);
 			m_playerSpawnPosList.Add(spawnPos[index]);
-			spawnPos.RemoveAt(index);
+			spawnPos.Remove(spawnPos[index]);
 		}
 
 		for (int i = 0; i < m_treasureAmount; ++i)
@@ -117,11 +125,10 @@ public class Create_Maze : MonoBehaviour
 
 			// プレイヤーは一度無視する
 			int index = Random.Range(0, spawnPos.Count);
-			Instantiate(m_treasure[treasureType], 
+			PhotonNetwork.Instantiate(m_treasure[treasureType].name, 
 				spawnPos[index].position,
-				spawnPos[index].rotation, 
-				m_treasureBoxParent);
-			spawnPos.RemoveAt(index);
+				spawnPos[index].rotation);
+			spawnPos.Remove(spawnPos[index]);
 		}
 	}
 
@@ -140,22 +147,23 @@ public class Create_Maze : MonoBehaviour
 		for (int i = 0; i < m_portalPosAmount; ++i)
 		{
 			int index = Random.Range(0, spawnPos.Count);
-			Instantiate(m_portal, spawnPos[index].position, spawnPos[index].rotation, m_portalParent);
+			PhotonNetwork.Instantiate(m_portal.name, spawnPos[index].position, spawnPos[index].rotation);
 			spawnPos.RemoveAt(index);
 		}
 
 		for (int i = 0; i < m_enemyAmount; ++i)
 		{
 			int index = Random.Range(0, spawnPos.Count);
-			Instantiate(m_enemy, spawnPos[index].position, spawnPos[index].rotation, m_enemyParent);
+			PhotonNetwork.Instantiate(m_enemy.name, spawnPos[index].position, spawnPos[index].rotation);
 			spawnPos.RemoveAt(index);
 		}
 	}
 
 	public static Transform GetPlayerSpawnPos()
 	{
+		Debug.Log(m_playerSpawnPosList.Count);
 		Transform pos = m_playerSpawnPosList[0];
-		m_playerSpawnPosList.RemoveAt(0);
+		m_playerSpawnPosList.Remove(m_playerSpawnPosList[0]);
 		return pos;
 	}
 }

@@ -61,7 +61,6 @@ public class PlayerController : MonoBehaviourPunCallbacks
 	{
 		int layer = transform.position.y < 10 ? transform.position.y < 5 ? 1 << 6 : 1 << 7 : 1 << 8;
 		m_mapCamera.cullingMask = layer | (1 << 10);
-		Debug.Log(layer);
 	}
 
 	void Update()
