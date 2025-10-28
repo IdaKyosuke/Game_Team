@@ -89,13 +89,12 @@ public class PlayerMove : MonoBehaviour
         if (m_condition.Current == ConditionType.Shock) return;
 
 		//ˆÚ“®—Ê‚Ìæ“¾
-		m_moveDirection = new Vector3(Input.GetAxis("Horizontal"), m_moveDirection.y, Input.GetAxis("Vertical"));
+		m_moveDirection = new Vector3(Input.GetAxisRaw("Horizontal"), m_moveDirection.y, Input.GetAxisRaw("Vertical"));
         if (m_controller.isGrounded && Input.GetButton("Jump")) m_moveDirection.y = m_jumpPower;
 
         //ƒJƒƒ‰‚ÌŒü‚«‚ğl—¶‚µ‚½ˆÚ“®—Ê
-        Vector3 cameraForward = Vector3.Scale(Camera.main.transform.forward, new Vector3(1, 0, 1)).normalized;
-        Vector3 moveVelocity = cameraForward * m_moveDirection.z + Camera.main.transform.right * m_moveDirection.x;
-        moveVelocity.Normalize();
+        Vector3 cameraForward = Vector3.Scale(Camera.main.transform.forward, new Vector3(1, 0, 1));
+        Vector3 moveVelocity = (cameraForward * m_moveDirection.z + Camera.main.transform.right * m_moveDirection.x).normalized;
         moveVelocity = new Vector3(moveVelocity.x * m_playerStatus.TotalStatus.moveSpeed, m_moveDirection.y, moveVelocity.z * m_playerStatus.TotalStatus.moveSpeed);
 
 		// UŒ‚’†‚ÍˆÚ“®‚Å‚«‚È‚¢
