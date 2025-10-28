@@ -119,7 +119,7 @@ public class StashManager : MonoBehaviour
 		// アイテム移動用のオブジェクト
 		m_moveItemTransform = GameObject.FindWithTag("moveItemTransform").transform;
 
-		CreateInventory(GridType.Stash);
+		//CreateInventory(GridType.Stash);
 		CreateInventory(GridType.Inventory);
     }
 
