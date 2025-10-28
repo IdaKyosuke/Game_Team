@@ -2,8 +2,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-
-
 public class PlayerStatus : MonoBehaviour
 {
     [SerializeField] StatusData m_statusData;
@@ -14,6 +12,7 @@ public class PlayerStatus : MonoBehaviour
     private Condition m_condition;
     private EquipmentParameter m_totalEquipmentStatus;  //装備のステータスの実数値(合計値)
     private PlayerParameter m_status;                   //自身の基礎ステータス
+    private PlayerParameter m_passiveStatus;            //パッシブスキルによるステータス 
     private PlayerParameter m_totalStatus;              //合計ステータス
     private int m_level;
     private int m_health;
@@ -32,6 +31,12 @@ public class PlayerStatus : MonoBehaviour
         set { m_mp = value; }
     }
 
+    public PlayerParameter PassiveStatus
+    {
+        get { return m_passiveStatus; }
+        set { m_passiveStatus = value; }
+    }
+
     private void Start()
     {
         //レベル1のステータスを設定
@@ -44,6 +49,10 @@ public class PlayerStatus : MonoBehaviour
         //合計ステータスの初期化
         m_totalStatus = new PlayerParameter(m_level);
 
+        //パッシブステータスの初期化
+        m_passiveStatus = new PlayerParameter(m_level);
+
+        //状態の取得
         m_condition = GetComponent<Condition>();
     }
 
@@ -56,7 +65,6 @@ public class PlayerStatus : MonoBehaviour
         // 装備枠分回す
         foreach (GameObject slot in m_equipments)
         {
-            //Debug.Log(m_equipments.Count);
             // 装備枠が空の場合0を加算していく
             if (slot.transform.childCount == 0) continue;
 
@@ -65,8 +73,11 @@ public class PlayerStatus : MonoBehaviour
             m_totalEquipmentStatus += info.GetEquipmentInfo();
         }
 
-        // 合計ステータスに装備のステータスを加算
+        // 合計ステータスに装備の合計ステータスを加算
         m_totalStatus += m_totalEquipmentStatus;
+
+        //パッシブスキルのステータスを加算
+        m_totalStatus += m_passiveStatus;
 
         //基礎ステータスを加算
         m_totalStatus += m_status;
@@ -114,7 +125,7 @@ public class PlayerStatus : MonoBehaviour
 
         //ダメージ
         m_health -= damage;
-        Debug.Log(damage);
+        Debug.Log("Damage : " + damage);
 
         //状態異常付与の抽選
         ConditionType conditionType = condition.Grant;

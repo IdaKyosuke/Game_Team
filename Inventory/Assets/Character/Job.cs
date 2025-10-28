@@ -11,14 +11,15 @@ public enum JobType
     Length,
 }
 
-public class Job : MonoBehaviour
+public abstract class Job : MonoBehaviour
 {
-    [SerializeField] JobType m_jobType;
-    [SerializeField] int m_skillIndex;
+    [SerializeField, Range(0, 2)] int m_skillIndex;
 
     private Action[] actions;
 
-    private void Start()
+    protected JobType m_jobType;
+
+    public void Initialize(JobType jobType)
     {
         //パッシブスキルの登録
         actions = new Action[]
@@ -30,11 +31,15 @@ public class Job : MonoBehaviour
 
         //パッシブスキルの発動
         actions[m_skillIndex]?.Invoke();
+
+        //ジョブタイプの設定
+        m_jobType = jobType;
     }
 
-    virtual protected void Passive1() { Debug.Log("Passive 1"); }
-
-    virtual protected void Passive2() { Debug.Log("Passive 2"); }
-
-    virtual protected void Passive3() { Debug.Log("Passive 3"); }
+    //各ジョブ固有のパッシブスキルは派生先で実装する
+    protected abstract void Passive1();
+                                      
+    protected abstract void Passive2();
+                                      
+    protected abstract void Passive3();
 }

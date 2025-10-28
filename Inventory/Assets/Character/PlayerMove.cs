@@ -9,7 +9,6 @@ public class PlayerMove : MonoBehaviour
     [SerializeField] Animator m_animator;
     [SerializeField] float m_jumpPower;
     [SerializeField] float m_gravity;
-    [SerializeField] UnityEvent m_onUniqueSkill;
     [SerializeField] StashManager m_stashManager;
     [SerializeField] Info_InventorySize m_inventortSize;
 	[SerializeField] PlayerAnime m_playerAnim;      // アニメーション管理用オブジェクト
@@ -76,32 +75,6 @@ public class PlayerMove : MonoBehaviour
 		{
 			m_stashManager.ManageUiActiveInfo();
 		}
-
-		// デバッグ用
-		if (Input.GetKeyDown("1"))
-		{
-			m_stashManager.AddItemInventory();
-		}
-		if (Input.GetKeyDown("2"))
-		{
-			m_stashManager.AddItemStash();
-		}
-        if (Input.GetKeyDown("3"))
-        {
-            m_condition.Init(ConditionType.Burn);
-        }
-        if (Input.GetKeyDown("4"))
-        {
-            m_condition.Init(ConditionType.Frost);
-        }
-        if (Input.GetKeyDown("5"))
-        {
-            m_condition.Init(ConditionType.Poison);
-        }
-        if (Input.GetKeyDown("6"))
-        {
-            m_condition.Init(ConditionType.Shock);
-        }
     }
 
     void FixedUpdate()
@@ -123,7 +96,7 @@ public class PlayerMove : MonoBehaviour
         Vector3 cameraForward = Vector3.Scale(Camera.main.transform.forward, new Vector3(1, 0, 1)).normalized;
         Vector3 moveVelocity = cameraForward * m_moveDirection.z + Camera.main.transform.right * m_moveDirection.x;
         moveVelocity.Normalize();
-        moveVelocity = new Vector3(moveVelocity.x * m_playerStatus.Value.moveSpeed, m_moveDirection.y, moveVelocity.z * m_playerStatus.Value.moveSpeed);
+        moveVelocity = new Vector3(moveVelocity.x * m_playerStatus.TotalStatus.moveSpeed, m_moveDirection.y, moveVelocity.z * m_playerStatus.TotalStatus.moveSpeed);
 
 		// 攻撃中は移動できない
 		if(!m_playerAnim.IsAttack())
@@ -163,7 +136,6 @@ public class PlayerMove : MonoBehaviour
 
     public void OnDeath()
     {
-        Debug.Log("Death!!!!!!!");
         m_animator.SetTrigger("Death");
     }
 
