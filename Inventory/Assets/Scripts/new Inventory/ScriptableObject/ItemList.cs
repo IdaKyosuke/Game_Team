@@ -64,5 +64,10 @@ public class ItemList : ScriptableObject
 	{
 		m_activeObject.GetComponent<Item_Object>().ChangeIndex(index);
 	}
-	
+
+	// アクティブなアイテムを削除する
+	public void DeleteActiveObject()
+	{
+		Destroy(m_activeObject);
+	}
 }
