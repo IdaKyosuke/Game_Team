@@ -1,6 +1,8 @@
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.EventSystems;
 
 public class PlayerMove : MonoBehaviour
 {
@@ -11,8 +13,8 @@ public class PlayerMove : MonoBehaviour
     [SerializeField] float m_gravity;
     [SerializeField] StashManager m_stashManager;
     [SerializeField] Info_InventorySize m_inventortSize;
-	[SerializeField] PlayerAnime m_playerAnim;      // アニメーション管理用オブジェクト
-	[SerializeField] GameObject m_spine;
+    [SerializeField] PlayerAnime m_playerAnim;      // アニメーション管理用オブジェクト
+    [SerializeField] GameObject m_spine;
 
     private float xRotation;
     private Vector3 m_moveDirection;
@@ -23,8 +25,8 @@ public class PlayerMove : MonoBehaviour
 
     public Info_InventorySize InventortSize => m_inventortSize;
 
-	// レイの当たった敵を保管する用
-	private GameObject m_rayTarget;
+    // レイの当たった敵を保管する用
+    private GameObject m_rayTarget;
 
     void Start()
     {
@@ -32,7 +34,6 @@ public class PlayerMove : MonoBehaviour
         m_controller = GetComponent<CharacterController>();
         m_playerStatus = GetComponent<PlayerStatus>();
         m_condition = GetComponent<Condition>();
-        m_moveDirection = Vector3.zero;
 
         Cursor.lockState = CursorLockMode.Locked;
     }
@@ -44,20 +45,26 @@ public class PlayerMove : MonoBehaviour
         {
             //プレイヤー以外は無視
             if (!hit.transform.gameObject.CompareTag("Player")) return;
-			// レイの当たった敵を保管
-			m_rayTarget = hit.transform.gameObject;
+            // レイの当たった敵を保管
+            m_rayTarget = hit.transform.gameObject;
 
-			//Eキーが押されていなければ無視
-			if (Input.GetKeyDown("e"))
-			{
-				m_stashManager.IsScavenger(true);
+            //Eキーが押されていなければ無視
+            if (Input.GetKeyDown("e"))
+            {
+                m_stashManager.IsScavenger(true);
 
-				//インベントリUIの表示
-				m_stashManager.CreateStashUi(
-					m_rayTarget.GetComponent<Inventory_Info>().GetInfo(),
-					m_rayTarget.GetComponent<StashManager>().GetItemList()
-					);
-			}
+                //インベントリUIの表示
+                m_stashManager.CreateStashUi(
+                    m_rayTarget.GetComponent<Inventory_Info>().GetInfo(),
+                    m_rayTarget.GetComponent<StashManager>().GetItemList()
+                    );
+            }
+        }
+
+        //ジャンプ
+        if (m_controller.isGrounded && Input.GetButton("Jump"))
+        {
+            m_moveDirection.y = m_jumpPower;
         }
 
         //攻撃
@@ -78,36 +85,41 @@ public class PlayerMove : MonoBehaviour
 
     void FixedUpdate()
     {
-        //移動したかどうか
         bool isMove = false;
 
-        //感電状態は移動不可
+        //感電状態なら移動不可
         if (m_condition.Current != ConditionType.Shock)
         {
-            //移動量の取得
-            m_moveDirection = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
-            if (m_controller.isGrounded && Input.GetButton("Jump")) m_moveDirection.y = m_jumpPower;
+            //移動の入力
+            Vector3 inputDiraction = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
+            if (inputDiraction != Vector3.zero) isMove = true;
 
-            //カメラの向きを考慮した移動量
-            Vector3 cameraForward = Vector3.Scale(Camera.main.transform.forward, new Vector3(1, 0, 1));
-            Vector3 moveVelocity = (cameraForward * m_moveDirection.z + Camera.main.transform.right * m_moveDirection.x).normalized;
-            moveVelocity = new Vector3(moveVelocity.x * m_playerStatus.TotalStatus.moveSpeed, m_moveDirection.y, moveVelocity.z * m_playerStatus.TotalStatus.moveSpeed);
+            //カメラの向きに合わせて移動方向を決定
+            Vector3 cameraForward = Vector3.Scale(Camera.main.transform.forward, new Vector3(1, 0, 1)).normalized;
+            Vector3 moveDirection = (cameraForward * inputDiraction.z + Camera.main.transform.right * inputDiraction.x).normalized;
 
-            // 攻撃中は移動できない
-            if (!m_playerAnim.IsAttack() && m_moveDirection != Vector3.zero)
+            //攻撃中は移動不可
+            if (m_playerAnim.IsAttack())
             {
-                //移動
-                m_controller.Move(moveVelocity * Time.deltaTime);
-                isMove = true;
+                m_moveDirection.x = 0;
+                m_moveDirection.z = 0;
+            }
+            else
+            {
+                m_moveDirection.x = moveDirection.x * m_playerStatus.TotalStatus.moveSpeed;
+                m_moveDirection.z = moveDirection.z * m_playerStatus.TotalStatus.moveSpeed;
             }
         }
 
         //自由落下
         m_moveDirection.y -= m_gravity * Time.deltaTime;
 
+        //移動
+        m_controller.Move(m_moveDirection * Time.deltaTime);
+
         //移動アニメーション
         m_animator.SetBool("Move", isMove);
-	}
+    }
 
     private void LateUpdate()
     {
