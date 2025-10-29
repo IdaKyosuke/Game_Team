@@ -132,6 +132,7 @@ GameObject:
   m_Component:
   - component: {fileID: 623324813}
   - component: {fileID: 623324814}
+  - component: {fileID: 623324815}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -169,6 +170,39 @@ MonoBehaviour:
   m_gameScene: GameScene
   m_lobbyScene: LobbyScene
   m_mapScene: MapScene
+--- !u!114 &623324815
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 623324812}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 956d14b91a4216349b2fa9a3c1c910b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  PrefabList:
+  - {fileID: 417325845519929568, guid: bdb1faa003bc5264d8c0210bdd8f967b, type: 3}
+  - {fileID: 2316276797442495871, guid: 97a4f7ba52b84bd4a8f905d1275bdee5, type: 3}
+  - {fileID: 10888960846896723, guid: f0e79f65f25756048b671f3ce58e4fb3, type: 3}
+  - {fileID: 3840519604392493462, guid: b7eafb4b83647874ab2d59b29fc433ca, type: 3}
+  - {fileID: 8617768527153439713, guid: 1e62fe4b6c8083245884378ae76f1a76, type: 3}
+  - {fileID: 4582066852293526987, guid: b23f4a3289d81cf43bb04183c654ac41, type: 3}
+  - {fileID: 3239017415459692570, guid: 5ef5b36ce445f6d4f8463c89a1f22da3, type: 3}
+  - {fileID: 5949784974341562719, guid: 1ee14a4e5f3009747932376bf7302396, type: 3}
+  - {fileID: 5632915182037350619, guid: 68d330424d139f74285832d78399ef65, type: 3}
+  - {fileID: 6245274126229929957, guid: 444d2aed17fdd4e4eb72297060697a87, type: 3}
+  - {fileID: 6922545222337691486, guid: 8adcd66c1ea20964f9e756325b3504e7, type: 3}
+  - {fileID: 8646668119937660822, guid: 14904f7fd138193488ed79e3480fdb99, type: 3}
+  - {fileID: 8843586829537065063, guid: ebbd905249e50e842acbcff30cc56979, type: 3}
+  - {fileID: 6770079576806562156, guid: 58037991a13fd9c43abb5ebe8ad67f77, type: 3}
+  - {fileID: 629276159145079963, guid: aa2f117ad56efa243855092134c6c706, type: 3}
+  - {fileID: 629276159145079963, guid: cb5d4c63cb15dd54abb054cebf018096, type: 3}
+  - {fileID: 629276159145079963, guid: 588b1f856e9b3b04ba8fe3b9ee0f19d5, type: 3}
+  - {fileID: 629276159145079963, guid: 254dfda2b87862445b86366fa973b861, type: 3}
+  - {fileID: 2558383051400345848, guid: 1095702f3a33da849aea064ec84467c2, type: 3}
+  - {fileID: 3634555056332244137, guid: fa98f34ea6853aa47beb2be3303a989e, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

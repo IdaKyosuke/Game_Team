@@ -18,7 +18,7 @@ public class Create_Maze : MonoBehaviourPunCallbacks
 	[SerializeField] int m_playerSpawnPosAmount = 20;
 	[SerializeField] int m_treasureAmount = 50;
 	[SerializeField] int m_portalPosAmount = 5;
-	[SerializeField] int m_enemyAmount = 0;
+	[SerializeField] int m_enemyAmount = 50;
 
 	[SerializeField] List<GameObject> m_mapPrefab;
 
@@ -54,7 +54,7 @@ public class Create_Maze : MonoBehaviourPunCallbacks
 							if (y == 0)
 							{
 								mapdatas.Add(
-									PhotonNetwork.Instantiate(
+									PhotonNetwork.InstantiateRoomObject(
 										m_stairsMap.name, 
 										new Vector3(m_size * i, y * 4.5f, m_size * j), 
 										Quaternion.identity).GetComponent<SendMapData>()
@@ -63,7 +63,7 @@ public class Create_Maze : MonoBehaviourPunCallbacks
 							continue;
 						}
 					}
-					GameObject map = PhotonNetwork.Instantiate(
+					GameObject map = PhotonNetwork.InstantiateRoomObject(
 						m_mapPrefab[Random.Range(0, m_mapPrefab.Count)].name, 
 						new Vector3(m_size * i, y * 4.5f, m_size * j), 
 						Quaternion.identity
@@ -80,7 +80,7 @@ public class Create_Maze : MonoBehaviourPunCallbacks
 			map.ReqestSetParent();
 		}
 
-		PhotonNetwork.Instantiate(m_wallOutSide.name, transform.position, Quaternion.identity);
+		PhotonNetwork.InstantiateRoomObject(m_wallOutSide.name, transform.position, Quaternion.identity);
 
 		SetPlayerTreasure(mapdatas);
 
@@ -125,7 +125,7 @@ public class Create_Maze : MonoBehaviourPunCallbacks
 
 			// プレイヤーは一度無視する
 			int index = Random.Range(0, spawnPos.Count);
-			PhotonNetwork.Instantiate(m_treasure[treasureType].name, 
+			PhotonNetwork.InstantiateRoomObject(m_treasure[treasureType].name, 
 				spawnPos[index].position,
 				spawnPos[index].rotation);
 			spawnPos.Remove(spawnPos[index]);
@@ -147,21 +147,20 @@ public class Create_Maze : MonoBehaviourPunCallbacks
 		for (int i = 0; i < m_portalPosAmount; ++i)
 		{
 			int index = Random.Range(0, spawnPos.Count);
-			PhotonNetwork.Instantiate(m_portal.name, spawnPos[index].position, spawnPos[index].rotation);
-			spawnPos.RemoveAt(index);
+			PhotonNetwork.InstantiateRoomObject(m_portal.name, spawnPos[index].position, spawnPos[index].rotation);
+			spawnPos.Remove(spawnPos[index]);
 		}
 
 		for (int i = 0; i < m_enemyAmount; ++i)
 		{
 			int index = Random.Range(0, spawnPos.Count);
-			PhotonNetwork.Instantiate(m_enemy.name, spawnPos[index].position, spawnPos[index].rotation);
-			spawnPos.RemoveAt(index);
+			PhotonNetwork.InstantiateRoomObject(m_enemy.name, spawnPos[index].position, spawnPos[index].rotation);
+			spawnPos.Remove(spawnPos[index]);
 		}
 	}
 
 	public static Transform GetPlayerSpawnPos()
 	{
-		Debug.Log(m_playerSpawnPosList.Count);
 		Transform pos = m_playerSpawnPosList[0];
 		m_playerSpawnPosList.Remove(m_playerSpawnPosList[0]);
 		return pos;

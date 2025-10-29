@@ -1,4 +1,5 @@
 using Photon.Pun;
+using Photon.Pun.Demo.PunBasics;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviourPunCallbacks
@@ -13,22 +14,37 @@ public class PlayerController : MonoBehaviourPunCallbacks
 	[SerializeField] private float sensY = 2f;
 	private float rotationY, rotationX;
 	bool m_isGrounded;
+	bool m_isDeath = false;
 
 	[SerializeField] private float jumpPower;  //ジャンプ力
 
-    private void Awake()
+	private void Awake()
     {
 		characterController = GetComponent<CharacterController>();
 		Cursor.lockState = CursorLockMode.Locked;
 		Cursor.visible = false;
-        characterController.enabled = false;        
+        characterController.enabled = false;
     }
 
     void Start()
 	{
-        transform.position = Create_Maze.GetPlayerSpawnPos().position;
-        characterController.enabled = true;
+		// マスターの持つリストを参照
+		photonView.RPC(nameof(RequestPlayerSpawnPos), RpcTarget.MasterClient, photonView.ViewID);
     }
+
+	[PunRPC]
+	void RequestPlayerSpawnPos(int viewId)
+	{
+		PhotonView.Find(viewId).RPC(nameof(SetPlayerPos), PhotonView.Find(viewId).Owner, Create_Maze.GetPlayerSpawnPos().position);
+	}
+
+	[PunRPC]
+	void SetPlayerPos(Vector3 pos)
+	{
+		// transform.position = pos;
+		transform.position = new Vector3(0, 1, 0);
+        characterController.enabled = true;
+	}
 
 	void TreasureOpen()
 	{
@@ -65,11 +81,9 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
 	void Update()
 	{
+		if (m_isDeath) return;
 		if (photonView.IsMine)
 		{
-			// ゲームの終了
-			EndGame();
-
 			MiniMap();
 
 			m_isGrounded = CheckGrounded();
@@ -135,19 +149,10 @@ public class PlayerController : MonoBehaviourPunCallbacks
 		}
 	}
 
-	//ゲーム終了
-	private void EndGame()
+	public override void OnLeftRoom()
 	{
-		//Escが押された時
-		if (Input.GetKey(KeyCode.Escape))
-		{
-
-#if UNITY_EDITOR
-			UnityEditor.EditorApplication.isPlaying = false;//ゲームプレイ終了
-#else
-    Application.Quit();//ゲームプレイ終了
-#endif
-		}
-
+		Debug.Log("LeftRoom");
+		m_isDeath = true;
+		base.OnLeftRoom();
 	}
 }

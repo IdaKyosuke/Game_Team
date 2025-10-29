@@ -26,7 +26,7 @@ public class PlayerMove : MonoBehaviourPunCallbacks
 	[SerializeField] StashManager m_manager;
 
 	[SerializeField] bool m_isPlayer = true;
-	
+	private bool m_isDeath = false;
 
     void Start()
     {
@@ -39,6 +39,7 @@ public class PlayerMove : MonoBehaviourPunCallbacks
 
     private void Update()
 	{
+		if (m_isDeath) return;
 		if (!m_isPlayer) return;
 		// 自身が生成したオブジェクトだけに移動処理を行う
 		if (photonView.IsMine)
@@ -117,6 +118,7 @@ public class PlayerMove : MonoBehaviourPunCallbacks
     public void OnDeath()
     {
         Debug.Log("Death!!!!!!!");
+		m_isDeath = true;
     }
 
 	// 変更後のアイテムリストを返す
@@ -142,5 +144,12 @@ public class PlayerMove : MonoBehaviourPunCallbacks
 	public StashManager GetManager()
 	{
 		return m_manager;
+	}
+
+	public override void OnLeftRoom()
+	{
+		Debug.Log("LeftRoom");
+		m_isDeath = true;
+		base.OnLeftRoom();
 	}
 }
