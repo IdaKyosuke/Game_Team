@@ -27,12 +27,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 126675572940373469}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.0000000040109853, y: -1.1368684e-13, z: 1.293051e-12, w: 1}
-  m_LocalPosition: {x: 0, y: 1.7, z: 0.100000024}
+  m_LocalRotation: {x: -0.000000070780516, y: -1.6818217e-11, z: 3.5710315e-12, w: 1}
+  m_LocalPosition: {x: 0, y: 0.1, z: 0.13}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 6353335903053452122}
+  m_Father: {fileID: 7151019982202814601}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!20 &1135898764695055192
 Camera:
@@ -1407,6 +1407,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 5238679799526199521}
   - {fileID: 1519820868071360549}
   m_Father: {fileID: 1225939811636245492}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2440,7 +2441,6 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 5238679799526199521}
   - {fileID: 886784458766079746}
   - {fileID: 6895668717532786135}
   m_Father: {fileID: 0}
@@ -2579,9 +2579,6 @@ MonoBehaviour:
   m_animator: {fileID: 6341249154321673196}
   m_jumpPower: 10
   m_gravity: 34
-  m_onUniqueSkill:
-    m_PersistentCalls:
-      m_Calls: []
   m_stashManager: {fileID: 0}
   m_inventortSize: {fileID: 0}
   m_playerAnim: {fileID: 7410941094257415344}

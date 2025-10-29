@@ -51,6 +51,7 @@ public class PlayerMove : MonoBehaviour
 			if (Input.GetKeyDown("e"))
 			{
 				m_stashManager.IsScavenger(true);
+
 				//インベントリUIの表示
 				m_stashManager.CreateStashUi(
 					m_rayTarget.GetComponent<Inventory_Info>().GetInfo(),
@@ -65,13 +66,11 @@ public class PlayerMove : MonoBehaviour
             // 攻撃中は無視
             if (m_playerAnim.IsAttack()) return;
 
-            //ジャンプ中は無視
-            if(!m_controller.isGrounded) return;
-
+            //攻撃アニメーション
             m_animator.SetTrigger("Attack1");
         }
 
-		if (Input.GetKeyDown("tab"))
+        if (Input.GetKeyDown("tab"))
 		{
 			m_stashManager.ManageUiActiveInfo();
 		}
@@ -82,28 +81,29 @@ public class PlayerMove : MonoBehaviour
         //移動したかどうか
         bool isMove = false;
 
+        //感電状態は移動不可
+        if (m_condition.Current != ConditionType.Shock)
+        {
+            //移動量の取得
+            m_moveDirection = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
+            if (m_controller.isGrounded && Input.GetButton("Jump")) m_moveDirection.y = m_jumpPower;
+
+            //カメラの向きを考慮した移動量
+            Vector3 cameraForward = Vector3.Scale(Camera.main.transform.forward, new Vector3(1, 0, 1));
+            Vector3 moveVelocity = (cameraForward * m_moveDirection.z + Camera.main.transform.right * m_moveDirection.x).normalized;
+            moveVelocity = new Vector3(moveVelocity.x * m_playerStatus.TotalStatus.moveSpeed, m_moveDirection.y, moveVelocity.z * m_playerStatus.TotalStatus.moveSpeed);
+
+            // 攻撃中は移動できない
+            if (!m_playerAnim.IsAttack() && m_moveDirection != Vector3.zero)
+            {
+                //移動
+                m_controller.Move(moveVelocity * Time.deltaTime);
+                isMove = true;
+            }
+        }
+
         //自由落下
         m_moveDirection.y -= m_gravity * Time.deltaTime;
-
-        //感電状態は移動不可
-        if (m_condition.Current == ConditionType.Shock) return;
-
-		//移動量の取得
-		m_moveDirection = new Vector3(Input.GetAxisRaw("Horizontal"), m_moveDirection.y, Input.GetAxisRaw("Vertical"));
-        if (m_controller.isGrounded && Input.GetButton("Jump")) m_moveDirection.y = m_jumpPower;
-
-        //カメラの向きを考慮した移動量
-        Vector3 cameraForward = Vector3.Scale(Camera.main.transform.forward, new Vector3(1, 0, 1));
-        Vector3 moveVelocity = (cameraForward * m_moveDirection.z + Camera.main.transform.right * m_moveDirection.x).normalized;
-        moveVelocity = new Vector3(moveVelocity.x * m_playerStatus.TotalStatus.moveSpeed, m_moveDirection.y, moveVelocity.z * m_playerStatus.TotalStatus.moveSpeed);
-
-		// 攻撃中は移動できない
-		if(!m_playerAnim.IsAttack())
-		{
-			//移動
-			m_controller.Move(moveVelocity * Time.deltaTime);
-            isMove = true;
-		}
 
         //移動アニメーション
         m_animator.SetBool("Move", isMove);
@@ -111,9 +111,6 @@ public class PlayerMove : MonoBehaviour
 
     private void LateUpdate()
     {
-        //攻撃中は回転しない
-        if (m_playerAnim.IsAttack()) return;
-
         // 視点移動
         float mouseX = Input.GetAxis("Mouse X") * MouseSensitivity * Time.deltaTime;
         float mouseY = Input.GetAxis("Mouse Y") * MouseSensitivity * Time.deltaTime;
@@ -124,7 +121,7 @@ public class PlayerMove : MonoBehaviour
         // 腰の回転
         xRotation -= mouseY;
         xRotation = Mathf.Clamp(xRotation, -40.0f, 30.0f);
-        m_spine.transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
+        m_spine.transform.localRotation = Quaternion.Euler(xRotation, 0, 0);
         Camera.main.transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
     }
 
