@@ -66,28 +66,30 @@ public class PlayerMove : MonoBehaviour
         //前方にRayを飛ばす
         if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out var hit))
         {
+            //プレイヤー以外は無視
+            if (!hit.transform.gameObject.CompareTag("Player")) return;
+
+            //自身は無視
+            if (hit.transform.root.gameObject == gameObject) return;
+
+            //死体以外は無視
+            if (!hit.transform.root.gameObject.GetComponent<PlayerMove>().IsDeath) return;
+
             // レイの当たった敵を保管
             m_rayTarget = hit.transform.gameObject;
-
-            //プレイヤー以外は無視
-            if (!m_rayTarget.CompareTag("Player")) return;
-
-            //"自身"と"死体以外"は無視
-            PlayerBone bone = m_rayTarget.GetComponent<PlayerBone>();
-            if (bone.Parent == gameObject || !bone.IsDeath) return;
 
             //Eキーが押されていなければ無視
             if (Input.GetKeyDown("e"))
             {
                 Debug.Log("IsScavenger");
 
-                //m_stashManager.IsScavenger(true);
+                m_stashManager.IsScavenger(true);
 
-                ////インベントリUIの表示
-                //m_stashManager.CreateStashUi(
-                //    m_rayTarget.GetComponent<Inventory_Info>().GetInfo(),
-                //    m_rayTarget.GetComponent<StashManager>().GetItemList()
-                //    );
+                //インベントリUIの表示
+                m_stashManager.CreateStashUi(
+                    m_rayTarget.transform.root.gameObject.GetComponent<Inventory_Info>().GetInfo(),
+                    m_rayTarget.transform.root.gameObject.GetComponent<StashManager>().GetItemList()
+                    );
             }
         }
     }
@@ -163,7 +165,8 @@ public class PlayerMove : MonoBehaviour
 		if (!m_rayTarget) return;
 
 		List<ItemList> list = new List<ItemList>(items);
-		m_rayTarget.GetComponent<StashManager>().CopyItemList(list);
+		m_rayTarget.transform.root.gameObject.GetComponent<StashManager>().CopyItemList(list);
+
 		// ターゲットを空にする
 		m_rayTarget = null;
 	}
