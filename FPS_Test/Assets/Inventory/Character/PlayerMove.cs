@@ -12,6 +12,7 @@ public class PlayerMove : MonoBehaviourPunCallbacks
     [SerializeField] UnityEvent m_onPassiveSkill;
     [SerializeField] GameObject m_stashManager;
     [SerializeField] Info_InventorySize m_inventortSize;
+	[SerializeField] GameObject m_uiParentCanvs;
 
     private Vector3 m_moveDirection;
 	private Rigidbody m_rb;
@@ -30,6 +31,7 @@ public class PlayerMove : MonoBehaviourPunCallbacks
 
     void Start()
     {
+		m_uiParentCanvs.SetActive(true);
 		m_isPlayer = photonView.IsMine;
 		if (!m_isPlayer) return;
 		m_rb = GetComponent<Rigidbody>();
