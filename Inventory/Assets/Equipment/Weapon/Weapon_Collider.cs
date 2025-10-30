@@ -37,10 +37,10 @@ public class Weapon_Collider : MonoBehaviour
 		if(other.gameObject.CompareTag("Player"))
 		{
 			// 当たったオブジェクトのIDを貰ってくる
-			int id = other.gameObject.GetInstanceID();
+			int id = other.GetComponent<PlayerBone>().Parent.GetInstanceID();
 
-			// 自分の親と当たったときは無視する
-			if (id == m_parentID) return;
+            // 自分の親と当たったときは無視する
+            if (id == m_parentID) return;
 
 			// すでに当たったオブジェクトの時は無視する
 			if (m_hitMasterInfo.ContainsKey(id)) return;
@@ -48,8 +48,11 @@ public class Weapon_Collider : MonoBehaviour
 			// 初めて当たったときは相手のIDを登録
 			m_hitMasterInfo[id] = true;
 
-			//ダメージを与える
-			if (other.TryGetComponent<PlayerStatus>(out var playerStatus))
+            //死体の場合は無視する
+            if (other.GetComponent<PlayerBone>().IsDeath) return;
+
+            //ダメージを与える
+            if (other.TryGetComponent<PlayerStatus>(out var playerStatus))
 			{
                 playerStatus.Damage(
                 m_parentPlayer.GetComponent<PlayerStatus>().TotalStatus.physicalPower,

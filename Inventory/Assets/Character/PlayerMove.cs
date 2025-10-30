@@ -1,8 +1,5 @@
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Events;
-using UnityEngine.EventSystems;
 
 public class PlayerMove : MonoBehaviour
 {
@@ -11,17 +8,20 @@ public class PlayerMove : MonoBehaviour
     [SerializeField] Animator m_animator;
     [SerializeField] float m_jumpPower;
     [SerializeField] float m_gravity;
-    [SerializeField] StashManager m_stashManager;
     [SerializeField] Info_InventorySize m_inventortSize;
     [SerializeField] PlayerAnime m_playerAnim;      // アニメーション管理用オブジェクト
     [SerializeField] GameObject m_spine;
 
-    private float xRotation;
+    private float m_rotateX;
+    private bool m_isDeath;
     private Vector3 m_moveDirection;
     private CharacterController m_controller;
 
+    private StashManager m_stashManager;
     private PlayerStatus m_playerStatus;
     private Condition m_condition;
+
+    public bool IsDeath => m_isDeath;
 
     public Info_InventorySize InventortSize => m_inventortSize;
 
@@ -34,33 +34,13 @@ public class PlayerMove : MonoBehaviour
         m_controller = GetComponent<CharacterController>();
         m_playerStatus = GetComponent<PlayerStatus>();
         m_condition = GetComponent<Condition>();
+        m_isDeath = false;
 
         Cursor.lockState = CursorLockMode.Locked;
     }
 
     private void Update()
     {
-        //前方にRayを飛ばす
-        if (Physics.Raycast(transform.position, transform.forward, out var hit))
-        {
-            //プレイヤー以外は無視
-            if (!hit.transform.gameObject.CompareTag("Player")) return;
-            // レイの当たった敵を保管
-            m_rayTarget = hit.transform.gameObject;
-
-            //Eキーが押されていなければ無視
-            if (Input.GetKeyDown("e"))
-            {
-                m_stashManager.IsScavenger(true);
-
-                //インベントリUIの表示
-                m_stashManager.CreateStashUi(
-                    m_rayTarget.GetComponent<Inventory_Info>().GetInfo(),
-                    m_rayTarget.GetComponent<StashManager>().GetItemList()
-                    );
-            }
-        }
-
         //ジャンプ
         if (m_controller.isGrounded && Input.GetButton("Jump"))
         {
@@ -77,10 +57,39 @@ public class PlayerMove : MonoBehaviour
             m_animator.SetTrigger("Attack1");
         }
 
+        //インベントリの操作
         if (Input.GetKeyDown("tab"))
 		{
 			m_stashManager.ManageUiActiveInfo();
 		}
+
+        //前方にRayを飛ばす
+        if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out var hit))
+        {
+            // レイの当たった敵を保管
+            m_rayTarget = hit.transform.gameObject;
+
+            //プレイヤー以外は無視
+            if (!m_rayTarget.CompareTag("Player")) return;
+
+            //"自身"と"死体以外"は無視
+            PlayerBone bone = m_rayTarget.GetComponent<PlayerBone>();
+            if (bone.Parent == gameObject || !bone.IsDeath) return;
+
+            //Eキーが押されていなければ無視
+            if (Input.GetKeyDown("e"))
+            {
+                Debug.Log("IsScavenger");
+
+                //m_stashManager.IsScavenger(true);
+
+                ////インベントリUIの表示
+                //m_stashManager.CreateStashUi(
+                //    m_rayTarget.GetComponent<Inventory_Info>().GetInfo(),
+                //    m_rayTarget.GetComponent<StashManager>().GetItemList()
+                //    );
+            }
+        }
     }
 
     void FixedUpdate()
@@ -131,10 +140,10 @@ public class PlayerMove : MonoBehaviour
         transform.Rotate(Vector3.up * mouseX);
 
         // 腰の回転
-        xRotation -= mouseY;
-        xRotation = Mathf.Clamp(xRotation, -40.0f, 30.0f);
-        m_spine.transform.localRotation = Quaternion.Euler(xRotation, 0, 0);
-        Camera.main.transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
+        m_rotateX -= mouseY;
+        m_rotateX = Mathf.Clamp(m_rotateX, -40.0f, 30.0f);
+        m_spine.transform.localRotation = Quaternion.Euler(m_rotateX, 0, 0);
+        Camera.main.transform.localRotation = Quaternion.Euler(m_rotateX, 0f, 0f);
     }
 
     public void OnDamage()
@@ -145,6 +154,7 @@ public class PlayerMove : MonoBehaviour
     public void OnDeath()
     {
         m_animator.SetTrigger("Death");
+        m_isDeath = true;
     }
 
 	// 変更後のアイテムリストを返す

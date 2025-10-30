@@ -4,13 +4,7 @@ public class PlayerAnime : MonoBehaviour
 {
     [SerializeField] Weapon_Collider m_collider; //UŒ‚—p‚Ì“–‚½‚è”»’è
 
-    private Animator m_animator;
 	private bool m_isAttack = false;
-
-    private void Start()
-    {
-        m_animator = GetComponent<Animator>();
-    }
 
     public void OnAttack1()
     {
