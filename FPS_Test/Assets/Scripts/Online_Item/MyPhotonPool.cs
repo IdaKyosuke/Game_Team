@@ -13,7 +13,7 @@ public class MyPhotonPool : MonoBehaviourPunCallbacks, IPunPrefabPool
 		PhotonNetwork.PrefabPool = this;
 		foreach (var a in PrefabList)
 		{
-			Debug.Log(a.name);
+			//Debug.Log(a.name);
 		}
 	}
 

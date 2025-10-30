@@ -21,8 +21,6 @@ public class PlayerController : MonoBehaviourPunCallbacks
 	private void Awake()
     {
 		characterController = GetComponent<CharacterController>();
-		Cursor.lockState = CursorLockMode.Locked;
-		Cursor.visible = false;
         characterController.enabled = false;
     }
 
@@ -32,6 +30,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
 		photonView.RPC(nameof(RequestPlayerSpawnPos), RpcTarget.MasterClient, photonView.ViewID);
     }
 
+	// マスターの中で個々にポジションを送る
 	[PunRPC]
 	void RequestPlayerSpawnPos(int viewId)
 	{
@@ -41,9 +40,11 @@ public class PlayerController : MonoBehaviourPunCallbacks
 	[PunRPC]
 	void SetPlayerPos(Vector3 pos)
 	{
-		// transform.position = pos;
-		transform.position = new Vector3(0, 1, 0);
+		pos = new Vector3(0, 1, 0);
+		transform.position = pos;
         characterController.enabled = true;
+		
+		//Debug.Log(PhotonNetwork.IsMasterClient + ":" + photonView.ViewID);
 	}
 
 	void TreasureOpen()
@@ -152,7 +153,13 @@ public class PlayerController : MonoBehaviourPunCallbacks
 	public override void OnLeftRoom()
 	{
 		Debug.Log("LeftRoom");
-		m_isDeath = true;
+		photonView.RPC(nameof(RequestOnDeath), photonView.Owner);
 		base.OnLeftRoom();
+	}
+
+	[PunRPC]
+	void RequestOnDeath()
+	{
+		m_isDeath = true;
 	}
 }

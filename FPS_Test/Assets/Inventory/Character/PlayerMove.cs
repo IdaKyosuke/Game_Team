@@ -30,6 +30,7 @@ public class PlayerMove : MonoBehaviourPunCallbacks
 
     void Start()
     {
+		m_isPlayer = photonView.IsMine;
 		if (!m_isPlayer) return;
 		m_rb = GetComponent<Rigidbody>();
         m_playerStatus = GetComponent<PlayerStatus>();
@@ -148,8 +149,14 @@ public class PlayerMove : MonoBehaviourPunCallbacks
 
 	public override void OnLeftRoom()
 	{
-		Debug.Log("LeftRoom");
-		m_isDeath = true;
+		Debug.Log("LeftRoom!");
+		photonView.RPC(nameof(RequestOnDeath), photonView.Owner);
 		base.OnLeftRoom();
+	}
+
+	[PunRPC]
+	void RequestOnDeath()
+	{
+		m_isDeath = true;
 	}
 }

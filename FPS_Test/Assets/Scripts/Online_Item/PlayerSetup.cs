@@ -7,10 +7,8 @@ public class PlayerSetup : MonoBehaviourPunCallbacks
 	[SerializeField] GameObject m_camera;
 	[SerializeField] GameObject m_miniMapCamera;
 
-	[PunRPC]
-	void Update()
+	void Start()
 	{
-		Debug.Log("カメラをセット");
         if (photonView.IsMine)
         {
 			// 自分のカメラを有効化
@@ -24,4 +22,10 @@ public class PlayerSetup : MonoBehaviourPunCallbacks
 			m_miniMapCamera	.SetActive(false);
         }
 	}
+
+	//public void SetCamera(bool active)
+	//{
+	//	m_camera.SetActive (active);
+	//	m_miniMapCamera.SetActive (active);
+	//}
 }
