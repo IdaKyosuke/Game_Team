@@ -59,6 +59,7 @@ public class ItemList : ScriptableObject
 	{
 		m_activeObject = obj;
 	}
+
 	// アクティブなオブジェクトのインデックスを変更する
 	public void ChangeIndex(int index)
 	{
@@ -68,6 +69,6 @@ public class ItemList : ScriptableObject
 	// アクティブなアイテムを削除する
 	public void DeleteActiveObject()
 	{
-		Destroy(m_activeObject);
+		m_activeObject.GetComponent<Item_Object>().Remove();
 	}
 }

@@ -1,9 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Rendering;
+using static UnityEditor.Progress;
 using static UnityEditor.ShaderGraph.Internal.KeywordDependentCollection;
 
 public class ShopManager : MonoBehaviour
@@ -74,31 +76,45 @@ public class ShopManager : MonoBehaviour
 	[SerializeField] Info_InventorySize info2;
 	// デバッグ用アイテムリスト
 	[SerializeField] List<GameObject> items = new List<GameObject>();
-	// テスト用
-	[SerializeField] bool m_isPlayer = true;
+
+
+
+
+
+	[SerializeField] TextMeshProUGUI m_text;
 
 
 	// Start is called before the first frame update
 	void Start()
 	{
-		if (!m_isPlayer) return;
 		// アイテム移動用のオブジェクト
 		m_moveItemTransform = GameObject.FindWithTag("moveItemTransform").transform;
 
 		CreateInventory(GridType.Inventory);
+		CreateInventory(GridType.Stash);
+
+		m_text.SetText("Money : " + m_infoMoney.GetCurrentMoney().ToString());
 	}
 
 	// Update is called once per frame
 	void Update()
 	{
-		if (!m_isPlayer) return;
-
 		if (Input.GetMouseButtonUp(0))
 		{
 			SetItem();
 			// 未選択状態に戻す
 			m_checkType = GridType.Empty;
 		}
+		
+
+		// デバッグ用
+		if(Input.GetKeyDown("1"))
+		{
+			AddItemInventory();
+		}
+
+
+		m_text.SetText("Money : " + m_infoMoney.GetCurrentMoney().ToString());
 	}
 
 	// アイテムを空き枠にセットする
@@ -106,31 +122,45 @@ public class ShopManager : MonoBehaviour
 	{
 		// 移動中のアイテムがないときは無視
 		if (m_moveItemTransform.childCount <= 0) return;
+
 		// アイテム移動用のオブジェクトの中身を確認
 		GameObject item = m_moveItemTransform.GetChild(0).gameObject;
+
+		// 購入モードで相手のインベントリにアイテムを入れようとした時は元の場所に戻す
+		if(m_isBuyMode && m_checkType == GridType.Stash) item.GetComponent<Item_Object>().PointerUp(false);
+
 		Grid[,] list = null;
 		int height = 0;
 		int width = 0;
 
-		switch (m_checkType)
+		SearchEqualType(list, ref height, ref width);
+
+		//switch (m_checkType)
+		//{
+		//	case GridType.Stash:
+		//		list = m_stashGridList;
+		//		height = m_stashHeight;
+		//		width = m_stashWidth;
+		//		break;
+
+		//	case GridType.Inventory:
+		//		list = m_inventoryGridList;
+		//		height = m_inventoryHeight;
+		//		width = m_inventoryWidth;
+		//		break;
+
+		//	// GridType.Empty
+		//	case GridType.Empty:
+		//		// マス目を選択していないとき
+		//		item.GetComponent<Item_Object>().PointerUp(false);
+		//		return;
+		//}
+
+		if(m_checkType == GridType.Empty)
 		{
-			case GridType.Stash:
-				list = m_stashGridList;
-				height = m_stashHeight;
-				width = m_stashWidth;
-				break;
-
-			case GridType.Inventory:
-				list = m_inventoryGridList;
-				height = m_inventoryHeight;
-				width = m_inventoryWidth;
-				break;
-
-			// GridType.Empty
-			case GridType.Empty:
-				// マス目を選択していないとき
-				item.GetComponent<Item_Object>().PointerUp(false);
-				return;
+			// マス目を選択していないとき
+			item.GetComponent<Item_Object>().PointerUp(false);
+			return;
 		}
 
 		// リストを回す
@@ -163,29 +193,11 @@ public class ShopManager : MonoBehaviour
 						// --- アイテムリストの管理 ---
 						if (m_checkType == GridType.Inventory)
 						{
-							if (!m_isBuyMode)
-							{
-								RemoveItemList(item, m_sellItemList);
-								AddItemList(item, m_itemList);
-							}
-							else
-							{
-								RemoveItemList(item, m_otherItemList);
-								AddItemList(item, m_itemList);
-							}
+							AddMyList(item);
 						}
 						else
 						{
-							if (!m_isBuyMode)
-							{
-								RemoveItemList(item, m_itemList);
-								AddItemList(item, m_sellItemList);
-							}
-							else
-							{
-								RemoveItemList(item, m_itemList);
-								AddItemList(item, m_otherItemList);
-							}
+							AddOtherList(item);
 						}
 					}
 					else
@@ -221,37 +233,40 @@ public class ShopManager : MonoBehaviour
 		{
 			if (isQuickMove)
 			{
-				switch (m_checkType)
-				{
-					case GridType.Inventory:
-						list = m_stashGridList;
-						height = m_stashHeight;
-						width = m_stashWidth;
-						break;
+				//switch (m_checkType)
+				//{
+				//	case GridType.Inventory:
+				//		list = m_stashGridList;
+				//		height = m_stashHeight;
+				//		width = m_stashWidth;
+				//		break;
 
-					case GridType.Stash:
-						list = m_inventoryGridList;
-						height = m_inventoryHeight;
-						width = m_inventoryWidth;
-						break;
-				}
+				//	case GridType.Stash:
+				//		list = m_inventoryGridList;
+				//		height = m_inventoryHeight;
+				//		width = m_inventoryWidth;
+				//		break;
+				//}
+				SearchOtherType(list, ref height, ref width);
 			}
 			else
 			{
-				switch (m_checkType)
-				{
-					case GridType.Stash:
-						list = m_stashGridList;
-						height = m_stashHeight;
-						width = m_stashWidth;
-						break;
+				//switch (m_checkType)
+				//{
+				//	case GridType.Stash:
+				//		list = m_stashGridList;
+				//		height = m_stashHeight;
+				//		width = m_stashWidth;
+				//		break;
 
-					case GridType.Inventory:
-						list = m_inventoryGridList;
-						height = m_inventoryHeight;
-						width = m_inventoryWidth;
-						break;
-				}
+				//	case GridType.Inventory:
+				//		list = m_inventoryGridList;
+				//		height = m_inventoryHeight;
+				//		width = m_inventoryWidth;
+				//		break;
+				//}
+
+				SearchEqualType(list, ref height, ref width);
 			}
 		}
 
@@ -369,20 +384,21 @@ public class ShopManager : MonoBehaviour
 		if (!isEquip)
 		{
 			// 装備されていない => アイテムの現在の枠タイプと違うタイプの枠を探索
-			switch (m_checkType)
-			{
-				case GridType.Inventory:
-					list = m_stashGridList;
-					height = m_stashHeight;
-					width = m_stashWidth;
-					break;
+			//switch (m_checkType)
+			//{
+			//	case GridType.Inventory:
+			//		list = m_stashGridList;
+			//		height = m_stashHeight;
+			//		width = m_stashWidth;
+			//		break;
 
-				case GridType.Stash:
-					list = m_inventoryGridList;
-					height = m_inventoryHeight;
-					width = m_inventoryWidth;
-					break;
-			}
+			//	case GridType.Stash:
+			//		list = m_inventoryGridList;
+			//		height = m_inventoryHeight;
+			//		width = m_inventoryWidth;
+			//		break;
+			//}
+			SearchOtherType(list, ref height, ref width);
 		}
 		else
 		{
@@ -430,16 +446,7 @@ public class ShopManager : MonoBehaviour
 							}
 							else
 							{
-								if(!m_isBuyMode)
-								{
-									AddItemList(item, m_sellItemList);
-									RemoveItemList(item, m_itemList);
-								}
-								else
-								{
-									AddItemList(item, m_otherItemList);
-									RemoveItemList(item, m_itemList);
-								}
+								AddOtherList(item);
 							}
 						}
 						else
@@ -450,17 +457,7 @@ public class ShopManager : MonoBehaviour
 							}
 							else
 							{
-								if(!m_isBuyMode)
-								{
-									AddItemList(item, m_itemList);
-									RemoveItemList(item, m_sellItemList);
-								}
-								else
-								{
-									AddItemList(item, m_itemList);
-									RemoveItemList(item, m_otherItemList);
-								}
-
+								AddMyList(item);
 							}
 						}
 					}
@@ -648,6 +645,36 @@ public class ShopManager : MonoBehaviour
 		list.Add(info);
 	}
 
+	// 自分のアイテムリストに追加する
+	private void AddMyList(GameObject item)
+	{
+		if (!m_isBuyMode)
+		{
+			AddItemList(item, m_itemList);
+			RemoveItemList(item, m_sellItemList);
+		}
+		else
+		{
+			AddItemList(item, m_itemList);
+			RemoveItemList(item, m_otherItemList);
+		}
+	}
+
+	// 相手のアイテムリストに追加する
+	private void AddOtherList(GameObject item)
+	{
+		if (!m_isBuyMode)
+		{
+			AddItemList(item, m_sellItemList);
+			RemoveItemList(item, m_itemList);
+		}
+		else
+		{
+			AddItemList(item, m_otherItemList);
+			RemoveItemList(item, m_itemList);
+		}
+	}
+
 	// リストから除外する
 	public void RemoveItemList(GameObject item, List<ItemList> list)
 	{
@@ -680,6 +707,9 @@ public class ShopManager : MonoBehaviour
 						m_stashGridList[i, j].SetInfo(false);
 					}
 				}
+
+				// 売値を加算
+				add += item.GetPrefab().GetComponent<Item_Object>().GetValue();
 
 				// インスタンス化されたオブジェクトを削除する
 				item.DeleteActiveObject();
@@ -731,17 +761,7 @@ public class ShopManager : MonoBehaviour
 			m_sellItemList.Clear();
 		}
 
-		// 内部的な配列をリセット
-		m_sellItemList = null;
-
-		// 表示しているUIを削除する
-		Destroy(m_stashUi.gameObject);
-		// 新しくUIを表示する
-		m_stashUi = Instantiate(m_stashUiPrefab, m_stashPos);
-
-		// テスト用に売却時と同じ動きをする
-		CreateInventory(GridType.Stash);
-
+		CreateNewShop();
 	}
 
 	// 売却モードに切り替える
@@ -754,15 +774,62 @@ public class ShopManager : MonoBehaviour
 		m_isBuyMode = false;
 
 		// 内部的な配列をリセット
-		m_sellItemList = null;
+		m_sellItemList.Clear();
+		m_sellItemList = new List<ItemList>();
 
+		CreateNewShop();
+	}
+
+	// ショップ画面作成の共通の処理
+	private void CreateNewShop()
+	{
 		// 表示しているUIを削除する
 		Destroy(m_stashUi.gameObject);
 		// 新しくUIを表示する
 		m_stashUi = Instantiate(m_stashUiPrefab, m_stashPos);
+		// インベントリの枠の親オブジェクトを取得
+		m_stashGridParent = m_stashUi.GetComponent<Inventory_Parent>().GetContent;
 
 		// 内部的な配列を作成
 		CreateInventory(GridType.Stash);
+	}
+
+	// 探索準備(選択されたGridType == 探索するGridType)
+	private void SearchEqualType(Grid[,] list, ref int height, ref int width)
+	{
+		switch (m_checkType)
+		{
+			case GridType.Inventory:
+				list = m_inventoryGridList;
+				height = m_inventoryHeight;
+				width = m_inventoryWidth;
+				break;
+
+			case GridType.Stash:
+				list = m_stashGridList;
+				height = m_stashHeight;
+				width = m_stashWidth;
+				break;
+		}
+	}
+
+	// 探索準備(選択されたGridType != 探索するGridType)
+	private void SearchOtherType(Grid[,] list, ref int height, ref int width)
+	{
+		switch (m_checkType)
+		{
+			case GridType.Inventory:
+				list = m_stashGridList;
+				height = m_stashHeight;
+				width = m_stashWidth;
+				break;
+
+			case GridType.Stash:
+				list = m_inventoryGridList;
+				height = m_inventoryHeight;
+				width = m_inventoryWidth;
+				break;
+		}
 	}
 
 	// ----- デバッグ用関数 -----
