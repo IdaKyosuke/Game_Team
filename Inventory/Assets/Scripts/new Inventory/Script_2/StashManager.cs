@@ -131,14 +131,16 @@ public class StashManager : MonoBehaviour
 	// Start is called before the first frame update
 	void Start()
     {
-		if (!m_isPlayer) return;
 		// アイテム移動用のオブジェクト
 		m_moveItemTransform = GameObject.FindWithTag("moveItemTransform").transform;
-
-		// インベントリのサイズを取得
-		m_inventoryWidth = m_infoInventory.GetSize.x;
-		m_inventoryHeight = m_infoInventory.GetSize.y;
-		CreateInventory(GridType.Inventory);
+		
+		if (m_isPlayer)
+		{
+			// インベントリのサイズを取得
+			m_inventoryWidth = m_infoInventory.GetSize.x;
+			m_inventoryHeight = m_infoInventory.GetSize.y;
+			CreateInventory(GridType.Inventory);
+		}
 
 		if(m_isShop)
 		{
@@ -187,14 +189,14 @@ public class StashManager : MonoBehaviour
 		int height = 0;
 		int width = 0;
 
-		SearchEqualType(ref list, ref height, ref width);
-
 		if (m_checkType == GridType.Empty)
 		{
 			// マス目を選択していないとき
 			item.GetComponent<Item_Object>().PointerUp(false);
 			return;
 		}
+
+		SearchEqualType(ref list, ref height, ref width);
 
 		// リストを回す
 		for (int i = 0; i < height; i++)
@@ -210,17 +212,50 @@ public class StashManager : MonoBehaviour
 						item.GetComponent<Item_Object>().PointerUp(true, list[j, i].GetTransform());
 						// 基点のインデックスを保持
 						item.GetComponent<Item_Object>().SetGridIndex(new Vector2Int(j, i));
-						// 現在のgridtypeを保管
-						item.GetComponent<Item_Object>().SetType(m_checkType);
-						// 装備の状態を変更
-						item.GetComponent<Item_Object>().SetEquipValue(false);
+						if (item.GetComponent<Item_Object>().GetEquipValue())
+						{
+							// 装備されていたら装備状態を解除する
+							item.GetComponent<Item_Object>().SetEquipValue(false, item.GetComponent<Item_Object>().GetGridType() == GridType.Inventory);
+							// 現在のgridtypeを保管
+							//item.GetComponent<Item_Object>().SetType(m_checkType);
+						}
+						else if (m_checkType != item.GetComponent<Item_Object>().GetGridType())
+						{
+							// アイテムが枠を超えて移動していた時
+							// --- アイテムリストの管理 ---
+							if (m_checkType == GridType.Inventory)
+							{
+								RemoveItemList(item, m_otherItemList);
+								AddItemList(item, m_itemList);
+							}
+							else
+							{
+								RemoveItemList(item, m_itemList);
+								AddItemList(item, m_otherItemList);
+							}
+							// 現在のgridtypeを保管
+							item.GetComponent<Item_Object>().SetType(m_checkType);
+						}
+						else
+						{
+							// 同じ枠内でアイテムが移動していた時
+							switch (m_checkType)
+							{
+								case GridType.Stash:
+									m_otherItemList[item.GetComponent<Item_Object>().GetIndex()].SetGridIndex(item.GetComponent<Item_Object>().GetGridIndex());
+									break;
 
-						// --- アイテムリストの管理 ---
-						if (m_checkType == GridType.Inventory) AddMyList(item);
-						else AddOtherList(item);
+								case GridType.Inventory:
+									m_itemList[item.GetComponent<Item_Object>().GetIndex()].SetGridIndex(item.GetComponent<Item_Object>().GetGridIndex());
+									break;
+							}
+
+							// 装備の状態を変更
+							//item.GetComponent<Item_Object>().SetEquipValue(false, item.GetComponent<Item_Object>().GetGridType() == GridType.Inventory);
+						}
 					}
 					else
-					{
+					{ 
 						// 元の位置に戻す
 						item.GetComponent<Item_Object>().PointerUp(false);
 					}
@@ -563,18 +598,12 @@ public class StashManager : MonoBehaviour
 		if (!m_isBuyMode)
 		{
 			AddItemList(item, m_itemList);
-			if (item.GetComponent<Item_Object>().GetGridType() != m_checkType)
-			{
-				RemoveItemList(item, m_sellItemList);
-			}
+			RemoveItemList(item, m_sellItemList);
 		}
 		else
 		{
 			AddItemList(item, m_itemList);
-			if (item.GetComponent<Item_Object>().GetGridType() != m_checkType)
-			{
-				RemoveItemList(item, m_otherItemList);
-			}
+			RemoveItemList(item, m_otherItemList);
 		}
 	}
 
@@ -584,18 +613,12 @@ public class StashManager : MonoBehaviour
 		if (!m_isBuyMode)
 		{
 			AddItemList(item, m_sellItemList);
-			if (item.GetComponent<Item_Object>().GetGridType() != m_checkType)
-			{
-				RemoveItemList(item, m_itemList); 
-			}
+			RemoveItemList(item, m_itemList); 
 		}
 		else
 		{
 			AddItemList(item, m_otherItemList);
-			if (item.GetComponent<Item_Object>().GetGridType() != m_checkType)
-			{
-				RemoveItemList(item, m_itemList);
-			}
+			RemoveItemList(item, m_itemList);
 		}
 	}
 
@@ -610,15 +633,37 @@ public class StashManager : MonoBehaviour
 		// アクティブなオブジェクトを変更
 		info.SetActiveObject(item);
 		// リストのインデックスを保存
-		info.ChangeIndex(list.Count - 1);
+		info.ChangeIndex(list.Count);
 		// アイテムリストに保存
 		list.Add(info);
 	}
 
-	// リストから除外する
-	public void RemoveItemList(GameObject item, List<ItemList> list)
+	// リストから除外する(リストを指定する)
+	private void RemoveItemList(GameObject item, List<ItemList> list)
 	{
-		list.Remove(list[item.GetComponent<Item_Object>().GetIndex()]);
+		list.RemoveAt(item.GetComponent<Item_Object>().GetIndex());
+		for (int i = 0; i < list.Count; i++)
+		{
+			list[i].ChangeIndex(i);
+		}
+	}
+
+	// リストから削除する(アイテムが今入っている枠のタイプを指定する)
+	public void SelectRemoveItemList(GameObject item)
+	{
+		List<ItemList> list = new List<ItemList>();
+		switch (item.GetComponent<Item_Object>().GetGridType())
+		{
+			case GridType.Inventory:
+				list = m_itemList;
+				break;
+
+			case GridType.Stash:
+				list = m_otherItemList;
+				break;
+		}
+
+		RemoveItemList(item, list);
 	}
 
 	// インベントリが開いているかを取得
@@ -769,6 +814,36 @@ public class StashManager : MonoBehaviour
 	{
 		height = m_inventoryHeight;
 		width = m_inventoryWidth;
+	}
+
+	// 装備枠のアイテムを設定する
+	public void SetEquipment(GameObject item, bool value, bool isMine = false)
+	{
+		// 誰の持ち物か判断する
+		List<ItemList> list = new List<ItemList>();
+		if (isMine)
+		{
+			list = m_itemList;
+			if (item.GetComponent<Item_Object>().GetGridType() == GridType.Stash)
+			{
+				RemoveItemList(item, m_otherItemList);
+				AddItemList(item, m_itemList);
+				item.GetComponent<Item_Object>().SetType(GridType.Inventory);
+			}
+		}
+		else
+		{
+			list = m_otherItemList;
+			if (item.GetComponent<Item_Object>().GetGridType() == GridType.Inventory)
+			{
+				RemoveItemList(item, m_itemList);
+				AddItemList(item, m_otherItemList);
+				item.GetComponent<Item_Object>().SetType(GridType.Stash);
+			}
+		}
+
+		// リストに装備状況を保存
+		list[item.GetComponent<Item_Object>().GetIndex()].SetEquipInfo(value);
 	}
 
 	// ----- デバッグ用関数 -----

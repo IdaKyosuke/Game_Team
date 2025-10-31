@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Xml.Linq;
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 using static Icon;
 
 public class Item_Object : MonoBehaviour
@@ -142,8 +143,7 @@ public class Item_Object : MonoBehaviour
 				m_pos, 
 				GetSize(),
 				false, 
-				m_gridType,
-				true
+				m_gridType
 				);
 		}
 	}
@@ -201,8 +201,7 @@ public class Item_Object : MonoBehaviour
 					m_pos, 
 					GetSize(), 
 					true,
-					m_gridType,
-					true
+					m_gridType
 					);
 			}
 		}
@@ -265,10 +264,14 @@ public class Item_Object : MonoBehaviour
 	}
 
 	// ‘•”õó‘Ô‚Ì•ÏX
-	public void SetEquipValue(bool value)
+	public void SetEquipValue(bool value, bool isMine = false, bool isChangeList = true)
 	{
 		m_isEquip = value;
+
+		if (!isChangeList) return;
+		m_inventoryManager.GetComponent<StashManager>().SetEquipment(gameObject, value, isMine);
 	}
+
 	// ‘•”õó‘Ô‚ğæ“¾‚·‚é
 	public bool GetEquipValue()
 	{
