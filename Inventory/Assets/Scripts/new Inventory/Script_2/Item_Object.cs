@@ -251,6 +251,8 @@ public class Item_Object : MonoBehaviour
 		m_gridType = type;
 	}
 
+	public GridType GetGridType() { return m_gridType; }
+
 	public EquipmentType GetWeaponType()
 	{
 		return m_equipmentType;

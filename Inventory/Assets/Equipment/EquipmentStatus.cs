@@ -26,7 +26,7 @@ public class EquipmentStatus : MonoBehaviour
         //武器なら状態異常付与のスキルを取得
         if (m_itemObject.GetWeaponType() == EquipmentType.Weapon)
         {
-            m_playerCondition.Grant = (ConditionType)m_passiveSkillData.EquipmentAbility[id].condition;
+            //m_playerCondition.Grant = (ConditionType)m_passiveSkillData.EquipmentAbility[id].condition;
         }
 
         //装備の総合ステータスを計算

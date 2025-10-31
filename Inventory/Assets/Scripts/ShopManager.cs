@@ -78,9 +78,6 @@ public class ShopManager : MonoBehaviour
 	[SerializeField] List<GameObject> items = new List<GameObject>();
 
 
-
-
-
 	[SerializeField] TextMeshProUGUI m_text;
 
 
@@ -247,7 +244,7 @@ public class ShopManager : MonoBehaviour
 				//		width = m_inventoryWidth;
 				//		break;
 				//}
-				SearchOtherType(list, ref height, ref width);
+				SearchOtherType(ref list, ref height, ref width);
 			}
 			else
 			{
@@ -398,7 +395,7 @@ public class ShopManager : MonoBehaviour
 			//		width = m_inventoryWidth;
 			//		break;
 			//}
-			SearchOtherType(list, ref height, ref width);
+			SearchOtherType(ref list, ref height, ref width);
 		}
 		else
 		{
@@ -407,6 +404,7 @@ public class ShopManager : MonoBehaviour
 			height = m_inventoryHeight;
 			width = m_inventoryWidth;
 		}
+
 		// リストを回す
 		for (int i = 0; i < height; i++)
 		{
@@ -789,7 +787,6 @@ public class ShopManager : MonoBehaviour
 		m_stashUi = Instantiate(m_stashUiPrefab, m_stashPos);
 		// インベントリの枠の親オブジェクトを取得
 		m_stashGridParent = m_stashUi.GetComponent<Inventory_Parent>().GetContent;
-
 		// 内部的な配列を作成
 		CreateInventory(GridType.Stash);
 	}
@@ -814,7 +811,7 @@ public class ShopManager : MonoBehaviour
 	}
 
 	// 探索準備(選択されたGridType != 探索するGridType)
-	private void SearchOtherType(Grid[,] list, ref int height, ref int width)
+	private void SearchOtherType(ref Grid[,] list, ref int height, ref int width)
 	{
 		switch (m_checkType)
 		{
