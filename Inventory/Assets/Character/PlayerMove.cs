@@ -11,6 +11,7 @@ public class PlayerMove : MonoBehaviour
     [SerializeField] Info_InventorySize m_inventortSize;
     [SerializeField] PlayerAnime m_playerAnim;      // アニメーション管理用オブジェクト
     [SerializeField] GameObject m_spine;
+    [SerializeField] bool m_isLobby;
 
     private float m_rotateX;
     private bool m_isDeath;
@@ -98,6 +99,9 @@ public class PlayerMove : MonoBehaviour
     {
         bool isMove = false;
 
+        //ロビー画面なら移動しない
+        if(m_isLobby) return;
+
         //感電状態なら移動不可
         if (m_condition.Current != ConditionType.Shock)
         {
@@ -134,6 +138,9 @@ public class PlayerMove : MonoBehaviour
 
     private void LateUpdate()
     {
+        //ロビー画面なら移動しない
+        if (m_isLobby) return;
+
         // 視点移動
         float mouseX = Input.GetAxis("Mouse X") * MouseSensitivity * Time.deltaTime;
         float mouseY = Input.GetAxis("Mouse Y") * MouseSensitivity * Time.deltaTime;
