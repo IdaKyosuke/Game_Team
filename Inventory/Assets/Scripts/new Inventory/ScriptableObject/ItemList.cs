@@ -59,6 +59,11 @@ public class ItemList : ScriptableObject
 	{
 		m_activeObject = obj;
 	}
+	// アクティブなオブジェクトを取得
+	public GameObject GetActiveObject()
+	{
+		return m_activeObject;
+	}
 
 	// アクティブなオブジェクトのインデックスを変更する
 	public void ChangeIndex(int index)
