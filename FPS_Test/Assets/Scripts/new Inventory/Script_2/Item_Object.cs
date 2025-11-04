@@ -51,6 +51,11 @@ public class Item_Object : MonoBehaviour
 	// inventoryManagerとtransformが設定されているか
 	private bool m_isSetManager = false;
 
+	// アイテムの価値
+	[SerializeField] Info_ItemValue m_itemValue;
+	// アイテムが購入予定に選択されているか
+	private bool m_isSelected = false;
+
 	// Start is called before the first frame update
 	void Start()
     {
@@ -300,11 +305,6 @@ public class Item_Object : MonoBehaviour
 		return m_mine;
 	}
 
-	// ---- デバッグ用 ----
-	private void OnDestroy()
-	{
-
-	}
 	// 自分と紐づくリストのインデックスを変更
 	public void ChangeIndex(int index)
 	{
@@ -341,4 +341,30 @@ public class Item_Object : MonoBehaviour
 
 		m_isSetManager = true;
 	}
+
+	// ---- アイテムの売買用の動き ----
+	// アイテムの価値を取得する
+	public int GetValue()
+	{
+		return m_itemValue.GetValue();
+	}
+
+	public void PointerDownForShop()
+	{
+		m_isSelected = true;
+	}
+
+	// アイテムが購入予定に選ばれたか取得
+	public bool IsSelected()
+	{
+		return m_isSelected;
+	}
+
+	// 購入予定のアイテムから外す
+	public void RemoveSelected()
+	{
+		m_isSelected = false;
+	}
+
+	// --------------------------------
 }
