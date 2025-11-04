@@ -1,15 +1,20 @@
+using Photon.Pun;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq.Expressions;
 using Unity.Burst.Intrinsics;
 using Unity.VisualScripting;
+using UnityEditor.Build;
+using UnityEditor.PackageManager.Requests;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.UIElements;
 using static TreasureBoxItem;
 
-public class TreasureBoxItem : MonoBehaviour
+public class TreasureBoxItem : MonoBehaviourPunCallbacks
 {
-	public enum TreasureType
+	public enum Rarity
 	{
 		Common,
 		Rare,
@@ -20,48 +25,62 @@ public class TreasureBoxItem : MonoBehaviour
 	}
 
 	[SerializeField] ExcelData m_excelData;
-	[SerializeField] TreasureType m_treasureType;
+	[SerializeField] Rarity m_rarity;
+	[SerializeField] Info_InventorySize m_inventorySize;
 	private List<MapObjectEntity> m_treasureList = new List<MapObjectEntity>();
+	private List<ItemList> m_itemList = new List<ItemList>();
+	private bool[,] m_isEquipped;
 
 	void Start()
 	{
+		if (!photonView.IsMine) return;
+		m_isEquipped = new bool[m_inventorySize.GetSize.x, m_inventorySize.GetSize.y];
+		for (int i = 0; i < m_inventorySize.GetSize.y; i++)
+		{
+			for (int j = 0; j <  m_inventorySize.GetSize.x; j++)
+			{
+				m_isEquipped[j, i] = false;
+			}
+		}
+
 		// 抽選会数を設定
 		int selectAmount = Random.Range(
-			m_excelData.treasureBox[(int)m_treasureType].itemMin,
-			m_excelData.treasureBox[(int)m_treasureType].itemMax + 1);
+			m_excelData.treasureBox[(int)m_rarity].itemMin,
+			m_excelData.treasureBox[(int)m_rarity].itemMax + 1);
 
 		SelectTreasureItem(selectAmount);
 	}
 
-	public void GetItem()
+	public Info_InventorySize GetInfo()
 	{
-		TryGetComponent(out TreasureAnime treasure);
-		if (treasure.opentreasure) return;
-		for (int i = 0; i < m_treasureList.Count; i++)
-		{
-			Debug.Log(m_treasureList[i].displayName);
-		}
+		return m_inventorySize;
+	}
+
+	public List<ItemList> GetItemList()
+	{
+		return m_itemList;
 	}
 
 	private void SelectTreasureItem(int selectAmount)
 	{
 		// 宝箱のレアリティの抽選の数値を取得
-		int[] probability = new int[(int)TreasureType.Length];
-		probability[0] = m_excelData.treasureBox[(int)m_treasureType].common;
-		probability[1] = m_excelData.treasureBox[(int)m_treasureType].rare;
-		probability[2] = m_excelData.treasureBox[(int)m_treasureType].unique;
-		probability[3] = m_excelData.treasureBox[(int)m_treasureType].legendary;
+		int[] probability = new int[(int)Rarity.Length];
+		probability[0] = m_excelData.treasureBox[(int)m_rarity].common;
+		probability[1] = m_excelData.treasureBox[(int)m_rarity].rare;
+		probability[2] = m_excelData.treasureBox[(int)m_rarity].unique;
+		probability[3] = m_excelData.treasureBox[(int)m_rarity].legendary;
 
 		// 宝箱のレアリティに応じて確定のレアリティのアイテムを一つ抽選
-		m_treasureList.Add(SelectObject(m_treasureType));
+		m_itemList.Add(SetItemData(SelectObject(m_rarity)));
 
 		// selectAmountの数だけ抽選する
 		for (int i = 0; i < selectAmount; ++i)
 		{
-			TreasureType treasureType = SelectRarity(probability);
+			Rarity treasureType = SelectRarity(probability);
 			MapObjectEntity treasureItem =  SelectObject(treasureType);
+			ItemList item = SetItemData(treasureItem);
 
-			m_treasureList.Add(treasureItem);
+			m_itemList.Add(item);
 		}
 
 		/////////////////////////////////////////////////
@@ -69,13 +88,13 @@ public class TreasureBoxItem : MonoBehaviour
 		/////////////////////////////////////////////////
 	}
 
-	private TreasureType SelectRarity(int[] probability)
+	private Rarity SelectRarity(int[] probability)
 	{
 		// レアリティの抽選
 		int raritySelectNum = Random.Range(0, 101);
 		int rarityNum = 0;
 
-		for (int i = 0; i < (int)TreasureType.Length; ++i)
+		for (int i = 0; i < (int)Rarity.Length; ++i)
 		{
 			raritySelectNum -= probability[i];
 			if (raritySelectNum < 0)
@@ -84,28 +103,28 @@ public class TreasureBoxItem : MonoBehaviour
 				break;
 			}
 		}
-		return (TreasureType)rarityNum;
+		return (Rarity)rarityNum;
 	}
 
-	private MapObjectEntity SelectObject(TreasureType type)
+	private MapObjectEntity SelectObject(Rarity type)
 	{
 		// 今回の抽選されたレアリティに応じてアイテム情報を取得
 		List<MapObjectEntity> objectData = m_excelData.common;
 		switch (type)
 		{
-			case TreasureType.Common:
+			case Rarity.Common:
 				objectData = m_excelData.common;
 				break;
 
-			case TreasureType.Rare:
+			case Rarity.Rare:
 				objectData = m_excelData.rare;
 				break;
 
-			case TreasureType.Unipue:
+			case Rarity.Unipue:
 				objectData = m_excelData.unique;
 				break;
 
-			case TreasureType.Legendary:
+			case Rarity.Legendary:
 				objectData = m_excelData.legendary;
 				break;
 		}
@@ -123,5 +142,93 @@ public class TreasureBoxItem : MonoBehaviour
 			}
 		}
 		return objectData[objectIndex];
+	}
+
+	private ItemList SetItemData(MapObjectEntity treasureItem)
+	{
+		ItemList info = ScriptableObject.CreateInstance<ItemList>();
+
+		bool isSet = false;
+
+		for (int i = 0; i < m_inventorySize.GetSize.y; ++i)
+		{
+			for (int j = 0; j < m_inventorySize.GetSize.x; ++j)
+			{
+				// マス目座標を保存
+				if (CheckSpace(new Vector2Int(i, j), new Vector2Int(treasureItem.height, treasureItem.width)))
+				{
+					isSet = true;
+					info.SetGridIndex(new Vector2Int(j, i));
+					break;
+				}
+			}
+			if (isSet) break;
+		}
+		
+		// プレハブを取得
+		Loader.LoadGameObjectAsync(treasureItem.objectName).Completed += op =>
+		{
+			info.SetPrefab(op.Result);
+			Addressables.Release(op);
+		};
+
+		return info;
+	}
+
+	private bool CheckSpace(Vector2Int startGrid, Vector2Int size)
+	{
+		// 枠外にはみ出すときはそもそも確認しない
+		if (startGrid.x + (size.x - 1) >= m_inventorySize.GetSize.x) return false;
+		if (startGrid.y + (size.y - 1) >= m_inventorySize.GetSize.y) return false;
+
+		// 中身を確認
+		for (int i = startGrid.y; i < startGrid.y + size.y; i++)
+		{
+			for (int j = startGrid.x; j < startGrid.x + size.x; j++)
+			{
+				if (m_isEquipped[j, i])
+				{
+					// 中身があるときはfalse
+					return false;
+				}
+			}
+		}
+		//Debug.Log(startGrid.x + ":" + startGrid.y);
+
+		// スペースが空いているときは中身が入っていることにする
+		for (int i = startGrid.y; i < startGrid.y + size.y; i++)
+		{
+			for (int j = startGrid.x; j < startGrid.x + size.x; j++)
+			{
+				m_isEquipped[j, i] = true;
+			}
+		}
+
+		return true;
+	}
+
+	// stringによる参照のため必要な関数(StashControllerのUpdate)
+	[PunRPC]
+	void RequestTreasureData(int requestId)
+	{
+		PhotonView view = PhotonView.Find(requestId);
+
+		GetComponent<TreasureAnime>().Open();
+		Debug.Log("view.RPC s : " + view);
+		view.RPC("ReceiveInventoryData", view.Owner, GetInfo(), GetItemList());
+		Debug.Log(GetItemList()[0].name);
+		Debug.Log("view.RPC e");
+	}
+
+	// stringによる参照のため必要な関数(StashControllerのReturnItemList)
+	[PunRPC]
+	void RequestCopyItemList(List<ItemList> list)
+	{
+		CopyItemList(list);
+	}
+
+	private void CopyItemList(List<ItemList> list)
+	{
+		m_itemList = new List<ItemList>(list);
 	}
 }

@@ -107,8 +107,6 @@ public class StashManager : MonoBehaviourPunCallbacks
 	[SerializeField] bool m_isPlayer = true;
 	private bool m_isScavenger = false;
 
-	// アイテムのエクセルデータ
-	[SerializeField] ExcelData m_data;
 	private int m_id;
 
 	private bool m_isInventoryOpen = false;
@@ -307,11 +305,11 @@ public class StashManager : MonoBehaviourPunCallbacks
 		if (startGrid.y + (size.y - 1) >= height) return false;
 
 		// 中身を確認
-		for (int i = startGrid.x; i < startGrid.x + size.x; i++)
+		for (int i = startGrid.y; i < startGrid.y + size.y; i++)
 		{
-			for(int j = startGrid.y; j < startGrid.y + size.y; j++)
+			for(int j = startGrid.x; j < startGrid.x + size.x; j++)
 			{
-				if (list[i, j].GetInfo())
+				if (list[j, i].GetInfo())
 				{
 					// 中身があるときはfalse
 					return false;
@@ -320,11 +318,12 @@ public class StashManager : MonoBehaviourPunCallbacks
 		}
 
 		// スペースが空いているときは中身が入っていることにする
-		for (int i = startGrid.x; i < startGrid.x + size.x; i++)
+		for (int i = startGrid.y; i < startGrid.y + size.y; i++)
 		{
-			for (int j = startGrid.y; j < startGrid.y + size.y; j++)
+			for (int j = startGrid.x; j < startGrid.x + size.x; j++)
 			{
-				list[i, j].SetInfo(true);
+				list[j, i].SetInfo(true);
+				//Debug.Log("[" + j +", " + i + "]");
 			}
 		}
 
@@ -345,6 +344,9 @@ public class StashManager : MonoBehaviourPunCallbacks
 		Grid[,] list = null;
 		List<ItemList> items = new List<ItemList> ();
 
+
+		Debug.Log("name [" + item.name + "] " + "Pos [ " + basePos + " ]");
+
 		switch (type)
 		{
 			case GridType.Stash:
@@ -359,11 +361,11 @@ public class StashManager : MonoBehaviourPunCallbacks
 		}
 
 		// スペースが空いているときは中身が入っていることにする
-		for (int i = basePos.x; i < basePos.x + size.x; i++)
+		for (int i = basePos.y; i < basePos.y + size.y; i++)
 		{
-			for (int j = basePos.y; j < basePos.y + size.y; j++)
+			for (int j = basePos.x; j < basePos.x + size.x; j++)
 			{
-				list[i, j].SetInfo(info);
+				list[j, i].SetInfo(info);
 			}
 		}
 
@@ -465,6 +467,8 @@ public class StashManager : MonoBehaviourPunCallbacks
 						);
 					// 基点のインデックスを保持
 					item.GetComponent<Item_Object>().SetGridIndex(new Vector2Int(j, i));
+
+					Debug.Log("[" + j + ", " + i + "]");
 
 					// 装備をショートカットで外すとき
 					if(item.GetComponent<Item_Object>().GetEquipValue())
@@ -572,15 +576,14 @@ public class StashManager : MonoBehaviourPunCallbacks
 		int count1 = 0;
 		foreach (ItemList item in itemList)
 		{
-			Debug.Log("itemList[" + count1 + "] " + item.GetGridIndex().x + " , " + item.GetGridIndex().y);
 			count1++;
 		}
 		// アイテムリストをコピー
 		m_otherItemList = new List<ItemList>(itemList);
 
 		// インベントリの情報を取得
-		m_stashHeight = info.GetSize.x;
-        m_stashWidth = info.GetSize.y;
+		m_stashHeight = info.GetSize.y;
+        m_stashWidth = info.GetSize.x;
 		// インベントリの枠の親オブジェクトを取得
         m_stashGridParent = m_stashUi.GetComponent<Inventory_Parent>().GetContent;
 		
@@ -591,7 +594,6 @@ public class StashManager : MonoBehaviourPunCallbacks
 		// リストをUIに反映
 		foreach (ItemList item in m_otherItemList)
 		{
-			Debug.Log("m_otherItemList[" + count + "] " + item.GetGridIndex().x + " , " + item.GetGridIndex().y);
 			CreateItem(count, item);
 			count++;
 		}
@@ -602,9 +604,6 @@ public class StashManager : MonoBehaviourPunCallbacks
 	{
 		Loader.LoadGameObjectAsync(item.GetPrefabName()).Completed += op =>
 		{
-			Debug.Log("[LoadGameObjectAsync][" + count + "] "  + item.GetGridIndex().x + " , " + item.GetGridIndex().y);
-
-
 			// リストからオブジェクトを生成
 			GameObject obj = Instantiate(
 				op.Result,
@@ -657,6 +656,7 @@ public class StashManager : MonoBehaviourPunCallbacks
 			case GridType.Inventory:
 				// インベントリ用マス目の配列を作成
 				list = new Grid[m_inventoryWidth, m_inventoryHeight];
+				//list = new Grid[m_inventoryHeight, m_inventoryWidth];
 				m_inventoryGridList = list;
                 height = m_inventoryHeight;
 				width = m_inventoryWidth;
@@ -666,6 +666,7 @@ public class StashManager : MonoBehaviourPunCallbacks
 			case GridType.Stash:
 				// スタッシュ用マス目の配列を作成
 				list = new Grid[m_stashWidth, m_stashHeight];
+				//list = new Grid[m_stashHeight, m_stashWidth];
 				m_stashGridList = list;
                 height = m_stashHeight;
 				width = m_stashWidth;
@@ -698,7 +699,7 @@ public class StashManager : MonoBehaviourPunCallbacks
 		{
 			Debug.Log(m_stashUiParent.activeSelf);
 			// 閉じるときにスタッシュの変更を相手に渡す
-			m_parent.GetComponent<PlayerMove>().ReturnItemList(m_otherItemList);
+			m_parent.GetComponent<StashController>().ReturnItemList(m_otherItemList);
             m_stashUiParent.SetActive(false);
 			m_otherItemList = null;
 			IsScavenger(false);

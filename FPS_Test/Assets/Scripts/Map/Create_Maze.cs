@@ -15,10 +15,12 @@ public class Create_Maze : MonoBehaviourPunCallbacks
 	[SerializeField] int m_frameSize = 7;
 	[SerializeField] int m_mapHeight = 3;
 
-	[SerializeField] int m_playerSpawnPosAmount = 20;
-	[SerializeField] int m_treasureAmount = 50;
-	[SerializeField] int m_portalPosAmount = 5;
-	[SerializeField] int m_enemyAmount = 50;
+	private int m_playerSpawnPosAmount = 10;
+	private int m_treasureAmount = 50;
+	private int m_portalPosAmount = 10;
+	private int m_enemyAmount = 50;
+
+	private int m_portalOffset = 2;
 
 	[SerializeField] List<GameObject> m_mapPrefab;
 
@@ -82,12 +84,12 @@ public class Create_Maze : MonoBehaviourPunCallbacks
 
 		PhotonNetwork.InstantiateRoomObject(m_wallOutSide.name, transform.position, Quaternion.identity);
 
-		SetPlayerTreasure(mapdatas);
+		SetObjectSpawn(mapdatas);
 
 		// 動的にnavMeshをbakeする
 		m_mapParent.GetComponent<NavMeshSurface>().BuildNavMesh();
 
-		SetEnemyReturn(mapdatas);
+		SetEnemySpawn(mapdatas);
 	}
 
 	[PunRPC]
@@ -97,18 +99,19 @@ public class Create_Maze : MonoBehaviourPunCallbacks
 		GameObjectExtensions.SetLayerRecursively(map, layerNum);
 	}
 
-	private void SetPlayerTreasure(List<SendMapData> mapData)
+	private void SetObjectSpawn(List<SendMapData> mapData)
 	{
 		List<Transform> spawnPos = new List<Transform>();
 		foreach (SendMapData data in mapData)
 		{
 			foreach (Transform t in data.GetSpawnPos())
 			{
-				// 宝箱とプレイヤーのスポーンポジションを全部入れる
+				// 宝箱とプレイヤーと帰還場所のスポーンポジションを全部入れる
 				spawnPos.Add(t);
 			}
 		}
 
+		// プレイヤーのスポーンポジション設定
 		for (int i = 0; i < m_playerSpawnPosAmount; ++i)
 		{
 			int index = Random.Range(0, spawnPos.Count);
@@ -116,6 +119,17 @@ public class Create_Maze : MonoBehaviourPunCallbacks
 			spawnPos.Remove(spawnPos[index]);
 		}
 
+		// 帰還場所設定
+		for (int i = 0; i < m_portalPosAmount; ++i)
+		{
+			int index = Random.Range(0, spawnPos.Count);
+			Vector3 pos = spawnPos[index].position;
+			pos.y += m_portalOffset;
+			PhotonNetwork.InstantiateRoomObject(m_portal.name, pos, spawnPos[index].rotation);
+			spawnPos.Remove(spawnPos[index]);
+		}
+
+		// 宝箱の場所設定
 		for (int i = 0; i < m_treasureAmount; ++i)
 		{
 			int treasureType =
@@ -132,23 +146,16 @@ public class Create_Maze : MonoBehaviourPunCallbacks
 		}
 	}
 
-	private void SetEnemyReturn(List<SendMapData> mapData)
+	private void SetEnemySpawn(List<SendMapData> mapData)
 	{
 		List<Transform> spawnPos = new List<Transform>();
 		foreach (SendMapData data in mapData)
 		{
 			foreach (Transform t in data.GetEnemyPortalPos())
 			{
-				// 敵と帰還場所のスポーンポジションを全部入れる
+				// 敵のスポーンポジションを全部入れる
 				spawnPos.Add(t);
 			}
-		}
-
-		for (int i = 0; i < m_portalPosAmount; ++i)
-		{
-			int index = Random.Range(0, spawnPos.Count);
-			PhotonNetwork.InstantiateRoomObject(m_portal.name, spawnPos[index].position, spawnPos[index].rotation);
-			spawnPos.Remove(spawnPos[index]);
 		}
 
 		for (int i = 0; i < m_enemyAmount; ++i)

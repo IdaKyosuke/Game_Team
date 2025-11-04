@@ -14,80 +14,71 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   common:
   - id: 0
-    objectName: a
+    objectName: "1\xD71"
     width: 1
     height: 1
-    probability: 35
-    displayName: a
+    probability: 50
+    displayName: "1\xD71"
+    equipmentType: 5
+    typeName: None
+    price: 30
   - id: 1
-    objectName: A
+    objectName: "1\xD71_body"
     width: 1
     height: 1
-    probability: 35
-    displayName: A
-  - id: 2
-    objectName: AA
-    width: 2
-    height: 1
-    probability: 30
-    displayName: AA
+    probability: 50
+    displayName: "1\xD71_body"
+    equipmentType: 1
+    typeName: Armor
+    price: 10
   rare:
   - id: 0
-    objectName: b
-    width: 2
+    objectName: "1\xD71_gauntlet"
+    width: 1
     height: 1
-    probability: 35
-    displayName: b
+    probability: 50
+    displayName: "1\xD71_gauntlet"
+    equipmentType: 2
+    typeName: Gauntlet
+    price: 100
   - id: 1
-    objectName: B
-    width: 2
+    objectName: "1\xD71_head"
+    width: 1
     height: 1
-    probability: 35
-    displayName: B
-  - id: 2
-    objectName: BB
-    width: 2
-    height: 2
-    probability: 30
-    displayName: BB
+    probability: 50
+    displayName: "1\xD71_head"
+    equipmentType: 0
+    typeName: Helmet
+    price: 80
   unique:
   - id: 0
-    objectName: c
-    width: 2
-    height: 2
-    probability: 35
-    displayName: c
+    objectName: "1\xD71_shoes"
+    width: 1
+    height: 1
+    probability: 50
+    displayName: "1\xD71_shoes"
+    equipmentType: 3
+    typeName: Shoes
+    price: 250
   - id: 1
-    objectName: C
-    width: 2
-    height: 2
-    probability: 35
-    displayName: C
-  - id: 2
-    objectName: CC
-    width: 3
-    height: 2
-    probability: 30
-    displayName: CC
+    objectName: "1\xD71_Weapon"
+    width: 1
+    height: 1
+    probability: 50
+    displayName: "1\xD71_Weapon"
+    equipmentType: 4
+    typeName: Weapon
+    price: 500
   legendary:
   - id: 0
-    objectName: d
-    width: 3
+    objectName: "1\xD72"
+    width: 1
     height: 2
-    probability: 35
-    displayName: d
-  - id: 1
-    objectName: D
-    width: 3
-    height: 2
-    probability: 35
-    displayName: D
-  - id: 2
-    objectName: DD
-    width: 2
-    height: 3
-    probability: 30
-    displayName: DD
+    probability: 100
+    displayName: "1\xD72"
+    equipmentType: 5
+    typeName: None
+    price: 1000
   treasureBox:
   - id: 0
     rarity: common
@@ -129,46 +120,3 @@ MonoBehaviour:
     rare: 40
     unique: 10
     legendary: 5
-  Object:
-  - id: 0
-    objectName: "1\xD71"
-    width: 1
-    height: 1
-    equipmentType: 5
-    typeName: None
-  - id: 1
-    objectName: "1\xD71_body"
-    width: 1
-    height: 1
-    equipmentType: 1
-    typeName: Armor
-  - id: 2
-    objectName: "1\xD71_gauntlet"
-    width: 1
-    height: 1
-    equipmentType: 2
-    typeName: Gauntlet
-  - id: 3
-    objectName: "1\xD71_head"
-    width: 1
-    height: 1
-    equipmentType: 0
-    typeName: Helmet
-  - id: 4
-    objectName: "1\xD71_shoes"
-    width: 1
-    height: 1
-    equipmentType: 3
-    typeName: Shoes
-  - id: 5
-    objectName: "1\xD71_Weapon"
-    width: 1
-    height: 1
-    equipmentType: 4
-    typeName: Weapon
-  - id: 6
-    objectName: "1\xD72"
-    width: 1
-    height: 2
-    equipmentType: 5
-    typeName: None
