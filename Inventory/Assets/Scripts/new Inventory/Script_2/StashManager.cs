@@ -431,7 +431,6 @@ public class StashManager : MonoBehaviour
 					{
 						// 現在の枠のgridtypeを保管
 						GridType m = (GridType)((int)m_checkType + 1 > 1 ? 0 : 1);
-						Debug.Log("GridType[ " + m + " ]");
 
 						item.GetComponent<Item_Object>().SetType(m);
 						// --- アイテムリストの管理 ---
@@ -714,6 +713,8 @@ public class StashManager : MonoBehaviour
 			m_sellItemList.Clear();
 			// 売却した分の金額を追加する
 			m_infoMoney.AddMoney(add);
+
+			m_text.SetText("Money : " + m_infoMoney.GetCurrentMoney().ToString());
 		}
 	}
 	// 購入用ボタン
@@ -723,6 +724,8 @@ public class StashManager : MonoBehaviour
 		{
 			// お金を消費
 			m_infoMoney.UseMoney(m_priceNegotiation);
+
+			m_text.SetText("Money : " + m_infoMoney.GetCurrentMoney().ToString());
 		}
 	}
 
