@@ -24,7 +24,7 @@ public class Search_Player : MonoBehaviour
 	{
 		if(other.gameObject.CompareTag("playerModel"))
 		{
-			Debug.Log("OnTriggerStay");
+			//Debug.Log("OnTriggerStay");
 			if(CheckRay(other.gameObject))
 			{
 				// プレイヤーを認識
@@ -36,7 +36,7 @@ public class Search_Player : MonoBehaviour
 	// 実際にレイを飛ばす
 	private bool CheckRay(GameObject player)
 	{
-		Debug.Log("CheckRay");
+		//Debug.Log("CheckRay");
 		m_rayDir = player.transform.position - transform.position;
 		// 自分自身からプレイヤーに対してレイを作成
 		Ray ray = new Ray(transform.position, m_rayDir);

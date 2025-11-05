@@ -327,7 +327,7 @@ public class Item_Object : MonoBehaviour
 	{
 		// 親オブジェクトからマネージャーを取得
 		m_inventoryManager = transform.parent.GetComponent<MoveItemTransform>().GetStashManager();
-		Debug.Log(m_inventoryManager);
+		//Debug.Log(m_inventoryManager);
 		// 移動中に格納される場所
 		m_moveItemTransform = m_inventoryManager.GetComponent<StashManager>().GetMoveItemTransform();
 

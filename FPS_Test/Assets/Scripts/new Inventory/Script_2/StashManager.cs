@@ -131,12 +131,6 @@ public class StashManager : MonoBehaviourPunCallbacks
 	// Start is called before the first frame update
 	void Start()
     {
-		//if (m_isPlayer)
-		//{
-		//	CreateInventory(GridType.Stash);
-		//	CreateInventory(GridType.Inventory);
-		//}
-
 		if (m_isPlayer)
 		{
 			// インベントリのサイズを取得
@@ -399,27 +393,8 @@ public class StashManager : MonoBehaviourPunCallbacks
 	// インベントリのアイテムリストを返す
 	public List<ItemList> GetItemList()
 	{
-		if(m_itemList.Count != 0)
-		{
-			Debug.Log(m_itemList[0].GetPrefabName());
-			Debug.Log(m_itemList.Count);
-		}
-
 		return m_itemList;
 	}
-
-	// インベントリのアイテムリストを返す
-	public ItemList GetItemListOne()
-	{
-		if (m_itemList.Count != 0)
-		{
-			Debug.Log(m_itemList[0].GetPrefabName());
-			Debug.Log(m_itemList.Count);
-		}
-
-		return m_itemList[0];
-	}
-
 	// --- ショートカット ---
 	// インベントリ ⇔ スタッシュ（空き枠を探して自動で入れ替える）
 	public bool QuickMoveItem(GridType type, GameObject item, bool isEquip, bool isAdd = false, bool isTest = false)
@@ -538,12 +513,6 @@ public class StashManager : MonoBehaviourPunCallbacks
 		m_itemList = new List<ItemList>(list);
 	}
 
-	// インベントリの種類とサイズの情報を渡す
-	public Info_InventorySize GetInventoryInfo()
-	{
-		return m_inventoryInfo;
-    }
-
     // アイテム欄を作成する
     public void CreateStashUi(Info_InventorySize info, List<ItemList> itemList)
 	{
@@ -569,6 +538,7 @@ public class StashManager : MonoBehaviourPunCallbacks
 		// インベントリの情報を取得
 		m_stashHeight = info.GetSize.y;
         m_stashWidth = info.GetSize.x;
+
 		// インベントリの枠の親オブジェクトを取得
         m_stashGridParent = m_stashUi.GetComponent<Inventory_Parent>().GetContent;
 		
@@ -636,7 +606,8 @@ public class StashManager : MonoBehaviourPunCallbacks
 		int height = 0;
 		int width = 0;
 		GameObject parent = null;
-        switch (type)
+
+		switch (type)
 		{
 			case GridType.Inventory:
 				// インベントリ用マス目の配列を作成
@@ -650,14 +621,14 @@ public class StashManager : MonoBehaviourPunCallbacks
 				// スタッシュ用マス目の配列を作成
 				list = new Grid[m_stashWidth, m_stashHeight];
 				m_stashGridList = list;
-				SetInventorySize(ref height, ref width);
+				SetStashSize(ref height, ref width);
 				parent = m_stashGridParent;
                 break;
         }
 
-        // スタッシュ用配列を作成
-        // 配列とマス目の状態を合わせる
-        int count = 0;
+		// スタッシュ用配列を作成
+		// 配列とマス目の状態を合わせる
+		int count = 0;
         for (int i = 0; i < height; i++)
         {
             for (int j = 0; j < width; j++)
