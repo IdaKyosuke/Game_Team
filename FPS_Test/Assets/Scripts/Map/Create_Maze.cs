@@ -82,12 +82,12 @@ public class Create_Maze : MonoBehaviourPunCallbacks
 			map.ReqestSetParent();
 		}
 
-		PhotonNetwork.InstantiateRoomObject(m_wallOutSide.name, transform.position, Quaternion.identity);
-
 		SetObjectSpawn(mapdatas);
 
 		// “®“I‚ÉnavMesh‚ðbake‚·‚é
 		m_mapParent.GetComponent<NavMeshSurface>().BuildNavMesh();
+
+		PhotonNetwork.InstantiateRoomObject(m_wallOutSide.name, transform.position, Quaternion.identity);
 
 		SetEnemySpawn(mapdatas);
 	}

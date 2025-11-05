@@ -36,10 +36,10 @@ public class Search_Player : MonoBehaviour
 	// 実際にレイを飛ばす
 	private bool CheckRay(GameObject player)
 	{
-		//Debug.Log("CheckRay");
-		m_rayDir = player.transform.position - transform.position;
-		// 自分自身からプレイヤーに対してレイを作成
-		Ray ray = new Ray(transform.position, m_rayDir);
+		// 自分の親とプレイヤーのベクトル
+		m_rayDir = player.transform.position - (transform.root.position + new Vector3(0, 0.5f, 0));
+        // 自分の親からプレイヤーに対してレイを作成
+        Ray ray = new Ray(transform.root.position + new Vector3(0, 0.5f, 0), m_rayDir);
 
 		RaycastHit hit;
 		if(Physics.Raycast(ray, out hit))

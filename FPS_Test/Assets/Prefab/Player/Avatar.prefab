@@ -215,39 +215,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aae3343e3c9e1d14db13121d6e136223, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_job: 0
-  m_statusData: {fileID: 11400000, guid: 01ed2263679667b408bc6dce5c21cf88, type: 2}
-  m_equipments: []
-  m_onDamage:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 417325845519929568}
-        m_TargetAssemblyTypeName: PlayerMove, Assembly-CSharp
-        m_MethodName: OnDamage
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  m_onDeath:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 417325845519929568}
-        m_TargetAssemblyTypeName: PlayerMove, Assembly-CSharp
-        m_MethodName: OnDeath
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+  m_skillIndex: 0
+  m_parameter:
+    level: 0
+    hp: 0
+    mp: 0
+    physicalPower: 0
+    magicPower: 0
+    physicalDefense: 0
+    magicDefense: 0
+    attackSpeed: 0
+    moveSpeed: 0
+    openSpeed: 0
+    requiredExp: 0
 --- !u!114 &4183251707182497922
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -302,6 +282,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_conditionData: {fileID: 11400000, guid: fc2d75826be22ac478e86c72b8a7b0e2, type: 2}
+  m_conditionUI: []
 --- !u!114 &6616165094456024883
 MonoBehaviour:
   m_ObjectHideFlags: 0

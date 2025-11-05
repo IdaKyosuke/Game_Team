@@ -85,7 +85,6 @@ public class Enemy_Nav : MonoBehaviour
 			// プレイヤーの体力を減らして、攻撃を当てたフラグを立てる
 			//m_playerStatus.GetComponent<Player_DungeonStatus>().GetHit(m_atk);
 			m_pastHit = true;
-			Debug.Log("hit");
 		}
 
 		// 攻撃中は移動しない
@@ -101,10 +100,11 @@ public class Enemy_Nav : MonoBehaviour
 		if(m_combat)
 		{
 			Combat();
-		}
+            Debug.Log("hit");
+        }
 		else
 		{
-			//Wandering();
+			Wandering();
 		}
 	}
 

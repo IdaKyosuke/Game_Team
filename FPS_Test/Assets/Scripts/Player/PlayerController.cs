@@ -4,24 +4,38 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviourPunCallbacks
 {
-	private CharacterController characterController;  // CharacterController型の変数
-	private Vector3 moveVelocity;  // キャラクターコントローラーを動かすためのVector3型の変数
-	[SerializeField] private Camera m_mapCamera;
-	[SerializeField] private Transform verRot;  //縦の視点移動の変数(カメラに合わせる)
-	[SerializeField] private Transform horRot;  //横の視点移動の変数(プレイヤーに合わせる)
-	[SerializeField] private float moveSpeed;  //移動速度
-	[SerializeField] private float sensX = 2f;
-	[SerializeField] private float sensY = 2f;
-	private float rotationY, rotationX;
-	bool m_isGrounded;
-	bool m_isDeath = false;
+    private const float MouseSensitivity = 250.0f;
 
-	[SerializeField] private float jumpPower;  //ジャンプ力
+	[SerializeField] Camera m_mapCamera;
+    [SerializeField] Animator m_animator;
+    [SerializeField] float m_jumpPower;
+    [SerializeField] float m_gravity;
+    [SerializeField] Info_InventorySize m_inventortSize;
+    [SerializeField] PlayerAnime m_playerAnim;			// アニメーション管理用オブジェクト
+    [SerializeField] GameObject m_spine;
 
-	private void Awake()
+    private float m_rotateX;
+    private bool m_isDeath;
+    private Vector3 m_moveDirection;
+
+    private GameObject m_rayTarget;						// レイの当たった敵を保管する用
+	private CharacterController m_characterController;	// CharacterController型の変数
+    private StashManager m_stashManager;
+    private PlayerStatus m_playerStatus;
+    private Condition m_condition;
+
+    public bool IsDeath => m_isDeath;
+
+    public Info_InventorySize InventortSize => m_inventortSize;
+
+    private void Awake()
     {
-		characterController = GetComponent<CharacterController>();
-        characterController.enabled = false;
+        m_characterController = GetComponent<CharacterController>();
+        m_stashManager = GetComponent<StashManager>();
+        m_playerStatus = GetComponent<PlayerStatus>();
+        m_condition = GetComponent<Condition>();
+        m_isDeath = false;
+        m_characterController.enabled = false;
     }
 
     void Start()
@@ -42,7 +56,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
 	{
 		pos = new Vector3(0, 1, 0);
 		transform.position = pos;
-        characterController.enabled = true;
+        m_characterController.enabled = true;
 		
 		//Debug.Log(PhotonNetwork.IsMasterClient + ":" + photonView.ViewID);
 	}
@@ -57,7 +71,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
 		// Raycastがhitするかどうかで判定
 		return Physics.Raycast(ray, 2);
 		*/
-		return characterController.isGrounded;
+		return m_characterController.isGrounded;
 	}
 
 	private void MiniMap()
@@ -69,72 +83,102 @@ public class PlayerController : MonoBehaviourPunCallbacks
 	void Update()
 	{
 		if (m_isDeath) return;
-		if (photonView.IsMine)
-		{
-			MiniMap();
+        if (photonView.IsMine)
+        {
+            MiniMap();
 
-			m_isGrounded = CheckGrounded();
+            //ジャンプ
+            if (CheckGrounded() && Input.GetButton("Jump"))
+            {
+                m_moveDirection.y = m_jumpPower;
+            }
 
-			Vector2 mouseInput = new Vector2(Input.GetAxis("Mouse X") * sensX,
-				Input.GetAxis("Mouse Y") * sensY);
+            //攻撃
+            if (Input.GetMouseButtonDown(0))
+            {
+                // 攻撃中は無視
+                if (m_playerAnim.IsAttack()) return;
 
-			rotationX -= mouseInput.y;
-			rotationY += mouseInput.x;
-			rotationY %= 360; // 絶対値が大きくなりすぎないように
+                //攻撃アニメーション
+                m_animator.SetTrigger("Attack1");
+            }
 
-			// 上下の視点移動量をClamp
-			rotationX = Mathf.Clamp(rotationX, -90, 90);
+            //前方にRayを飛ばす
+            if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out var hit))
+            {
+                //プレイヤー以外は無視
+                if (!hit.transform.gameObject.CompareTag("Player")) return;
 
-			// 頭、体の向きの適用
-			verRot.transform.localRotation = Quaternion.Euler(rotationX, 0, 0);
-			horRot.transform.localRotation = Quaternion.Euler(0, rotationY, 0);
+                //自身は無視
+                if (hit.transform.root.gameObject == gameObject) return;
 
-			//Wキーがおされたら
-			if (Input.GetKey(KeyCode.W))
-			{
-				characterController.Move(this.gameObject.transform.forward * moveSpeed * Time.deltaTime);
-			}
-			//Sキーがおされたら
-			if (Input.GetKey(KeyCode.S))
-			{
-				characterController.Move(this.gameObject.transform.forward * -1f * moveSpeed * Time.deltaTime);
-			}
-			//Aキーがおされたら
-			if (Input.GetKey(KeyCode.A))
-			{
-				characterController.Move(this.gameObject.transform.right * -1 * moveSpeed * Time.deltaTime);
-			}
-			//Dキーがおされたら
-			if (Input.GetKey(KeyCode.D))
-			{
-				characterController.Move(this.gameObject.transform.right * moveSpeed * Time.deltaTime);
-			}
+                //死体以外は無視
+                if (!hit.transform.root.gameObject.GetComponent<PlayerController>().IsDeath) return;
 
-			// 接地しているとき
-			if (m_isGrounded)
-			{
-				// ジャンプ
-				if (Input.GetKeyDown(KeyCode.Space))
-				{
-					moveVelocity.y = jumpPower;
-				}
-			}
-			// 空中にいる時
-			else
-			{
-				// 重力をかける
-				moveVelocity.y += Physics.gravity.y * Time.deltaTime;
-			}
+                // レイの当たった敵を保管
+                m_rayTarget = hit.transform.gameObject;
 
-			// キャラクターを動かす
-			characterController.Move(moveVelocity * Time.deltaTime);
-
-			// 移動スピードをアニメーターに反映する
-			//animator.SetFloat("MoveSpeed", new Vector3(moveVelocity.x, 0, moveVelocity.z).magnitude);
-		}
+                // 移動スピードをアニメーターに反映する
+                //animator.SetFloat("MoveSpeed", new Vector3(moveVelocity.x, 0, moveVelocity.z).magnitude);
+            }
+        }
 	}
 
-	public override void OnLeftRoom()
+    private void FixedUpdate()
+    {
+        bool isMove = false;
+
+        //感電状態なら移動不可
+        if (m_condition.Current != ConditionType.Shock)
+        {
+            //移動の入力
+            Vector3 inputDiraction = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
+            if (inputDiraction != Vector3.zero) isMove = true;
+
+            //カメラの向きに合わせて移動方向を決定
+            Vector3 cameraForward = Vector3.Scale(Camera.main.transform.forward, new Vector3(1, 0, 1)).normalized;
+            Vector3 moveDirection = (cameraForward * inputDiraction.z + Camera.main.transform.right * inputDiraction.x).normalized;
+
+            //攻撃中は移動不可
+            if (m_playerAnim.IsAttack())
+            {
+                m_moveDirection.x = 0;
+                m_moveDirection.z = 0;
+            }
+            else
+            {
+                m_moveDirection.x = moveDirection.x * m_playerStatus.TotalStatus.moveSpeed;
+                m_moveDirection.z = moveDirection.z * m_playerStatus.TotalStatus.moveSpeed;
+            }
+        }
+
+        //自由落下
+        m_moveDirection.y -= m_gravity * Time.deltaTime;
+
+        //移動
+        m_characterController.Move(m_moveDirection * Time.deltaTime);
+
+        //移動アニメーション
+        m_animator.SetBool("Move", isMove);
+    }
+
+    void LateUpdate()
+	{
+        // 視点移動
+        float mouseX = Input.GetAxis("Mouse X") * MouseSensitivity * Time.deltaTime;
+        float mouseY = Input.GetAxis("Mouse Y") * MouseSensitivity * Time.deltaTime;
+
+        // 横回転
+        transform.Rotate(Vector3.up * mouseX);
+
+        // 腰の回転
+        m_rotateX -= mouseY;
+        m_rotateX = Mathf.Clamp(m_rotateX, -40.0f, 30.0f);
+        m_spine.transform.localRotation = Quaternion.Euler(m_rotateX, 0, 0);
+        Camera.main.transform.localRotation = Quaternion.Euler(m_rotateX, 0f, 0f);
+    }
+
+    public override void OnLeftRoom()
 	{
 		Debug.Log("LeftRoom");
 		photonView.RPC(nameof(RequestOnDeath), photonView.Owner);

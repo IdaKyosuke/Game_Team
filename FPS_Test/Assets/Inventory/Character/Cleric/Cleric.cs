@@ -1,14 +1,31 @@
+using System.Net;
 using UnityEngine;
 
-public class Cleric : PlayerStatus
+public class Cleric : Job
 {
-    public override void Identity()
-    { 
-        Debug.Log("Cleric Identity");
+    private void Start()
+    {
+        //パッシブスキルの初期化
+        Initialize(JobType.Cleric);
+    }
 
-        if (Input.GetKeyDown(KeyCode.Q))
-        {
-            Debug.Log("武器の持ち替え");
-        }
+    private void Update()
+    {
+        
+    }
+
+    protected override void Passive1()
+    {
+        
+    }
+
+    protected override void Passive2()
+    {
+        
+    }
+
+    protected override void Passive3()
+    {
+
     }
 }

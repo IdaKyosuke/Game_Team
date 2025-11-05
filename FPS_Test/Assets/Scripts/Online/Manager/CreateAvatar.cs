@@ -21,7 +21,7 @@ public class CreateAvatar : MonoBehaviourPunCallbacks
 
 		for (int i = 0; i < PhotonNetwork.PlayerList.Length; ++i)
 		{
-			GameObject player = PhotonNetwork.InstantiateRoomObject("Avatar", new Vector3(0, 1, 0), Quaternion.identity);
+			GameObject player = PhotonNetwork.InstantiateRoomObject("Player", new Vector3(0, 1, 0), Quaternion.identity);
 
 			yield return new WaitForSeconds(0.1f);
 			PhotonView playerView = player.GetComponent<PhotonView>();
