@@ -102,8 +102,6 @@ public class StashManager : MonoBehaviour
 	// テスト用
 	[SerializeField] bool m_isPlayer = true;
 	private bool m_isScavenger = false;
-	// アイテムリスト
-	[SerializeField] List<ItemList> m_itemListMine = new List<ItemList>();
 
 	// アイテムのエクセルデータ
 	[SerializeField] ExcelData m_data;
