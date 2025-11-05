@@ -27,12 +27,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 126675572940373469}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.000000070780516, y: -1.6818217e-11, z: 3.5710315e-12, w: 1}
-  m_LocalPosition: {x: 0, y: 0.1, z: 0.13}
+  m_LocalRotation: {x: -0.000000007736276, y: -0, z: 3.1120406e-12, w: 1}
+  m_LocalPosition: {x: -0, y: 1.734299, z: 0.0991292}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 7151019982202814601}
+  m_Father: {fileID: 6353335903053452122}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!20 &1135898764695055192
 Camera:
@@ -1407,7 +1407,6 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 5238679799526199521}
   - {fileID: 1519820868071360549}
   m_Father: {fileID: 1225939811636245492}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2463,6 +2462,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 5238679799526199521}
   - {fileID: 886784458766079746}
   - {fileID: 6895668717532786135}
   m_Father: {fileID: 0}
@@ -2604,6 +2604,7 @@ MonoBehaviour:
   m_inventortSize: {fileID: 0}
   m_playerAnim: {fileID: 7410941094257415344}
   m_spine: {fileID: 3107797509132042500}
+  m_isLobby: 0
 --- !u!114 &2938231622506258168
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2635,10 +2636,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 181d7e91f9efde746b0112b2d94cd263, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_stashWidth: 7
-  m_stashHeight: 8
-  m_inventoryWidth: 7
-  m_inventoryHeight: 3
   m_stashGridParent: {fileID: 0}
   m_inventoryGridParent: {fileID: 0}
   m_stashUiParent: {fileID: 0}
@@ -2649,13 +2646,17 @@ MonoBehaviour:
   m_inventoryInfo: {fileID: 0}
   m_inventoryPos: {fileID: 0}
   m_stashPos: {fileID: 0}
-  info1: {fileID: 0}
-  info2: {fileID: 0}
   items: []
   m_parent: {fileID: 0}
   m_isPlayer: 1
   m_itemListMine: []
   m_data: {fileID: 0}
+  m_infoMoney: {fileID: 0}
+  m_infoItem: {fileID: 0}
+  m_isShop: 0
+  m_infoStash: {fileID: 0}
+  m_infoInventory: {fileID: 0}
+  m_text: {fileID: 0}
 --- !u!1 &6190652024236006018
 GameObject:
   m_ObjectHideFlags: 0
