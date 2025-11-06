@@ -12,7 +12,7 @@ public class EquipmentStatus : MonoBehaviour
 
     public EquipmentParameter TotalStatus => m_totalStatus;
 
-    private void Start()
+    private void Awake()
     {
         m_itemObject = GetComponent<Item_Object>();
 

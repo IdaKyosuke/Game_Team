@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Security.Cryptography;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.EventSystems;
@@ -36,7 +37,7 @@ public class Item_Object : MonoBehaviour
 
 	// 装備かどうか & 装備のタイプは
 	[SerializeField] EquipmentType m_equipmentType = EquipmentType.None;
-	private bool m_isEquip = false;		// 現在装備されているか
+	private bool m_isEquip = false;     // 現在装備されているか
 
 	// 装備の情報
 	private EquipmentStatus m_equipmentInfo;
@@ -111,16 +112,6 @@ public class Item_Object : MonoBehaviour
 		return m_pos;
     }
 
-    public void PointerEnter()
-	{
-		m_isPointerEnter = true;
-	}
-
-	public void PointerExit()
-	{
-		m_isPointerEnter = false;
-	}
-
 	// ショートカット移動
 	private void QuickMove()
 	{
@@ -161,8 +152,8 @@ public class Item_Object : MonoBehaviour
 		}
 	}
 
-	// アイテムを持ち上げる際の動き
-	public void PointerDown()
+    // アイテムを持ち上げる際の動き
+    public void PointerDown()
 	{
 		if (m_quickMove || m_isDrag || m_quickEquip) return;
 
