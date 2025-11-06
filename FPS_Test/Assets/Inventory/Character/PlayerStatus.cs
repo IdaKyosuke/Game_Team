@@ -9,6 +9,8 @@ public class PlayerStatus : MonoBehaviour
     [SerializeField] UnityEvent m_onDamage;
     [SerializeField] UnityEvent m_onDeath;
 
+    [SerializeField] GameObject m_statusUI;
+
     private Condition m_condition;
     private EquipmentParameter m_totalEquipmentStatus;  //装備のステータスの実数値(合計値)
     private PlayerParameter m_status;                   //自身の基礎ステータス
@@ -37,7 +39,7 @@ public class PlayerStatus : MonoBehaviour
         set { m_passiveStatus = value; }
     }
 
-    private void Start()
+    private void Awake()
     {
         //レベル1のステータスを設定
         m_level = 1;
@@ -54,6 +56,8 @@ public class PlayerStatus : MonoBehaviour
 
         //状態の取得
         m_condition = GetComponent<Condition>();
+
+        m_statusUI.SetActive(true);
     }
 
     private void Update()

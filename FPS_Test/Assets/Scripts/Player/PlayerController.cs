@@ -16,8 +16,8 @@ public class PlayerController : MonoBehaviourPunCallbacks
     private float m_rotateX;
     private bool m_isDeath;
     private Vector3 m_moveDirection;
-	private CharacterController m_characterController;	// CharacterControllerŒ^‚Ì•Ï”
-    private PlayerStatus m_playerStatus;
+	private CharacterController m_characterController;  // CharacterControllerŒ^‚Ì•Ï”
+    [SerializeField] PlayerStatus m_playerStatus;
     private Condition m_condition;
 
     public bool IsDeath => m_isDeath;
@@ -27,7 +27,6 @@ public class PlayerController : MonoBehaviourPunCallbacks
     private void Awake()
     {
         m_characterController = GetComponent<CharacterController>();
-        m_playerStatus = GetComponent<PlayerStatus>();
         m_condition = GetComponent<Condition>();
         m_isDeath = false;
         m_characterController.enabled = false;
