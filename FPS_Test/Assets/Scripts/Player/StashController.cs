@@ -1,26 +1,16 @@
 using Photon.Pun;
 using System.Collections.Generic;
-using Unity.Burst.CompilerServices;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
-using static TreasureBoxItem;
-using UnityEngine.Rendering.Universal;
 
 public class StashController : MonoBehaviourPunCallbacks
 {
-    [SerializeField] float m_jumpPower;
-    [SerializeField] float m_gravity;
     [SerializeField] UnityEvent m_onPassiveSkill;
     [SerializeField] GameObject m_stashManager;
     [SerializeField] Info_InventorySize m_inventortSize;
 	[SerializeField] GameObject m_uiParentCanvs;
 
-    private Vector3 m_moveDirection;
 	private Rigidbody m_rb;
-
-    private PlayerStatus m_playerStatus;
-    private Condition m_condition;
 
     public Info_InventorySize InventortSize => m_inventortSize;
 
@@ -37,15 +27,13 @@ public class StashController : MonoBehaviourPunCallbacks
 		m_isPlayer = photonView.IsMine;
 		if (!m_isPlayer) return;
 		m_rb = GetComponent<Rigidbody>();
-        m_playerStatus = GetComponent<PlayerStatus>();
-        m_condition = GetComponent<Condition>();
-        m_moveDirection = Vector3.zero;
     }
 
     private void Update()
 	{
 		if (m_isDeath) return;
 		if (!m_isPlayer) return;
+
 		// 自身が生成したオブジェクトだけに移動処理を行う
 		if (photonView.IsMine)
 		{

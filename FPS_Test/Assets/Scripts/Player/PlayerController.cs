@@ -1,10 +1,9 @@
 using Photon.Pun;
-using Photon.Pun.Demo.PunBasics;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviourPunCallbacks
 {
-    private const float MouseSensitivity = 250.0f;
+    private const float MouseSensitivity = 140.0f;
 
 	[SerializeField] Camera m_mapCamera;
     [SerializeField] Animator m_animator;
@@ -17,10 +16,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
     private float m_rotateX;
     private bool m_isDeath;
     private Vector3 m_moveDirection;
-
-    private GameObject m_rayTarget;						// レイの当たった敵を保管する用
 	private CharacterController m_characterController;	// CharacterController型の変数
-    private StashManager m_stashManager;
     private PlayerStatus m_playerStatus;
     private Condition m_condition;
 
@@ -31,7 +27,6 @@ public class PlayerController : MonoBehaviourPunCallbacks
     private void Awake()
     {
         m_characterController = GetComponent<CharacterController>();
-        m_stashManager = GetComponent<StashManager>();
         m_playerStatus = GetComponent<PlayerStatus>();
         m_condition = GetComponent<Condition>();
         m_isDeath = false;
@@ -102,25 +97,6 @@ public class PlayerController : MonoBehaviourPunCallbacks
                 //攻撃アニメーション
                 m_animator.SetTrigger("Attack1");
             }
-
-            //前方にRayを飛ばす
-            if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out var hit))
-            {
-                //プレイヤー以外は無視
-                if (!hit.transform.gameObject.CompareTag("Player")) return;
-
-                //自身は無視
-                if (hit.transform.root.gameObject == gameObject) return;
-
-                //死体以外は無視
-                if (!hit.transform.root.gameObject.GetComponent<PlayerController>().IsDeath) return;
-
-                // レイの当たった敵を保管
-                m_rayTarget = hit.transform.gameObject;
-
-                // 移動スピードをアニメーターに反映する
-                //animator.SetFloat("MoveSpeed", new Vector3(moveVelocity.x, 0, moveVelocity.z).magnitude);
-            }
         }
 	}
 
@@ -164,6 +140,9 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
     void LateUpdate()
 	{
+        //攻撃中は視点移動不可
+        if (m_playerAnim.IsAttack()) return;    
+
         // 視点移動
         float mouseX = Input.GetAxis("Mouse X") * MouseSensitivity * Time.deltaTime;
         float mouseY = Input.GetAxis("Mouse Y") * MouseSensitivity * Time.deltaTime;

@@ -6,12 +6,17 @@ public class PlayerAnime : MonoBehaviour
 
 	private bool m_isAttack = false;
 
+	public void OnAttackInit()
+	{
+		//UŒ‚ŠJn
+		m_isAttack = true;
+	}
+
     public void OnAttack1()
     {
 		// UŒ‚’†‚Í–³‹
 		if (m_isAttack) return;
 		m_collider.StartAttack();
-		m_isAttack = true;
     }
 
     public void OnAttack1End()
