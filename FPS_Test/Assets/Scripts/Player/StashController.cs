@@ -9,17 +9,17 @@ public class StashController : MonoBehaviourPunCallbacks
     [SerializeField] GameObject m_stashManager;
     [SerializeField] Info_InventorySize m_inventortSize;
 	[SerializeField] GameObject m_uiParentCanvs;
+	[SerializeField] StashManager m_manager;
+	[SerializeField] bool m_isPlayer = true;
 
-	private Rigidbody m_rb;
+	
+	private Rigidbody m_rb;         // ƒŒƒC‚Ì“–‚½‚Á‚½“G‚ð•ÛŠÇ‚·‚é—p
+    private GameObject m_rayTarget;
+	private bool m_isDeath = false;
 
     public Info_InventorySize InventortSize => m_inventortSize;
 
-	// ƒŒƒC‚Ì“–‚½‚Á‚½“G‚ð•ÛŠÇ‚·‚é—p
-	private GameObject m_rayTarget;
-	[SerializeField] StashManager m_manager;
-
-	[SerializeField] bool m_isPlayer = true;
-	private bool m_isDeath = false;
+	public bool IsOpen => m_manager.IsOpenInventory();
 
     void Start()
     {

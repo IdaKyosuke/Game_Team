@@ -64,7 +64,7 @@ public class PlayerStatus : MonoBehaviour
     {
         // 数値をリセット
         m_totalStatus = new PlayerParameter(m_level);
-        m_totalEquipmentStatus = new EquipmentParameter();
+        m_totalEquipmentStatus =  ScriptableObject.CreateInstance<EquipmentParameter>();
 
         // 装備枠分回す
         foreach (GameObject slot in m_equipments)

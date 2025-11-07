@@ -12,13 +12,14 @@ public class PlayerController : MonoBehaviourPunCallbacks
     [SerializeField] Info_InventorySize m_inventortSize;
     [SerializeField] PlayerAnime m_playerAnim;			// アニメーション管理用オブジェクト
     [SerializeField] GameObject m_spine;
+    [SerializeField] PlayerStatus m_playerStatus;
 
+	private CharacterController m_characterController;  // CharacterController型の変数
+    private StashController m_stashController;
+    private Condition m_condition;
+    private Vector3 m_moveDirection;
     private float m_rotateX;
     private bool m_isDeath;
-    private Vector3 m_moveDirection;
-	private CharacterController m_characterController;  // CharacterController型の変数
-    [SerializeField] PlayerStatus m_playerStatus;
-    private Condition m_condition;
 
     public bool IsDeath => m_isDeath;
 
@@ -27,6 +28,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
     private void Awake()
     {
         m_characterController = GetComponent<CharacterController>();
+        m_stashController = GetComponent<StashController>();
         m_condition = GetComponent<Condition>();
         m_isDeath = false;
         m_characterController.enabled = false;
@@ -103,28 +105,24 @@ public class PlayerController : MonoBehaviourPunCallbacks
     {
         bool isMove = false;
 
-        //感電状態なら移動不可
-        if (m_condition.Current != ConditionType.Shock)
+        //移動の入力
+        Vector3 inputDiraction = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
+        if (inputDiraction != Vector3.zero) isMove = true;
+
+        //カメラの向きに合わせて移動方向を決定
+        Vector3 cameraForward = Vector3.Scale(Camera.main.transform.forward, new Vector3(1, 0, 1)).normalized;
+        Vector3 moveDirection = (cameraForward * inputDiraction.z + Camera.main.transform.right * inputDiraction.x).normalized;
+
+        //移動不可
+        if (m_condition.Current == ConditionType.Shock || m_playerAnim.IsAttack() || m_stashController.IsOpen)
         {
-            //移動の入力
-            Vector3 inputDiraction = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
-            if (inputDiraction != Vector3.zero) isMove = true;
-
-            //カメラの向きに合わせて移動方向を決定
-            Vector3 cameraForward = Vector3.Scale(Camera.main.transform.forward, new Vector3(1, 0, 1)).normalized;
-            Vector3 moveDirection = (cameraForward * inputDiraction.z + Camera.main.transform.right * inputDiraction.x).normalized;
-
-            //攻撃中は移動不可
-            if (m_playerAnim.IsAttack())
-            {
-                m_moveDirection.x = 0;
-                m_moveDirection.z = 0;
-            }
-            else
-            {
-                m_moveDirection.x = moveDirection.x * m_playerStatus.TotalStatus.moveSpeed;
-                m_moveDirection.z = moveDirection.z * m_playerStatus.TotalStatus.moveSpeed;
-            }
+            m_moveDirection.x = 0;
+            m_moveDirection.z = 0;
+        }
+        else
+        {
+            m_moveDirection.x = moveDirection.x * m_playerStatus.TotalStatus.moveSpeed;
+            m_moveDirection.z = moveDirection.z * m_playerStatus.TotalStatus.moveSpeed;
         }
 
         //自由落下
