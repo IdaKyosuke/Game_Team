@@ -54,7 +54,6 @@ public struct Grid
 		m_grid.GetComponent<GridIcon>().SetType(type);
 	}
 }
-
 public class StashManager : MonoBehaviourPunCallbacks
 {
 	// スタッシュ用サイズ
