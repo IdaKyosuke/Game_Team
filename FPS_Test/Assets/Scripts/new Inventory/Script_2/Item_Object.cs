@@ -155,6 +155,7 @@ public class Item_Object : MonoBehaviour
     // ƒAƒCƒeƒ€‚ğ‚¿ã‚°‚éÛ‚Ì“®‚«
     public void PointerDown()
 	{
+		if (!Input.GetMouseButtonDown(0)) return;
 		if (m_quickMove || m_isDrag || m_quickEquip) return;
 
 		if(Input.GetKey("left ctrl"))
