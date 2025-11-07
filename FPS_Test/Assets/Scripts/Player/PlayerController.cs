@@ -5,6 +5,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
 {
     private const float MouseSensitivity = 140.0f;
 
+    [SerializeField] Camera m_mainCamera;
 	[SerializeField] Camera m_mapCamera;
     [SerializeField] Animator m_animator;
     [SerializeField] float m_jumpPower;
@@ -110,8 +111,8 @@ public class PlayerController : MonoBehaviourPunCallbacks
         if (inputDiraction != Vector3.zero) isMove = true;
 
         //ƒJƒƒ‰‚ÌŒü‚«‚É‡‚í‚¹‚ÄˆÚ“®•ûŒü‚ğŒˆ’è
-        Vector3 cameraForward = Vector3.Scale(Camera.main.transform.forward, new Vector3(1, 0, 1)).normalized;
-        Vector3 moveDirection = (cameraForward * inputDiraction.z + Camera.main.transform.right * inputDiraction.x).normalized;
+        Vector3 cameraForward = Vector3.Scale(m_mainCamera.transform.forward, new Vector3(1, 0, 1)).normalized;
+        Vector3 moveDirection = (cameraForward * inputDiraction.z + m_mainCamera.transform.right * inputDiraction.x).normalized;
 
         //ˆÚ“®•s‰Â
         if (m_condition.Current == ConditionType.Shock || m_playerAnim.IsAttack() || m_stashController.IsOpen)
@@ -151,7 +152,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
         m_rotateX -= mouseY;
         m_rotateX = Mathf.Clamp(m_rotateX, -40.0f, 30.0f);
         m_spine.transform.localRotation = Quaternion.Euler(m_rotateX, 0, 0);
-        Camera.main.transform.localRotation = Quaternion.Euler(m_rotateX, 0f, 0f);
+        m_mainCamera.transform.localRotation = Quaternion.Euler(m_rotateX, 0f, 0f);
     }
 
     public override void OnLeftRoom()
