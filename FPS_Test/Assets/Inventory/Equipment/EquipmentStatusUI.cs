@@ -13,11 +13,11 @@ public class EquipmentStatusUI : MonoBehaviour, IPointerEnterHandler, IPointerEx
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        m_ui.SetActive(false);
+       m_ui.SetActive(false);
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        m_ui.SetActive(false);
+       m_ui.SetActive(false);
     }
 }
