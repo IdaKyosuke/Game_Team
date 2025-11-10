@@ -15,6 +15,8 @@ public class TetsData_2_ForInstance : MonoBehaviour
 	[SerializeField] int m_lv;
 	[SerializeField] int m_money;
 
+	[SerializeField] Stash_Test m_stashManager;
+
 	private void Start()
 	{
 		m_instance = TestData_2.Instance;
@@ -25,6 +27,12 @@ public class TetsData_2_ForInstance : MonoBehaviour
 		m_list[0].text = m_name;
 		m_list[1].text = m_lv.ToString();
 		m_list[2].text = m_money.ToString();
+		m_list[3].text = "";
+
+		foreach (var item in m_stashManager.GetList())
+		{
+			m_list[3].text += item.GetPrefabName() + "\n";
+		}
 
 		SetValue();
 	}
