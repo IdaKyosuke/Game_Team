@@ -1,16 +1,7 @@
 using Photon.Pun;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Linq.Expressions;
-using Unity.Burst.Intrinsics;
-using Unity.VisualScripting;
-using UnityEditor.Build;
-using UnityEditor.PackageManager.Requests;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
-using UnityEngine.Rendering.Universal;
-using UnityEngine.UIElements;
-using static TreasureBoxItem;
 
 public class TreasureBoxItem : MonoBehaviourPunCallbacks
 {

@@ -79,31 +79,32 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
 	void Update()
 	{
+        if (!photonView.IsMine) return;
 		if (m_isDeath) return;
-        if (photonView.IsMine)
+
+        MiniMap();
+
+        //ジャンプ
+        if (CheckGrounded() && Input.GetButton("Jump"))
         {
-            MiniMap();
-
-            //ジャンプ
-            if (CheckGrounded() && Input.GetButton("Jump"))
-            {
-                m_moveDirection.y = m_jumpPower;
-            }
-
-            //攻撃
-            if (Input.GetMouseButtonDown(0))
-            {
-                // 攻撃中は無視
-                if (m_playerAnim.IsAttack()) return;
-
-                //攻撃アニメーション
-                m_animator.SetTrigger("Attack1");
-            }
+            m_moveDirection.y = m_jumpPower;
         }
-	}
+
+        //攻撃
+        if (Input.GetMouseButtonDown(0))
+        {
+            // 攻撃中は無視
+            if (m_playerAnim.IsAttack()) return;
+
+            //攻撃アニメーション
+            m_animator.SetTrigger("Attack1");
+        }
+    }
 
     private void FixedUpdate()
     {
+        if (!photonView.IsMine) return;
+
         bool isMove = false;
 
         //移動の入力
@@ -138,6 +139,8 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
     void LateUpdate()
 	{
+        if (!photonView.IsMine) return;
+
         //攻撃中は視点移動不可
         if (m_playerAnim.IsAttack()) return;    
 

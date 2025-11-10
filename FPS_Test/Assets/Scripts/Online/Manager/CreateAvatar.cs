@@ -1,5 +1,4 @@
 using Photon.Pun;
-using Photon.Realtime;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -27,9 +26,8 @@ public class CreateAvatar : MonoBehaviourPunCallbacks
 			PhotonView playerView = player.GetComponent<PhotonView>();
 			playerView.TransferOwnership(PhotonNetwork.PlayerList[i]);
 			yield return new WaitForSeconds(0.1f);
-			photonView.RPC(nameof(SetScripts), playerView.Owner, playerView.ViewID);
-			player.GetComponent<PlayerSetup>().enabled = true;
-			m_player.Add(player);
+			photonView.RPC(nameof(SetScripts), RpcTarget.All, playerView.ViewID);
+            m_player.Add(player);
 		}
 	}
 
@@ -39,7 +37,8 @@ public class CreateAvatar : MonoBehaviourPunCallbacks
 		PhotonView view = PhotonView.Find(viewId);
 		view.GetComponent<StashController>().enabled = true;
 		view.GetComponent<PlayerController>().enabled = true;
-	}
+		view.GetComponent<PlayerSetup>().enabled = true;
+    }
 
 	public static List<GameObject> GetPlayerList
 	{

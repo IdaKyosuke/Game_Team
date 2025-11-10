@@ -1,10 +1,7 @@
 using Photon.Pun;
-using System.Collections;
 using System.Collections.Generic;
 using Unity.AI.Navigation;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.AI;
 
 public class Create_Maze : MonoBehaviourPunCallbacks
 {

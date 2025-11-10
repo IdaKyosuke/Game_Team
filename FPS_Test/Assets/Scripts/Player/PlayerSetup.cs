@@ -1,25 +1,54 @@
 using Photon.Pun;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerSetup : MonoBehaviourPunCallbacks
 {
-	[SerializeField] GameObject m_camera;
+    private const int ModelMeshAmount = 3;
+   
+    [SerializeField] SkinnedMeshRenderer[] m_firstPersonModel;  //自身
+    [SerializeField] GameObject m_firstPersonSowrd;  
+    [SerializeField] SkinnedMeshRenderer[] m_thirdPersonModel;  //相手
+    [SerializeField] GameObject m_thirdPersonSowrd;  
+    [SerializeField] GameObject[] m_camera;
 	[SerializeField] GameObject m_miniMapCamera;
 
 	void Start()
 	{
         if (photonView.IsMine)
         {
-			// 自分のカメラを有効化
-			m_camera.SetActive(true);
-			m_miniMapCamera.SetActive(true);
+            //プレイヤーのモデル
+            for (int i = 0; i < ModelMeshAmount; ++i)
+            {
+                m_firstPersonModel[i].enabled = true;
+                m_thirdPersonModel[i].enabled = false;
+            }
+
+            //剣のモデル
+            m_firstPersonSowrd.SetActive(true);
+            m_thirdPersonSowrd.SetActive(false);
+
+            // 自分のカメラを有効化
+            m_camera[0].SetActive(true);
+            m_camera[1].SetActive(true);
+            m_miniMapCamera.SetActive(true);
         }
         else
         {
-			// 他人のカメラは無効化
-			m_camera.SetActive(false);
-			m_miniMapCamera	.SetActive(false);
+            //プレイヤーのモデル
+            for (int i = 0; i < ModelMeshAmount; ++i)
+            {
+                m_firstPersonModel[i].enabled = false;
+                m_thirdPersonModel[i].enabled = true;
+            }
+
+            //剣のモデル
+            m_firstPersonSowrd.SetActive(false);
+            m_thirdPersonSowrd.SetActive(true);
+
+            // 他人のカメラは無効化
+            m_camera[0].SetActive(false);
+			m_camera[1].SetActive(false);
+            m_miniMapCamera	.SetActive(false);
         }
-	}
+    }
 }
