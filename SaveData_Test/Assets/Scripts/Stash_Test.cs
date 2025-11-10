@@ -15,4 +15,9 @@ public class Stash_Test : MonoBehaviour
 	{
 		return m_items;
 	}
+
+	public void LoadItemList(List<ItemList> list)
+	{
+		m_items = list;
+	}
 }

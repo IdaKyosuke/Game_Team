@@ -12,6 +12,7 @@ using Unity.VisualScripting;
 public class TestData_2 : ISerializationCallbackReceiver
 {
 	private static TestData_2 m_instance = null;
+	[SerializeField] Stash_Test m_manager;
 
 	public static TestData_2 Instance
 	{
@@ -33,7 +34,7 @@ public class TestData_2 : ISerializationCallbackReceiver
 	public string m_name = "NoName";
 	public int m_lv = 1;
 	public int m_money = 0;
-	public List<int> m_sample = new List<int>() { 0,1,2,3 };
+	public List<ItemList> m_sample = new List<ItemList>();
 
 	[SerializeField] private string m_testDictJson = "";
 	
@@ -84,6 +85,9 @@ public class TestData_2 : ISerializationCallbackReceiver
 	public void Reload()
 	{
 		JsonUtility.FromJsonOverwrite(GetJson(), this);
+
+		Stash_Test m_manager = GameObject.FindWithTag("stashManager").GetComponent<Stash_Test>();
+		m_manager.LoadItemList(m_sample);
 	}
 
 	// データを読み込む
@@ -120,6 +124,8 @@ public class TestData_2 : ISerializationCallbackReceiver
 	// ---- データをJsonにして保存 ----
 	public void Save()
 	{
+		Stash_Test m_manager = GameObject.FindWithTag("stashManager").GetComponent<Stash_Test>();
+		m_sample = m_manager.GetList();
 		m_jsonText = JsonUtility.ToJson(this);
 		File.WriteAllText(GetFilePath(), m_jsonText);
 	}

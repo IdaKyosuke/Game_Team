@@ -2320,7 +2320,7 @@ GameObject:
   - component: {fileID: 1755330361}
   m_Layer: 0
   m_Name: StashManager
-  m_TagString: Untagged
+  m_TagString: stashManager
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2337,7 +2337,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ed925c9e72dbe2e44b64abca76f75912, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_items: []
+  m_items:
+  - {fileID: 11400000, guid: 3780561eac5b369469d0c7ed6c1ad08f, type: 2}
+  - {fileID: 11400000, guid: 0dd1c8c076be40445acb6b80a0fccd49, type: 2}
+  - {fileID: 11400000, guid: f5139f4790156c142ad759e869413a85, type: 2}
+  - {fileID: 11400000, guid: 3780561eac5b369469d0c7ed6c1ad08f, type: 2}
+  - {fileID: 11400000, guid: 25c3c6dbf37b5624fbba313fa79d0653, type: 2}
 --- !u!4 &1755330362
 Transform:
   m_ObjectHideFlags: 0
