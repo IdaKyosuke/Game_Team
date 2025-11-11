@@ -569,7 +569,7 @@ public class StashManager : MonoBehaviourPunCallbacks
 			if (item.IsEquip())
 			{
 				// ‘•”õ‚³‚ê‚Ä‚¢‚½ƒAƒCƒeƒ€
-				m_stashUi.GetComponent<Inventory_Parent>().GetEquipments.GetComponent<PlayerStatus>().QuickEquip(obj, true);
+				m_stashUi.GetComponent<Inventory_Parent>().GetEquipments.GetComponent<EquipmentManager>().QuickEquip(obj, true);
 			}
 			else
 			{

@@ -22,7 +22,7 @@ public class Wizard : Job
     private void Update()
     {
         //MP‚ªÅ‘å’l‚È‚çˆ—‚µ‚È‚¢
-        if (m_status.MP >= m_status.TotalStatus.mp) return;
+        if (m_status.MP >= m_status.Total.mp) return;
         
         //MPŽ©“®‰ñ•œ
         m_elapsedTime += Time.deltaTime;

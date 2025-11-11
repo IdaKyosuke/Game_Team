@@ -12,7 +12,6 @@ public class StashController : MonoBehaviourPunCallbacks
 	[SerializeField] StashManager m_manager;
 	[SerializeField] bool m_isPlayer = true;
 
-	
 	private Rigidbody m_rb;         // ƒŒƒC‚Ì“–‚½‚Á‚½“G‚ð•ÛŠÇ‚·‚é—p
     private GameObject m_rayTarget;
 	private bool m_isDeath = false;

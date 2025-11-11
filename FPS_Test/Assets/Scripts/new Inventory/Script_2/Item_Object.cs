@@ -21,7 +21,7 @@ public class Item_Object : MonoBehaviour
 
 	// マネージャー
 	[SerializeField] GameObject m_inventoryManager;
-	[SerializeField] PlayerStatus m_equipmentManager;
+	[SerializeField] EquipmentManager m_equipmentManager;
 
 	// カメラ
 	private Camera m_camera;
@@ -321,7 +321,7 @@ public class Item_Object : MonoBehaviour
 
 		if (m_equipmentType != EquipmentType.None)
 		{
-			m_equipmentManager = transform.parent.GetComponent<MoveItemTransform>().GetEquipmentManager().GetComponent<PlayerStatus>();
+			m_equipmentManager = transform.parent.GetComponent<MoveItemTransform>().GetEquipmentManager().GetComponent<EquipmentManager>();
 		}
 
 		m_isSetManager = true;

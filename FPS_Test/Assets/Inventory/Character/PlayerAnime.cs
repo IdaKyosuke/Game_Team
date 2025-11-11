@@ -9,7 +9,7 @@ public class PlayerAnime : MonoBehaviour
 	public void OnAttackInit()
 	{
 		//UŒ‚ŠJn
-		m_isAttack = true;
+		//m_isAttack = true;
 	}
 
     public void OnAttack1()

@@ -7,15 +7,15 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
     [SerializeField] Camera m_mainCamera;
 	[SerializeField] Camera m_mapCamera;
-    [SerializeField] Animator m_animator;
+    [SerializeField] Animator[] m_animator;
     [SerializeField] float m_jumpPower;
     [SerializeField] float m_gravity;
     [SerializeField] Info_InventorySize m_inventortSize;
     [SerializeField] PlayerAnime m_playerAnim;			// アニメーション管理用オブジェクト
     [SerializeField] GameObject m_spine;
-    [SerializeField] PlayerStatus m_playerStatus;
 
 	private CharacterController m_characterController;  // CharacterController型の変数
+    private PlayerStatus m_status;
     private StashController m_stashController;
     private Condition m_condition;
     private Vector3 m_moveDirection;
@@ -26,9 +26,12 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
     public Info_InventorySize InventortSize => m_inventortSize;
 
+    public PlayerStatus Status => m_status;
+
     private void Awake()
     {
         m_characterController = GetComponent<CharacterController>();
+        m_status = GetComponent<PlayerStatus>();
         m_stashController = GetComponent<StashController>();
         m_condition = GetComponent<Condition>();
         m_isDeath = false;
@@ -97,7 +100,8 @@ public class PlayerController : MonoBehaviourPunCallbacks
             if (m_playerAnim.IsAttack()) return;
 
             //攻撃アニメーション
-            m_animator.SetTrigger("Attack1");
+            m_animator[0].SetTrigger("Attack1");
+            m_animator[1].SetTrigger("Attack1");
         }
     }
 
@@ -123,8 +127,8 @@ public class PlayerController : MonoBehaviourPunCallbacks
         }
         else
         {
-            m_moveDirection.x = moveDirection.x * m_playerStatus.TotalStatus.moveSpeed;
-            m_moveDirection.z = moveDirection.z * m_playerStatus.TotalStatus.moveSpeed;
+            m_moveDirection.x = moveDirection.x * m_status.Total.moveSpeed;
+            m_moveDirection.z = moveDirection.z * m_status.Total.moveSpeed;
         }
 
         //自由落下
@@ -134,7 +138,8 @@ public class PlayerController : MonoBehaviourPunCallbacks
         m_characterController.Move(m_moveDirection * Time.deltaTime);
 
         //移動アニメーション
-        m_animator.SetBool("Move", isMove);
+        m_animator[0].SetBool("Move", isMove);
+        m_animator[1].SetBool("Move", isMove);
     }
 
     void LateUpdate()
@@ -156,6 +161,12 @@ public class PlayerController : MonoBehaviourPunCallbacks
         m_rotateX = Mathf.Clamp(m_rotateX, -40.0f, 30.0f);
         m_spine.transform.localRotation = Quaternion.Euler(m_rotateX, 0, 0);
         m_mainCamera.transform.localRotation = Quaternion.Euler(m_rotateX, 0f, 0f);
+    }
+
+    public void OnDeath()
+    {
+        m_animator[0].SetTrigger("Death");
+        m_animator[1].SetTrigger("Death");
     }
 
     public override void OnLeftRoom()

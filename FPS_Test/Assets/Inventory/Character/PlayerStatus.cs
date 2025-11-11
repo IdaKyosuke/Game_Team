@@ -9,8 +9,6 @@ public class PlayerStatus : MonoBehaviour
     [SerializeField] UnityEvent m_onDamage;
     [SerializeField] UnityEvent m_onDeath;
 
-    [SerializeField] GameObject m_statusUI;
-
     private Condition m_condition;
     private EquipmentParameter m_totalEquipmentStatus;  //装備のステータスの実数値(合計値)
     private PlayerParameter m_status;                   //自身の基礎ステータス
@@ -23,7 +21,9 @@ public class PlayerStatus : MonoBehaviour
 
     public PlayerParameter Value => m_status;
 
-    public PlayerParameter TotalStatus => m_totalStatus;
+    public PlayerParameter Total => m_totalStatus;
+
+    public List<GameObject> Equipments => m_equipments;
 
     public int Health => m_health;
 
@@ -56,8 +56,6 @@ public class PlayerStatus : MonoBehaviour
 
         //状態の取得
         m_condition = GetComponent<Condition>();
-
-        m_statusUI.SetActive(true);
     }
 
     private void Update()
@@ -182,24 +180,5 @@ public class PlayerStatus : MonoBehaviour
     {
         //回復
         m_health += value;
-    }
-
-    public void QuickEquip(GameObject item, bool firstSetItemFlg = false)
-    {
-        foreach (GameObject slot in m_equipments)
-        {
-            // 候補のタイプと一致する枠を見つけたら中を確認 => 空いていたら装備
-            if (slot.GetComponent<GridIcon_Equipment>().GetEquipmentType() == item.GetComponent<Item_Object>().GetWeaponType())
-            {
-                // 装備枠を確認
-                slot.GetComponent<GridIcon_Equipment>().QuickEquip(item, !firstSetItemFlg);
-            }
-        }
-    }
-
-    //装備枠をリストに追加する
-    public void SetSlot(GameObject slot)
-    {
-        m_equipments.Add(slot);
     }
 }

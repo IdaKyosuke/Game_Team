@@ -32,7 +32,7 @@ public class Weapon_Collider : MonoBehaviour
 	private void OnTriggerEnter(Collider other)
 	{
 		// プレイヤーに当たったとき
-		if(other.gameObject.CompareTag("Player"))
+		if(other.gameObject.CompareTag("playerModel"))
 		{
 			//相手プレイヤーの親を取得
 			GameObject otherPlayer = other.transform.root.gameObject;
@@ -53,20 +53,20 @@ public class Weapon_Collider : MonoBehaviour
             if (otherPlayer.GetComponent<PlayerController>().IsDeath) return;
 
             //ダメージを与える
-            if (otherPlayer.TryGetComponent<PlayerStatus>(out var playerStatus))
-			{
-                playerStatus.Damage(
-                transform.root.GetComponent<PlayerStatus>().TotalStatus.physicalPower,
-                AttackType.Physical,
-                transform.root.GetComponent<Condition>());
+            PlayerStatus status = otherPlayer.GetComponent<PlayerController>().Status;
 
-                // 当たった場所にエフェクトを表示
-                Vector3 hitPos = other.ClosestPointOnBounds(GetComponent<BoxCollider>().bounds.center);
-                Quaternion quaternion = Quaternion.identity;
-                quaternion.x = hitPos.x - other.transform.position.x;
-                quaternion.z = hitPos.z - other.transform.position.z;
-                //GameObject effect = Instantiate(m_hitEffect, hitPos, quaternion);
-            }
-		}
-	}
+            status.Damage(
+            transform.root.GetComponent<PlayerStatus>().Total.physicalPower,
+            AttackType.Physical,
+            transform.root.GetComponent<Condition>());
+
+            // 当たった場所にエフェクトを表示
+            Vector3 hitPos = other.ClosestPointOnBounds(GetComponent<BoxCollider>().bounds.center);
+            Quaternion quaternion = Quaternion.identity;
+            quaternion.x = hitPos.x - other.transform.position.x;
+            quaternion.z = hitPos.z - other.transform.position.z;
+
+            //GameObject effect = Instantiate(m_hitEffect, hitPos, quaternion);
+        }
+    }
 }

@@ -9,7 +9,7 @@ public class PlayerAttack : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Player"))
         {
-            other.GetComponent<PlayerStatus>().Damage(m_status.TotalStatus.physicalPower, AttackType.Physical, m_condition);
+            other.GetComponent<PlayerStatus>().Damage(m_status.Total.physicalPower, AttackType.Physical, m_condition);
         }
     }
 }
