@@ -104,7 +104,7 @@ public class PlayerStatus : MonoBehaviour
         m_status = m_statusData.GetStatus(m_level);
     }
 
-    public void Damage(int power, AttackType attackType, Condition condition)
+    public void Damage(int power, AttackType attackType, int ConditionTypeNum, int grantRate)
     {
         //既に死んでいるならダメージを与えない
         if (m_health <= 0) return;
@@ -129,11 +129,11 @@ public class PlayerStatus : MonoBehaviour
         m_health -= damage;
         Debug.Log("Damage : " + damage);
 
-        //状態異常付与の抽選
-        ConditionType conditionType = condition.Grant;
+		//状態異常付与の抽選
+        ConditionType conditionType = (ConditionType)ConditionTypeNum;
         if (conditionType != ConditionType.None)
         {
-            if (condition.Rate(conditionType) >= Random.Range(0, 100))
+            if (grantRate >= Random.Range(0, 100))
             {
                 m_condition.Init(conditionType);
             }

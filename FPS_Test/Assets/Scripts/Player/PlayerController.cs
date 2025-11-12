@@ -181,4 +181,19 @@ public class PlayerController : MonoBehaviourPunCallbacks
 	{
 		m_isDeath = true;
 	}
+
+	[PunRPC]
+	void AttackAnime()
+	{
+		if (!photonView.IsMine) Debug.Log("攻撃アニメーション");
+		transform.GetChild(0).GetComponent<PlayerAnime>().Attack();
+		transform.GetChild(1).GetComponent<PlayerAnime>().Attack();
+	}
+
+	[PunRPC]
+	void AttackAnimeEnd()
+	{
+		transform.GetChild(0).GetComponent<PlayerAnime>().AttackEnd();
+		transform.GetChild(1).GetComponent<PlayerAnime>().AttackEnd();
+	}
 }

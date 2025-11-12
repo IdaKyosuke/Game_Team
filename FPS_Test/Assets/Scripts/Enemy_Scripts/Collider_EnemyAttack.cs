@@ -15,17 +15,19 @@ public class Collider_EnemyAttack : MonoBehaviour
 	private void OnTriggerStay(Collider other)
 	{
 		// ƒvƒŒƒCƒ„[‚ªUŒ‚”ÍˆÍ‚É“ü‚Á‚½‚ç
-		if (other.gameObject.CompareTag("Player"))
+		if (other.gameObject.CompareTag("playerModel"))
 		{
 			m_canAttack = true;
+			Debug.Log("attackReady");
 		}
 	}
 
 	private void OnTriggerExit(Collider other)
 	{
-		if (other.gameObject.CompareTag("Player"))
+		if (other.gameObject.CompareTag("playerModel"))
 		{
 			m_canAttack = false;
+			Debug.Log("attackNotReady");
 		}
 	}
 

@@ -1,8 +1,10 @@
+using Photon.Pun;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Weapon_Collider : MonoBehaviour
+public class Weapon_Collider : MonoBehaviourPunCallbacks
 {
+	[SerializeField] AttackType m_attackType;
 	private Dictionary<int, bool> m_hitMasterInfo { get; } = new Dictionary<int, bool>();
 	[SerializeField] GameObject m_hitEffect;
 	private BoxCollider m_boxCollider;
@@ -22,26 +24,28 @@ public class Weapon_Collider : MonoBehaviour
 		// リストをリセット
 		m_hitMasterInfo.Clear();
 		m_boxCollider.enabled = true;
+		Debug.Log("コライダーtrue");
 	}
 
 	public void EndAttack()
 	{
+		Debug.Log("コライダーfalse");
 		m_boxCollider.enabled = false;
 	}
 
 	private void OnTriggerEnter(Collider other)
 	{
 		// プレイヤーに当たったとき
-		if(other.gameObject.CompareTag("playerModel"))
+		if (other.gameObject.CompareTag("playerModel"))
 		{
 			//相手プレイヤーの親を取得
 			GameObject otherPlayer = other.transform.root.gameObject;
 
-            // 当たったオブジェクトのIDを貰ってくる
-            int id = otherPlayer.GetInstanceID();
+			// 当たったオブジェクトのIDを貰ってくる
+			int id = otherPlayer.GetInstanceID();
 
-            // 自分の親と当たったときは無視する
-            if (id == m_parentID) return;
+			// 自分の親と当たったときは無視する
+			if (id == m_parentID) return;
 
 			// すでに当たったオブジェクトの時は無視する
 			if (m_hitMasterInfo.ContainsKey(id)) return;
@@ -49,24 +53,30 @@ public class Weapon_Collider : MonoBehaviour
 			// 初めて当たったときは相手のIDを登録
 			m_hitMasterInfo[id] = true;
 
-            //死体の場合は無視する
-            if (otherPlayer.GetComponent<PlayerController>().IsDeath) return;
+			//死体の場合は無視する
+			if (otherPlayer.GetComponent<PlayerController>().IsDeath) return;
 
-            //ダメージを与える
-            PlayerStatus status = otherPlayer.GetComponent<PlayerController>().Status;
+			// 当たった場所にエフェクトを表示
+			Vector3 hitPos = other.ClosestPointOnBounds(GetComponent<BoxCollider>().bounds.center);
+			Quaternion quaternion = Quaternion.identity;
+			quaternion.x = hitPos.x - other.transform.position.x;
+			quaternion.z = hitPos.z - other.transform.position.z;
 
-            status.Damage(
-            transform.root.GetComponent<PlayerStatus>().Total.physicalPower,
-            AttackType.Physical,
-            transform.root.GetComponent<Condition>());
+			//GameObject effect = Instantiate(m_hitEffect, hitPos, quaternion);
+		}
+	}
 
-            // 当たった場所にエフェクトを表示
-            Vector3 hitPos = other.ClosestPointOnBounds(GetComponent<BoxCollider>().bounds.center);
-            Quaternion quaternion = Quaternion.identity;
-            quaternion.x = hitPos.x - other.transform.position.x;
-            quaternion.z = hitPos.z - other.transform.position.z;
+	// (DamageBodyのOnTriggerEnter)
+	[PunRPC]
+	void RequestDamageValue(int viewId)
+	{
+		PhotonView view = PhotonView.Find(viewId);
+		Condition condition = transform.root.GetComponent<Condition>();
 
-            //GameObject effect = Instantiate(m_hitEffect, hitPos, quaternion);
-        }
-    }
+		view.RPC("Damage", view.Owner,
+			transform.root.GetComponent<PlayerStatus>().Total.physicalPower,
+			(int)m_attackType,
+			(int)condition.Grant,
+			condition.Rate(condition.Grant));
+	}
 }

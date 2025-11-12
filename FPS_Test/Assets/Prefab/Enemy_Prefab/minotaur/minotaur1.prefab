@@ -1588,6 +1588,7 @@ GameObject:
   - component: {fileID: 5974424341554802401}
   - component: {fileID: 9128638084452644291}
   - component: {fileID: 4742228955993307159}
+  - component: {fileID: 7566666284640304504}
   m_Layer: 0
   m_Name: minotaur1
   m_TagString: Untagged
@@ -1613,6 +1614,7 @@ Transform:
   - {fileID: 8421248755184544010}
   - {fileID: 7025438262093547332}
   - {fileID: 6093624049302163676}
+  - {fileID: 5951025772741622205}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &4662215473649777555
@@ -1789,6 +1791,7 @@ MonoBehaviour:
   observableSearch: 2
   ObservedComponents:
   - {fileID: 4742228955993307159}
+  - {fileID: 7566666284640304504}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
@@ -1808,6 +1811,36 @@ MonoBehaviour:
   m_SynchronizeRotation: 1
   m_SynchronizeScale: 0
   m_UseLocal: 1
+--- !u!114 &7566666284640304504
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2558383051400345848}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b8c4a61274f60b4ea5fb4299cfdbf14, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowLayerWeightsInspector: 1
+  ShowParameterInspector: 1
+  m_SynchronizeParameters:
+  - Type: 9
+    SynchronizeType: 1
+    Name: death
+  - Type: 3
+    SynchronizeType: 1
+    Name: attack
+  - Type: 4
+    SynchronizeType: 1
+    Name: walk
+  - Type: 9
+    SynchronizeType: 1
+    Name: hit
+  m_SynchronizeLayers:
+  - SynchronizeType: 1
+    LayerIndex: 0
 --- !u!1 &2586236617880516092
 GameObject:
   m_ObjectHideFlags: 0
@@ -4931,3 +4964,77 @@ Transform:
   - {fileID: 8493427272373669716}
   m_Father: {fileID: 2901284850517491985}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &5176736727313908403
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 7002471729365128530}
+    m_Modifications:
+    - target: {fileID: 1531572183044127502, guid: 291bd3c4de4845c46bd338124fbceb7b,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531572183044127502, guid: 291bd3c4de4845c46bd338124fbceb7b,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.877
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531572183044127502, guid: 291bd3c4de4845c46bd338124fbceb7b,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.112
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531572183044127502, guid: 291bd3c4de4845c46bd338124fbceb7b,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.92387956
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531572183044127502, guid: 291bd3c4de4845c46bd338124fbceb7b,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0.38268343
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531572183044127502, guid: 291bd3c4de4845c46bd338124fbceb7b,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531572183044127502, guid: 291bd3c4de4845c46bd338124fbceb7b,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531572183044127502, guid: 291bd3c4de4845c46bd338124fbceb7b,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: -45
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531572183044127502, guid: 291bd3c4de4845c46bd338124fbceb7b,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531572183044127502, guid: 291bd3c4de4845c46bd338124fbceb7b,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2529445267659295005, guid: 291bd3c4de4845c46bd338124fbceb7b,
+        type: 3}
+      propertyPath: m_Name
+      value: BoneGizmo
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 291bd3c4de4845c46bd338124fbceb7b, type: 3}
+--- !u!4 &5951025772741622205 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1531572183044127502, guid: 291bd3c4de4845c46bd338124fbceb7b,
+    type: 3}
+  m_PrefabInstance: {fileID: 5176736727313908403}
+  m_PrefabAsset: {fileID: 0}

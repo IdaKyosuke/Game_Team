@@ -25,6 +25,7 @@ public class CreateAvatar : MonoBehaviourPunCallbacks
 			yield return new WaitForSeconds(0.1f);
 			PhotonView playerView = player.GetComponent<PhotonView>();
 			playerView.TransferOwnership(PhotonNetwork.PlayerList[i]);
+			player.transform.GetChild(1).GetComponent<PhotonView>().TransferOwnership(PhotonNetwork.PlayerList[i]);
 			yield return new WaitForSeconds(0.1f);
 			photonView.RPC(nameof(SetScripts), RpcTarget.All, playerView.ViewID);
             m_player.Add(player);

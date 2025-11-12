@@ -2839,7 +2839,6 @@ GameObject:
   m_Component:
   - component: {fileID: 687027415906209272}
   - component: {fileID: 4928813134907156081}
-  - component: {fileID: 7589361282291611583}
   - component: {fileID: 3946503384959789932}
   m_Layer: 0
   m_Name: Main Camera
@@ -2914,14 +2913,6 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
---- !u!81 &7589361282291611583
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1253187207488348395}
-  m_Enabled: 1
 --- !u!114 &3946503384959789932
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13010,6 +13001,8 @@ GameObject:
   - component: {fileID: 7566588374472350230}
   - component: {fileID: 2741097035216703926}
   - component: {fileID: 6949077064274818103}
+  - component: {fileID: 7219438813347848854}
+  - component: {fileID: 1725804784879696998}
   m_Layer: 0
   m_Name: PlayerModel_TPS
   m_TagString: Player
@@ -13070,6 +13063,56 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_collider: {fileID: 294818354121544404}
+--- !u!114 &7219438813347848854
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6102831290836702481}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b8c4a61274f60b4ea5fb4299cfdbf14, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowLayerWeightsInspector: 1
+  ShowParameterInspector: 1
+  m_SynchronizeParameters:
+  - Type: 4
+    SynchronizeType: 1
+    Name: Move
+  - Type: 9
+    SynchronizeType: 2
+    Name: Attack1
+  - Type: 9
+    SynchronizeType: 1
+    Name: Death
+  m_SynchronizeLayers:
+  - SynchronizeType: 1
+    LayerIndex: 0
+--- !u!114 &1725804784879696998
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6102831290836702481}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 1
+  observableSearch: 2
+  ObservedComponents:
+  - {fileID: 7219438813347848854}
+  sceneViewId: 0
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
 --- !u!1 &6117077661146118436
 GameObject:
   m_ObjectHideFlags: 0
@@ -13920,6 +13963,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6e27c0119bbb30148af03fc177af2b6a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_attackType: 0
   m_hitEffect: {fileID: 0}
 --- !u!1 &6445321232088409627
 GameObject:
@@ -14768,6 +14812,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6e27c0119bbb30148af03fc177af2b6a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_attackType: 0
   m_hitEffect: {fileID: 0}
 --- !u!1 &6725730232777206456
 GameObject:
@@ -17482,6 +17527,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7994991592685685411}
   - component: {fileID: 794641053671561284}
+  - component: {fileID: 7499367146688261626}
   m_Layer: 0
   m_Name: mixamorig:Hips
   m_TagString: playerModel
@@ -17528,6 +17574,19 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.3, y: 1.5, z: 0.2}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &7499367146688261626
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7686849901852579277}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 42d4471adbc4e0a4680f35d05d82a58b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_status: {fileID: 809893212673852016}
 --- !u!1 &7734657730871258649
 GameObject:
   m_ObjectHideFlags: 0

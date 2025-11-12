@@ -64,7 +64,6 @@ public class StartGameButton : MonoBehaviourPunCallbacks
 		}
 		string roomName = sb.ToString();
 		// ルームを作成して参加する
-		Debug.Log("部屋を作成");
 		PhotonNetwork.CreateRoom(roomName, options, TypedLobby.Default);
 	}
 
@@ -107,7 +106,6 @@ public class StartGameButton : MonoBehaviourPunCallbacks
 	{
 		if (isProcessingRoom || !PhotonNetwork.IsConnectedAndReady) return false;
 		isProcessingRoom = true;
-		Debug.Log("ランダムルームに参加希望");
 
 		PhotonNetwork.JoinRandomRoom();
 		return true;
@@ -116,7 +114,6 @@ public class StartGameButton : MonoBehaviourPunCallbacks
 	{
 		if (isProcessingRoom) return false;
 		isProcessingRoom = true;
-		Debug.Log("部屋退出");
 
 		PhotonNetwork.LeaveRoom();
 		return true;

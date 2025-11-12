@@ -3,7 +3,6 @@ using UnityEngine;
 public class Item_Object : MonoBehaviour
 {
 	[SerializeField] Info_ItemSize m_info;
-	private bool m_isPointerEnter = false;
 	private bool m_isDrag = false;		// カーソルを追従しているか
 	private bool m_quickMove = false;	// ショートカット移動をしているか
 	private bool m_quickEquip = false;	// 高速装備を行う
@@ -41,9 +40,6 @@ public class Item_Object : MonoBehaviour
 
 	// テスト用（自分のリストのindex）
 	private int m_index;
-
-	// inventoryManagerとtransformが設定されているか
-	private bool m_isSetManager = false;
 
 	// アイテムの価値
 	[SerializeField] Info_ItemValue m_itemValue;
@@ -323,8 +319,6 @@ public class Item_Object : MonoBehaviour
 		{
 			m_equipmentManager = transform.parent.GetComponent<MoveItemTransform>().GetEquipmentManager().GetComponent<EquipmentManager>();
 		}
-
-		m_isSetManager = true;
 	}
 
 	// ---- アイテムの売買用の動き ----

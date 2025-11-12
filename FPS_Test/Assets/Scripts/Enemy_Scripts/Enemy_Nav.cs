@@ -1,8 +1,9 @@
+using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class Enemy_Nav : MonoBehaviour
+public class Enemy_Nav : MonoBehaviourPunCallbacks
 {
 	// NavMeshä÷òA
 	private NavMeshAgent m_agent;
@@ -76,6 +77,8 @@ public class Enemy_Nav : MonoBehaviour
 	// Update is called once per frame
 	void Update()
     {
+		if (!photonView.IsMine) return;
+
 		// éÄñSÇµÇΩÇÁçsìÆÇµÇ»Ç¢
 		if(m_isDeath) return;
 
@@ -104,7 +107,7 @@ public class Enemy_Nav : MonoBehaviour
         }
 		else
 		{
-			Wandering();
+			//Wandering();
 		}
 	}
 

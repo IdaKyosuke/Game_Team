@@ -29,5 +29,6 @@ public class SendMapData : MonoBehaviourPunCallbacks
 	{
 		GameObject mapParent = GameObject.FindWithTag("MapParent");
 		transform.SetParent(mapParent.transform);
+		Debug.Log("setParent");
 	}
 }
