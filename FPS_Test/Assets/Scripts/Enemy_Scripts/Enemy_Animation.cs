@@ -1,8 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-//using UniRx;
-//using UniRx.Triggers;
 using UnityEngine;
 
 public class Enemy_Animation : MonoBehaviour
@@ -26,28 +24,6 @@ public class Enemy_Animation : MonoBehaviour
 		m_pastPos = transform.position;
 		m_isDeath = false;
 		m_weaponCol.SetActive(false);	// 最初は当たり判定を消す
-
-		//// ---- UniRx ----
-		//ObservableStateMachineTrigger trigger =
-		//	m_anim.GetBehaviour<ObservableStateMachineTrigger>();
-
-		//// Stateの開始イベント
-		//IDisposable enterState = trigger
-		//	.OnStateEnterAsObservable()
-		//	.Subscribe(onStateInfo =>
-		//	{
-		//		AnimatorStateInfo info = onStateInfo.StateInfo;
-				
-		//	}).AddTo(this);
-
-		//// Stateの終了イベント
-		//IDisposable exitState = trigger
-		//	.OnStateExitAsObservable()
-		//	.Subscribe(onStateInfo =>
-		//	{
-		//		AnimatorStateInfo info = onStateInfo.StateInfo;
-
-		//	}).AddTo(this);
 	}
 
 	private void Update()

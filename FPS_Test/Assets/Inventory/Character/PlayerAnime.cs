@@ -4,6 +4,7 @@ using UnityEngine;
 public class PlayerAnime : MonoBehaviourPunCallbacks
 {
     [SerializeField] Weapon_Collider m_collider; //UŒ‚—p‚Ì“–‚½‚è”»’è
+	[SerializeField] Animator m_anim;
 
 	private bool m_isAttack = false;
 
@@ -42,5 +43,10 @@ public class PlayerAnime : MonoBehaviourPunCallbacks
 	public bool IsAttack()
 	{
 		return m_isAttack;
+	}
+
+	public void StartAttack()
+	{
+		m_anim.SetBool("attack", false);
 	}
 }

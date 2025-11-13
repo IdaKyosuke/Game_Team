@@ -5507,6 +5507,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_collider: {fileID: 294818354121544404}
+  m_anim: {fileID: 89965639170149130}
 --- !u!1 &2845069245619572547
 GameObject:
   m_ObjectHideFlags: 0
@@ -13063,6 +13064,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_collider: {fileID: 294818354121544404}
+  m_anim: {fileID: 2741097035216703926}
 --- !u!114 &7219438813347848854
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13082,11 +13084,14 @@ MonoBehaviour:
     SynchronizeType: 1
     Name: Move
   - Type: 9
-    SynchronizeType: 2
+    SynchronizeType: 1
     Name: Attack1
   - Type: 9
     SynchronizeType: 1
     Name: Death
+  - Type: 4
+    SynchronizeType: 2
+    Name: attack
   m_SynchronizeLayers:
   - SynchronizeType: 1
     LayerIndex: 0

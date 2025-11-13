@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks.Triggers;
 using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine;
@@ -77,7 +78,7 @@ public class Enemy_Nav : MonoBehaviourPunCallbacks
 	// Update is called once per frame
 	void Update()
     {
-		if (!photonView.IsMine) return;
+		if (!PhotonNetwork.IsMasterClient) return;
 
 		// 死亡したら行動しない
 		if(m_isDeath) return;
@@ -90,6 +91,7 @@ public class Enemy_Nav : MonoBehaviourPunCallbacks
 			m_pastHit = true;
 		}
 
+
 		// 攻撃中は移動しない
 		if (m_isAttack) return;
 
@@ -100,10 +102,9 @@ public class Enemy_Nav : MonoBehaviourPunCallbacks
 			GetComponent<Enemy_Animation>().AttackAnim();
 		}
 
-		if(m_combat)
+		if (m_combat)
 		{
 			Combat();
-            Debug.Log("hit");
         }
 		else
 		{
@@ -129,6 +130,8 @@ public class Enemy_Nav : MonoBehaviourPunCallbacks
 	{
 		// プレイヤーに向かって移動
 		m_agent.SetDestination(m_target.position);
+
+		Debug.Log("[ " + m_target + " ]を追跡中");
 	}
 
 	// 徘徊モード中、移動方向と時間を決める
@@ -199,7 +202,17 @@ public class Enemy_Nav : MonoBehaviourPunCallbacks
 		// 見つけたプレイヤーを追いかける
 		m_player = player;
 
-		m_target = m_player.transform;
+		if(m_target)
+		{
+			if(Vector3.Distance(transform.position, m_target.transform.position) > Vector3.Distance(transform.position, player.transform.position))
+			{
+				m_target = m_player.transform;
+			}
+		}
+		else
+		{
+			m_target = m_player.transform;
+		}
 
 		Debug.Log("start");
 	}

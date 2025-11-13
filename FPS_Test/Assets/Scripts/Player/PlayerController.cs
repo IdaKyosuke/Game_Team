@@ -100,8 +100,10 @@ public class PlayerController : MonoBehaviourPunCallbacks
             if (m_playerAnim.IsAttack()) return;
 
             //攻撃アニメーション
-            m_animator[0].SetTrigger("Attack1");
-            m_animator[1].SetTrigger("Attack1");
+            //m_animator[0].SetTrigger("Attack1");
+            //m_animator[1].SetTrigger("Attack1");
+            m_animator[0].SetBool("attack", true);
+            m_animator[1].SetBool("attack", true);
         }
     }
 

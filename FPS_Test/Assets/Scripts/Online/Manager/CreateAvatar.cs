@@ -10,6 +10,8 @@ using UnityEngine;
 using UnityEngine.UI;
 
 // MonoBehaviourPunCallbacksを継承して、PUNのコールバックを受け取れるようにする
+[DefaultExecutionOrder(10)]
+
 public class CreateAvatar : MonoBehaviourPunCallbacks
 {
 	private static List<GameObject> m_player = new List<GameObject>();
