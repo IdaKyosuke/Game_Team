@@ -645,6 +645,10 @@ public class StashManager : MonoBehaviourPunCallbacks
 	{
 		if (m_stashUiParent.activeSelf)
 		{
+            //カーソルの操作を固定する
+            Cursor.visible = false;
+            Cursor.lockState = CursorLockMode.Locked;
+
 			// 閉じるときにスタッシュの変更を相手に渡す
 			m_parent.GetComponent<StashController>().ReturnItemList(m_otherItemList);
             m_stashUiParent.SetActive(false);
@@ -655,10 +659,15 @@ public class StashManager : MonoBehaviourPunCallbacks
 				Destroy(m_stashUi.gameObject);
 			}
 			m_isInventoryOpen = false;
+
         }
-		else
+        else
 		{
-			m_stashUiParent.SetActive(true);
+			//カーソルの操作を可能にする
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.None;
+
+            m_stashUiParent.SetActive(true);
 			m_isInventoryOpen = true;
 		}
     }

@@ -146,7 +146,11 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
     void LateUpdate()
 	{
+        //自身以外は移動不可
         if (!photonView.IsMine) return;
+
+        //インベントリを開いているなら移動不可
+        if (m_stashController.IsOpen) return;
 
         //攻撃中は視点移動不可
         if (m_playerAnim.IsAttack()) return;    
