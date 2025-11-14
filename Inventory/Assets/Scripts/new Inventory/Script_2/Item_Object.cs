@@ -153,7 +153,12 @@ public class Item_Object : MonoBehaviour
 	{
 		if (m_quickMove || m_isDrag || m_quickEquip) return;
 
-		if(Input.GetKey("left ctrl"))
+		if(m_inventoryManager.GetComponent<StashManager>().IsBuyMode())
+		{
+			// 購入モードの時は追従しないようにする
+
+		}
+		else if(Input.GetKey("left ctrl"))
 		{
 			// ショートカット開始
 			m_quickMove = true;
@@ -214,7 +219,7 @@ public class Item_Object : MonoBehaviour
 	{
 		Vector2 result = Vector2.zero;
 
-		// screenPositionを親の座標系(parentRectTransform)に対応するよう変換する.
+		// screenPositionを親の座標系(parentRectTransform)に対応するよう変換する
 		RectTransformUtility.ScreenPointToLocalPointInRectangle(
 			parentRectTransform, 
 			screenPosition, 
