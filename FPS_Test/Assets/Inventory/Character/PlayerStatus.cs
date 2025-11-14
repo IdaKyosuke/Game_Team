@@ -55,6 +55,7 @@ public class PlayerStatus : MonoBehaviour
     private void Update()
     {
         // 数値をリセット
+        PlayerParameter prev = m_totalStatus;
         m_totalStatus = new PlayerParameter(m_level);
         m_totalEquipmentStatus =  ScriptableObject.CreateInstance<EquipmentParameter>();
 
