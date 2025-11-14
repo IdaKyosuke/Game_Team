@@ -206,6 +206,7 @@ public class Enemy_Nav : MonoBehaviourPunCallbacks
 		{
 			if(Vector3.Distance(transform.position, m_target.transform.position) > Vector3.Distance(transform.position, player.transform.position))
 			{
+				// PlayerModel_TPS‘¤‚ÌHips‚ªˆø‚Á‚©‚©‚é
 				m_target = m_player.transform;
 			}
 		}
