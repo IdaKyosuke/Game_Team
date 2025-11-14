@@ -12,26 +12,20 @@ public class PlayerStatus : MonoBehaviour
     private Condition m_condition;
     private EquipmentParameter m_totalEquipmentStatus;  //装備のステータスの実数値(合計値)
     private PlayerParameter m_status;                   //自身の基礎ステータス
+    private PlayerParameter m_currentStatus;            //実行時の変動ステータス
     private PlayerParameter m_passiveStatus;            //パッシブスキルによるステータス 
     private PlayerParameter m_totalStatus;              //合計ステータス
     private int m_level;
-    private int m_health;
-    private int m_mp;
-    private int m_exp;
 
     public PlayerParameter Value => m_status;
+
+    public PlayerParameter Current => m_currentStatus;
 
     public PlayerParameter Total => m_totalStatus;
 
     public List<GameObject> Equipments => m_equipments;
 
-    public int Health => m_health;
-
-    public int MP
-    { 
-        get { return m_mp; }
-        set { m_mp = value; }
-    }
+    public int Health => m_currentStatus.hp;
 
     public PlayerParameter PassiveStatus
     {
@@ -45,8 +39,8 @@ public class PlayerStatus : MonoBehaviour
         m_level = 1;
         m_status = m_statusData.GetStatus(m_level);
 
-        //体力
-        m_health = m_status.hp;
+        //実行時ステータスの設定
+        m_currentStatus = m_status;
 
         //合計ステータスの初期化
         m_totalStatus = new PlayerParameter(m_level);
@@ -91,23 +85,32 @@ public class PlayerStatus : MonoBehaviour
         if (m_statusData.MaxLevel <= m_level) return;
 
         //経験値の加算
-        m_exp += exp;
+        m_currentStatus.requiredExp += exp;
 
         //レベルアップ
-        if (m_exp <= m_status.requiredExp) return;
+        if (m_currentStatus.requiredExp <= m_status.requiredExp) return;
 
         //レベルの加算
         m_level++;
-        m_exp = 0;
+        m_currentStatus.requiredExp = 0;
 
         //ステータスの設定
         m_status = m_statusData.GetStatus(m_level);
     }
 
+    public void Heal(int value)
+    {
+        //回復
+        m_currentStatus.hp += value;
+
+        //上限値を超えないようにする
+        if (m_currentStatus.hp >= m_totalStatus.hp) m_currentStatus.hp = m_totalStatus.hp;
+    }
+
     public void Damage(int power, AttackType attackType, int ConditionTypeNum, int grantRate)
     {
         //既に死んでいるならダメージを与えない
-        if (m_health <= 0) return;
+        if (m_currentStatus.hp <= 0) return;
 
         //ダメージ計算
         int damage = 0;
@@ -126,7 +129,7 @@ public class PlayerStatus : MonoBehaviour
         if (damage <= 0) return;
 
         //ダメージ
-        m_health -= damage;
+        m_currentStatus.hp -= damage;
         Debug.Log("Damage : " + damage);
 
 		//状態異常付与の抽選
@@ -140,7 +143,7 @@ public class PlayerStatus : MonoBehaviour
         }
 
         //体力の確認
-        if (m_health <= 0)
+        if (m_currentStatus.hp <= 0)
         {
             //死亡通知
             m_onDeath?.Invoke();
@@ -155,16 +158,16 @@ public class PlayerStatus : MonoBehaviour
     public void ConditionDamage(int value)
     {
         //既に死んでいるならダメージを与えない
-        if (m_health <= 0) return;
+        if (m_currentStatus.hp <= 0) return;
 
         //マイナスのダメージは与えない
         if (value <= 0) return;
 
         //ダメージ
-        m_health -= value;
+        m_currentStatus.hp -= value;
 
         //体力の確認
-        if (m_health <= 0)
+        if (m_currentStatus.hp <= 0)
         {
             //死亡通知
             m_onDeath?.Invoke();
@@ -174,11 +177,5 @@ public class PlayerStatus : MonoBehaviour
             //被弾通知
             m_onDamage?.Invoke();
         }
-    }
-
-    public void Heal(int value)
-    {
-        //回復
-        m_health += value;
     }
 }

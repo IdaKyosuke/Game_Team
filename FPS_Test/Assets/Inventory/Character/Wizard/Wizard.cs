@@ -22,13 +22,13 @@ public class Wizard : Job
     private void Update()
     {
         //MP‚ªÅ‘å’l‚È‚çˆ—‚µ‚È‚¢
-        if (m_status.MP >= m_status.Total.mp) return;
+        if (m_status.Current.mp >= m_status.Total.mp) return;
         
         //MPŽ©“®‰ñ•œ
         m_elapsedTime += Time.deltaTime;
         if (m_elapsedTime >= Interval)
         {
-            m_status.MP += 2;
+            m_status.Current.mp += 2;
             m_elapsedTime = 0;
         }
     }
