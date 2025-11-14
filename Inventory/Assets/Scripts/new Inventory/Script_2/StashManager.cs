@@ -507,11 +507,11 @@ public class StashManager : MonoBehaviour
 		// リストをUIに反映
 		foreach (var item in m_otherItemList)
 		{
-			GameObject prefab = item.GetComponent<ItemList>().GetPrefab();
+			GameObject prefab = item.GetPrefab();
 			// リストからオブジェクトを生成
 			GameObject obj = Instantiate(prefab, m_moveItemTransform);
 
-			if (item.GetComponent<ItemList>().IsEquip())
+			if (item.IsEquip())
 			{
 				// 装備されていたアイテム
 				m_stashUi.GetComponent<Inventory_Parent>().GetEquipments.GetComponent<Player_Equipment>().QuickEquip(obj);
@@ -519,7 +519,7 @@ public class StashManager : MonoBehaviour
 			else
 			{
 				// 普通のアイテムのマス目を埋める
-				MoveItem(obj, item.GetComponent<Item_Object>().GetGridIndex(), obj.GetComponent<Item_Object>().GetSize(), true, GridType.Stash);
+				MoveItem(obj, item.GetGridIndex(), obj.GetComponent<Item_Object>().GetSize(), true, GridType.Stash);
 			}
 		}
 		OpenUi();
@@ -747,7 +747,9 @@ public class StashManager : MonoBehaviour
 		}
 		// 購入モードに切り替える
 		m_isBuyMode = true;
-		CreateNewShop();
+
+		// 購入モードはとりあえずリストの最初のショップを表示する
+		GameObject.FindWithTag("shopInfoList").GetComponent<ShopInfoList>().GetShopInfo(0).SetShopItem();
 	}
 	// 売却モードに切り替える
 	public void ChangeSellMode()
@@ -855,6 +857,15 @@ public class StashManager : MonoBehaviour
 
 		// リストに装備状況を保存
 		list[item.GetComponent<Item_Object>().GetIndex()].SetEquipInfo(value);
+	}
+
+	// 販売アイテムUIを作成
+	public void SetShopItemUI(Info_InventorySize info, List<ItemList> itemList)
+	{
+		// 表示しているUIを削除する
+		Destroy(m_stashUi.gameObject);
+
+		
 	}
 
 	// ----- デバッグ用関数 -----
