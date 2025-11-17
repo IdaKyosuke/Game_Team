@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Runtime.Serialization.Formatters;
 using TMPro;
 using Unity.VisualScripting;
@@ -124,6 +125,14 @@ public class StashManager : MonoBehaviour
 	// 購入時にアイテムの情報を表示するようのUI
 	[SerializeField] Image m_buyItemIcon;
 	[SerializeField] TextMeshProUGUI m_price;
+	[SerializeField] TextMeshProUGUI m_itemName;
+
+	// 購入予定のアイテムのアイコン
+	private Color m_color;
+	// 購入予定のアイテムのオブジェクト
+	private ItemList m_buyItem;
+	// ショップのボタン関係を管理しているオブジェクト
+	private ShopInfoList m_shopButtonInfo;
 
 	// ---- テスト用 ----
 	[SerializeField] Info_InventorySize m_infoStash;
@@ -136,7 +145,8 @@ public class StashManager : MonoBehaviour
     {
 		// アイテム移動用のオブジェクト
 		m_moveItemTransform = GameObject.FindWithTag("moveItemTransform").transform;
-		
+		m_shopButtonInfo = GameObject.FindWithTag("shopInfoList").GetComponent<ShopInfoList>();
+
 		if (m_isPlayer)
 		{
 			// インベントリのサイズを取得
@@ -149,6 +159,7 @@ public class StashManager : MonoBehaviour
 		{
 			m_stashWidth = m_infoStash.GetSize.x;
 			m_stashHeight = m_infoStash.GetSize.y;
+			m_color = m_buyItemIcon.GetComponent<Image>().color;
 			CreateInventory(GridType.Stash);
 			m_text.SetText("Money : " + m_infoMoney.GetCurrentMoney().ToString());
 		}
@@ -379,7 +390,13 @@ public class StashManager : MonoBehaviour
 
 	// --- ショートカット ---
 	// インベントリ ⇔ スタッシュ（空き枠を探して自動で入れ替える）
-	public bool QuickMoveItem(GridType type, GameObject item, bool isEquip, bool isAdd = false, bool isTest = false)
+	public bool QuickMoveItem(
+		GridType type, 
+		GameObject item, 
+		bool isEquip, 
+		bool isAdd = false, 
+		bool isTest = false
+	)
 	{
 		// 購入モードでは無視
 		if (!isTest && m_isBuyMode)
@@ -389,87 +406,18 @@ public class StashManager : MonoBehaviour
 			return false;
 		}
 
-		//Vector2Int size = item.GetComponent<Item_Object>().GetSize();
-
-		//// アイテムの入っているマス目のタイプに応じて探索する枠を変える
-		//m_checkType = type;
-
-		//// 全マス探索
-		//Grid[,] list = null;
-		//int height = 0;
-		//int width = 0;
-
-		//// 装備されていない => アイテムの現在の枠タイプと違うタイプの枠を探索
-		//if (!isEquip) SearchOtherType(ref list, ref height, ref width);
-		//else
-		//{
-		//	// 装備されている => インベントリに入れる
-		//	list = m_inventoryGridList;
-		//	SetInventorySize(ref height, ref width);
-		//}
-
-		//// リストを回す
-		//for (int i = 0; i < height; i++)
-		//{
-		//	for (int j = 0; j < width; j++)
-		//	{
-		//              if (CheckSpace(new Vector2Int(j, i), size, isEquip, true))
-		//		{
-		//			// 移動先の子オブジェクトに設定する
-		//			item.GetComponent<Item_Object>().PointerUp(true, list[j, i].GetTransform());
-		//			// 基点のインデックスを保持
-		//			item.GetComponent<Item_Object>().SetGridIndex(new Vector2Int(j, i));
-
-		//			// 装備をショートカットで外すとき
-		//			if(item.GetComponent<Item_Object>().GetEquipValue())
-		//			{
-		//				// 装備されていたら装備状態を解除する
-		//				item.GetComponent<Item_Object>().SetEquipValue(false);
-		//				// アイテムリストに追加する
-		//				AddItemList(item, m_itemList);
-		//				// gridTypeをインベントリに変更する
-		//				item.GetComponent<Item_Object>().SetType(GridType.Inventory);
-		//			}
-		//			else
-		//			{
-		//				// 現在の枠のgridtypeを保管
-		//				GridType m = (GridType)((int)m_checkType + 1 > 1 ? 0 : 1);
-
-		//				item.GetComponent<Item_Object>().SetType(m);
-		//				// --- アイテムリストの管理 ---
-		//				if (m_checkType == GridType.Inventory)
-		//				{
-		//					if(isTest) AddItemList(item, m_otherItemList);
-		//					else AddOtherList(item);
-		//				}
-		//				else
-		//				{
-		//					if(isTest) AddItemList(item, m_itemList);
-		//					else AddMyList(item);
-		//				}
-		//			}
-		//			return true;
-		//		}
-		//	}
-		//}
-
-		//if(isAdd)
-		//{
-		//          item.GetComponent<Item_Object>().Remove();
-		//      }
-		//else
-		//{
-		//          // アイテムが入るスペースがないので元の位置に戻す
-		//          item.GetComponent<Item_Object>().PointerUp(false);
-		//      }
-
-		//return false;
-
 		return CheckGrid(type, item, isEquip, isAdd, isTest);
     }
 
-	// 指定したタイプのマス目を探索する
-	private bool CheckGrid(GridType type, GameObject item, bool isEquip, bool isAdd = false, bool isTest = false)
+	// 指定したタイプのマス目を探索してリストを管理する
+	
+	private bool CheckGrid(
+		GridType type,		// アイテムのGridType
+		GameObject item,	// item自身
+		bool isEquip,		// 装備されているか,
+		bool isAdd = false, // 移動ではなく追加か
+		bool isTest = false // デバッグ用アイテムか
+	)
 	{
 		Vector2Int size = item.GetComponent<Item_Object>().GetSize();
 
@@ -498,10 +446,16 @@ public class StashManager : MonoBehaviour
 				if (CheckSpace(new Vector2Int(j, i), size, isEquip, true))
 				{
 					// 移動先の子オブジェクトに設定する
-					item.GetComponent<Item_Object>().PointerUp(true, list[j, i].GetTransform());
+					if(m_isBuyMode)
+					{
+						item.GetComponent<Item_Object>().MoveItem(list[j, i].GetTransform());
+					}
+					else
+					{
+						item.GetComponent<Item_Object>().PointerUp(true, list[j, i].GetTransform());
+					}
 					// 基点のインデックスを保持
 					item.GetComponent<Item_Object>().SetGridIndex(new Vector2Int(j, i));
-
 					// 装備をショートカットで外すとき
 					if (item.GetComponent<Item_Object>().GetEquipValue())
 					{
@@ -516,8 +470,8 @@ public class StashManager : MonoBehaviour
 					{
 						// 現在の枠のgridtypeを保管
 						GridType m = (GridType)((int)m_checkType + 1 > 1 ? 0 : 1);
-
 						item.GetComponent<Item_Object>().SetType(m);
+
 						// --- アイテムリストの管理 ---
 						if (m_checkType == GridType.Inventory)
 						{
@@ -769,6 +723,17 @@ public class StashManager : MonoBehaviour
 	}
 
 	// ----- ボタンの処理 ------
+	public void Deal()
+	{
+		if(m_isBuyMode)
+		{
+			BuyItem();
+		}
+		else
+		{
+			SellItem();
+		}
+	}
 	// 売却用ボタン
 	public void SellItem()
 	{
@@ -805,12 +770,32 @@ public class StashManager : MonoBehaviour
 	// 購入用ボタン
 	public void BuyItem()
 	{
-		if (m_isBuyMode && m_infoMoney.GetCurrentMoney() >= m_priceNegotiation)
+		// 購入予定アイテムを選択していない時は無視
+		if (!m_buyItem) return;
+
+		if (
+			m_isBuyMode && 
+			m_infoMoney.GetCurrentMoney() >= m_buyItem.GetActiveObject().GetComponent<Item_Object>().GetValue()
+		)
 		{
-			// お金を消費
-			m_infoMoney.UseMoney(m_priceNegotiation);
+			// アイテムを移動する
+			GameObject item = m_buyItem.GetActiveObject();
+
+			if(CheckGrid(item.GetComponent<Item_Object>().GetGridType(), item, false))
+			{
+				// お金を消費
+				m_infoMoney.UseMoney(m_buyItem.GetActiveObject().GetComponent<Item_Object>().GetValue());
+
+				// 購入予定のアイテムをリセットする
+				ResetBuyItemInfo();
+			}
 
 			m_text.SetText("Money : " + m_infoMoney.GetCurrentMoney().ToString());
+		}
+		else if(m_infoMoney.GetCurrentMoney() < m_buyItem.GetActiveObject().GetComponent<Item_Object>().GetValue())
+		{
+			// 所持金額が足りない場合
+
 		}
 	}
 
@@ -819,7 +804,6 @@ public class StashManager : MonoBehaviour
 	{
 		// すでに購入モードの時は無視する
 		if (m_isBuyMode) return;
-		Debug.Log("BuyMode");
 
 		if (m_sellItemList.Count != 0)
 		{
@@ -836,27 +820,27 @@ public class StashManager : MonoBehaviour
 		m_isBuyMode = true;
 
 		// 購入モードはとりあえずリストの最初のショップを表示する
-		GameObject.FindWithTag("shopInfoList").GetComponent<ShopInfoList>().GetShopInfo(0).SetShopItem();
+		m_shopButtonInfo.GetShopInfo(0).SetShopItem();
 	}
+
 	// 売却モードに切り替える
 	public void ChangeSellMode()
 	{
 		// すでに売却モードの時は無視する
 		if (!m_isBuyMode) return;
-
-		Debug.Log("SellMode");
+		// 売却ボタンが隠れていた時用
+		m_shopButtonInfo.ShowDealButton();
 
 		// 売却モードに切り替える
 		m_isBuyMode = false;
 
-		// 内部的な配列をリセット
+		// 内部的なリストをリセット
 		m_sellItemList.Clear();
-		m_sellItemList = new List<ItemList>();
+		//m_sellItemList = new List<ItemList>();
 
 		CreateNewShop();
 	}
 	// ---------------------------------
-
 
 	// ショップ画面作成の共通の処理
 	private void CreateNewShop()
@@ -949,8 +933,11 @@ public class StashManager : MonoBehaviour
 	// 販売アイテムUIを作成
 	public void SetShopItemUI(Info_InventorySize info, List<ItemList> itemList, bool isSet)
 	{
+		if (!m_isBuyMode) return;
 		// 表示しているUIを削除する
 		CreateNewShop();
+		// 商品リストをリセット
+		m_otherItemList.Clear();
 
 		foreach (ItemList item in itemList)
 		{
@@ -958,12 +945,65 @@ public class StashManager : MonoBehaviour
 			// アイテムをスタッシュに並べる
 			CheckGrid(GridType.Inventory, g, false, true, true);
 		}
+
+		ResetBuyItemInfo();
 	}
 
 	// 購入前にアイテムの情報を表示する
-	public void SetBuyItemInfo(Image icon, string name)
+	public void SetBuyItemInfo(Sprite icon, string name, int price, int index)
 	{
+		// 最初に選ばれたアイテムの時だけ走る
+		if(m_color.a == 0)
+		{
+			m_color.a = 255;
+			m_buyItemIcon.color = m_color;
+		}
+		else
+		{
+			// それまで選択されていたアイテムを選択状態から外す
+			m_buyItem.GetActiveObject().GetComponent<Item_Object>().RemoveSelected();
+			// 解放したマス目を埋めなおす
+			m_buyItem.GetActiveObject().GetComponent<Item_Object>().ResetItem();
+		}
+		// アイテムのオブジェクトを購入予定にする
+		m_buyItem = m_otherItemList[index];
+		m_buyItem.GetActiveObject().GetComponent<Item_Object>().PointerDownForShop();
 
+		// アイテムの情報を表示する
+		m_buyItemIcon.sprite = icon;
+		m_itemName.SetText(name);
+		m_price.SetText(price.ToString());
+		if(m_infoMoney.GetCurrentMoney() < m_buyItem.GetActiveObject().GetComponent<Item_Object>().GetValue())
+		{
+			// 所持金額が足りていない場合
+			m_price.color = Color.red;
+			m_shopButtonInfo.HideDealButton();
+		}
+		else
+		{
+			// 足りている場合
+			m_price.color = Color.white;
+			m_shopButtonInfo.ShowDealButton();
+		}
+	}
+
+	// トレーダーを入れ替えた時に購入予定のアイテムの情報をリセット
+	private void ResetBuyItemInfo()
+	{
+		// アイテムアイコン用のUIを透明にする
+		m_color.a = 0;
+		m_buyItemIcon.color = m_color;
+		m_buyItemIcon.sprite = null;
+		// テキストをリセット
+		m_itemName.SetText("");
+		m_price.SetText("");
+		if(m_buyItem)
+		{
+			// 解放したマス目を埋めなおす
+			m_buyItem.GetActiveObject().GetComponent<Item_Object>().FillGrid();
+			// アイテムをリセット
+			m_buyItem = null;
+		}
 	}
 
 	public bool IsBuyMode()
