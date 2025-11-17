@@ -1,6 +1,7 @@
 using Photon.Pun;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Playables;
 
 public class Weapon_Collider : MonoBehaviourPunCallbacks
 {
@@ -24,7 +25,7 @@ public class Weapon_Collider : MonoBehaviourPunCallbacks
 		// リストをリセット
 		m_hitMasterInfo.Clear();
 		m_boxCollider.enabled = true;
-		Debug.Log("コライダーtrue");
+		Debug.Log("剣のコライダーは今" + m_boxCollider.enabled);
 	}
 
 	public void EndAttack()
@@ -33,8 +34,14 @@ public class Weapon_Collider : MonoBehaviourPunCallbacks
 		m_boxCollider.enabled = false;
 	}
 
+	public AttackType AttackType
+	{
+		get { return m_attackType; }
+	}
+
 	private void OnTriggerEnter(Collider other)
 	{
+		Debug.Log("剣が当たった");
 		// プレイヤーに当たったとき
 		if (other.gameObject.CompareTag("playerModel"))
 		{
@@ -64,19 +71,5 @@ public class Weapon_Collider : MonoBehaviourPunCallbacks
 
 			//GameObject effect = Instantiate(m_hitEffect, hitPos, quaternion);
 		}
-	}
-
-	// (DamageBodyのOnTriggerEnter)
-	[PunRPC]
-	void RequestDamageValue(int viewId)
-	{
-		PhotonView view = PhotonView.Find(viewId);
-		Condition condition = transform.root.GetComponent<Condition>();
-
-		view.RPC("Damage", view.Owner,
-			transform.root.GetComponent<PlayerStatus>().Total.physicalPower,
-			(int)m_attackType,
-			(int)condition.Grant,
-			condition.Rate(condition.Grant));
 	}
 }

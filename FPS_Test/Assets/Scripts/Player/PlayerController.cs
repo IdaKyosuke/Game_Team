@@ -13,6 +13,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
     [SerializeField] Info_InventorySize m_inventortSize;
     [SerializeField] PlayerAnime m_playerAnim;			// アニメーション管理用オブジェクト
     [SerializeField] GameObject m_spine;
+	[SerializeField] Weapon_Collider m_weapon;
 
 	private CharacterController m_characterController;  // CharacterController型の変数
     private PlayerStatus m_status;
@@ -201,5 +202,27 @@ public class PlayerController : MonoBehaviourPunCallbacks
 	{
 		transform.GetChild(0).GetComponent<PlayerAnime>().AttackEnd();
 		transform.GetChild(1).GetComponent<PlayerAnime>().AttackEnd();
+	}
+
+	// (DamageBodyのOnTriggerEnter)
+	[PunRPC]
+	void RequestDamageValue(int viewId)
+	{
+		PhotonView view = PhotonView.Find(viewId);
+		Condition condition = GetComponent<Condition>();
+		int power = GetComponent<PlayerStatus>().Total.physicalPower;
+
+		view.RPC(nameof(Damage), view.Owner,
+			power,
+			(int)m_weapon.AttackType,
+			(int)condition.Grant,
+			condition.Rate(condition.Grant));
+	}
+
+	// (PlayerControllerのRequestDamageValue)
+	[PunRPC]
+	void Damage(int power, int attackTypeNum, int ConditionTypeNum, int grantRate)
+	{
+		m_status.Damage(power, (AttackType)attackTypeNum, ConditionTypeNum, grantRate);
 	}
 }

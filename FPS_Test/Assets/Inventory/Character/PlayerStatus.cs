@@ -1,8 +1,9 @@
+using Photon.Pun;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class PlayerStatus : MonoBehaviour
+public class PlayerStatus : MonoBehaviourPunCallbacks
 {
     [SerializeField] StatusData m_statusData;
     [SerializeField] List<GameObject> m_equipments;  //‘•”õ˜g
@@ -170,8 +171,9 @@ public class PlayerStatus : MonoBehaviour
         //‘Ì—Í‚ÌŠm”F
         if (m_currentStatus.hp <= 0)
         {
-            //Ž€–S’Ê’m
-            m_onDeath?.Invoke();
+			//Ž€–S’Ê’m
+			photonView.RPC("RequestOnDeath", RpcTarget.All);
+			m_onDeath?.Invoke();
         }
         else
         {
