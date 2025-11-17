@@ -912,8 +912,7 @@ Transform:
   m_LocalPosition: {x: 0.03679657, y: 4.50491, z: -3.9721642}
   m_LocalScale: {x: 0.013455456, y: 4.943036, z: 1.1907673}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 5500317182337214099}
+  m_Children: []
   m_Father: {fileID: 4100336585525255629}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &2083954646570242735
@@ -2976,7 +2975,7 @@ Camera:
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 1073744887
+    m_Bits: 3221228543
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -3009,7 +3008,7 @@ MonoBehaviour:
   m_RendererIndex: -1
   m_VolumeLayerMask:
     serializedVersion: 2
-    m_Bits: 1015
+    m_Bits: 3221228543
   m_VolumeTrigger: {fileID: 0}
   m_VolumeFrameworkUpdateModeOption: 2
   m_RenderPostProcessing: 0
@@ -3851,7 +3850,7 @@ GameObject:
   m_Component:
   - component: {fileID: 549111428295257222}
   - component: {fileID: 3853570217957704510}
-  m_Layer: 0
+  m_Layer: 31
   m_Name: Male_Basics_Shorts_001
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5582,7 +5581,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ba37a72a4220321459a01c8f73e57ae0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_collider: {fileID: 294818354121544404}
+  m_collider: {fileID: 0}
   m_anim: {fileID: 89965639170149130}
 --- !u!1 &2845069245619572547
 GameObject:
@@ -5887,7 +5886,7 @@ MonoBehaviour:
   m_inventortSize: {fileID: 0}
   m_playerAnim: {fileID: 6460200283450306284}
   m_spine: {fileID: 4130736925548767500}
-  m_weapon: {fileID: 294818354121544404}
+  m_weapon: {fileID: 4112248464980273913}
 --- !u!114 &2281312538683248340
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5976,12 +5975,36 @@ MonoBehaviour:
   - {fileID: 9066696552151276242}
   - {fileID: 6266115444119381461}
   - {fileID: 8552469859716615437}
-  m_firstPersonSowrd: {fileID: 1654860337299308852}
+  m_firstPersonSowrd:
+  - {fileID: 5350303719059531431}
+  - {fileID: 1736362894989426402}
+  - {fileID: 4985811580636039160}
+  - {fileID: 6642418599971105068}
+  - {fileID: 9098141702009491978}
+  - {fileID: 6324515364275930809}
+  - {fileID: 4083837763175780271}
+  - {fileID: 7362927240319543547}
+  - {fileID: 602676135731470661}
+  - {fileID: 5919203297754803969}
+  - {fileID: 2116822955535318634}
+  - {fileID: 3273968819204311996}
   m_thirdPersonModel:
   - {fileID: 5587449623977618630}
   - {fileID: 3853570217957704510}
   - {fileID: 3490838179266276328}
-  m_thirdPersonSowrd: {fileID: 2206053209776956234}
+  m_thirdPersonSowrd:
+  - {fileID: 1887615879523114843}
+  - {fileID: 3497379077890442544}
+  - {fileID: 4825832987491467007}
+  - {fileID: 9035970092605559228}
+  - {fileID: 5194630011256801775}
+  - {fileID: 5414134171329014201}
+  - {fileID: 1066393511335244363}
+  - {fileID: 2423940541728973508}
+  - {fileID: 3752984537816156709}
+  - {fileID: 5996107270952587885}
+  - {fileID: 936931620598555577}
+  - {fileID: 4519669867217671877}
   m_camera:
   - {fileID: 1253187207488348395}
   - {fileID: 6187711159813430339}
@@ -11285,7 +11308,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5012663329106020354}
   - component: {fileID: 3490838179266276328}
-  m_Layer: 0
+  m_Layer: 31
   m_Name: Male_Basics_T_Shirt_001
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -12997,7 +13020,7 @@ GameObject:
   - component: {fileID: 6949077064274818103}
   - component: {fileID: 7219438813347848854}
   - component: {fileID: 1725804784879696998}
-  m_Layer: 0
+  m_Layer: 31
   m_Name: PlayerModel_TPS
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -13056,7 +13079,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ba37a72a4220321459a01c8f73e57ae0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_collider: {fileID: 294818354121544404}
+  m_collider: {fileID: 4112248464980273913}
   m_anim: {fileID: 2741097035216703926}
 --- !u!114 &7219438813347848854
 MonoBehaviour:
@@ -13070,8 +13093,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b8c4a61274f60b4ea5fb4299cfdbf14, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ShowLayerWeightsInspector: 1
-  ShowParameterInspector: 1
+  ShowLayerWeightsInspector: 0
+  ShowParameterInspector: 0
   m_SynchronizeParameters:
   - Type: 4
     SynchronizeType: 1
@@ -13612,7 +13635,7 @@ GameObject:
   m_Component:
   - component: {fileID: 20804044159135384}
   - component: {fileID: 5587449623977618630}
-  m_Layer: 0
+  m_Layer: 31
   m_Name: CC_Base_Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -13894,75 +13917,6 @@ MonoBehaviour:
   m_content: {fileID: 627301426268444737}
   m_equipments: {fileID: 0}
   stashManager: {fileID: 5448406972463202420}
---- !u!1 &6432914833170981144
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 5500317182337214099}
-  - component: {fileID: 3921844891412132178}
-  - component: {fileID: 294818354121544404}
-  m_Layer: 10
-  m_Name: Collider
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &5500317182337214099
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6432914833170981144}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0.000000014901158, y: -0.000000029802315, z: -0.000000014901158,
-    w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 3063229963124424240}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &3921844891412132178
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6432914833170981144}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 19.965717, y: 1.8321861, z: 2.000616}
-  m_Center: {x: 0.0000006810863, y: -0.08930965, z: 0.0003075083}
---- !u!114 &294818354121544404
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6432914833170981144}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6e27c0119bbb30148af03fc177af2b6a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_attackType: 0
-  m_hitEffect: {fileID: 0}
 --- !u!1 &6445321232088409627
 GameObject:
   m_ObjectHideFlags: 0
@@ -14885,7 +14839,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 19.965717, y: 1.8321861, z: 2.000616}
+  m_Size: {x: 30, y: 4, z: 3}
   m_Center: {x: 0.0000006810863, y: -0.08930965, z: 0.0003075083}
 --- !u!114 &4112248464980273913
 MonoBehaviour:
@@ -17730,7 +17684,7 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3

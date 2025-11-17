@@ -212,17 +212,19 @@ public class PlayerController : MonoBehaviourPunCallbacks
 		Condition condition = GetComponent<Condition>();
 		int power = GetComponent<PlayerStatus>().Total.physicalPower;
 
+        Debug.Log(view);
+
 		view.RPC(nameof(Damage), view.Owner,
 			power,
 			(int)m_weapon.AttackType,
 			(int)condition.Grant,
-			condition.Rate(condition.Grant));
+			condition.Rate);
 	}
 
 	// (PlayerController‚ÌRequestDamageValue)
 	[PunRPC]
 	void Damage(int power, int attackTypeNum, int ConditionTypeNum, int grantRate)
 	{
-		m_status.Damage(power, (AttackType)attackTypeNum, ConditionTypeNum, grantRate);
+        m_status.Damage(power, (AttackType)attackTypeNum, ConditionTypeNum, grantRate);
 	}
 }

@@ -28,7 +28,10 @@ public class PlayerAnime : MonoBehaviourPunCallbacks
 	{
 		// 攻撃中は無視
 		if (m_isAttack) return;
-		m_collider.StartAttack();
+
+		//コライダーが無ければ何もしない
+		if(m_collider) m_collider.StartAttack();
+        
 		m_isAttack = true;
 	}
 
@@ -36,7 +39,10 @@ public class PlayerAnime : MonoBehaviourPunCallbacks
 	{
 		// 攻撃中以外は無視
 		if (!m_isAttack) return;
-		m_collider.EndAttack();
+
+		//コライダーが無ければ何にもしない
+		if(m_collider) m_collider.EndAttack();
+
 		m_isAttack = false;
 	}
 

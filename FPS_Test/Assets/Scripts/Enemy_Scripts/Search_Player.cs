@@ -37,7 +37,7 @@ public class Search_Player : MonoBehaviour
 
 		if(Physics.Raycast(ray, out hit, m_rayLength, ~m_layerMask))
 		{
-			Debug.Log("Rayのゲームオブジェクト[ " + hit.collider.gameObject + " ]");
+			//Debug.Log("Rayのゲームオブジェクト[ " + hit.collider.gameObject + " ]");
 			if (hit.collider.gameObject.CompareTag("playerModel"))
 			{
 				// 敵とプレイヤーの間に何も障害物が無い場合

@@ -28,7 +28,7 @@ public class Condition : MonoBehaviour
 
     public ConditionType Current => m_condition;
 
-    public int Rate(ConditionType type) => m_conditionData.ConditionAbility[(int)type].grantRate;
+    public int Rate => m_conditionData.ConditionAbility[(int)m_grantCondition].grantRate;
 
     public ConditionType Grant
     { 

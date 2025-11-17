@@ -1,7 +1,6 @@
 using Photon.Pun;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Playables;
 
 public class Weapon_Collider : MonoBehaviourPunCallbacks
 {
@@ -25,12 +24,12 @@ public class Weapon_Collider : MonoBehaviourPunCallbacks
 		// リストをリセット
 		m_hitMasterInfo.Clear();
 		m_boxCollider.enabled = true;
-		Debug.Log("剣のコライダーは今" + m_boxCollider.enabled);
+		//Debug.Log("剣のコライダーは今" + m_boxCollider.enabled);
 	}
 
 	public void EndAttack()
 	{
-		Debug.Log("コライダーfalse");
+		//Debug.Log("コライダーfalse");
 		m_boxCollider.enabled = false;
 	}
 
@@ -41,7 +40,6 @@ public class Weapon_Collider : MonoBehaviourPunCallbacks
 
 	private void OnTriggerEnter(Collider other)
 	{
-		Debug.Log("剣が当たった");
 		// プレイヤーに当たったとき
 		if (other.gameObject.CompareTag("playerModel"))
 		{

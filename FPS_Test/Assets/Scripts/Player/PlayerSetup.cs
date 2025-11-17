@@ -4,11 +4,12 @@ using UnityEngine;
 public class PlayerSetup : MonoBehaviourPunCallbacks
 {
     private const int ModelMeshAmount = 3;
+    private const int SowrdMeshAmount = 12;
    
     [SerializeField] SkinnedMeshRenderer[] m_firstPersonModel;  //自身
-    [SerializeField] GameObject m_firstPersonSowrd;  
+    [SerializeField] MeshRenderer[] m_firstPersonSowrd;  
     [SerializeField] SkinnedMeshRenderer[] m_thirdPersonModel;  //相手
-    [SerializeField] GameObject m_thirdPersonSowrd;  
+    [SerializeField] MeshRenderer[] m_thirdPersonSowrd;  
     [SerializeField] GameObject[] m_camera;
 	[SerializeField] GameObject m_miniMapCamera;
 
@@ -24,8 +25,11 @@ public class PlayerSetup : MonoBehaviourPunCallbacks
             }
 
             //剣のモデル
-            m_firstPersonSowrd.SetActive(true);
-            m_thirdPersonSowrd.SetActive(false);
+            for (int i = 0; i < SowrdMeshAmount; ++i)
+            {
+                m_firstPersonSowrd[i].enabled = true;
+                m_thirdPersonSowrd[i].enabled = false;
+            }
 
             // 自分のカメラを有効化
             m_camera[0].SetActive(true);
@@ -42,8 +46,11 @@ public class PlayerSetup : MonoBehaviourPunCallbacks
             }
 
             //剣のモデル
-            m_firstPersonSowrd.SetActive(false);
-            m_thirdPersonSowrd.SetActive(true);
+            for (int i = 0; i < SowrdMeshAmount; ++i)
+            {
+                m_firstPersonSowrd[i].enabled = false;
+                m_thirdPersonSowrd[i].enabled = true;
+            }
 
             // 他人のカメラは無効化
             m_camera[0].SetActive(false);
