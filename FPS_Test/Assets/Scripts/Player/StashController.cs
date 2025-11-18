@@ -11,6 +11,7 @@ public class StashController : MonoBehaviourPunCallbacks
 	[SerializeField] GameObject m_uiParentCanvs;
 	[SerializeField] StashManager m_manager;
 	[SerializeField] bool m_isPlayer = true;
+	[SerializeField] Transform m_camera;
 
 	private Rigidbody m_rb;         // レイの当たった敵を保管する用
     private GameObject m_rayTarget;
@@ -37,9 +38,9 @@ public class StashController : MonoBehaviourPunCallbacks
 		if (photonView.IsMine)
 		{
 			//前方にRayを飛ばす
-			if (Physics.Raycast(transform.position, transform.forward, out var hit))
+			if (Physics.Raycast(m_camera.position, m_camera.forward, out var hit))
 			{
-				//Debug.Log("Hit!!!!!!!!!!!!");
+				Debug.Log("Hit : " + hit.transform.name);
 				//Eキーが押されていなければ無視
 				if (Input.GetKeyDown("e"))
 				{
@@ -55,7 +56,7 @@ public class StashController : MonoBehaviourPunCallbacks
 						{
 							Debug.Log("Eをおした" + view);
 							// rayが当たっているオブジェクトに自分へ情報を送るようリクエストする
-							view.RPC(nameof(RequestInventoryData), view.Owner, photonView.ViewID, true);
+							view.RPC(nameof(RequestInventoryData), view.Owner, photonView.ViewID);
 						}
 					}
 
@@ -97,20 +98,21 @@ public class StashController : MonoBehaviourPunCallbacks
 		{
 			m_rb.isKinematic = true;
 		}
+
+		Debug.DrawRay(m_camera.position, m_camera.forward, Color.yellow);
 	}
 
 	// プレイヤーからリクエストをもらってデータを送り返す
 	[PunRPC]
-	void RequestInventoryData(int requestId, bool isPlayer)
+	void RequestInventoryData(int requestId)
 	{
-		if (isPlayer)
-		{
-			PhotonView view = PhotonView.Find(requestId);
+		PhotonView view = PhotonView.Find(requestId);
+		// 死んでいなければreturn
+		if (!view.GetComponent<PlayerController>().IsDeath) return;
 
-			Debug.Log("view.RPC s : " + view);
-			view.RPC(nameof(ReceiveInventoryData), view.Owner, GetComponent<Inventory_Info>().GetInfo(), GetManager().GetItemList());
-			Debug.Log("view.RPC e");
-		}
+		Debug.Log("view.RPC s : " + view);
+		view.RPC(nameof(ReceiveInventoryData), view.Owner, GetComponent<Inventory_Info>().GetInfo(), GetManager().GetItemList());
+		Debug.Log("view.RPC e");
 	}
 
 	[PunRPC]
@@ -161,12 +163,12 @@ public class StashController : MonoBehaviourPunCallbacks
 	public override void OnLeftRoom()
 	{
 		Debug.Log("LeftRoom!");
-		photonView.RPC(nameof(RequestOnDeath), photonView.Owner);
+		photonView.RPC(nameof(RequestOnDeathStash), photonView.Owner);
 		base.OnLeftRoom();
 	}
 
 	[PunRPC]
-	void RequestOnDeath()
+	void RequestOnDeathStash()
 	{
 		m_isDeath = true;
 	}

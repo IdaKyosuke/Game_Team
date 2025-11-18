@@ -5837,19 +5837,7 @@ MonoBehaviour:
       m_Calls: []
   m_onDeath:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 6817290701913448664}
-        m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
-        m_MethodName: OnDeath
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &4873756508487685046
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5907,6 +5895,7 @@ MonoBehaviour:
   m_uiParentCanvs: {fileID: 7279570769328164000}
   m_manager: {fileID: 5448406972463202420}
   m_isPlayer: 1
+  m_camera: {fileID: 687027415906209272}
 --- !u!114 &7150673753242893947
 MonoBehaviour:
   m_ObjectHideFlags: 0

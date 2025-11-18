@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class Item_Object : MonoBehaviour
 {
@@ -144,6 +145,7 @@ public class Item_Object : MonoBehaviour
     // ƒAƒCƒeƒ€‚ğ‚¿ã‚°‚éÛ‚Ì“®‚«
     public void PointerDown()
 	{
+		Debug.Log("‚¿‚ñ‚¿‚ñ");
 		if (!Input.GetMouseButtonDown(0)) return;
 		if (m_quickMove || m_isDrag || m_quickEquip) return;
 

@@ -111,6 +111,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
     private void FixedUpdate()
     {
         if (!photonView.IsMine) return;
+		if (m_isDeath) return;
 
         bool isMove = false;
 
@@ -150,6 +151,9 @@ public class PlayerController : MonoBehaviourPunCallbacks
         //自身以外は移動不可
         if (!photonView.IsMine) return;
 
+		// 死んでたら移動不可
+		if (m_isDeath) return;
+
         //インベントリを開いているなら移動不可
         if (m_stashController.IsOpen) return;
 
@@ -179,14 +183,16 @@ public class PlayerController : MonoBehaviourPunCallbacks
     public override void OnLeftRoom()
 	{
 		Debug.Log("LeftRoom");
-		photonView.RPC(nameof(RequestOnDeath), photonView.Owner);
+		photonView.RPC(nameof(RequestOnDeathPlayer), photonView.Owner);
 		base.OnLeftRoom();
 	}
 
 	[PunRPC]
-	void RequestOnDeath()
+	void RequestOnDeathPlayer()
 	{
+		Debug.Log("死んだ : " + photonView);
 		m_isDeath = true;
+		OnDeath();
 	}
 
 	[PunRPC]

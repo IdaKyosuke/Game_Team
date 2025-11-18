@@ -144,11 +144,16 @@ public class PlayerStatus : MonoBehaviourPunCallbacks
             }
         }
 
+		Debug.Log("現状の体力 : " + m_currentStatus.hp);
+
         //体力の確認
         if (m_currentStatus.hp <= 0)
         {
-            //死亡通知
-            m_onDeath?.Invoke();
+			Debug.Log("体力が0になった");
+			//死亡通知
+			photonView.RPC("RequestOnDeathPlayer", RpcTarget.All);
+			photonView.RPC("RequestOnDeathStash", RpcTarget.All);
+			m_onDeath?.Invoke();
         }
         else
         {
@@ -172,7 +177,8 @@ public class PlayerStatus : MonoBehaviourPunCallbacks
         if (m_currentStatus.hp <= 0)
         {
 			//死亡通知
-			photonView.RPC("RequestOnDeath", RpcTarget.All);
+			photonView.RPC("RequestOnDeathPlayer", RpcTarget.All);
+			photonView.RPC("RequestOnDeathStash", RpcTarget.All);
 			m_onDeath?.Invoke();
         }
         else
