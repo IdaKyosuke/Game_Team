@@ -155,9 +155,11 @@ public class Item_Object : MonoBehaviour
 
 		if(m_inventoryManager.GetComponent<StashManager>().IsBuyMode())
 		{
+			Debug.Log("枠のタイプ[ " + m_gridType + " ]");
 			// 購入モード
 			if (m_gridType == GridType.Stash)
 			{
+				if (m_isEquip) return;
 				// 購入モードの時は追従しないようにする
 				m_inventoryManager.GetComponent<StashManager>().SetBuyItemInfo(
 					GetComponent<Image>().sprite,

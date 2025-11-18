@@ -124,6 +124,9 @@ public class GridIcon_Equipment : MonoBehaviour
 		// ‘•”õ‚ğ˜g‚É“ü‚ê‚é
 		item.GetComponent<Item_Object>().PointerUp(true, transform);
 		// ‘•”õó‘Ô‚É‚·‚é
-		item.GetComponent<Item_Object>().SetEquipValue(true);
+		item.GetComponent<Item_Object>().SetEquipValue(
+			true,
+			item.GetComponent<Item_Object>().GetGridType() == GridType.Inventory
+			);
 	}
 }

@@ -467,7 +467,10 @@ public class StashManager : MonoBehaviour
 					if (item.GetComponent<Item_Object>().GetEquipValue())
 					{
 						// 装備されていたら装備状態を解除する
-						item.GetComponent<Item_Object>().SetEquipValue(false);
+						item.GetComponent<Item_Object>().SetEquipValue(
+							false, 
+							item.GetComponent<Item_Object>().GetGridType() == GridType.Inventory
+							);
 						// アイテムリストに追加する
 						AddItemList(item, m_itemList);
 						// gridTypeをインベントリに変更する
@@ -478,6 +481,8 @@ public class StashManager : MonoBehaviour
 						// 現在の枠のgridtypeを保管
 						GridType m = (GridType)((int)m_checkType + 1 > 1 ? 0 : 1);
 						item.GetComponent<Item_Object>().SetType(m);
+
+						
 
 						// --- アイテムリストの管理 ---
 						if (m_checkType == GridType.Inventory)
@@ -946,6 +951,7 @@ public class StashManager : MonoBehaviour
 			list = m_itemList;
 			if (item.GetComponent<Item_Object>().GetGridType() == GridType.Stash)
 			{
+				UnityEngine.Debug.Log("mine");
 				RemoveItemList(item, m_otherItemList);
 				AddItemList(item, m_itemList);
 				item.GetComponent<Item_Object>().SetType(GridType.Inventory);
@@ -956,6 +962,7 @@ public class StashManager : MonoBehaviour
 			list = m_otherItemList;
 			if (item.GetComponent<Item_Object>().GetGridType() == GridType.Inventory)
 			{
+				UnityEngine.Debug.Log("other");
 				RemoveItemList(item, m_itemList);
 				AddItemList(item, m_otherItemList);
 				item.GetComponent<Item_Object>().SetType(GridType.Stash);
