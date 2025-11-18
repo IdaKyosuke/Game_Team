@@ -19,4 +19,10 @@ public class EquipmentStatusUI : MonoBehaviour, IPointerEnterHandler, IPointerEx
     {
        m_ui.SetActive(false);
     }
+
+    //e‚ª”ñ•\¦‚É‚È‚Á‚½‚ç©g‚ğíœ
+    private void OnDisable()
+    {
+       m_ui.SetActive(false);
+    }
 }
