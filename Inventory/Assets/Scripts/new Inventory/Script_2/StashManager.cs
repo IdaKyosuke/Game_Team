@@ -334,7 +334,14 @@ public class StashManager : MonoBehaviour
 	}
 
 	// 指定したマスの状態を変更する
-	public void MoveItem(GameObject item, Vector2Int basePos, Vector2Int size, bool info, GridType type, bool changeList = false)
+	public void MoveItem(
+		GameObject item,
+		Vector2Int basePos,
+		Vector2Int size,
+		bool info,
+		GridType type,
+		bool changeList = false
+	)
 	{
 		// アドレスコピー
 		Grid[,] list = null;
@@ -767,6 +774,32 @@ public class StashManager : MonoBehaviour
 			m_text.SetText("Money : " + m_infoMoney.GetCurrentMoney().ToString());
 		}
 	}
+
+	// 売却用アイテムの総額を計算する
+	private int CalcSoldValue()
+	{
+		int add = 0;
+
+		// 売却予定のアイテムを削除
+		foreach (ItemList item in m_sellItemList)
+		{
+			// 売却したアイテムが入っていたマスを空ける
+			Vector2Int basePos = item.GetGridIndex();
+			Vector2Int size = item.GetPrefab().GetComponent<Item_Object>().GetSize();
+			for (int i = basePos.x; i < basePos.x + size.x; i++)
+			{
+				for (int j = basePos.y; j < basePos.y + size.y; j++)
+				{
+					m_stashGridList[i, j].SetInfo(false);
+				}
+			}
+			// 売値を加算
+			add += item.GetPrefab().GetComponent<Item_Object>().GetValue();
+		}
+
+		return add;
+	}
+
 	// 購入用ボタン
 	public void BuyItem()
 	{
@@ -828,15 +861,18 @@ public class StashManager : MonoBehaviour
 	{
 		// すでに売却モードの時は無視する
 		if (!m_isBuyMode) return;
+
 		// 売却ボタンが隠れていた時用
 		m_shopButtonInfo.ShowDealButton();
 
 		// 売却モードに切り替える
 		m_isBuyMode = false;
 
+		// 購入予定のアイテムが選択されている時は元に戻す
+		ResetBuyItemInfo();
+
 		// 内部的なリストをリセット
 		m_sellItemList.Clear();
-		//m_sellItemList = new List<ItemList>();
 
 		CreateNewShop();
 	}
@@ -999,8 +1035,16 @@ public class StashManager : MonoBehaviour
 		m_price.SetText("");
 		if(m_buyItem)
 		{
-			// 解放したマス目を埋めなおす
-			m_buyItem.GetActiveObject().GetComponent<Item_Object>().FillGrid();
+			if(m_isBuyMode)
+			{
+				// 解放したマス目を埋めなおす
+				m_buyItem.GetActiveObject().GetComponent<Item_Object>().FillGrid();
+			}
+			else
+			{
+				// アイテムを元の位置に戻す
+				m_buyItem.GetActiveObject().GetComponent<Item_Object>().ResetItem();
+			}
 			// アイテムをリセット
 			m_buyItem = null;
 		}
