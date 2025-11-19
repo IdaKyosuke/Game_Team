@@ -641,7 +641,7 @@ public class StashManager : MonoBehaviourPunCallbacks
     }
 
     // インベントリのUIを開閉(Tab用)
-	public void ManageUiActiveInfo()
+	public bool ManageUiActiveInfo()
 	{
 		if (m_stashUiParent.activeSelf)
 		{
@@ -660,6 +660,7 @@ public class StashManager : MonoBehaviourPunCallbacks
 			}
 			m_isInventoryOpen = false;
 
+			return true;
         }
         else
 		{
@@ -669,7 +670,8 @@ public class StashManager : MonoBehaviourPunCallbacks
 
             m_stashUiParent.SetActive(true);
 			m_isInventoryOpen = true;
-		}
+			return false;
+        }
     }
 
 	public void IsScavenger(bool value)

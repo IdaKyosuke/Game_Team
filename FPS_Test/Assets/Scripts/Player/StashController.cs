@@ -1,7 +1,10 @@
+using Cysharp.Threading.Tasks;
 using Photon.Pun;
+using Photon.Realtime;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 
 public class StashController : MonoBehaviourPunCallbacks
 {
@@ -12,6 +15,7 @@ public class StashController : MonoBehaviourPunCallbacks
 	[SerializeField] StashManager m_manager;
 	[SerializeField] bool m_isPlayer = true;
 	[SerializeField] Transform m_camera;
+	private GameObject m_miniMap;
 
 	private Rigidbody m_rb;         // ƒŒƒC‚Ì“–‚½‚Á‚½“G‚ð•ÛŠÇ‚·‚é—p
     private GameObject m_rayTarget;
@@ -21,12 +25,18 @@ public class StashController : MonoBehaviourPunCallbacks
 
 	public bool IsOpen => m_manager.IsOpenInventory();
 
-    void Start()
+    void Awake()
     {
 		m_uiParentCanvs.SetActive(true);
-		m_isPlayer = photonView.IsMine;
-		if (!m_isPlayer) return;
+		if (!photonView.IsMine) return;
 		m_rb = GetComponent<Rigidbody>();
+    }
+
+    private async void Start()
+    {
+        var token = this.GetCancellationTokenOnDestroy();
+        await UniTask.WaitUntil(() => SceneManager.GetSceneByName("MapScene").isLoaded, cancellationToken: token);
+		m_miniMap = GameObject.FindWithTag("MiniMap");
     }
 
     private void Update()
@@ -79,7 +89,7 @@ public class StashController : MonoBehaviourPunCallbacks
 
 			if (Input.GetKeyDown("tab"))
 			{
-				m_stashManager.GetComponent<StashManager>().ManageUiActiveInfo();
+				m_miniMap.SetActive(m_stashManager.GetComponent<StashManager>().ManageUiActiveInfo());
 			}
 
 			if(m_stashManager.GetComponent<StashManager>().IsOpenInventory())
