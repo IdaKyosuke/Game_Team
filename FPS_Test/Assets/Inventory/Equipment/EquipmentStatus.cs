@@ -1,3 +1,4 @@
+using Photon.Pun;
 using UnityEngine;
 
 public class EquipmentStatus : MonoBehaviour
@@ -6,31 +7,38 @@ public class EquipmentStatus : MonoBehaviour
     [SerializeField] EquipmentData m_passiveSkillData;  //装備のパッシブスキル
     [SerializeField] Condition m_condition;             
 
-    private Item_Object m_itemObject;                   //アイテムデータ
     private EquipmentParameter m_totalStatus;           //装備の総合ステータス
 
     public EquipmentParameter TotalStatus => m_totalStatus;
 
     private void Start()
     {
-        m_itemObject = GetComponent<Item_Object>();
+        //Null対策(後で消す)
+        Init();
+    }
 
-        //ランダムでパッシブスキルを設定
-        int id = Random.Range(0, 2);
-        if (id == 1)
+    public void Init(int id = -1)
+    {
+        //idが設定されていなければ抽選
+        if (id == -1)
         {
-            id = Random.Range(0, m_passiveSkillData.EquipmentAbility.Count);
-            m_statusData.id = id;
+            //ランダムでパッシブスキルを設定 (1 / 2)
+            int rand = Random.Range(0, 2);
+            if (rand == 1)
+            {
+                rand = Random.Range(0, m_passiveSkillData.EquipmentAbility.Count);
+                m_statusData.id = rand;
+            }
         }
-		/*
+
         //武器なら状態異常付与のスキルを取得
-        if (m_itemObject.GetWeaponType() == EquipmentType.Weapon)
+        if (GetComponent<Item_Object>().GetWeaponType() == EquipmentType.Weapon)
         {
-            m_condition.Grant = (ConditionType)m_passiveSkillData.EquipmentAbility[id].condition;
+            transform.root.GetComponent<Condition>().Grant = (ConditionType)m_passiveSkillData.EquipmentAbility[m_statusData.id].condition;
         }
-		*/
+
         //装備の総合ステータスを計算
         m_totalStatus = m_statusData;
-        m_totalStatus += m_passiveSkillData.EquipmentAbility[id];
+        m_totalStatus += m_passiveSkillData.EquipmentAbility[m_statusData.id];
     }
 }

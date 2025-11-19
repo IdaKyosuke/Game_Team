@@ -33,10 +33,16 @@ public class ItemList : ScriptableObject
 		m_gridIndex = index;
 	}
 
-	// プレハブを取得する
+	// プレハブ(String)を取得する
 	public string GetPrefabName()
 	{
 		return m_prefabName;
+	}
+
+	// プレハブ(GameObject)を取得
+	public GameObject GetPrefabObject()
+	{
+		return m_prefab;
 	}
 
 	// プレハブを設定する

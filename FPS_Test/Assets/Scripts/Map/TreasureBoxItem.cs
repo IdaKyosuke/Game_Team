@@ -1,7 +1,6 @@
 using Photon.Pun;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.AddressableAssets;
 
 public class TreasureBoxItem : MonoBehaviourPunCallbacks
 {
@@ -160,7 +159,7 @@ public class TreasureBoxItem : MonoBehaviourPunCallbacks
 		Loader.LoadGameObjectAsync(treasureItem.objectName).Completed += op =>
 		{
 			info.SetPrefab(op.Result);
-			Addressables.Release(op);
+			//Addressables.Release(op);
 		};
 
 		return info;

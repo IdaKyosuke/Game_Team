@@ -8,11 +8,6 @@ public class EquipmentUI : MonoBehaviour
 
     private void OnEnable()
     {
-        Setup();
-    }
-
-    private void Setup()
-    {
         m_texts[0].text = m_status.TotalStatus.hp.ToString();
         m_texts[1].text = m_status.TotalStatus.mp.ToString();
         m_texts[2].text = m_status.TotalStatus.physicalPower.ToString();
