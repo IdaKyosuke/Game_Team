@@ -14,8 +14,8 @@ public class EquipmentUI : MonoBehaviour
         m_texts[3].text = m_status.TotalStatus.magicPower.ToString();
         m_texts[4].text = m_status.TotalStatus.physicalDefense.ToString();
         m_texts[5].text = m_status.TotalStatus.magicDefense.ToString();
-        m_texts[8].text = m_status.TotalStatus.attackSpeed.ToString();
-        m_texts[6].text = m_status.TotalStatus.moveSpeed.ToString();
-        m_texts[7].text = m_status.TotalStatus.openSpeed.ToString();
+        m_texts[6].text = m_status.TotalStatus.attackSpeed.ToString();
+        m_texts[7].text = m_status.TotalStatus.moveSpeed.ToString();
+        m_texts[8].text = m_status.TotalStatus.openSpeed.ToString();
     }
 }

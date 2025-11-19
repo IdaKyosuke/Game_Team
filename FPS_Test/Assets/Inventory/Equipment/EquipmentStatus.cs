@@ -4,8 +4,7 @@ using UnityEngine;
 public class EquipmentStatus : MonoBehaviour
 {
     [SerializeField] EquipmentParameter m_statusData;   //装備の基礎ステータス(ScriptableObject)
-    [SerializeField] EquipmentData m_passiveSkillData;  //装備のパッシブスキル
-    [SerializeField] Condition m_condition;             
+    [SerializeField] EquipmentData m_passiveSkillData;  //装備のパッシブスキル     
 
     private EquipmentParameter m_totalStatus;           //装備の総合ステータス
 
