@@ -28,7 +28,6 @@ public class StashController : MonoBehaviourPunCallbacks
     void Awake()
     {
 		m_uiParentCanvs.SetActive(true);
-		if (!photonView.IsMine) return;
 		m_rb = GetComponent<Rigidbody>();
     }
 
@@ -170,13 +169,7 @@ public class StashController : MonoBehaviourPunCallbacks
 		return m_manager;
 	}
 
-	public override void OnLeftRoom()
-	{
-		Debug.Log("LeftRoom!");
-		photonView.RPC(nameof(RequestOnDeathStash), photonView.Owner);
-		base.OnLeftRoom();
-	}
-
+	// CreateAvatar‚ÌOnPlayerLeftRoom
 	[PunRPC]
 	void RequestOnDeathStash()
 	{
