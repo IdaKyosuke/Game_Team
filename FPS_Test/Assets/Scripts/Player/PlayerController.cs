@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using Photon.Pun;
 using UnityEngine;
 
@@ -39,14 +40,17 @@ public class PlayerController : MonoBehaviourPunCallbacks
         m_characterController.enabled = false;
     }
 
-    void Start()
-	{
-		// マスターの持つリストを参照
-		photonView.RPC(nameof(RequestPlayerSpawnPos), RpcTarget.MasterClient, photonView.ViewID);
+    async void Start()
+    {
+        // マップ生成が終わるまで待つ
+        await UniTask.WaitUntil(() => Create_Maze.IsMapReady);
+
+        // マスターの持つリストを参照
+        photonView.RPC(nameof(RequestPlayerSpawnPos), RpcTarget.MasterClient, photonView.ViewID);
     }
 
-	// マスターの中で個々にポジションを送る
-	[PunRPC]
+    // マスターの中で個々にポジションを送る
+    [PunRPC]
 	void RequestPlayerSpawnPos(int viewId)
 	{
 		PhotonView.Find(viewId).RPC(nameof(SetPlayerPos), PhotonView.Find(viewId).Owner, Create_Maze.GetPlayerSpawnPos().position);

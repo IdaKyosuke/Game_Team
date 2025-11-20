@@ -27,7 +27,11 @@ public class Create_Maze : MonoBehaviourPunCallbacks
 
 	private static List<Transform> m_playerSpawnPosList = new List<Transform>();
 
-	[SerializeField] GameObject m_mapParent;			// 生成したマップのプレハブを入れる
+    public static bool m_IsMapReady = false;
+
+    public static bool IsMapReady => m_IsMapReady;
+
+    [SerializeField] GameObject m_mapParent;			// 生成したマップのプレハブを入れる
 
 	// Start is called before the first frame update
 	void Awake()
@@ -37,7 +41,10 @@ public class Create_Maze : MonoBehaviourPunCallbacks
 
 	private void SetMap()
 	{
-		bool xCorner = false;
+        // マップ生成開始
+        m_IsMapReady = false;
+
+        bool xCorner = false;
 		List<SendMapData> mapdatas = new List<SendMapData>();
 		for (int y  = 0; y < m_mapHeight; ++y)
 		{
@@ -90,9 +97,12 @@ public class Create_Maze : MonoBehaviourPunCallbacks
 		PhotonNetwork.InstantiateRoomObject(m_wallOutSide.name, transform.position, Quaternion.identity);
 
 		SetEnemySpawn(mapdatas);
-	}
 
-	[PunRPC]
+        // マップ生成完了
+		m_IsMapReady = true;
+    }
+
+    [PunRPC]
 	void RequestChangeLayer(int layerNum, int viewId)
 	{
 		Transform map = PhotonView.Find(viewId).transform;
