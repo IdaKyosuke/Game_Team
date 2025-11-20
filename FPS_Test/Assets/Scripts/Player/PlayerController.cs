@@ -180,7 +180,13 @@ public class PlayerController : MonoBehaviourPunCallbacks
         m_animator[1].SetTrigger("Death");
     }
 
-	//	CreateAvatar‚ÌOnPlayerLeftRoom
+    public override void OnLeftRoom()
+	{
+		Debug.Log("LeftRoom");
+		photonView.RPC(nameof(RequestOnDeathPlayer), photonView.Owner);
+		base.OnLeftRoom();
+	}
+
 	[PunRPC]
 	void RequestOnDeathPlayer()
 	{

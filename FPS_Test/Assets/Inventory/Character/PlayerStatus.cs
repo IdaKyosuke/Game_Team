@@ -63,11 +63,14 @@ public class PlayerStatus : MonoBehaviourPunCallbacks
         // 装備枠分回す
         foreach (GameObject slot in m_equipments)
         {
-            // 装備枠が空の場合0を加算していく
+            // 装備枠が空の場合は無視
             if (slot.transform.childCount == 0) continue;
 
             // 装備のステータスを加算
             Item_Object info = slot.transform.GetChild(0).GetComponent<Item_Object>();
+			// まだ性能が未割当の時は無視
+			if(!info.GetEquipmentInfo()) continue;
+
             m_totalEquipmentStatus += info.GetEquipmentInfo();
         }
 

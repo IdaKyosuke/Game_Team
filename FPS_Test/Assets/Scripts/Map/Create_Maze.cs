@@ -168,7 +168,6 @@ public class Create_Maze : MonoBehaviourPunCallbacks
 
 	public static Transform GetPlayerSpawnPos()
 	{
-		Debug.Log("プレイヤーのすっポンポン" + m_playerSpawnPosList[0].name);
 		Transform pos = m_playerSpawnPosList[0];
 		m_playerSpawnPosList.Remove(m_playerSpawnPosList[0]);
 		return pos;

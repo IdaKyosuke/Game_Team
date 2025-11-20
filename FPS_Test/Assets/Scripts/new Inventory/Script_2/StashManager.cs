@@ -84,7 +84,7 @@ public class StashManager : MonoBehaviourPunCallbacks
     [SerializeField] Info_InventorySize m_inventoryInfo;
 
     // アイテムリスト
-    private List<ItemList> m_itemList = new List<ItemList>();
+    [SerializeField] List<ItemList> m_itemList = new List<ItemList>();
     // 自分以外のアイテムリスト
     private List<ItemList> m_otherItemList = new List<ItemList>();
 	// 売却予定のアイテムリスト
@@ -116,6 +116,9 @@ public class StashManager : MonoBehaviourPunCallbacks
 	// ショップ用のマネージャーかどうか
 	[SerializeField] bool m_isShop = false;
 
+	// セーブデータ管理用
+	private SaveData m_saveInstance = null;
+
 	// テスト用
 	[SerializeField] bool m_isPlayer = true;
 	private bool m_isScavenger = false;
@@ -127,6 +130,7 @@ public class StashManager : MonoBehaviourPunCallbacks
 	// Start is called before the first frame update
 	void Start()
     {
+
 		if (m_isPlayer)
 		{
 			// インベントリのサイズを取得
@@ -141,6 +145,7 @@ public class StashManager : MonoBehaviourPunCallbacks
 			m_stashHeight = m_infoStash.GetSize.y;
 			CreateInventory(GridType.Stash);
 		}
+		m_saveInstance = SaveData.Instance;
 	}
 
     // Update is called once per frame
@@ -159,6 +164,27 @@ public class StashManager : MonoBehaviourPunCallbacks
 		{
 			// デバッグ用
 			if (Input.GetKeyDown("1")) AddItemInventory();
+		}
+
+		if(Input.GetKeyDown("0"))
+		{
+			// 現在のアイテムをセーブ
+			m_saveInstance.SaveInventory(m_itemList);
+		}
+		else if (Input.GetKeyDown("9"))
+		{
+			// 現在のアイテムを全て削除
+			ResetItemList();
+			// セーブしたアイテムをロード
+			m_itemList = new List<ItemList>(m_saveInstance.ReloadInventory());
+			Debug.Log("itemList[" + m_itemList.Count + "]");
+			int count = 0;
+			// リストをUIに反映
+			foreach (ItemList item in m_itemList)
+			{
+				CreateItem(count, item, GridType.Inventory);
+				count++;
+			}
 		}
 	}
 
@@ -551,7 +577,7 @@ public class StashManager : MonoBehaviourPunCallbacks
 		ManageUiActiveInfo();
 	}
 
-	private void CreateItem(int count, ItemList item)
+	private void CreateItem(int count, ItemList item, GridType type = GridType.Stash)
 	{
 		Loader.LoadGameObjectAsync(item.GetPrefabName()).Completed += op =>
 		{
@@ -564,12 +590,20 @@ public class StashManager : MonoBehaviourPunCallbacks
 			obj.GetComponent<Item_Object>().SetBaseInfo();     
 			
 			// 自分が入っている枠のタイプを設定
-			obj.GetComponent<Item_Object>().SetType(GridType.Stash);
+			obj.GetComponent<Item_Object>().SetType(type);
 
 			if (item.IsEquip())
 			{
-				// 装備されていたアイテム
-				m_stashUi.GetComponent<Inventory_Parent>().GetEquipments.GetComponent<EquipmentManager>().QuickEquip(obj, true);
+				if(type == GridType.Inventory)
+				{	
+					// 装備されていたアイテム
+					m_inventoryUi.GetComponent<Inventory_Parent>().GetEquipments.GetComponent<EquipmentManager>().QuickEquip(obj, true);
+				}
+				else
+				{
+					// 装備されていたアイテム
+					m_stashUi.GetComponent<Inventory_Parent>().GetEquipments.GetComponent<EquipmentManager>().QuickEquip(obj, true);
+				}
 			}
 			else
 			{
@@ -581,10 +615,24 @@ public class StashManager : MonoBehaviourPunCallbacks
 					item.GetGridIndex(),
 					obj.GetComponent<Item_Object>().GetSize(),
 					true,
-					GridType.Stash
+					type
 					);
+
 				// UIを移動
-				obj.GetComponent<Item_Object>().PointerUp(true, m_stashGridList[item.GetGridIndex().x, item.GetGridIndex().y].GetTransform());
+				if (type == GridType.Inventory)
+				{
+					obj.GetComponent<Item_Object>().PointerUp(
+						true,
+						m_inventoryGridList[item.GetGridIndex().x, item.GetGridIndex().y].GetTransform()
+						);
+				}
+				else
+				{
+					obj.GetComponent<Item_Object>().PointerUp(
+						true,
+						m_stashGridList[item.GetGridIndex().x, item.GetGridIndex().y].GetTransform()
+						);
+				}
 			}
 
 			// リストのアクティブなオブジェクトを保存
@@ -923,6 +971,18 @@ public class StashManager : MonoBehaviourPunCallbacks
 		item.transform.localPosition = Vector3.zero;
 		item.GetComponent<Item_Object>().ChangeParent(m_moveItemTransform);
 		AddItem(GridType.Inventory, item, true);
+	}
+
+	public void ResetItemList()
+	{
+		foreach(var item in m_itemList)
+		{
+			item.GetActiveObject().GetComponent<Item_Object>().ReadyMove();
+			item.DeleteActiveObject();
+		}
+
+		m_itemList.Clear();
+		Debug.Log("Delete");
 	}
 	// ----------------------------------
 

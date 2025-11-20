@@ -33,7 +33,7 @@ public class Item_Object : MonoBehaviour
 	private bool m_isEquip = false;     // 現在装備されているか
 
 	// 装備の情報
-	private EquipmentStatus m_equipmentInfo;
+	private EquipmentStatus m_equipmentInfo = null;
 
 	// デバッグ用
 	[SerializeField] string m_name;
@@ -118,7 +118,7 @@ public class Item_Object : MonoBehaviour
 	}
 
 	// アイテムを移動させる前の準備
-	private void ReadyMove()
+	public void ReadyMove()
 	{
 		// 当たり判定用の画像を非アクティブにする
 		m_collider.SetActive(false);
@@ -260,6 +260,10 @@ public class Item_Object : MonoBehaviour
 	// 装備の場合に性能を返す
 	public EquipmentParameter GetEquipmentInfo()
 	{
+		if(!m_equipmentInfo)
+		{
+			return null;
+		}
         return m_equipmentInfo.TotalStatus;
 	}
 

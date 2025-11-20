@@ -1,6 +1,5 @@
 using Cysharp.Threading.Tasks;
 using Photon.Pun;
-using Photon.Realtime;
 using System.Collections;
 using System.Collections.Generic;
 using System.Xml.Serialization;
@@ -74,20 +73,5 @@ public class CreateAvatar : MonoBehaviourPunCallbacks
 	public static List<GameObject> GetPlayerList
 	{
 		get {  return m_player; }
-	}
-
-	public override void OnPlayerLeftRoom(Player otherPlayer)
-	{
-		// 1. 抜けたプレイヤーのOwnerを持つオブジェクトを探す
-		foreach (var player in m_player)
-		{
-			PhotonView view = player.GetComponent<PhotonView>();
-			if (view.Owner == otherPlayer)
-			{
-				// 2. そのキャラに「死亡処理」をRPCで送る
-				view.RPC("RequestOnDeathPlayer", RpcTarget.All);
-				view.RPC("RequestOnDeathStash", RpcTarget.All);
-			}
-		}
 	}
 }
