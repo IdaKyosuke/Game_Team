@@ -39,12 +39,12 @@ public class TetsData_2_ForInstance : MonoBehaviour
 
 	public void Save()
 	{
-		m_instance.Save();
+		m_instance.Save(m_stashManager.GetList());
 	}
 
 	public void Load()
 	{
-		m_instance.Reload();
+		m_stashManager.LoadItemList(m_instance.Reload());
 
 		m_name = m_instance.m_name;
 		m_lv = m_instance.m_lv;

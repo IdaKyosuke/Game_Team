@@ -18,6 +18,6 @@ public class Stash_Test : MonoBehaviour
 
 	public void LoadItemList(List<ItemList> list)
 	{
-		m_items = list;
+		m_items = new List<ItemList>(list);
 	}
 }

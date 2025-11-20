@@ -9,7 +9,7 @@ using Unity.VisualScripting;
 
 [Serializable]
 // jsonファイルを作成してセーブ
-public class TestData_2 : ISerializationCallbackReceiver
+public class TestData_2
 {
 	private static TestData_2 m_instance = null;
 	[SerializeField] Stash_Test m_manager;
@@ -36,58 +36,57 @@ public class TestData_2 : ISerializationCallbackReceiver
 	public int m_money = 0;
 	public List<ItemList> m_sample = new List<ItemList>();
 
-	[SerializeField] private string m_testDictJson = "";
+	//[SerializeField] private string m_testDictJson = "";
 	
-	// "Dictionary"や"Object"はそのまま保存ができないので"string"に変換して保存する
-	public Dictionary<string, int> m_testDict = new Dictionary<string, int>() 
-	{
-		{ "key1", 0   },
-		{ "key2", 50  },
-		{ "key3", 100 }
-	};
+	//// "Dictionary"や"Object"はそのまま保存ができないので"string"に変換して保存する
+	//public Dictionary<string, int> m_testDict = new Dictionary<string, int>() 
+	//{
+	//	{ "key1", 0   },
+	//	{ "key2", 50  },
+	//	{ "key3", 100 }
+	//};
 
-	// ---- シリアライズ, デシリアライズ時のコールバック ----
-	// SaveData(TestData)→Jsonの変換の前に実行
-	public void OnBeforeSerialize()
-	{
-		// Dictionaryはそのままで保存されないのでシリアライズしてテキストで保存
-		m_testDictJson = Serialize(m_testDict);
-	}
+	//// ---- シリアライズ, デシリアライズ時のコールバック ----
+	//// SaveData(TestData)→Jsonの変換の前に実行
+	//public void OnBeforeSerialize()
+	//{
+	//	// Dictionaryはそのままで保存されないのでシリアライズしてテキストで保存
+	//	m_testDictJson = Serialize(m_testDict);
+	//}
 
-	// SaveData(TestData)→Jsonの変換の後に実行
-	public void OnAfterDeserialize()
-	{
-		// 保存されているテキストがあればDictionaryにデシリアライズする
-		if(!string.IsNullOrEmpty(m_testDictJson))
-		{
-			m_testDict = Desirialize<Dictionary<string, int>>(m_testDictJson);
-		}
-	}
+	//// SaveData(TestData)→Jsonの変換の後に実行
+	//public void OnAfterDeserialize()
+	//{
+	//	// 保存されているテキストがあればDictionaryにデシリアライズする
+	//	if(!string.IsNullOrEmpty(m_testDictJson))
+	//	{
+	//		m_testDict = Desirialize<Dictionary<string, int>>(m_testDictJson);
+	//	}
+	//}
 
-	// 引数のオブジェクトをシリアライズして返す
-	private static string Serialize<T>(T obj)
-	{
-		BinaryFormatter bf = new BinaryFormatter();
-		MemoryStream  ms = new MemoryStream();
-		bf.Serialize(ms, obj);
-		return Convert.ToBase64String(ms.GetBuffer());
-	}
+	//// 引数のオブジェクトをシリアライズして返す
+	//private static string Serialize<T>(T obj)
+	//{
+	//	BinaryFormatter bf = new BinaryFormatter();
+	//	MemoryStream  ms = new MemoryStream();
+	//	bf.Serialize(ms, obj);
+	//	return Convert.ToBase64String(ms.GetBuffer());
+	//}
 
-	// 引数のテキストを指定されたクラスにデシリアライズして返す
-	private static T Desirialize<T>(string str)
-	{
-		BinaryFormatter bf = new BinaryFormatter();
-		MemoryStream ms = new MemoryStream(Convert.FromBase64String(str));
-		return (T)bf.Deserialize(ms);
-	}
+	//// 引数のテキストを指定されたクラスにデシリアライズして返す
+	//private static T Desirialize<T>(string str)
+	//{
+	//	BinaryFormatter bf = new BinaryFormatter();
+	//	MemoryStream ms = new MemoryStream(Convert.FromBase64String(str));
+	//	return (T)bf.Deserialize(ms);
+	//}
 
 	// ---- データを再読み込みする ----
-	public void Reload()
+	public List<ItemList> Reload()
 	{
 		JsonUtility.FromJsonOverwrite(GetJson(), this);
 
-		Stash_Test m_manager = GameObject.FindWithTag("stashManager").GetComponent<Stash_Test>();
-		m_manager.LoadItemList(m_sample);
+		return m_sample;
 	}
 
 	// データを読み込む
@@ -122,10 +121,9 @@ public class TestData_2 : ISerializationCallbackReceiver
 	}
 
 	// ---- データをJsonにして保存 ----
-	public void Save()
+	public void Save(List<ItemList> list)
 	{
-		Stash_Test m_manager = GameObject.FindWithTag("stashManager").GetComponent<Stash_Test>();
-		m_sample = m_manager.GetList();
+		m_sample = new List<ItemList>(list);
 		m_jsonText = JsonUtility.ToJson(this);
 		File.WriteAllText(GetFilePath(), m_jsonText);
 	}
