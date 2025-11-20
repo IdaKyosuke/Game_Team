@@ -6,15 +6,15 @@ using UnityEngine.SceneManagement;
 public class GameManager : SingletonBase<GameManager>
 {
 	// シーン切り替え先
-	[SerializeField] SceneAsset m_gameScene;
-	[SerializeField] SceneAsset m_lobbyScene;
-	[SerializeField] SceneAsset m_mapScene;
+	[SerializeField] string m_gameScene;
+	[SerializeField] string m_lobbyScene;
+	[SerializeField] string m_mapScene;
 
     // Start is called before the first frame update
     void Start()
     {
 		// 最初にロビーシーンを読み込む
-		SceneManager.LoadSceneAsync(m_lobbyScene.name, LoadSceneMode.Additive);
+		SceneManager.LoadSceneAsync(m_lobbyScene, LoadSceneMode.Additive);
 
 		// プレイヤー自身の名前を"Player"に設定する
 		PhotonNetwork.NickName = "Player";
@@ -26,18 +26,18 @@ public class GameManager : SingletonBase<GameManager>
 	public void StartGame()
 	{
 		// ゲームを読み込む
-		SceneManager.LoadSceneAsync(m_gameScene.name, LoadSceneMode.Additive);
-		SceneManager.LoadSceneAsync(m_mapScene.name, LoadSceneMode.Additive);
+		SceneManager.LoadSceneAsync(m_gameScene, LoadSceneMode.Additive);
+		SceneManager.LoadSceneAsync(m_mapScene, LoadSceneMode.Additive);
 		// ロビーシーンをアンロード
-		SceneManager.UnloadSceneAsync(m_lobbyScene.name);
+		SceneManager.UnloadSceneAsync(m_lobbyScene);
 	}
 
 	public void ReturnLobby()
 	{
 		PhotonNetwork.LeaveRoom();
 		// ロビーシーンを読み込む
-		SceneManager.LoadSceneAsync(m_lobbyScene.name, LoadSceneMode.Additive);
+		SceneManager.LoadSceneAsync(m_lobbyScene, LoadSceneMode.Additive);
 		// ゲームをアンロード
-		SceneManager.UnloadSceneAsync(m_gameScene.name);
+		SceneManager.UnloadSceneAsync(m_gameScene);
 	}
 }
