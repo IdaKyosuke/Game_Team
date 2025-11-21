@@ -1,12 +1,7 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
-using Unity.VisualScripting;
-using UnityEditorInternal;
 using UnityEngine;
-using static UnityEditor.Progress;
 
 [Serializable]
 public class SaveData
@@ -153,13 +148,15 @@ public class SaveData
 	// ---- データを全て削除し、初期化 ----
 	public void DeleteInventory()
 	{
+		m_inventoryItem.Clear();
 		m_jsonText = JsonUtility.ToJson(new SaveData());
-		ReloadInventory();
+		File.WriteAllText(GetFilePath(), m_jsonText);
 	}
 	public void DeleteStash()
 	{
+		m_stashItem.Clear();
 		m_jsonText = JsonUtility.ToJson(new SaveData());
-		ReloadStash();
+		File.WriteAllText(GetFilePath(), m_jsonText);
 	}
 
 	// ---- 保存先のパスを取得 ----

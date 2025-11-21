@@ -121,6 +121,7 @@ public class Create_Maze : MonoBehaviourPunCallbacks
 			}
 		}
 
+		m_playerSpawnPosList.Clear();
 		// プレイヤーのスポーンポジション設定
 		for (int i = 0; i < m_playerSpawnPosAmount; ++i)
 		{

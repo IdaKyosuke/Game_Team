@@ -2,6 +2,7 @@ using Photon.Pun;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
+using UnityEngine.SceneManagement;
 
 
 public struct Grid
@@ -146,6 +147,12 @@ public class StashManager : MonoBehaviourPunCallbacks
 			CreateInventory(GridType.Stash);
 		}
 		m_saveInstance = SaveData.Instance;
+
+		Load();
+		if(!SceneManager.GetSceneByName("LobbyScene").isLoaded)
+		{ 
+			m_saveInstance.DeleteInventory();
+		}
 	}
 
     // Update is called once per frame
@@ -166,25 +173,48 @@ public class StashManager : MonoBehaviourPunCallbacks
 			if (Input.GetKeyDown("1")) AddItemInventory();
 		}
 
-		if(Input.GetKeyDown("0"))
+		if (Input.GetKeyDown("0"))
 		{
 			// 現在のアイテムをセーブ
 			m_saveInstance.SaveInventory(m_itemList);
 		}
-		else if (Input.GetKeyDown("9"))
+		//else if (Input.GetKeyDown("9"))
+		//{
+		//	// 現在のアイテムを全て削除
+		//	ResetItemList();
+		//	// セーブしたアイテムをロード
+		//	m_itemList = new List<ItemList>(m_saveInstance.ReloadInventory());
+		//	Debug.Log("itemList[" + m_itemList.Count + "]");
+		//	int count = 0;
+		//	// リストをUIに反映
+		//	foreach (ItemList item in m_itemList)
+		//	{
+		//		CreateItem(count, item, GridType.Inventory);
+		//		count++;
+		//	}
+		//}
+	}
+
+	public void Save()
+	{
+		// 現在のアイテムをセーブ
+		m_saveInstance.SaveInventory(m_itemList);
+		Debug.Log("save");
+	}
+
+	public void Load()
+	{
+		// 現在のアイテムを全て削除
+		ResetItemList();
+		// セーブしたアイテムをロード
+		m_itemList = new List<ItemList>(m_saveInstance.ReloadInventory());
+		Debug.Log("itemList[" + m_itemList.Count + "]");
+		int count = 0;
+		// リストをUIに反映
+		foreach (ItemList item in m_itemList)
 		{
-			// 現在のアイテムを全て削除
-			ResetItemList();
-			// セーブしたアイテムをロード
-			m_itemList = new List<ItemList>(m_saveInstance.ReloadInventory());
-			Debug.Log("itemList[" + m_itemList.Count + "]");
-			int count = 0;
-			// リストをUIに反映
-			foreach (ItemList item in m_itemList)
-			{
-				CreateItem(count, item, GridType.Inventory);
-				count++;
-			}
+			CreateItem(count, item, GridType.Inventory);
+			count++;
 		}
 	}
 

@@ -1,44 +1,53 @@
 using Cysharp.Threading.Tasks;
 using Photon.Pun;
+using System.Xml;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 public class PlayerController : MonoBehaviourPunCallbacks
 {
-    private const float MouseSensitivity = 140.0f;
+	private const float MouseSensitivity = 140.0f;
 
-    [SerializeField] Camera m_mainCamera;
+	[SerializeField] Camera m_mainCamera;
 	[SerializeField] Camera m_mapCamera;
-    [SerializeField] Animator[] m_animator;
-    [SerializeField] float m_jumpPower;
-    [SerializeField] float m_gravity;
-    [SerializeField] Info_InventorySize m_inventortSize;
-    [SerializeField] PlayerAnime m_playerAnim;			// アニメーション管理用オブジェクト
-    [SerializeField] GameObject m_spine;
+	[SerializeField] Animator[] m_animator;
+	[SerializeField] float m_jumpPower;
+	[SerializeField] float m_gravity;
+	[SerializeField] Info_InventorySize m_inventortSize;
+	[SerializeField] PlayerAnime m_playerAnim;          // アニメーション管理用オブジェクト
+	[SerializeField] GameObject m_spine;
 	[SerializeField] Weapon_Collider m_weapon;
 
+	private int m_playerId;
 	private CharacterController m_characterController;  // CharacterController型の変数
-    private PlayerStatus m_status;
-    private StashController m_stashController;
-    private Condition m_condition;
-    private Vector3 m_moveDirection;
-    private float m_rotateX;
-    private bool m_isDeath;
+	private PlayerStatus m_status;
+	private StashController m_stashController;
+	private Condition m_condition;
+	private Vector3 m_moveDirection;
+	private float m_rotateX;
+	private bool m_isDeath;
+	private bool m_setPos;
 
-    public bool IsDeath => m_isDeath;
+	private GameManager m_gameManager = null;
 
-    public Info_InventorySize InventortSize => m_inventortSize;
+	public bool IsDeath => m_isDeath;
 
-    public PlayerStatus Status => m_status;
+	public Info_InventorySize InventortSize => m_inventortSize;
+
+	public PlayerStatus Status => m_status;
 
     private void Awake()
     {
+		m_setPos = false;
         m_characterController = GetComponent<CharacterController>();
         m_status = GetComponent<PlayerStatus>();
         m_stashController = GetComponent<StashController>();
         m_condition = GetComponent<Condition>();
         m_isDeath = false;
         m_characterController.enabled = false;
-    }
+
+		m_gameManager = GameManager.Instance;
+	}
 
     async void Start()
     {
@@ -53,6 +62,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
     [PunRPC]
 	void RequestPlayerSpawnPos(int viewId)
 	{
+		Debug.Log("プレイヤーがポスを受け取る" + Create_Maze.GetPlayerSpawnPos());
 		PhotonView.Find(viewId).RPC(nameof(SetPlayerPos), PhotonView.Find(viewId).Owner, Create_Maze.GetPlayerSpawnPos().position);
 	}
 
@@ -62,6 +72,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
 		pos = new Vector3(0, 1, 0);
 		transform.position = pos;
         m_characterController.enabled = true;
+		m_setPos = true;
 		
 		//Debug.Log(PhotonNetwork.IsMasterClient + ":" + photonView.ViewID);
 	}
@@ -87,6 +98,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
 	void Update()
 	{
+		if (!m_setPos) return;
         if (!photonView.IsMine) return;
 		if (m_isDeath) return;
 
@@ -110,11 +122,19 @@ public class PlayerController : MonoBehaviourPunCallbacks
             m_animator[0].SetBool("attack", true);
             m_animator[1].SetBool("attack", true);
         }
+
+		// デバッグ用
+		if(Input.GetKeyDown("5"))
+		{
+			m_stashController.Save();
+			m_gameManager.ReturnLobby();
+		}
     }
 
     private void FixedUpdate()
-    {
-        if (!photonView.IsMine) return;
+	{
+		if (!m_setPos) return;
+		if (!photonView.IsMine) return;
 		if (m_isDeath) return;
 
         bool isMove = false;
@@ -152,8 +172,9 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
     void LateUpdate()
 	{
-        //自身以外は移動不可
-        if (!photonView.IsMine) return;
+		if (!m_setPos) return;
+		//自身以外は移動不可
+		if (!photonView.IsMine) return;
 
 		// 死んでたら移動不可
 		if (m_isDeath) return;
@@ -178,26 +199,14 @@ public class PlayerController : MonoBehaviourPunCallbacks
         m_mainCamera.transform.localRotation = Quaternion.Euler(m_rotateX, 0f, 0f);
     }
 
-    public void OnDeath()
-    {
-        m_animator[0].SetTrigger("Death");
+	[PunRPC]
+    public void OnDeathPlayer()
+	{
+		m_isDeath = true;
+		m_animator[0].SetTrigger("Death");
         m_animator[1].SetTrigger("Death");
     }
 
-    public override void OnLeftRoom()
-	{
-		Debug.Log("LeftRoom");
-		photonView.RPC(nameof(RequestOnDeathPlayer), photonView.Owner);
-		base.OnLeftRoom();
-	}
-
-	[PunRPC]
-	void RequestOnDeathPlayer()
-	{
-		Debug.Log("死んだ : " + photonView);
-		m_isDeath = true;
-		OnDeath();
-	}
 
 	[PunRPC]
 	void AttackAnime()
@@ -236,5 +245,16 @@ public class PlayerController : MonoBehaviourPunCallbacks
 	void Damage(int power, int attackTypeNum, int ConditionTypeNum, int grantRate)
 	{
         m_status.Damage(power, (AttackType)attackTypeNum, ConditionTypeNum, grantRate);
+	}
+
+	[PunRPC]
+	void SetPlayerId(int playerId)
+	{
+		m_playerId = playerId;
+	}
+
+	public int GetPlayerId()
+	{
+		return m_playerId; 
 	}
 }

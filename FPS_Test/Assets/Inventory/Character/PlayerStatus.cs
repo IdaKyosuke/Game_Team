@@ -154,8 +154,8 @@ public class PlayerStatus : MonoBehaviourPunCallbacks
         {
 			Debug.Log("‘Ì—Í‚ª0‚É‚È‚Á‚½");
 			//Ž€–S’Ê’m
-			photonView.RPC("RequestOnDeathPlayer", RpcTarget.All);
-			photonView.RPC("RequestOnDeathStash", RpcTarget.All);
+			photonView.RPC("OnDeathPlayer", RpcTarget.All);
+			photonView.RPC("OnDeathStash", RpcTarget.All);
 			m_onDeath?.Invoke();
         }
         else
@@ -180,8 +180,8 @@ public class PlayerStatus : MonoBehaviourPunCallbacks
         if (m_currentStatus.hp <= 0)
         {
 			//Ž€–S’Ê’m
-			photonView.RPC("RequestOnDeathPlayer", RpcTarget.All);
-			photonView.RPC("RequestOnDeathStash", RpcTarget.All);
+			photonView.RPC("OnDeathPlayer", RpcTarget.All);
+			photonView.RPC("OnDeathStash", RpcTarget.All);
 			m_onDeath?.Invoke();
         }
         else

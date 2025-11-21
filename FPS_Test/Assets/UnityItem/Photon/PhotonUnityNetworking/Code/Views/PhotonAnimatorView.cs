@@ -421,9 +421,6 @@ namespace Photon.Pun
                             if (!TriggerUsageWarningDone)
                             {
                                 TriggerUsageWarningDone = true;
-                                Debug.Log("PhotonAnimatorView: When using triggers, make sure this component is last in the stack.\n" +
-                                          "If you still experience issues, implement triggers as a regular RPC \n" +
-                                          "or in custom IPunObservable component instead",this);
                             
                             }
                             // here we can't rely on the current real state of the trigger, we might have missed its raise

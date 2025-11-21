@@ -15,7 +15,7 @@ public class StashController : MonoBehaviourPunCallbacks
 	[SerializeField] StashManager m_manager;
 	[SerializeField] bool m_isPlayer = true;
 	[SerializeField] Transform m_camera;
-	private GameObject m_miniMap;
+	private GameObject m_miniMap = null;
 
 	private Rigidbody m_rb;         // レイの当たった敵を保管する用
     private GameObject m_rayTarget;
@@ -28,7 +28,6 @@ public class StashController : MonoBehaviourPunCallbacks
     void Awake()
     {
 		m_uiParentCanvs.SetActive(true);
-		if (!photonView.IsMine) return;
 		m_rb = GetComponent<Rigidbody>();
     }
 
@@ -50,7 +49,7 @@ public class StashController : MonoBehaviourPunCallbacks
 			//前方にRayを飛ばす
 			if (Physics.Raycast(m_camera.position, m_camera.forward, out var hit))
 			{
-				Debug.Log("Hit : " + hit.transform.name);
+				//Debug.Log("Hit : " + hit.transform.name);
 				//Eキーが押されていなければ無視
 				if (Input.GetKeyDown("e"))
 				{
@@ -89,7 +88,10 @@ public class StashController : MonoBehaviourPunCallbacks
 
 			if (Input.GetKeyDown("tab"))
 			{
-				m_miniMap.SetActive(m_stashManager.GetComponent<StashManager>().ManageUiActiveInfo());
+				if (m_miniMap != null)
+				{
+					m_miniMap.SetActive(m_stashManager.GetComponent<StashManager>().ManageUiActiveInfo());
+				}
 			}
 
 			if(m_stashManager.GetComponent<StashManager>().IsOpenInventory())
@@ -139,9 +141,11 @@ public class StashController : MonoBehaviourPunCallbacks
         Debug.Log("Damage!!!!!!!");
     }
 
-    public void OnDeath()
+	[PunRPC]
+    public void OnDeathStash()
     {
-        Debug.Log("Death!!!!!!!");
+		m_stashManager.GetComponent<StashManager>().Save();
+		Debug.Log("death");
 		m_isDeath = true;
     }
 
@@ -170,16 +174,8 @@ public class StashController : MonoBehaviourPunCallbacks
 		return m_manager;
 	}
 
-	public override void OnLeftRoom()
+	public void Save()
 	{
-		Debug.Log("LeftRoom!");
-		photonView.RPC(nameof(RequestOnDeathStash), photonView.Owner);
-		base.OnLeftRoom();
-	}
-
-	[PunRPC]
-	void RequestOnDeathStash()
-	{
-		m_isDeath = true;
+		m_manager.Save();
 	}
 }

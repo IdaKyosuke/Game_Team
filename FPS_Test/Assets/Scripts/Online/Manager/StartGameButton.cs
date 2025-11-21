@@ -18,6 +18,8 @@ public class StartGameButton : MonoBehaviourPunCallbacks
 	bool clickStart = false;
 	bool isProcessingRoom = false;
 
+	[SerializeField] StashManager m_stashManager = null;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -33,6 +35,7 @@ public class StartGameButton : MonoBehaviourPunCallbacks
 			// ボタンを押して部屋に入れた場合
 			if (TryJoinRandomRoom())
 			{
+				m_stashManager.Save();
 				clickStart = true;
 				m_startButtonText.text = "STOP";
 			}

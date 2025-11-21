@@ -34,10 +34,14 @@ public class GameManager : SingletonBase<GameManager>
 
 	public void ReturnLobby()
 	{
+		Cursor.visible = true;
+		Cursor.lockState = CursorLockMode.None;
+
 		PhotonNetwork.LeaveRoom();
 		// ロビーシーンを読み込む
 		SceneManager.LoadSceneAsync(m_lobbyScene, LoadSceneMode.Additive);
 		// ゲームをアンロード
 		SceneManager.UnloadSceneAsync(m_gameScene);
+		SceneManager.UnloadSceneAsync(m_mapScene);
 	}
 }
