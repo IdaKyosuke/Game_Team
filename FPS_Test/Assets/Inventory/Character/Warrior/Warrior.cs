@@ -16,7 +16,7 @@ public class Warrior : Job
 
     protected override void Identity()
     {
-        //固有アクション
+        //固有アクションなし
     }
 
     public override void Attack()

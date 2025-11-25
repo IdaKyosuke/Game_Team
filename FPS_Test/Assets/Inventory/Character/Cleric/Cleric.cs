@@ -9,15 +9,11 @@ public class Cleric : Job
         Initialize(JobType.Cleric, AttackType.Cleric);
     }
 
-    private void Update()
-    {
-        
-    }
-
     protected override void Identity()
     {
         //固有アクション
     }
+
     public override void Attack()
     {
         //攻撃処理

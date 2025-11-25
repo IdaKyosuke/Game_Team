@@ -11,6 +11,13 @@ public enum JobType
     Length,
 }
 
+public enum AttackType
+{
+    Physical,   //物理
+    Magical,    //魔法
+    Cleric,     //エネミー特攻
+}
+
 public abstract class Job : MonoBehaviour
 {
     [SerializeField, Range(0, 2)] int m_skillIndex;
@@ -19,8 +26,6 @@ public abstract class Job : MonoBehaviour
 
     protected JobType m_jobType;
     protected AttackType m_attackType;
-
-    public JobType JobType => m_jobType;
 
     public AttackType AttackType => m_attackType;
 

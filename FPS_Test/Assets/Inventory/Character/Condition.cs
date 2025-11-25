@@ -85,7 +85,7 @@ public class Condition : MonoBehaviour
 
             //割合ダメージ
             int damage = m_status.Health / m_value;
-            m_status.ConditionDamage(damage);
+            m_status.PenetrationDamage(damage);
 
             Debug.Log("Burn : HP = " + m_status.Health);
         }
@@ -116,7 +116,7 @@ public class Condition : MonoBehaviour
         {
             yield return new WaitForSeconds(m_interval);
 
-            m_status.ConditionDamage(m_value);
+            m_status.PenetrationDamage(m_value);
             Debug.Log("Poison : HP = " + m_status.Health);
         }
 
@@ -129,7 +129,7 @@ public class Condition : MonoBehaviour
         //ダメージを与えて一定時間移動不可
 
         //自身のレベルに応じた即時ダメージ
-        m_status.ConditionDamage(m_value * m_status.Value.Level);
+        m_status.PenetrationDamage(m_value * m_status.Value.Level);
 
         //一定時間待機
         yield return new WaitForSeconds(m_interval);

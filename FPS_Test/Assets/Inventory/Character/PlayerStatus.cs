@@ -169,7 +169,7 @@ public class PlayerStatus : MonoBehaviourPunCallbacks
         }
     }
 
-    public void ConditionDamage(int value)
+    public void PenetrationDamage(int value)
     {
         //Šù‚É€‚ñ‚Å‚¢‚é‚È‚çƒ_ƒ[ƒW‚ğ—^‚¦‚È‚¢
         if (m_currentStatus.hp <= 0) return;
