@@ -16,7 +16,7 @@ public class Wizard : Job
         m_elapsedTime = 0;
 
         //パッシブスキルの初期化
-        Initialize(JobType.Wizard);
+        Initialize(JobType.Wizard, AttackType.Physical);
     }
 
     private void Update()
@@ -31,6 +31,16 @@ public class Wizard : Job
             m_status.Current.mp += 2;
             m_elapsedTime = 0;
         }
+    }
+
+    protected override void Identity()
+    {
+        //固有アクション
+    }
+
+    public override void Attack()
+    {
+        //攻撃処理
     }
 
     protected override void Passive1()

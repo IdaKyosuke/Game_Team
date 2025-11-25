@@ -11,12 +11,18 @@ public class Warrior : Job
         m_status = GetComponent<PlayerStatus>();
 
         //パッシブスキルの初期化
-        Initialize(JobType.Warrior);
+        Initialize(JobType.Warrior, AttackType.Physical);
     }
 
-    private void Update()
+    protected override void Identity()
     {
+        //固有アクション
+    }
 
+    public override void Attack()
+    {
+        //攻撃処理
+        Debug.Log("プレイヤーの攻撃");
     }
 
     protected override void Passive1()

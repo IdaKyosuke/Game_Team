@@ -17,10 +17,10 @@ public class Thief : Job
         m_condition.Grant = ConditionType.Poison;
 
         //パッシブスキルの初期化
-        Initialize(JobType.Thief);
+        Initialize(JobType.Thief, AttackType.Physical);
     }
 
-    private void Update()
+    protected override void Identity()
     {
         //固有アクション
         if (Input.GetKeyDown(KeyCode.Q))
@@ -28,6 +28,11 @@ public class Thief : Job
             //罠の設置
             Instantiate(m_trap, transform.position, Quaternion.identity);
         }
+    }
+
+    public override void Attack()
+    {
+        //攻撃処理
     }
 
     protected override void Passive1()

@@ -1,6 +1,7 @@
 using Cysharp.Threading.Tasks;
 using Photon.Pun;
 using System.Xml;
+using Unity.Jobs;
 using UnityEngine;
 using UnityEngine.Rendering;
 
@@ -23,6 +24,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
 	private PlayerStatus m_status;
 	private StashController m_stashController;
 	private Condition m_condition;
+	private Job m_job;
 	private Vector3 m_moveDirection;
 	private float m_rotateX;
 	private bool m_isDeath;
@@ -43,6 +45,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
         m_status = GetComponent<PlayerStatus>();
         m_stashController = GetComponent<StashController>();
         m_condition = GetComponent<Condition>();
+        m_job = GetComponent<Job>();
         m_isDeath = false;
         m_characterController.enabled = false;
 
@@ -77,19 +80,6 @@ public class PlayerController : MonoBehaviourPunCallbacks
 		//Debug.Log(PhotonNetwork.IsMasterClient + ":" + photonView.ViewID);
 	}
 
-	private bool CheckGrounded()
-	{
-		/*
-		// 放つ光線の初期位置と姿勢
-		// 若干身体にめり込ませた位置から発射しないと正しく判定できない時がある
-		var ray = new Ray(origin: transform.position + Vector3.up * rayOffset, direction: Vector3.down);
-
-		// Raycastがhitするかどうかで判定
-		return Physics.Raycast(ray, 2);
-		*/
-		return m_characterController.isGrounded;
-	}
-
 	private void MiniMap()
 	{
 		int layer = transform.position.y < 10 ? transform.position.y < 5 ? 1 << 6 : 1 << 7 : 1 << 8;
@@ -105,7 +95,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
         MiniMap();
 
         //ジャンプ
-        if (CheckGrounded() && Input.GetButton("Jump"))
+        if (m_characterController.isGrounded && Input.GetButton("Jump"))
         {
             m_moveDirection.y = m_jumpPower;
         }
@@ -116,9 +106,9 @@ public class PlayerController : MonoBehaviourPunCallbacks
             // 攻撃中は無視
             if (m_playerAnim.IsAttack()) return;
 
+			m_job.Attack();
+
             //攻撃アニメーション
-            //m_animator[0].SetTrigger("Attack1");
-            //m_animator[1].SetTrigger("Attack1");
             m_animator[0].SetBool("attack", true);
             m_animator[1].SetBool("attack", true);
         }
@@ -235,7 +225,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
 		view.RPC(nameof(Damage), view.Owner,
 			power,
-			(int)m_weapon.AttackType,
+			(int)m_job.AttackType,
 			(int)condition.Grant,
 			condition.Rate);
 	}

@@ -18,8 +18,19 @@ public abstract class Job : MonoBehaviour
     private Action[] actions;
 
     protected JobType m_jobType;
+    protected AttackType m_attackType;
 
-    public void Initialize(JobType jobType)
+    public JobType JobType => m_jobType;
+
+    public AttackType AttackType => m_attackType;
+
+    private void Update()
+    {
+        //固有アクション
+        Identity();
+    }
+
+    public void Initialize(JobType jobType, AttackType attackType)
     {
         //パッシブスキルの登録
         actions = new Action[]
@@ -34,7 +45,14 @@ public abstract class Job : MonoBehaviour
 
         //ジョブタイプの設定
         m_jobType = jobType;
+        m_attackType = attackType;
     }
+
+    //固有アクション
+    protected abstract void Identity();
+
+    //攻撃
+    public abstract void Attack();
 
     //各ジョブ固有のパッシブスキルは派生先で実装する
     protected abstract void Passive1();

@@ -58,6 +58,7 @@ public class CreateAvatar : MonoBehaviourPunCallbacks
 		view.GetComponent<StashController>().enabled = true;
 		view.GetComponent<PlayerController>().enabled = true;
 		view.GetComponent<PlayerSetup>().enabled = true;
+		view.GetComponent<Job>().enabled = true;
     }
 
 	public override void OnPlayerLeftRoom(Player otherPlayer)

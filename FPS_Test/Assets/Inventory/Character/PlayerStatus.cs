@@ -128,6 +128,10 @@ public class PlayerStatus : MonoBehaviourPunCallbacks
             case AttackType.Magical:
                 damage = (power * 2) - (m_status.magicDefense / 3);
                 break;
+
+            case AttackType.Cleric:
+                //自身がエネミーの場合は被ダメージを強化
+                break;
         }
 
         //マイナスのダメージは与えない
