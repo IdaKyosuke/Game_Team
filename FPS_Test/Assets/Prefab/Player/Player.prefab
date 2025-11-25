@@ -1212,7 +1212,7 @@ MonoBehaviour:
   m_ScaleFactor: 1
   m_ReferenceResolution: {x: 800, y: 600}
   m_ScreenMatchMode: 0
-  m_MatchWidthOrHeight: 0.5
+  m_MatchWidthOrHeight: 0.2
   m_PhysicalUnit: 3
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
@@ -1726,7 +1726,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7136094980449142664}
   - component: {fileID: 415793613904726974}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: MoveItem_Transform
   m_TagString: moveItemTransform
   m_Icon: {fileID: 0}
@@ -1766,7 +1766,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_stashManager: {fileID: 3627012827660075209}
   m_equipmentManager: {fileID: 227558570196778935}
-  m_camera: {fileID: 0}
+  m_camera: {fileID: 7540617520341220029}
 --- !u!1 &739129297551834005
 GameObject:
   m_ObjectHideFlags: 0
@@ -8018,6 +8018,7 @@ MonoBehaviour:
   m_inventoryUiPrefab: {fileID: 6813400088616159083, guid: dda91aaaff4132f4cb8aa283e485c781,
     type: 3}
   m_inventoryInfo: {fileID: 0}
+  m_itemList: []
   m_inventoryPos: {fileID: 3759137861553446726}
   m_stashPos: {fileID: 6339233544514925068}
   m_infoStash: {fileID: 11400000, guid: 84e296e4b3b983a4d8436ec81f82a876, type: 2}
@@ -9416,7 +9417,7 @@ GameObject:
   - component: {fileID: 1746420569761325855}
   - component: {fileID: 279744557359743592}
   - component: {fileID: 2685332305101455341}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: ForTransform
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9453,7 +9454,7 @@ Canvas:
   m_Enabled: 1
   serializedVersion: 3
   m_RenderMode: 1
-  m_Camera: {fileID: 4928813134907156081}
+  m_Camera: {fileID: 7540617520341220029}
   m_PlaneDistance: 0.1
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
@@ -9461,7 +9462,7 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_VertexColorAlwaysGammaSpace: 0
-  m_AdditionalShaderChannelsFlag: 0
+  m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
   m_SortingOrder: 1
@@ -16469,7 +16470,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3990211276493450782}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: UiParent
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -16489,8 +16490,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 5639226679069504848}
   - {fileID: 8422922583587159402}
+  - {fileID: 5639226679069504848}
   m_Father: {fileID: 4405870202886141769}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7313798257447635423
