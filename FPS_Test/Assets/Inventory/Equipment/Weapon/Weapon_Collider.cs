@@ -7,30 +7,39 @@ public class Weapon_Collider : MonoBehaviourPunCallbacks
 	[SerializeField] AttackType m_attackType;
 	private Dictionary<int, bool> m_hitMasterInfo { get; } = new Dictionary<int, bool>();
 	[SerializeField] GameObject m_hitEffect;
-	private BoxCollider m_boxCollider;
+	private Collider m_collider;
 	private int m_parentID;
 
-	private void Start()
+	private GameObject m_parent = null;
+
+	public GameObject Parent
+	{
+		get { return m_parent; }
+		set { m_parent = value; }
+    }
+
+    private void Start()
 	{
 		// 自分の当たり判定を保持
-		m_boxCollider = GetComponent<BoxCollider>();
-		m_boxCollider.enabled = false;
+		m_collider = GetComponent<Collider>();
+		m_collider.enabled = false;
 
-		m_parentID = transform.root.gameObject.GetInstanceID();
-	}
+		if(m_parent == null) m_parent = transform.root.gameObject;
+		m_parentID = m_parent.gameObject.GetInstanceID();
+    }
 
 	public void StartAttack()
 	{
 		// リストをリセット
 		m_hitMasterInfo.Clear();
-		m_boxCollider.enabled = true;
+		m_collider.enabled = true;
 		//Debug.Log("剣のコライダーは今" + m_boxCollider.enabled);
 	}
 
 	public void EndAttack()
 	{
 		//Debug.Log("コライダーfalse");
-		m_boxCollider.enabled = false;
+		m_collider.enabled = false;
 	}
 
 	public AttackType AttackType
@@ -62,7 +71,7 @@ public class Weapon_Collider : MonoBehaviourPunCallbacks
 			if (otherPlayer.GetComponent<PlayerController>().IsDeath) return;
 
 			// 当たった場所にエフェクトを表示
-			Vector3 hitPos = other.ClosestPointOnBounds(GetComponent<BoxCollider>().bounds.center);
+			Vector3 hitPos = other.ClosestPointOnBounds(GetComponent<Collider>().bounds.center);
 			Quaternion quaternion = Quaternion.identity;
 			quaternion.x = hitPos.x - other.transform.position.x;
 			quaternion.z = hitPos.z - other.transform.position.z;

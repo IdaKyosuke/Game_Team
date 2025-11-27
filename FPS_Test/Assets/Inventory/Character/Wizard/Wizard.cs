@@ -45,17 +45,16 @@ public class Wizard : Job
     public override void Attack()
     {
         //UŒ‚ˆ—
-        Debug.Log("Wizard‚ÌUŒ‚ŠJn");
 
         //–‚’e¶¬
         GameObject ball = Instantiate(m_magicBall, m_camera.transform.position, m_camera.transform.rotation);
+        ball.GetComponent<Weapon_Collider>().Parent = gameObject;
         ball.GetComponent<MagicAttack>().Init(m_camera.transform.forward);
     }
 
     public override void AttackEnd()
     {
         //UŒ‚I—¹ˆ—
-        Debug.Log("Wizard‚ÌUŒ‚I—¹");
     }
 
     protected override void Passive1()

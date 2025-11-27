@@ -156,7 +156,6 @@ public class PlayerStatus : MonoBehaviourPunCallbacks
         //‘Ì—Í‚ÌŠm”F
         if (m_currentStatus.hp <= 0)
         {
-			Debug.Log("‘Ì—Í‚ª0‚É‚È‚Á‚½");
 			//Ž€–S’Ê’m
 			photonView.RPC("OnDeathPlayer", RpcTarget.All);
 			photonView.RPC("OnDeathStash", RpcTarget.All);
