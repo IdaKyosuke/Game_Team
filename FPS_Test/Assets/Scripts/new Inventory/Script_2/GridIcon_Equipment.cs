@@ -12,7 +12,7 @@ public enum EquipmentType
 	Length,
 }
 
-[DefaultExecutionOrder(-99)]
+[DefaultExecutionOrder(-40)]
 public class GridIcon_Equipment : MonoBehaviour
 {
 	private bool m_onPointer = false;

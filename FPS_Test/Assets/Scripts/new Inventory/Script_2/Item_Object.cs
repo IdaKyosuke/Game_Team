@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class Item_Object : MonoBehaviour
 {
@@ -60,11 +61,6 @@ public class Item_Object : MonoBehaviour
 			iconParent = transform.parent;
 		}
 
-		//if(!m_isSetManager)
-		//{
-		//	SetBaseInfo();
-		//}
-
 		// スケールを1にする
 		rectTransform.localScale = Vector3.one;
 	}
@@ -105,7 +101,6 @@ public class Item_Object : MonoBehaviour
 	// ショートカット移動
 	private void QuickMove()
 	{
-		Debug.Log(m_inventoryManager);
 		// 現在の自分の入っている枠のタイプに応じて入れ替える
 		m_inventoryManager.GetComponent<StashManager>().QuickMoveItem(m_gridType, gameObject, m_isEquip);
 	}
@@ -131,44 +126,68 @@ public class Item_Object : MonoBehaviour
 		// 装備枠に入っていないとき
 		if(!m_isEquip)
 		{
-			// これまで入っていたマス目を解放
-			m_inventoryManager.GetComponent<StashManager>().MoveItem(
-				gameObject,
-				m_pos, 
-				GetSize(),
-				false, 
-				m_gridType
-				);
+			Release();
 		}
 	}
 
-    // アイテムを持ち上げる際の動き
-    public void PointerDown()
+	// これまで入っていたマス目を解放
+	private void Release()
 	{
-		Debug.Log("ちんちん");
+		m_inventoryManager.GetComponent<StashManager>().MoveItem(gameObject, m_pos, GetSize(), false, m_gridType);
+	}
+
+	// アイテムを持ち上げる際の動き
+	public void PointerDown()
+	{
 		if (!Input.GetMouseButtonDown(0)) return;
 		if (m_quickMove || m_isDrag || m_quickEquip) return;
+		if (m_inventoryManager.GetComponent<StashManager>().IsBuyMode())
+		{
+			Debug.Log("枠のタイプ[ " + m_gridType + " ]");
+			// 購入モード
+			if (m_gridType == GridType.Stash)
+			{
+				if (m_isEquip) return;
+				// 購入モードの時は追従しないようにする
+				m_inventoryManager.GetComponent<StashManager>().SetBuyItemInfo(
+					GetComponent<Image>().sprite,
+					name,
+					GetValue(),
+					m_index
+					);
 
-		if(Input.GetKey("left ctrl"))
-		{
-			// ショートカット開始
-			m_quickMove = true;
-		}
-		else if(Input.GetKey("left alt") && m_equipmentType != EquipmentType.None)
-		{
-			// 高速装備する
-			m_quickEquip = true;
+				ReadyMove();
+			}
 		}
 		else
 		{
-			// マウスカーソルの追従開始
-			m_isDrag = true;
+			if (Input.GetKey("left ctrl"))
+			{
+				// ショートカット開始
+				m_quickMove = true;
+			}
+			else if(Input.GetKey("left alt") && m_equipmentType != EquipmentType.None)
+			{
+				// 高速装備する
+				m_quickEquip = true;
+			}
+			else
+			{
+				// マウスカーソルの追従開始
+				m_isDrag = true;
+			}
+			ReadyMove();
 		}
-		ReadyMove();
 	}
 
 	public void PointerUp(bool canSet, Transform nextPos = null)
 	{
+
+		// 購入モード && 購入予定になっている時はここまでしか走らない
+		if (m_isSelected && m_inventoryManager.GetComponent<StashManager>().IsBuyMode()) return;
+		// 当たり判定用の画像をアクティブにする
+		m_collider.SetActive(true);
+
 		// マウスカーソルの追従を終了
 		m_isDrag = false;
 		// クイック移動状態を終了
@@ -179,30 +198,46 @@ public class Item_Object : MonoBehaviour
 		if (canSet)
 		{
 			// 移動可能
-			// 移動先の枠を親オブジェクトに設定
-			SetParentTransform(nextPos);
-			rectTransform.anchoredPosition = Vector2.zero;
+			MoveItem(nextPos);
 		}
 		else
 		{
 			// 移動不可能
-			// 元あった位置に戻る
-			SetParentTransform(iconParent);
-			rectTransform.anchoredPosition = prevPos;
-			if(!m_isEquip)
-			{
-				// 解放したマス目を埋めなおす
-				m_inventoryManager.GetComponent<StashManager>().MoveItem(
-					gameObject, 
-					m_pos, 
-					GetSize(), 
-					true,
-					m_gridType
-					);
-			}
+			ResetItem();
 		}
+	}
+
+	public void MoveItem(Transform nextPos)
+	{
+		// 移動先の枠を親オブジェクトに設定
+		SetParentTransform(nextPos);
+		rectTransform.anchoredPosition = Vector2.zero;
+	}
+
+	public void ResetItem()
+	{
 		// 当たり判定用の画像をアクティブにする
 		m_collider.SetActive(true);
+		// 元あった位置に戻る
+		SetParentTransform(iconParent);
+		rectTransform.anchoredPosition = prevPos;
+		if (!m_isEquip)
+		{
+			// 解放したマス目を埋めなおす
+			FillGrid();
+		}
+	}
+
+	// 解放したマス目を埋めなおす
+	public void FillGrid()
+	{
+		m_inventoryManager.GetComponent<StashManager>().MoveItem(
+			gameObject,
+			m_pos,
+			GetSize(),
+			true,
+			m_gridType
+			);
 	}
 
 	// ScreenPositionからlocalPositionへの変換関数

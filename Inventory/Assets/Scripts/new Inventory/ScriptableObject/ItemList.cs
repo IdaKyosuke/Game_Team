@@ -59,10 +59,21 @@ public class ItemList : ScriptableObject
 	{
 		m_activeObject = obj;
 	}
+	// アクティブなオブジェクトを取得
+	public GameObject GetActiveObject()
+	{
+		return m_activeObject;
+	}
+
 	// アクティブなオブジェクトのインデックスを変更する
 	public void ChangeIndex(int index)
 	{
 		m_activeObject.GetComponent<Item_Object>().ChangeIndex(index);
 	}
-	
+
+	// アクティブなアイテムを削除する
+	public void DeleteActiveObject()
+	{
+		m_activeObject.GetComponent<Item_Object>().Remove();
+	}
 }

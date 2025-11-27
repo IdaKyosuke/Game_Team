@@ -15,6 +15,7 @@ public enum ConditionType
 public class Condition : MonoBehaviour
 {
     [SerializeField] ConditionData m_conditionData;
+    [SerializeField] GameObject[] m_conditionUI;
 
     private ConditionType m_condition;      //自身の状態
     private ConditionType m_grantCondition; //相手に付与可能な状態異常
@@ -26,6 +27,8 @@ public class Condition : MonoBehaviour
     private Action[] m_onConditions;
 
     public ConditionType Current => m_condition;
+
+    public int Rate(ConditionType type) => m_conditionData.ConditionAbility[(int)type].grantRate;
 
     public ConditionType Grant
     { 
@@ -56,6 +59,9 @@ public class Condition : MonoBehaviour
 
     public void Init(ConditionType conditionType)
     {
+        //すでに状態異常の場合は処理しない
+        if (m_condition != ConditionType.None) return;
+
         //状態異常のデータを取得
         m_condition = conditionType;
         m_count = m_conditionData.ConditionAbility[(int)m_condition].triggerCount;
@@ -64,6 +70,9 @@ public class Condition : MonoBehaviour
 
         //状態異常の処理
         m_onConditions[(int)m_condition]?.Invoke();
+
+        //UI表示
+        m_conditionUI[(int)m_condition].SetActive(true);
     }
 
     private IEnumerator Burn()
@@ -76,25 +85,27 @@ public class Condition : MonoBehaviour
 
             //割合ダメージ
             int damage = m_status.Health / m_value;
-            //m_status.Damage(damage);
+            m_status.ConditionDamage(damage);
 
             Debug.Log("Burn : HP = " + m_status.Health);
         }
 
+        m_conditionUI[(int)m_condition].SetActive(false);
         m_condition = ConditionType.None;
     }
 
     private IEnumerator Frost()
     {
         //移動速度低下
-        m_status.Value.moveSpeed -= m_value;
+        m_status.Value.moveSpeed /= m_value;
 
         //一定時間待機
         yield return new WaitForSeconds(m_interval);
 
         //移動速度を元に戻す
-        m_status.Value.moveSpeed += m_value;
+        m_status.Value.moveSpeed *= m_value;
 
+        m_conditionUI[(int)m_condition].SetActive(false);
         m_condition = ConditionType.None;
     }
 
@@ -105,10 +116,11 @@ public class Condition : MonoBehaviour
         {
             yield return new WaitForSeconds(m_interval);
 
-            //m_status.Damage(m_value);
+            m_status.ConditionDamage(m_value);
             Debug.Log("Poison : HP = " + m_status.Health);
         }
 
+        m_conditionUI[(int)m_condition].SetActive(false);
         m_condition = ConditionType.None;
     }
 
@@ -117,11 +129,12 @@ public class Condition : MonoBehaviour
         //ダメージを与えて一定時間移動不可
 
         //自身のレベルに応じた即時ダメージ
-        //m_status.Damage(m_value * m_status.Value.Level / 100);
+        m_status.ConditionDamage(m_value * m_status.Value.Level);
 
         //一定時間待機
         yield return new WaitForSeconds(m_interval);
 
+        m_conditionUI[(int)m_condition].SetActive(false);
         m_condition = ConditionType.None;
     }
 
@@ -136,6 +149,7 @@ public class Condition : MonoBehaviour
             Debug.Log("Regen : HP = " + m_status.Health);
         }
 
+        m_conditionUI[(int)m_condition].SetActive(false);
         m_condition = ConditionType.None;
     }
 }

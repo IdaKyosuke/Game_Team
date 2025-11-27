@@ -45,7 +45,6 @@ public class GridIcon : MonoBehaviour
 		// ©•ª‚Ìã‚Åƒhƒƒbƒv‚³‚ê‚½‚Æ‚«
 		if(Input.GetMouseButtonUp(0) && m_onPointer)
 		{
-			//GameObject.FindWithTag("inventoryManager").GetComponent<StashManager>().StartSet(m_type);
 			m_stashManager.StartSet(m_type);
 		}
     }
