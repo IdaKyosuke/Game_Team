@@ -3,12 +3,19 @@ using UnityEngine;
 
 public class PlayerAnime : MonoBehaviourPunCallbacks
 {
-    [SerializeField] Weapon_Collider m_collider; //攻撃用の当たり判定
 	[SerializeField] Animator m_anim;
 
-	private bool m_isAttack = false;
+    private Job m_job;
+    private bool m_isAttack = false;
 
-	public void OnAttackInit()
+	public bool IsAttack => m_isAttack;
+
+    private void Start()
+    {
+        m_job  = transform.root.GetComponent<Job>();
+    }
+
+    public void OnAttackInit()
 	{
 		//攻撃開始
 		m_isAttack = true;
@@ -29,10 +36,10 @@ public class PlayerAnime : MonoBehaviourPunCallbacks
 		// 攻撃中は無視
 		if (m_isAttack) return;
 
-		//コライダーが無ければ何もしない
-		if(m_collider) m_collider.StartAttack();
-        
-		m_isAttack = true;
+		//ジョブごとの攻撃処理
+		m_job.Attack();
+
+        m_isAttack = true;
 	}
 
 	public void AttackEnd()
@@ -40,15 +47,10 @@ public class PlayerAnime : MonoBehaviourPunCallbacks
 		// 攻撃中以外は無視
 		if (!m_isAttack) return;
 
-		//コライダーが無ければ何にもしない
-		if(m_collider) m_collider.EndAttack();
+        //ジョブごとの攻撃終了処理
+        m_job.AttackEnd();
 
-		m_isAttack = false;
-	}
-
-	public bool IsAttack()
-	{
-		return m_isAttack;
+        m_isAttack = false;
 	}
 
 	public void StartAttack()

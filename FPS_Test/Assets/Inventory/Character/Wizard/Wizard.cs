@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 public class Wizard : Job
@@ -41,6 +40,12 @@ public class Wizard : Job
     public override void Attack()
     {
         //UŒ‚ˆ—
+        Debug.Log("Wizard‚ÌUŒ‚ŠJn");
+    }
+
+    public override void AttackEnd()
+    {
+        //UŒ‚I—¹ˆ—
     }
 
     protected override void Passive1()

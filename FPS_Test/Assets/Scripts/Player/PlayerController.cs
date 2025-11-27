@@ -104,7 +104,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
         if (Input.GetMouseButtonDown(0))
         {
             // 攻撃中は無視
-            if (m_playerAnim.IsAttack()) return;
+            if (m_playerAnim.IsAttack) return;
 
 			m_job.Attack();
 
@@ -138,7 +138,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
         Vector3 moveDirection = (cameraForward * inputDiraction.z + m_mainCamera.transform.right * inputDiraction.x).normalized;
 
         //移動不可
-        if (m_condition.Current == ConditionType.Shock || m_playerAnim.IsAttack() || m_stashController.IsOpen)
+        if (m_condition.Current == ConditionType.Shock || m_stashController.IsOpen)
         {
             m_moveDirection.x = 0;
             m_moveDirection.z = 0;
@@ -163,6 +163,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
     void LateUpdate()
 	{
 		if (!m_setPos) return;
+
 		//自身以外は移動不可
 		if (!photonView.IsMine) return;
 
@@ -171,9 +172,6 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
         //インベントリを開いているなら移動不可
         if (m_stashController.IsOpen) return;
-
-        //攻撃中は視点移動不可
-        if (m_playerAnim.IsAttack()) return;    
 
         // 視点移動
         float mouseX = Input.GetAxis("Mouse X") * MouseSensitivity * Time.deltaTime;

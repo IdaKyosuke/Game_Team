@@ -56,8 +56,10 @@ public abstract class Job : MonoBehaviour
     //固有アクション
     protected abstract void Identity();
 
-    //攻撃
+    //攻撃の処理
     public abstract void Attack();
+
+    public abstract void AttackEnd();
 
     //各ジョブ固有のパッシブスキルは派生先で実装する
     protected abstract void Passive1();

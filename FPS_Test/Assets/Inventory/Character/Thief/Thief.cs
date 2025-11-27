@@ -36,6 +36,11 @@ public class Thief : Job
         //UŒ‚ˆ—
     }
 
+    public override void AttackEnd()
+    {
+        //UŒ‚I—¹ˆ—
+    }
+
     protected override void Passive1()
     {
         //ˆÚ“®‘¬“xUP

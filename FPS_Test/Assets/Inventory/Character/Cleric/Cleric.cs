@@ -19,6 +19,11 @@ public class Cleric : Job
         //UŒ‚ˆ—
     }
 
+    public override void AttackEnd()
+    {
+        //UŒ‚I—¹ˆ—
+    }
+
     protected override void Passive1()
     {
         

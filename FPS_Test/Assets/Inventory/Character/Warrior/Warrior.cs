@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class Warrior : Job
 {
+    [SerializeField] Weapon_Collider m_attackCollier;
     [SerializeField] PlayerParameter m_parameter;
     private PlayerStatus m_status;
 
@@ -23,6 +24,14 @@ public class Warrior : Job
     {
         //攻撃処理
         Debug.Log("プレイヤーの攻撃");
+        m_attackCollier.StartAttack();
+    }
+
+    public override void AttackEnd()
+    {
+        //攻撃終了処理
+        Debug.Log("プレイヤーの攻撃終了");
+        m_attackCollier.EndAttack();
     }
 
     protected override void Passive1()
