@@ -4,6 +4,10 @@ public class Wizard : Job
 {
     private const float Interval = 3;
 
+    [SerializeField] GameObject m_magicBall;
+    [SerializeField] GameObject m_camera;
+
+    private Vector3 m_attackOffset;
     private PlayerStatus m_status;
     private Condition m_condition;
     private float m_elapsedTime;
@@ -13,9 +17,10 @@ public class Wizard : Job
         m_status = GetComponent<PlayerStatus>();
         m_condition = GetComponent<Condition>();
         m_elapsedTime = 0;
+        m_attackOffset = new Vector3(0, 0.4f, 0);
 
         //パッシブスキルの初期化
-        Initialize(JobType.Wizard, AttackType.Physical);
+        Initialize(JobType.Wizard, AttackType.Magical);
     }
 
     private void Update()
@@ -41,11 +46,16 @@ public class Wizard : Job
     {
         //攻撃処理
         Debug.Log("Wizardの攻撃開始");
+
+        //魔弾生成
+        GameObject ball = Instantiate(m_magicBall, m_camera.transform.position, m_camera.transform.rotation);
+        ball.GetComponent<MagicAttack>().Init(m_camera.transform.forward);
     }
 
     public override void AttackEnd()
     {
         //攻撃終了処理
+        Debug.Log("Wizardの攻撃終了");
     }
 
     protected override void Passive1()

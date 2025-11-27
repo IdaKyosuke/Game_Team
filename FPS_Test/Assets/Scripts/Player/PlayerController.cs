@@ -1,9 +1,6 @@
 using Cysharp.Threading.Tasks;
 using Photon.Pun;
-using System.Xml;
-using Unity.Jobs;
 using UnityEngine;
-using UnityEngine.Rendering;
 
 public class PlayerController : MonoBehaviourPunCallbacks
 {
@@ -194,7 +191,6 @@ public class PlayerController : MonoBehaviourPunCallbacks
 		m_animator[0].SetTrigger("Death");
         m_animator[1].SetTrigger("Death");
     }
-
 
 	[PunRPC]
 	void AttackAnime()
