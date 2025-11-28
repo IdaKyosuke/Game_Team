@@ -131,6 +131,7 @@ public class StashManager : MonoBehaviourPunCallbacks
 	private ItemList m_buyItem;
 	// ショップのボタン関係を管理しているオブジェクト
 	[SerializeField] ShopInfoList m_shopButtonInfo;
+	private GameObject m_trader = null;	// 今取引しようとしているトレーダー
 
 	// セーブデータ管理用
 	private SaveData m_saveInstance = null;
@@ -160,7 +161,9 @@ public class StashManager : MonoBehaviourPunCallbacks
 		{
 			m_stashWidth = m_infoStash.GetSize.x;
 			m_stashHeight = m_infoStash.GetSize.y;
+			m_color = m_buyItemIcon.GetComponent<Image>().color;
 			CreateInventory(GridType.Stash);
+			m_text.SetText("Money : " + m_infoMoney.GetCurrentMoney().ToString());
 		}
 		m_saveInstance = SaveData.Instance;
 
@@ -772,7 +775,7 @@ public class StashManager : MonoBehaviourPunCallbacks
 		GridType type,      // アイテムのGridType
 		GameObject item,    // item自身
 		bool isEquip,       // 装備されているか,
-		bool isAdd = false, // 移動ではなく追加か
+		bool isAdd = false, // リスト間での移動ではなく追加か
 		bool isTest = false // デバッグ用アイテムか
 	)
 	{
@@ -831,8 +834,6 @@ public class StashManager : MonoBehaviourPunCallbacks
 						// 現在の枠のgridtypeを保管
 						GridType m = (GridType)((int)m_checkType + 1 > 1 ? 0 : 1);
 						item.GetComponent<Item_Object>().SetType(m);
-
-
 
 						// --- アイテムリストの管理 ---
 						if (m_checkType == GridType.Inventory)
@@ -917,9 +918,15 @@ public class StashManager : MonoBehaviourPunCallbacks
 
 	// ----- ボタンの処理 ------
 	// 販売アイテムUIを作成
-	public void SetShopItemUI(Info_InventorySize info, List<ItemList> itemList, bool isSet)
+	public void SetShopItemUI(Info_InventorySize info, List<ItemList> itemList, bool isSet, GameObject trader)
 	{
+		// 購入モード以外では無視
 		if (!m_isBuyMode) return;
+		// 今取引しているトレーダーを再選択したときは無視
+		if (m_trader == trader) return;
+
+		// 現在取引しているトレーダーを保持
+		m_trader = trader;
 
 		ResetBuyItemInfo();
 		// 表示しているUIを削除する
@@ -1009,6 +1016,7 @@ public class StashManager : MonoBehaviourPunCallbacks
 
 	public bool IsBuyMode()
 	{
+		if(!m_isShop) return false;
 		return m_isBuyMode;
 	}
 	// ---------------------------------
@@ -1148,9 +1156,10 @@ public class StashManager : MonoBehaviourPunCallbacks
 
 			if (CheckGrid(item.GetComponent<Item_Object>().GetGridType(), item, false))
 			{
+				// 当たり判定を復活させる
+				item.GetComponent<Item_Object>().ResetHitCol();
 				// お金を消費
 				m_infoMoney.UseMoney(m_buyItem.GetActiveObject().GetComponent<Item_Object>().GetValue());
-
 				// 購入予定のアイテムをリセットする
 				ResetBuyItemInfo();
 			}
@@ -1176,6 +1185,7 @@ public class StashManager : MonoBehaviourPunCallbacks
 			// 売却用アイテムリストが空じゃないとき
 			foreach (ItemList item in list)
 			{
+				
 				// アイテムをインベントリに返す
 				QuickMoveItem(GridType.Stash, item.GetActiveObject(), false, true, false);
 			}

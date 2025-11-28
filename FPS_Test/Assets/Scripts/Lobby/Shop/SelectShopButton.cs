@@ -26,7 +26,7 @@ public class SelectShopButton : MonoBehaviour
 
 	public void SetShopItem()
 	{
-		m_manager.SetShopItemUI(m_inventorySize, m_shopList, m_isSet);
+		m_manager.SetShopItemUI(m_inventorySize, m_shopList, m_isSet, gameObject);
 	}
 
 	// アイテムの座標を設定し終えた時に呼ぶ

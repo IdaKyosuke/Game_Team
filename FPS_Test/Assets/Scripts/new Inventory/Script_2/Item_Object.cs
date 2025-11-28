@@ -121,6 +121,7 @@ public class Item_Object : MonoBehaviour
 		iconParent = transform.parent;
 		// ドラッグ前の位置を記憶しておく
 		prevPos = rectTransform.anchoredPosition;
+
 		// 移動中用のオブジェクトを親に変更
 		SetParentTransform(m_moveItemTransform);
 		// 装備枠に入っていないとき
@@ -130,12 +131,17 @@ public class Item_Object : MonoBehaviour
 		}
 	}
 
-	// これまで入っていたマス目を解放
+	// これまで入っていたマス目を解放（自身の型をそのまま使う）
 	private void Release()
 	{
-		m_inventoryManager.GetComponent<StashManager>().MoveItem(gameObject, m_pos, GetSize(), false, m_gridType);
+		m_inventoryManager.GetComponent<StashManager>().MoveItem(
+			gameObject,
+			m_pos,
+			GetSize(),
+			false,
+			m_gridType
+		);
 	}
-
 	// アイテムを持ち上げる際の動き
 	public void PointerDown()
 	{
@@ -143,7 +149,6 @@ public class Item_Object : MonoBehaviour
 		if (m_quickMove || m_isDrag || m_quickEquip) return;
 		if (m_inventoryManager.GetComponent<StashManager>().IsBuyMode())
 		{
-			Debug.Log("枠のタイプ[ " + m_gridType + " ]");
 			// 購入モード
 			if (m_gridType == GridType.Stash)
 			{
@@ -182,7 +187,6 @@ public class Item_Object : MonoBehaviour
 
 	public void PointerUp(bool canSet, Transform nextPos = null)
 	{
-
 		// 購入モード && 購入予定になっている時はここまでしか走らない
 		if (m_isSelected && m_inventoryManager.GetComponent<StashManager>().IsBuyMode()) return;
 		// 当たり判定用の画像をアクティブにする
@@ -384,6 +388,12 @@ public class Item_Object : MonoBehaviour
 	public void RemoveSelected()
 	{
 		m_isSelected = false;
+	}
+
+	// 購入予定アイテムの当たり判定を復活させる
+	public void ResetHitCol()
+	{
+		m_collider.SetActive(true);
 	}
 
 	// --------------------------------

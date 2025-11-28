@@ -69,6 +69,7 @@ public class GridIcon : MonoBehaviour
 
 	public void SetUi(bool value)
 	{
+		Debug.Log(transform.gameObject.name + ": set ui");
 		m_fillUi = value;
         if (!m_image)
         {
