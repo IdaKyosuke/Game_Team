@@ -103,7 +103,8 @@ public class PlayerController : MonoBehaviourPunCallbacks
             // 攻撃中は無視
             if (m_playerAnim.IsAttack) return;
 
-			m_job.Attack();
+			//職業別の攻撃処理
+            m_job.Attack();
 
             //攻撃アニメーション
             m_animator[0].SetBool("attack", true);
@@ -142,8 +143,9 @@ public class PlayerController : MonoBehaviourPunCallbacks
         }
         else
         {
-            m_moveDirection.x = moveDirection.x * m_status.Total.moveSpeed;
-            m_moveDirection.z = moveDirection.z * m_status.Total.moveSpeed;
+            //移動速度の反映(20で割った値を使う)
+            m_moveDirection.x = moveDirection.x * m_status.Total.moveSpeed / 20;
+            m_moveDirection.z = moveDirection.z * m_status.Total.moveSpeed / 20;
         }
 
         //自由落下
