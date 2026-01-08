@@ -10,6 +10,8 @@ public enum GridType
 	Stash,
 	Empty,
 
+	Equipment,
+
 	Length,
 }
 

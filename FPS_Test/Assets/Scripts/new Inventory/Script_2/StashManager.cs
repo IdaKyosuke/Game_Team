@@ -185,6 +185,11 @@ public class StashManager : MonoBehaviourPunCallbacks
 
 		if (Input.GetMouseButtonUp(0))
 		{
+			// ‘•”õ˜g‚ª‘I‘ğ‚³‚ê‚½‚Æ‚«‚Í–³‹
+			if (m_checkType == GridType.Equipment)
+			{
+				return;
+			}
 			SetItem();
 			// –¢‘I‘ğó‘Ô‚É–ß‚·
 			m_checkType = GridType.Empty;

@@ -57,6 +57,11 @@ public class LobbyButton : MonoBehaviour
 				m_func = new Button_Setting();
 				Debug.Log("setting");
 				break;
+
+			case LobbyButtonType.ReturnLobby:
+				m_func = new Button_Setting();
+				Debug.Log("returnLobby");
+				break;
 		}
 
 		Debug.Log(m_func);

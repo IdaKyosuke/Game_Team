@@ -12,7 +12,7 @@ public enum EquipmentType
 	Length,
 }
 
-[DefaultExecutionOrder(-40)]
+[DefaultExecutionOrder(-60)]
 public class GridIcon_Equipment : MonoBehaviour
 {
 	private bool m_onPointer = false;
@@ -32,13 +32,16 @@ public class GridIcon_Equipment : MonoBehaviour
 	// ©•ª‚Ì‘•”õ˜g‚©‚Ç‚¤‚©
 	[SerializeField] bool m_isMine = false;
 
+	private StashManager m_stashManager;
+
 	// Start is called before the first frame update
 	void Start()
 	{
 		m_pastInfo = m_fillUi;
 		if(!m_moveItemTransform)
 		{
-			m_moveItemTransform = m_parent.GetComponent<Inventory_Parent>().GetStashManager().GetMoveItemTransform();
+			m_stashManager = m_parent.GetComponent<Inventory_Parent>().GetStashManager();
+			m_moveItemTransform = m_stashManager.GetMoveItemTransform();
 		}
 	}
 
@@ -48,6 +51,7 @@ public class GridIcon_Equipment : MonoBehaviour
 		// ©•ª‚Ìã‚Åƒhƒƒbƒv‚³‚ê‚½‚Æ‚«
 		if (Input.GetMouseButtonUp(0) && m_onPointer)
 		{
+			m_stashManager.StartSet(GridType.Equipment);
 			Equip();
 		}
 	}
@@ -111,6 +115,8 @@ public class GridIcon_Equipment : MonoBehaviour
 				o.GetComponent<Item_Object>().SetEquipValue(true, m_isMine);
 			}
 		}
+
+		m_stashManager.StartSet(GridType.Empty);
 	}
 
 	public void QuickEquip(GameObject item, bool firstSetItemFlg = true)
