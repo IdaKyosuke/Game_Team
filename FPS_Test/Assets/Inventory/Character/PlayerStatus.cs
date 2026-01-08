@@ -16,6 +16,8 @@ public class PlayerStatus : MonoBehaviourPunCallbacks
     private PlayerParameter m_currentStatus;            //実行時の変動ステータス
     private PlayerParameter m_passiveStatus;            //パッシブスキルによるステータス 
     private PlayerParameter m_totalStatus;              //合計ステータス
+    private int m_hp;   //残り体力
+    private int m_mp;   //残り魔力
     private int m_level;
 
     public PlayerParameter Value => m_status;
@@ -34,6 +36,18 @@ public class PlayerStatus : MonoBehaviourPunCallbacks
         set { m_passiveStatus = value; }
     }
 
+    public int CurrentHP
+    {
+        get { return m_hp; }
+        set { m_hp = value; }
+    }
+
+    public int CurrentMP
+    {
+        get { return m_mp; }
+        set { m_mp = value; }
+    }
+
     private void Awake()
     {
         //レベル1のステータスを設定
@@ -42,6 +56,7 @@ public class PlayerStatus : MonoBehaviourPunCallbacks
 
         //実行時ステータスの設定
         m_currentStatus = m_status;
+        m_hp = m_currentStatus.hp;
 
         //合計ステータスの初期化
         m_totalStatus = new PlayerParameter(m_level);
@@ -56,7 +71,6 @@ public class PlayerStatus : MonoBehaviourPunCallbacks
     private void Update()
     {
         // 数値をリセット
-        PlayerParameter prev = m_totalStatus;
         m_totalStatus = new PlayerParameter(m_level);
         m_totalEquipmentStatus =  ScriptableObject.CreateInstance<EquipmentParameter>();
 
@@ -68,11 +82,13 @@ public class PlayerStatus : MonoBehaviourPunCallbacks
 
             // 装備のステータスを加算
             Item_Object info = slot.transform.GetChild(0).GetComponent<Item_Object>();
+
 			// まだ性能が未割当の時は無視
 			if(!info.GetEquipmentInfo()) continue;
 
+            // 装備のステータスを合計ステータスに加算
             m_totalEquipmentStatus += info.GetEquipmentInfo();
-        }
+        }                 
 
         // 合計ステータスに装備の合計ステータスを加算
         m_totalStatus += m_totalEquipmentStatus;
@@ -82,6 +98,12 @@ public class PlayerStatus : MonoBehaviourPunCallbacks
 
         //基礎ステータスを加算
         m_totalStatus += m_status;
+
+        //デバッグ用
+        if(Input.GetKeyDown(KeyCode.O))
+        {
+            PenetrationDamage(7);
+        }
     }
 
     public void LevelUp(int exp)
@@ -115,7 +137,7 @@ public class PlayerStatus : MonoBehaviourPunCallbacks
     public void Damage(int power, AttackType attackType, int ConditionTypeNum, int grantRate)
     {
         //既に死んでいるならダメージを与えない
-        if (m_currentStatus.hp <= 0) return;
+        if (m_hp <= 0) return;
 
         //ダメージ計算
         int damage = 0;
@@ -138,7 +160,7 @@ public class PlayerStatus : MonoBehaviourPunCallbacks
         if (damage <= 0) return;
 
         //ダメージ
-        m_currentStatus.hp -= damage;
+        m_hp -= damage;
         Debug.Log("Damage : " + damage);
 
 		//状態異常付与の抽選
@@ -151,13 +173,15 @@ public class PlayerStatus : MonoBehaviourPunCallbacks
             }
         }
 
-		Debug.Log("現状の体力 : " + m_currentStatus.hp);
+		Debug.Log("現状の体力 : " + m_hp);
 
         //体力の確認
-        if (m_currentStatus.hp <= 0)
+        if (m_hp <= 0)
         {
-			//死亡通知
-			photonView.RPC("OnDeathPlayer", RpcTarget.All);
+            m_hp = 0;
+
+            //死亡通知
+            photonView.RPC("OnDeathPlayer", RpcTarget.All);
 			photonView.RPC("OnDeathStash", RpcTarget.All);
 			m_onDeath?.Invoke();
         }
@@ -171,19 +195,22 @@ public class PlayerStatus : MonoBehaviourPunCallbacks
     public void PenetrationDamage(int value)
     {
         //既に死んでいるならダメージを与えない
-        if (m_currentStatus.hp <= 0) return;
+        if (m_hp <= 0) return;
 
         //マイナスのダメージは与えない
         if (value <= 0) return;
 
         //ダメージ
-        m_currentStatus.hp -= value;
+        m_hp -= value;
 
         //体力の確認
-        if (m_currentStatus.hp <= 0)
+        if (m_hp <= 0)
         {
-			//死亡通知
-			photonView.RPC("OnDeathPlayer", RpcTarget.All);
+            m_hp = 0;
+
+            //死亡通知
+            Debug.Log("死亡");
+            photonView.RPC("OnDeathPlayer", RpcTarget.All);
 			photonView.RPC("OnDeathStash", RpcTarget.All);
 			m_onDeath?.Invoke();
         }

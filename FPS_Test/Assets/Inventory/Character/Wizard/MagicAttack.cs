@@ -23,7 +23,7 @@ public class MagicAttack : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         //‰½‚©‚É“–‚½‚Á‚½‚çíœ
-       // Destroy(gameObject);
+        Destroy(gameObject);
     }
 
     public void Init(Vector3 dir)

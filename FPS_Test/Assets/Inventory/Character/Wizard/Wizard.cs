@@ -21,7 +21,7 @@ public class Wizard : Job
         Initialize(JobType.Wizard, AttackType.Magical);
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         //MP‚ªÅ‘å’l‚È‚çˆ—‚µ‚È‚¢
         if (m_status.Current.mp >= m_status.Total.mp) return;
@@ -30,7 +30,7 @@ public class Wizard : Job
         m_elapsedTime += Time.deltaTime;
         if (m_elapsedTime >= Interval)
         {
-            m_status.Current.mp += 2;
+            m_status.Total.mp += 2;
             m_elapsedTime = 0;
         }
     }

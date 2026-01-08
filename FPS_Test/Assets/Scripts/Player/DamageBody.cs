@@ -3,8 +3,6 @@ using UnityEngine;
 
 public class DamageBody : MonoBehaviourPunCallbacks
 {
-	[SerializeField] PlayerStatus m_status;
-
 	private void OnTriggerEnter(Collider other)
 	{
 		// •Ší‚Ìî•ñ‚ğæ“¾
