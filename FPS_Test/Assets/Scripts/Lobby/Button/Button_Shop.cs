@@ -23,12 +23,11 @@ public class Button_Shop : Button_Function
 	public override void PushThis()
 	{
 		m_shopUi.SetActive(true);
-		m_startButton.SetActive(false);
+		//m_startButton.SetActive(false);
 	}
 
 	public override void PushOther()
 	{
-		m_shopUi.SetActive(false);
-		m_startButton.SetActive(true);
+		//m_startButton.SetActive(true);
 	}
 }

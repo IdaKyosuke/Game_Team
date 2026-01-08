@@ -35,7 +35,6 @@ public class LobbyButton : MonoBehaviour
 	// ‚Ç‚Ìƒ{ƒ^ƒ“‚ÌŠÖ”‚ğŒÄ‚Ô‚©‚ğİ’è‚·‚é
 	private void SetButtonType(LobbyButtonType type)
 	{
-		Debug.Log(m_buttonType);
 		switch(type)
 		{
 			case LobbyButtonType.Battle:
@@ -59,12 +58,10 @@ public class LobbyButton : MonoBehaviour
 				break;
 
 			case LobbyButtonType.ReturnLobby:
-				m_func = new Button_Setting();
+				m_func = new Button_ReturnLobby();
 				Debug.Log("returnLobby");
 				break;
 		}
-
-		Debug.Log(m_func);
 
 		if(m_func != null)
 		{

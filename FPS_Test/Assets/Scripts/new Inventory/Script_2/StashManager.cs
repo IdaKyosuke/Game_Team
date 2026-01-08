@@ -131,7 +131,7 @@ public class StashManager : MonoBehaviourPunCallbacks
 	private ItemList m_buyItem;
 	// ショップのボタン関係を管理しているオブジェクト
 	[SerializeField] ShopInfoList m_shopButtonInfo;
-	private GameObject m_trader = null;	// 今取引しようとしているトレーダー
+	private GameObject m_buyTrader = null;	// 購入しようとしているトレーダー
 
 	// セーブデータ管理用
 	private SaveData m_saveInstance = null;
@@ -928,10 +928,10 @@ public class StashManager : MonoBehaviourPunCallbacks
 		// 購入モード以外では無視
 		if (!m_isBuyMode) return;
 		// 今取引しているトレーダーを再選択したときは無視
-		if (m_trader == trader) return;
+		if (m_buyTrader == trader) return;
 
 		// 現在取引しているトレーダーを保持
-		m_trader = trader;
+		m_buyTrader = trader;
 
 		ResetBuyItemInfo();
 		// 表示しているUIを削除する
@@ -1184,13 +1184,14 @@ public class StashManager : MonoBehaviourPunCallbacks
 		// すでに購入モードの時は無視する
 		if (m_isBuyMode) return;
 
+		m_buyTrader = null;
+
 		if (m_sellItemList.Count != 0)
 		{
 			List<ItemList> list = new List<ItemList>(m_sellItemList);
 			// 売却用アイテムリストが空じゃないとき
 			foreach (ItemList item in list)
 			{
-				
 				// アイテムをインベントリに返す
 				QuickMoveItem(GridType.Stash, item.GetActiveObject(), false, true, false);
 			}
@@ -1224,6 +1225,32 @@ public class StashManager : MonoBehaviourPunCallbacks
 		CreateNewShop();
 	}
 	// ---------------------------------
+
+	// ショップ画面 => ロビー画面に遷移した時
+	public void ResetShop()
+	{
+		if(m_isBuyMode)
+		{
+			// 購入予定のアイテムが選択されている時は元に戻す
+			ResetBuyItemInfo();
+		}
+		else
+		{
+			// 売却用アイテムリストが空じゃないとき
+			if (m_sellItemList.Count != 0)
+			{
+				List<ItemList> list = new List<ItemList>(m_sellItemList);
+				foreach (ItemList item in list)
+				{
+					// アイテムをインベントリに返す
+					QuickMoveItem(GridType.Stash, item.GetActiveObject(), false, true, false);
+				}
+				m_sellItemList.Clear();
+			}
+			// 購入モードに切り替える
+			m_isBuyMode = true;
+		}
+	}
 
 	// 探索準備(選択されたGridType == 探索するGridType)
 	private void SearchEqualType(ref Grid[,] list, ref int height, ref int width)
