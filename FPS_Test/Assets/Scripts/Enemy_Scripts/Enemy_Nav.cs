@@ -34,7 +34,7 @@ public class Enemy_Nav : MonoBehaviourPunCallbacks
 
 	// 自身のステータス
 	//[SerializeField] Enemy_Data m_data;
-	private int m_hp;
+	private int m_hp = 100;
 	private int m_atk;
 	private int m_exp;
 
@@ -173,9 +173,7 @@ public class Enemy_Nav : MonoBehaviourPunCallbacks
 		if(!m_isDeath && !m_isGetHit && other.gameObject.CompareTag("weapon_player"))
 		{
 			// プレイヤーの武器で攻撃されたらダメージを受ける
-			//m_hp -= m_playerStatus.GetComponent<Player_DungeonStatus>().GetAtk();
-			// 出血エフェクトを出す
-			Instantiate(m_blood, other.ClosestPointOnBounds(this.transform.position), Quaternion.identity);
+			m_hp -= other.transform.root.GetComponent<PlayerStatus>().Total.physicalPower;
 			// 攻撃を受けたフラグを立てる
 			m_isGetHit = true;
 			if(m_hp <= 0)

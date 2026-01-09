@@ -119,7 +119,17 @@ public class PlayerController : MonoBehaviourPunCallbacks
 		}
     }
 
-    private void FixedUpdate()
+	private void OnTriggerEnter(Collider other)
+	{
+		if (other.CompareTag("Portal"))
+		{
+			PhotonView.Destroy(other);
+			m_stashController.Save();
+			m_gameManager.ReturnLobby();
+		}
+	}
+
+	private void FixedUpdate()
 	{
 		if (!m_setPos) return;
 		if (!photonView.IsMine) return;

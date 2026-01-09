@@ -156,6 +156,8 @@ public class PlayerStatus : MonoBehaviourPunCallbacks
                 break;
         }
 
+
+		Debug.Log("だまげ" + damage);
         //マイナスのダメージは与えない
         if (damage <= 0) return;
 

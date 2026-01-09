@@ -5,6 +5,7 @@ using UnityEngine;
 // 敵の攻撃判定コライダーにつける
 public class Enemy_WeaponCollider : MonoBehaviour
 {
+	[SerializeField] int m_attackPower;
 	[SerializeField] GameObject m_enemy;    // 武器の持ち主
 
 	private void OnTriggerEnter(Collider other)
@@ -13,5 +14,10 @@ public class Enemy_WeaponCollider : MonoBehaviour
 		{
 			m_enemy.GetComponent<Enemy_Nav>().GiveHit();
 		}
+	}
+
+	public int attackPower
+	{
+		get { return m_attackPower; }
 	}
 }
