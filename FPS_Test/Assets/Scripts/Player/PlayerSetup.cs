@@ -4,7 +4,6 @@ using UnityEngine;
 public class PlayerSetup : MonoBehaviourPunCallbacks
 {
     private const int ModelMeshAmount = 3;
-    private const int SowrdMeshAmount = 12;
    
     [SerializeField] SkinnedMeshRenderer[] m_firstPersonModel;  //©g
     [SerializeField] MeshRenderer[] m_firstPersonSowrd;  
@@ -25,7 +24,7 @@ public class PlayerSetup : MonoBehaviourPunCallbacks
             }
 
             //Œ•‚Ìƒ‚ƒfƒ‹
-            for (int i = 0; i < SowrdMeshAmount; ++i)
+            for (int i = 0; i < m_firstPersonSowrd.Length; ++i)
             {
                 m_firstPersonSowrd[i].enabled = true;
                 m_thirdPersonSowrd[i].enabled = false;
@@ -46,7 +45,7 @@ public class PlayerSetup : MonoBehaviourPunCallbacks
             }
 
             //Œ•‚Ìƒ‚ƒfƒ‹
-            for (int i = 0; i < SowrdMeshAmount; ++i)
+            for (int i = 0; i < m_firstPersonSowrd.Length; ++i)
             {
                 m_firstPersonSowrd[i].enabled = false;
                 m_thirdPersonSowrd[i].enabled = true;

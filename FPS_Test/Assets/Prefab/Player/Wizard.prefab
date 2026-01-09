@@ -3934,7 +3934,7 @@ GameObject:
   - component: {fileID: 4405870202886141769}
   - component: {fileID: 6888842347149093431}
   - component: {fileID: 3179004021752579685}
-  - component: {fileID: 8946028126584387918}
+  - component: {fileID: -6055169982673330795}
   - component: {fileID: 809893212673852016}
   - component: {fileID: 4873756508487685046}
   - component: {fileID: 6817290701913448664}
@@ -3944,7 +3944,7 @@ GameObject:
   - component: {fileID: 9092896346281013015}
   - component: {fileID: 993910600635936262}
   m_Layer: 11
-  m_Name: Player
+  m_Name: Wizard
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4025,7 +4025,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &8946028126584387918
+--- !u!114 &-6055169982673330795
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -4034,23 +4034,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 2970398514251725746}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aae3343e3c9e1d14db13121d6e136223, type: 3}
+  m_Script: {fileID: 11500000, guid: fe7fcf3b4358eae429027e0845cc8621, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_skillIndex: 0
-  m_attackCollier: {fileID: 4112248464980273913}
-  m_parameter:
-    level: 0
-    hp: 0
-    mp: 0
-    physicalPower: 0
-    magicPower: 0
-    physicalDefense: 0
-    magicDefense: 0
-    attackSpeed: 0
-    moveSpeed: 0
-    openSpeed: 0
-    requiredExp: 0
+  m_magicBall: {fileID: 8781157291520378377, guid: e09573bdc8b3000408f2105a9696d2ef,
+    type: 3}
+  m_camera: {fileID: 1253187207488348395}
 --- !u!114 &809893212673852016
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10647,8 +10637,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 30, y: 1.8, z: 2}
-  m_Center: {x: 0, y: -0.2, z: 0.0003075083}
+  m_Size: {x: 30, y: 4, z: 3}
+  m_Center: {x: 0, y: 0, z: 0.0003075083}
 --- !u!114 &4112248464980273913
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10812,7 +10802,7 @@ GameObject:
   - component: {fileID: 8355204652188726578}
   m_Layer: 31
   m_Name: Collider
-  m_TagString: weapon_player
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
