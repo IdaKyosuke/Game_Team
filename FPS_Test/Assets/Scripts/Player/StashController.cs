@@ -54,10 +54,10 @@ public class StashController : MonoBehaviourPunCallbacks
 				if (Input.GetKeyDown("e"))
 				{
 					//プレイヤー
-					if (hit.transform.gameObject.CompareTag("Player"))
+					if (hit.transform.root.gameObject.CompareTag("Player"))
 					{
 						// レイの当たった敵を保管
-						m_rayTarget = hit.transform.gameObject;
+						m_rayTarget = hit.transform.root.gameObject;
 
 						m_stashManager.GetComponent<StashManager>().IsScavenger(true);
 
@@ -69,7 +69,8 @@ public class StashController : MonoBehaviourPunCallbacks
 						}
 					}
 
-					if (hit.transform.gameObject.CompareTag("Treasure"))
+                    //宝箱
+                    if (hit.transform.gameObject.CompareTag("Treasure"))
 					{
 						// レイの当たった敵を保管
 						m_rayTarget = hit.transform.gameObject;

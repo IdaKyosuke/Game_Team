@@ -30,9 +30,8 @@ public class StatusUI : MonoBehaviour
         m_statusText[1].text = m_playerStatus.Total.magicPower.ToString();
         m_statusText[2].text = m_playerStatus.Total.physicalDefense.ToString();
         m_statusText[3].text = m_playerStatus.Total.magicDefense.ToString();
-        m_statusText[4].text = m_playerStatus.Total.attackSpeed.ToString();
-        m_statusText[5].text = m_playerStatus.Total.moveSpeed.ToString();
-        m_statusText[6].text = m_playerStatus.Total.openSpeed.ToString();
-        m_statusText[7].text = m_playerStatus.Total.requiredExp.ToString();
+        m_statusText[4].text = m_playerStatus.Total.moveSpeed.ToString();
+        m_statusText[5].text = m_playerStatus.Total.openSpeed.ToString();
+        m_statusText[6].text = m_playerStatus.Total.requiredExp.ToString();
     }
 }
