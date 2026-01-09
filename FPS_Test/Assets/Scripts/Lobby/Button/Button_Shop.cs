@@ -5,12 +5,11 @@ using UnityEngine;
 public class Button_Shop : Button_Function
 {
 	private GameObject m_shopUi;
-	private GameObject m_startButton;
+	private ShopInfoList m_shopButtonInfo;
 
 	public override void Initialize()
 	{
 		m_shopUi = GameObject.FindWithTag("shopUi");
-		m_startButton = GameObject.FindWithTag("gameStartButton");
 
 		Debug.Log("shop start");
 
@@ -23,7 +22,10 @@ public class Button_Shop : Button_Function
 	public override void PushThis()
 	{
 		m_shopUi.SetActive(true);
-		//m_startButton.SetActive(false);
+		m_shopButtonInfo = GameObject.FindWithTag("shopInfoList").GetComponent<ShopInfoList>();
+		// 購入モードはとりあえずリストの最初のショップを表示する
+		m_shopButtonInfo.GetShopInfo(0).SetShopItem();
+		Debug.Log("set");
 	}
 
 	public override void PushOther()

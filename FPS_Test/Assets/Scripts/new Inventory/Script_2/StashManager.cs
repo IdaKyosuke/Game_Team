@@ -93,6 +93,8 @@ public class StashManager : MonoBehaviourPunCallbacks
     private List<ItemList> m_otherItemList = new List<ItemList>();
 	// 売却予定のアイテムリスト
 	private List<ItemList> m_sellItemList = new List<ItemList>();
+	// トレーダーの販売アイテムリスト
+	private List<ItemList> m_traderItemList = new List<ItemList>();
 
 	// UIを表示するときの座標用
 	[SerializeField] Transform m_inventoryPos;
@@ -923,7 +925,7 @@ public class StashManager : MonoBehaviourPunCallbacks
 
 	// ----- ボタンの処理 ------
 	// 販売アイテムUIを作成
-	public void SetShopItemUI(Info_InventorySize info, List<ItemList> itemList, bool isSet, GameObject trader)
+	public void SetShopItemUI(Info_InventorySize info, ref List<ItemList> itemList, bool isSet, GameObject trader)
 	{
 		// 購入モード以外では無視
 		if (!m_isBuyMode) return;
@@ -938,6 +940,8 @@ public class StashManager : MonoBehaviourPunCallbacks
 		CreateNewShop();
 		// 商品リストをリセット
 		m_otherItemList.Clear();
+		// 商品リストのコピー
+		m_traderItemList = itemList;
 
 		foreach (ItemList item in itemList)
 		{
@@ -1159,6 +1163,17 @@ public class StashManager : MonoBehaviourPunCallbacks
 			// アイテムを移動する
 			GameObject item = m_buyItem.GetActiveObject();
 
+			// 販売リストを更新
+			//m_buyTrader.GetComponent<SelectShopButton>().UpdataItemList(item.GetComponent<Item_Object>().GetIndex());
+			Debug.Log("消すアイテムのインデックス : " + item.GetComponent<Item_Object>().GetIndex());
+			Debug.Log("消すアイテムの名前 : " + item.name);
+			Debug.Log("トレーダー側で消されたアイテムの名前 : " + m_traderItemList[item.GetComponent<Item_Object>().GetIndex()].GetPrefabName());
+
+			m_traderItemList.RemoveAt(item.GetComponent<Item_Object>().GetIndex());
+
+			Debug.Log("otherItemListの要素数 : " + m_otherItemList.Count);
+			Debug.Log("traderItemListの要素数 : " + m_traderItemList.Count);
+
 			if (CheckGrid(item.GetComponent<Item_Object>().GetGridType(), item, false))
 			{
 				// 当たり判定を復活させる
@@ -1168,6 +1183,9 @@ public class StashManager : MonoBehaviourPunCallbacks
 				// 購入予定のアイテムをリセットする
 				ResetBuyItemInfo();
 			}
+
+			Debug.Log("otherItemListの要素数 : " + m_otherItemList.Count);
+			Debug.Log("traderItemListの要素数 : " + m_traderItemList.Count);
 
 			m_text.SetText("Money : " + m_infoMoney.GetCurrentMoney().ToString());
 		}
