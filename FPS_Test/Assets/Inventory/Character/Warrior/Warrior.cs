@@ -2,8 +2,6 @@ using UnityEngine;
 
 public class Warrior : Job
 {
-    [SerializeField] Weapon_Collider m_attackCollier;
-
     private PlayerStatus m_status;
     private bool m_isOneLife;   //一度だけHP1で耐えるかどうか
     private bool m_isDamageCut; //ダメージカットが発動しているかどうか
@@ -27,20 +25,6 @@ public class Warrior : Job
     protected override void Identity()
     {
         //固有アクションなし
-    }
-
-    public override void Attack()
-    {
-        //攻撃処理
-        Debug.Log("プレイヤーの攻撃");
-        m_attackCollier.StartAttack();
-    }
-
-    public override void AttackEnd()
-    {
-        //攻撃終了処理
-        Debug.Log("プレイヤーの攻撃終了");
-        m_attackCollier.EndAttack();
     }
 
     protected override void Passive1()

@@ -3922,6 +3922,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ba37a72a4220321459a01c8f73e57ae0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_attackCollier: {fileID: 4112248464980273913}
   m_anim: {fileID: 89965639170149130}
 --- !u!1 &2970398514251725746
 GameObject:
@@ -4038,19 +4039,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_skillIndex: 0
-  m_attackCollier: {fileID: 4112248464980273913}
-  m_parameter:
-    level: 0
-    hp: 0
-    mp: 0
-    physicalPower: 0
-    magicPower: 0
-    physicalDefense: 0
-    magicDefense: 0
-    attackSpeed: 0
-    moveSpeed: 0
-    openSpeed: 0
-    requiredExp: 0
 --- !u!114 &809893212673852016
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9316,8 +9304,8 @@ GameObject:
   - component: {fileID: 7566588374472350230}
   - component: {fileID: 2741097035216703926}
   - component: {fileID: 6949077064274818103}
-  - component: {fileID: 7219438813347848854}
   - component: {fileID: 1725804784879696998}
+  - component: {fileID: 7219438813347848854}
   m_Layer: 31
   m_Name: PlayerModel_TPS
   m_TagString: Player
@@ -9377,37 +9365,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ba37a72a4220321459a01c8f73e57ae0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_attackCollier: {fileID: 4112248464980273913}
   m_anim: {fileID: 2741097035216703926}
---- !u!114 &7219438813347848854
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6102831290836702481}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b8c4a61274f60b4ea5fb4299cfdbf14, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ShowLayerWeightsInspector: 0
-  ShowParameterInspector: 0
-  m_SynchronizeParameters:
-  - Type: 4
-    SynchronizeType: 1
-    Name: Move
-  - Type: 9
-    SynchronizeType: 1
-    Name: Attack1
-  - Type: 9
-    SynchronizeType: 1
-    Name: Death
-  - Type: 4
-    SynchronizeType: 2
-    Name: attack
-  m_SynchronizeLayers:
-  - SynchronizeType: 1
-    LayerIndex: 0
 --- !u!114 &1725804784879696998
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9431,6 +9390,36 @@ MonoBehaviour:
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
+--- !u!114 &7219438813347848854
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6102831290836702481}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b8c4a61274f60b4ea5fb4299cfdbf14, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowLayerWeightsInspector: 1
+  ShowParameterInspector: 1
+  m_SynchronizeParameters:
+  - Type: 4
+    SynchronizeType: 1
+    Name: Move
+  - Type: 9
+    SynchronizeType: 1
+    Name: Attack1
+  - Type: 9
+    SynchronizeType: 1
+    Name: Death
+  - Type: 4
+    SynchronizeType: 2
+    Name: attack
+  m_SynchronizeLayers:
+  - SynchronizeType: 1
+    LayerIndex: 0
 --- !u!1 &6117077661146118436
 GameObject:
   m_ObjectHideFlags: 0

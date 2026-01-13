@@ -3,58 +3,23 @@ using UnityEngine;
 
 public class PlayerAnime : MonoBehaviourPunCallbacks
 {
-	[SerializeField] Animator m_anim;
+    [SerializeField] Weapon_Collider m_attackCollier;
+    [SerializeField] Animator m_anim;
 
-    private Job m_job;
-    private bool m_isAttack = false;
-
-	public bool IsAttack => m_isAttack;
-
-    private void Start()
-    {
-        m_job  = transform.root.GetComponent<Job>();
-    }
-
-    public void OnAttackInit()
-	{
-		//UŒ‚ŠJn
-		m_isAttack = true;
-	}
+	public bool IsAttack => m_anim.GetBool("attack");
 
     public void OnAttack1()
-    {
-		transform.root.GetComponent<PhotonView>().RPC("AttackAnime", RpcTarget.All);
+    { 
+        m_attackCollier?.StartAttack();
     }
 
     public void OnAttack1End()
-    {
-		transform.root.GetComponent<PhotonView>().RPC("AttackAnimeEnd", RpcTarget.All);
-	}
+    { 
+		m_attackCollier?.EndAttack();
+    }
 
-	public void Attack()
-	{
-		// UŒ‚’†‚Í–³‹
-		if (m_isAttack) return;
-
-		//ƒWƒ‡ƒu‚²‚Æ‚ÌUŒ‚ˆ—
-		m_job.Attack();
-
-        m_isAttack = true;
-	}
-
-	public void AttackEnd()
-	{
-		// UŒ‚’†ˆÈŠO‚Í–³‹
-		if (!m_isAttack) return;
-
-        //ƒWƒ‡ƒu‚²‚Æ‚ÌUŒ‚I—¹ˆ—
-        m_job.AttackEnd();
-
-        m_isAttack = false;
-	}
-
-	public void StartAttack()
-	{
-		m_anim.SetBool("attack", false);
-	}
+    public void ResetBool()
+    { 
+        m_anim.SetBool("attack", false);
+    }
 }

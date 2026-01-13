@@ -5,8 +5,9 @@ using UnityEngine;
 public class Weapon_Collider : MonoBehaviourPunCallbacks
 {
 	[SerializeField] AttackType m_attackType;
-	private Dictionary<int, bool> m_hitMasterInfo { get; } = new Dictionary<int, bool>();
 	[SerializeField] GameObject m_hitEffect;
+
+	private Dictionary<int, bool> m_hitMasterInfo { get; } = new Dictionary<int, bool>();
 	private Collider m_collider;
 	private int m_parentID;
 

@@ -40,25 +40,6 @@ public class Wizard : Job
         //固有アクション
     }
 
-    public override void Attack()
-    {
-        //攻撃に必要なMPが残っているか確認
-        if (m_status.Current.mp < 5) return;
-
-        //MP消費
-        m_status.Current.mp -= 5;
-
-        //攻撃処理
-        GameObject ball = Instantiate(m_magicBall, m_camera.transform.position, m_camera.transform.rotation);
-        ball.GetComponent<Weapon_Collider>().Parent = gameObject;
-        ball.GetComponent<MagicAttack>().Init(m_camera.transform.forward);
-    }
-
-    public override void AttackEnd()
-    {
-        //攻撃終了処理
-    }
-
     protected override void Passive1()
     {
         m_condition.Grant = ConditionType.Burn;

@@ -103,9 +103,6 @@ public class PlayerController : MonoBehaviourPunCallbacks
             // 攻撃中は無視
             if (m_playerAnim.IsAttack) return;
 
-			//職業別の攻撃処理
-            m_job.Attack();
-
             //攻撃アニメーション
             m_animator[0].SetBool("attack", true);
             m_animator[1].SetBool("attack", true);
@@ -203,21 +200,6 @@ public class PlayerController : MonoBehaviourPunCallbacks
 		m_animator[0].SetTrigger("Death");
         m_animator[1].SetTrigger("Death");
     }
-
-	[PunRPC]
-	void AttackAnime()
-	{
-		if (!photonView.IsMine) Debug.Log("攻撃アニメーション");
-		transform.GetChild(0).GetComponent<PlayerAnime>().Attack();
-		transform.GetChild(1).GetComponent<PlayerAnime>().Attack();
-	}
-
-	[PunRPC]
-	void AttackAnimeEnd()
-	{
-		transform.GetChild(0).GetComponent<PlayerAnime>().AttackEnd();
-		transform.GetChild(1).GetComponent<PlayerAnime>().AttackEnd();
-	}
 
 	// (DamageBodyのOnTriggerEnter)
 	[PunRPC]
