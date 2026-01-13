@@ -1,4 +1,5 @@
 using Photon.Pun;
+using System;
 using System.Collections.Generic;
 using TMPro;
 using Unity.VisualScripting;
@@ -6,6 +7,7 @@ using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using static UnityEditor.Progress;
 
 public struct Grid
 {
@@ -783,7 +785,8 @@ public class StashManager : MonoBehaviourPunCallbacks
 		GameObject item,    // item自身
 		bool isEquip,       // 装備されているか,
 		bool isAdd = false, // リスト間での移動ではなく追加か
-		bool isTest = false // デバッグ用アイテムか
+		bool isTest = false,// デバッグ用アイテムか
+		bool isNormal = true// ショップ用の動きをしないか
 	)
 	{
 		Vector2Int size = item.GetComponent<Item_Object>().GetSize();
@@ -845,12 +848,12 @@ public class StashManager : MonoBehaviourPunCallbacks
 						// --- アイテムリストの管理 ---
 						if (m_checkType == GridType.Inventory)
 						{
-							if (isTest) AddItemList(item, m_otherItemList);
+							if (isTest) AddItemList(item, m_otherItemList, isNormal);
 							else AddOtherList(item);
 						}
 						else
 						{
-							if (isTest) AddItemList(item, m_itemList);
+							if (isTest) AddItemList(item, m_itemList, isNormal);
 							else AddMyList(item);
 						}
 					}
@@ -873,7 +876,7 @@ public class StashManager : MonoBehaviourPunCallbacks
 	}
 
 	// リストに追加する
-	private void AddItemList(GameObject item, List<ItemList> list)
+	private void AddItemList(GameObject item, List<ItemList> list, bool isNormal = true)
 	{
 		ItemList info = ScriptableObject.CreateInstance<ItemList>();
 		// マス目座標を保存
@@ -887,11 +890,19 @@ public class StashManager : MonoBehaviourPunCallbacks
 
 		// アクティブなオブジェクトを変更
 		info.SetActiveObject(item);
-		// リストのインデックスを保存
-		info.ChangeIndex(list.Count);
 
-		// アイテムリストに保存
-		list.Add(info);
+		if(isNormal)
+		{
+			// リストのインデックスを保存
+			info.ChangeIndex(list.Count);
+			// アイテムリストに保存
+			list.Add(info);
+		}
+		else
+		{
+			info.ChangeIndex(item.GetComponent<Item_Object>().GetIndex());
+			list[item.GetComponent<Item_Object>().GetIndex()] = info;
+		}
 	}
 
 	// リストから除外する(リストを指定する)
@@ -940,22 +951,37 @@ public class StashManager : MonoBehaviourPunCallbacks
 		CreateNewShop();
 		// 商品リストをリセット
 		m_otherItemList.Clear();
+		// 商品リストの長さを渡されたリストの長さに変更
+		SetListLength(ref m_otherItemList, itemList.Count);
+
 		// 商品リストのコピー
 		m_traderItemList = itemList;
 
-		foreach (ItemList item in itemList)
+		for(int i = 0; i < itemList.Count; i++)
 		{
-			// プレハブを取得
-			Loader.LoadGameObjectAsync(item.GetPrefabName()).Completed += op =>
-			{
-				GameObject g = Instantiate(op.Result, m_moveItemTransform);
-				g.GetComponent<Item_Object>().SetBaseInfo();
-				// アイテムをスタッシュに並べる
-				CheckGrid(GridType.Inventory, g, false, true, true);
-
-				Addressables.Release(op);
-			};
+			ItemList item = itemList[i];
+			
+			GetPrefabForShop(i, item);
 		}
+	}
+
+	// ショップ用のプレハブ取得関数
+	private void GetPrefabForShop(int index, ItemList item)
+	{
+		// プレハブを取得
+		Loader.LoadGameObjectAsync(item.GetPrefabName()).Completed += op =>
+		{
+			GameObject g = Instantiate(op.Result, m_moveItemTransform);
+			g.GetComponent<Item_Object>().SetBaseInfo();
+
+			// アイテムリストのインデックス番号を処理した順に書き変える
+			g.GetComponent<Item_Object>().ChangeIndex(index);
+
+			// アイテムをスタッシュに並べる
+			CheckGrid(GridType.Inventory, g, false, true, true, false);
+
+			Addressables.Release(op);
+		};
 	}
 
 	// 購入前にアイテムの情報を表示する
@@ -1033,7 +1059,7 @@ public class StashManager : MonoBehaviourPunCallbacks
 	// ----- デバッグ用関数 -----
 	public void AddItemInventory()
 	{
-		m_id = Random.Range(0, items.Count);
+		m_id = UnityEngine.Random.Range(0, items.Count);
 		GameObject item = Instantiate(items[m_id], m_moveItemTransform);
 		item.GetComponent<Item_Object>().SetBaseInfo();
 		item.GetComponent<Item_Object>().ChangeParent(m_moveItemTransform);
@@ -1044,7 +1070,7 @@ public class StashManager : MonoBehaviourPunCallbacks
 	public void AddItemStash()
 	{
 		if (!m_stashUi) return;
-		m_id = Random.Range(0, items.Count);
+		m_id = UnityEngine.Random.Range(0, items.Count);
 		GameObject item = Instantiate(items[m_id], m_moveItemTransform);
 		item.GetComponent<Item_Object>().SetBaseInfo();
 		item.transform.localPosition = Vector3.zero;
@@ -1164,15 +1190,7 @@ public class StashManager : MonoBehaviourPunCallbacks
 			GameObject item = m_buyItem.GetActiveObject();
 
 			// 販売リストを更新
-			//m_buyTrader.GetComponent<SelectShopButton>().UpdataItemList(item.GetComponent<Item_Object>().GetIndex());
-			Debug.Log("消すアイテムのインデックス : " + item.GetComponent<Item_Object>().GetIndex());
-			Debug.Log("消すアイテムの名前 : " + item.name);
-			Debug.Log("トレーダー側で消されたアイテムの名前 : " + m_traderItemList[item.GetComponent<Item_Object>().GetIndex()].GetPrefabName());
-
 			m_traderItemList.RemoveAt(item.GetComponent<Item_Object>().GetIndex());
-
-			Debug.Log("otherItemListの要素数 : " + m_otherItemList.Count);
-			Debug.Log("traderItemListの要素数 : " + m_traderItemList.Count);
 
 			if (CheckGrid(item.GetComponent<Item_Object>().GetGridType(), item, false))
 			{
@@ -1183,9 +1201,6 @@ public class StashManager : MonoBehaviourPunCallbacks
 				// 購入予定のアイテムをリセットする
 				ResetBuyItemInfo();
 			}
-
-			Debug.Log("otherItemListの要素数 : " + m_otherItemList.Count);
-			Debug.Log("traderItemListの要素数 : " + m_traderItemList.Count);
 
 			m_text.SetText("Money : " + m_infoMoney.GetCurrentMoney().ToString());
 		}
@@ -1314,5 +1329,14 @@ public class StashManager : MonoBehaviourPunCallbacks
 	{
 		height = m_inventoryHeight;
 		width = m_inventoryWidth;
+	}
+
+	// listの長さを指定した長さに変更する
+	public static void SetListLength<T>(ref List<T> list, int length)
+	{
+		for(int i = 0; i < length; i++)
+		{
+			list.Add(default(T));
+		}
 	}
 }

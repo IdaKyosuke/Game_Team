@@ -49,21 +49,5 @@ public class SelectShopButton : MonoBehaviour
 			item.SetPrefabName(obj.name);
 			m_shopList.Add(item);
 		}
-		/*
-		foreach(GameObject obj in m_objectList.GetList())
-		{
-			ItemList item = ScriptableObject.CreateInstance<ItemList>();
-			item.SetPrefabName(obj.name);
-			m_shopList.Add(item);
-		}
-		*/
-	}
-
-	// 販売アイテムリストの更新
-	public void UpdataItemList(List<ItemList> itemList)
-	{
-		Debug.Log("コピー前" + m_shopList.Count);
-		m_shopList = itemList;
-		Debug.Log("コピー後" + m_shopList.Count);
 	}
 }
