@@ -55,12 +55,12 @@ public class Thief : Job
     protected override void Passive2()
     {
         //ŠJ••‘¬“xUP
-        m_status.PassiveStatus.openSpeed += 2;
+        m_status.PassiveStatus.openSpeed += 10;
     }
 
     protected override void Passive3()
     {
-        //UŒ‚‘¬“xUP
-        m_status.PassiveStatus.attackSpeed += 2;
+        //Œ®‚Ìæ“¾
+        
     }
 }

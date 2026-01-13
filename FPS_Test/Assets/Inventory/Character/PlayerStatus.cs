@@ -105,7 +105,7 @@ public class PlayerStatus : MonoBehaviourPunCallbacks
 
             // 装備のステータスを合計ステータスに加算
             m_totalEquipmentStatus += info.GetEquipmentInfo();
-        }                 
+        }
 
         // 合計ステータスに装備の合計ステータスを加算
         m_totalStatus += m_totalEquipmentStatus;
@@ -117,9 +117,9 @@ public class PlayerStatus : MonoBehaviourPunCallbacks
         m_totalStatus += m_status;
 
         //デバッグ用
-        if(Input.GetKeyDown(KeyCode.O))
+        if (Input.GetKeyDown(KeyCode.O))
         {
-            PenetrationDamage(7);
+            PenetrationDamage(53);
         }
     }
 
@@ -169,11 +169,15 @@ public class PlayerStatus : MonoBehaviourPunCallbacks
 
     public void Damage(int power, AttackType attackType, int ConditionTypeNum, int grantRate)
     {
+        //職業情報
+        Warrior warrior;
+        Cleric cleric;
+
         //既に死んでいるならダメージを与えない
         if (m_hp <= 0) return;
 
         //ダメージ計算
-        int damage = 0;
+        float damage = 0;
         switch (attackType)
         {
             case AttackType.Physical:
@@ -185,16 +189,30 @@ public class PlayerStatus : MonoBehaviourPunCallbacks
                 break;
 
             case AttackType.Cleric:
-                //自身がエネミーの場合は被ダメージを強化
+                damage = (power * 2) - (m_status.physicalDefense / 3);
                 break;
         }
 
-		Debug.Log("だまげ" + damage);
         //マイナスのダメージは与えない
         if (damage <= 0) return;
 
-        //ダメージ
-        m_hp -= damage;
+        //戦士のダメージカットスキル確認
+        if (TryGetComponent(out warrior))
+        {
+            if (warrior.IsDamageCut)
+            {
+                damage *= 0.9f;
+                return;
+            }
+        }
+
+        //僧侶のバリアスキル確認
+        if (TryGetComponent(out cleric))
+        { 
+            cleric.GetBarrierDamage((int)damage);
+        }
+
+        m_hp -= (int)damage;
         Debug.Log("Damage : " + damage);
 
 		//状態異常付与の抽選
@@ -210,9 +228,18 @@ public class PlayerStatus : MonoBehaviourPunCallbacks
         //体力の確認
         if (m_hp <= 0)
         {
-            m_hp = 0;
+            //戦士の一度だけ耐えるスキル確認
+            if (TryGetComponent(out warrior))
+            {
+                if (warrior.IsOneLife)
+                {
+                    m_hp = 1;
+                    return;
+                }
+            }
 
             //死亡通知
+            m_hp = 0;
             photonView.RPC("OnDeathPlayer", RpcTarget.All);
 			photonView.RPC("OnDeathStash", RpcTarget.All);
 			m_onDeath?.Invoke();

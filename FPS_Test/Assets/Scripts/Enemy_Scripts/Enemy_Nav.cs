@@ -155,9 +155,16 @@ public class Enemy_Nav : MonoBehaviourPunCallbacks
 			//プレイヤー情報の取得
 			PlayerStatus playerStatus = other.transform.root.GetComponent<PlayerStatus>();
             Job playerJob = other.transform.root.GetComponent<Job>();
+			Weapon_Collider weapon = other.GetComponent<Weapon_Collider>();
 
-            // プレイヤーの武器で攻撃されたらダメージを受ける
-            m_hp -= playerStatus.Total.physicalPower;
+			//基礎攻撃力
+			float damage = playerStatus.Total.physicalPower;
+
+            //僧侶の攻撃は1.2倍にする
+            if (weapon.AttackType == AttackType.Cleric) damage *= 1.2f;
+
+            //被弾処理
+            m_hp -= (int)damage;
 			
 			// 攻撃を受けたフラグを立てる
 			m_isGetHit = true;

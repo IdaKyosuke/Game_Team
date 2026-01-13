@@ -3,8 +3,14 @@ using UnityEngine;
 public class Warrior : Job
 {
     [SerializeField] Weapon_Collider m_attackCollier;
-    [SerializeField] PlayerParameter m_parameter;
+
     private PlayerStatus m_status;
+    private bool m_isOneLife;   //一度だけHP1で耐えるかどうか
+    private bool m_isDamageCut; //ダメージカットが発動しているかどうか
+
+    public bool IsOneLife => m_isOneLife;
+
+    public bool IsDamageCut => m_isDamageCut;
 
     private void Start()
     {
@@ -13,6 +19,9 @@ public class Warrior : Job
 
         //パッシブスキルの初期化
         Initialize(JobType.Warrior, AttackType.Physical);
+
+        m_isOneLife = false;
+        m_isDamageCut = false;
     }
 
     protected override void Identity()
@@ -37,17 +46,29 @@ public class Warrior : Job
     protected override void Passive1()
     {
         //全ステータス強化
-        m_status.PassiveStatus += m_parameter;
+        m_status.PassiveStatus += new PlayerParameter(0)
+        {
+            hp = 200,
+            mp = 0,
+            physicalPower = 200,
+            magicPower = 0,
+            physicalDefense = 100,
+            magicDefense = 100,
+            attackSpeed = 0,
+            moveSpeed = 4,
+            openSpeed = 4
+        };
     }
 
     protected override void Passive2()
     {
-        //攻撃速度UP
-        m_status.PassiveStatus.attackSpeed += 3;
+        //一度だけHP1で耐える
+        m_isOneLife = true;
     }
 
     protected override void Passive3()
     {
         //ダメージカット
+        m_isDamageCut = true;
     }
 }

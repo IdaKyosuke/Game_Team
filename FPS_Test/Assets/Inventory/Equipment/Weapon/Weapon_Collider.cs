@@ -20,8 +20,8 @@ public class Weapon_Collider : MonoBehaviourPunCallbacks
 
     private void Start()
 	{
-		// 自分の当たり判定を保持
-		m_collider = GetComponent<Collider>();
+        // 自分の当たり判定を保持
+        m_collider = GetComponent<Collider>();
 		m_collider.enabled = false;
 
 		if(m_parent == null) m_parent = transform.root.gameObject;
@@ -33,12 +33,10 @@ public class Weapon_Collider : MonoBehaviourPunCallbacks
 		// リストをリセット
 		m_hitMasterInfo.Clear();
 		m_collider.enabled = true;
-		//Debug.Log("剣のコライダーは今" + m_boxCollider.enabled);
 	}
 
 	public void EndAttack()
 	{
-		//Debug.Log("コライダーfalse");
 		m_collider.enabled = false;
 	}
 
