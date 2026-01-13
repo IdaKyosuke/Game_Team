@@ -33,13 +33,9 @@ public class Enemy_Nav : MonoBehaviourPunCallbacks
 	[SerializeField] GameObject m_checkAttackCol;
 
 	// 自身のステータス
-	//[SerializeField] Enemy_Data m_data;
 	private int m_hp = 100;
 	private int m_atk;
 	private int m_exp;
-
-	// プレイヤーのステータス
-	[SerializeField] GameObject m_playerStatus;
 
 	// 攻撃を受けたときの血しぶき
 	[SerializeField] GameObject m_blood;
@@ -48,17 +44,6 @@ public class Enemy_Nav : MonoBehaviourPunCallbacks
     void Start()
     {
         m_agent = GetComponent<NavMeshAgent>();
-		/*
-		if(!m_player)
-		{
-			m_player = GameObject.FindWithTag("Player");
-		}
-		if(!m_playerStatus)
-		{
-			m_playerStatus = GameObject.FindWithTag("playerStatus");
-		}
-		m_target = m_player.transform;
-		*/
 		m_charaCon = GetComponent<CharacterController>();
 		m_moveDir = Vector3.zero;
 		m_combat = false;
@@ -70,9 +55,7 @@ public class Enemy_Nav : MonoBehaviourPunCallbacks
 		m_isGetHit = false;
 		m_isHit = false;
 		m_pastHit = m_isHit;
-		//m_hp = m_data.hp;
-		//m_atk = m_data.attack;
-		//m_exp = m_data.exp;
+		m_exp = 300;
 	}
 
 	// Update is called once per frame
@@ -86,19 +69,16 @@ public class Enemy_Nav : MonoBehaviourPunCallbacks
 		// 攻撃が命中した
 		if(!m_pastHit && m_isHit)
 		{
-			// プレイヤーの体力を減らして、攻撃を当てたフラグを立てる
-			//m_playerStatus.GetComponent<Player_DungeonStatus>().GetHit(m_atk);
 			m_pastHit = true;
 		}
-
 
 		// 攻撃中は移動しない
 		if (m_isAttack) return;
 
 		if (!m_isAttack && m_checkAttackCol.GetComponent<Collider_EnemyAttack>().CanAttack())
 		{
-			m_isAttack = true;
 			// 攻撃アニメーションを指定
+			m_isAttack = true;
 			GetComponent<Enemy_Animation>().AttackAnim();
 		}
 
@@ -138,12 +118,12 @@ public class Enemy_Nav : MonoBehaviourPunCallbacks
 	private void SelectMove()
 	{
 		// 移動方向
-		int x = UnityEngine.Random.Range(-1, 2);
-		int z = UnityEngine.Random.Range(-1, 2);
+		int x = Random.Range(-1, 2);
+		int z = Random.Range(-1, 2);
 		m_moveDir = new Vector3(x, 0, z);
 
 		// 移動時間
-		m_moveTime = UnityEngine.Random.Range(m_minMoveTime, m_maxMoveTime);
+		m_moveTime = Random.Range(m_minMoveTime, m_maxMoveTime);
 		m_selected = true;
 	}
 
@@ -172,22 +152,39 @@ public class Enemy_Nav : MonoBehaviourPunCallbacks
 	{
 		if(!m_isDeath && !m_isGetHit && other.gameObject.CompareTag("weapon_player"))
 		{
-			// プレイヤーの武器で攻撃されたらダメージを受ける
-			m_hp -= other.transform.root.GetComponent<PlayerStatus>().Total.physicalPower;
+			//プレイヤー情報の取得
+			PlayerStatus playerStatus = other.transform.root.GetComponent<PlayerStatus>();
+            Job playerJob = other.transform.root.GetComponent<Job>();
+
+            // プレイヤーの武器で攻撃されたらダメージを受ける
+            m_hp -= playerStatus.Total.physicalPower;
+			
 			// 攻撃を受けたフラグを立てる
 			m_isGetHit = true;
+			
+			//死亡確認
 			if(m_hp <= 0)
 			{
 				// 死亡状態にする
 				m_isDeath = true;
+
 				// 死亡アニメーション
 				GetComponent<Enemy_Animation>().IsDeath();
+
 				// 自分の当たり判定を無くす
 				GetComponent<CapsuleCollider>().enabled = false;
-				// プレイヤーに経験値を加算する
-				//m_playerStatus.GetComponent<Player_DungeonStatus>().AddExp(m_exp);
-			}
-		}
+
+                // プレイヤーに経験値を加算する
+                playerStatus.AddExp(m_exp);
+
+				//プレイヤーの職業が僧侶か魔法使いの場合はMPを5回復させる
+				if (playerJob.JobType == JobType.Cleric
+				|| playerJob.JobType == JobType.Wizard)
+				{
+                    playerStatus.MagicHeal(5);
+                }
+            }
+        }
 	}
 
 	// プレイヤーを発見してモードが変わる
@@ -200,7 +197,7 @@ public class Enemy_Nav : MonoBehaviourPunCallbacks
 		// 見つけたプレイヤーを追いかける
 		m_player = player;
 
-		if(m_target)
+        if (m_target)
 		{
 			if(Vector3.Distance(transform.position, m_target.transform.position) > Vector3.Distance(transform.position, player.transform.position))
 			{
@@ -214,12 +211,6 @@ public class Enemy_Nav : MonoBehaviourPunCallbacks
 		}
 
 		Debug.Log("start");
-	}
-
-	// 今のモードを取得
-	public bool IsCombat()
-	{
-		return m_combat;
 	}
 
 	// 攻撃が終了した

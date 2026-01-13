@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using Unity.Jobs.LowLevel.Unsafe;
 using UnityEngine;
 
 public enum ConditionType
@@ -20,6 +21,7 @@ public class Condition : MonoBehaviour
     private ConditionType m_condition;      //自身の状態
     private ConditionType m_grantCondition; //相手に付与可能な状態異常
     private PlayerStatus m_status;
+    private JobType m_jobType;
     private int m_count;
     private int m_interval;
     private int m_value;
@@ -38,6 +40,7 @@ public class Condition : MonoBehaviour
 
     private void Awake()
     {
+        m_jobType = GetComponent<Job>().JobType;
         m_status = GetComponent<PlayerStatus>();
 
         m_condition = ConditionType.None;
@@ -61,6 +64,9 @@ public class Condition : MonoBehaviour
     {
         //すでに状態異常の場合は処理しない
         if (m_condition != ConditionType.None) return;
+
+        //僧侶の場合は毒状態を付与しない
+        if (m_jobType == JobType.Cleric && conditionType == ConditionType.Poison) return;
 
         //状態異常のデータを取得
         m_condition = conditionType;

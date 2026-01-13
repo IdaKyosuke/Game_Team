@@ -8,11 +8,11 @@ public class StatusData : ScriptableObject
     //レベルごとのパラメータ
     [SerializeField] List<PlayerParameter> parameters;
 
-    //指定レベルのステータスを取得
+    //レベルに応じたステータスの取得
     public PlayerParameter GetStatus(int level) => parameters[level - 1];
 
     //最大レベルの取得
-    public int MaxLevel => parameters.Count + 1;
+    public int MaxLevel => parameters.Count;
 
     //インスペクター上で変更があればレベルを更新
     private void OnValidate()

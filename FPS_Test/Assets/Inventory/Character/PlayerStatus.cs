@@ -18,6 +18,7 @@ public class PlayerStatus : MonoBehaviourPunCallbacks
     private PlayerParameter m_totalStatus;              //合計ステータス
     private int m_hp;   //残り体力
     private int m_mp;   //残り魔力
+    private int m_exp;  //現在の経験値
     private int m_level;
 
     public PlayerParameter Value => m_status;
@@ -46,6 +47,22 @@ public class PlayerStatus : MonoBehaviourPunCallbacks
     {
         get { return m_mp; }
         set { m_mp = value; }
+    }
+
+    public int CurrentExp
+    {
+        get { return m_exp; }
+        set { m_exp = value; }
+    }
+
+    public int Level
+    {
+        get { return m_level; }
+    }
+
+    public int MaxLevel
+    {
+        get { return m_statusData.MaxLevel; }
     }
 
     private void Awake()
@@ -106,32 +123,48 @@ public class PlayerStatus : MonoBehaviourPunCallbacks
         }
     }
 
-    public void LevelUp(int exp)
+    public void AddExp(int exp)
     {
         //既にレベルマックスなら何もしない
         if (m_statusData.MaxLevel <= m_level) return;
+        Debug.Log("現在のレベル[ " + m_level + " ]");
+        Debug.Log("上限のレベル[ " + MaxLevel+ " ]");
 
         //経験値の加算
-        m_currentStatus.requiredExp += exp;
+        m_exp += exp;
 
         //レベルアップ
-        if (m_currentStatus.requiredExp <= m_status.requiredExp) return;
+        if (m_exp <= m_status.requiredExp) return;
 
         //レベルの加算
         m_level++;
-        m_currentStatus.requiredExp = 0;
+        m_exp = 0;
+        Debug.Log("レベルアップ");
 
         //ステータスの設定
         m_status = m_statusData.GetStatus(m_level);
+
+        //体力と魔力を全回復
+        m_hp = m_status.hp;
+        m_mp = m_status.mp;
     }
 
     public void Heal(int value)
     {
         //回復
-        m_currentStatus.hp += value;
+        m_hp += value;
 
         //上限値を超えないようにする
-        if (m_currentStatus.hp >= m_totalStatus.hp) m_currentStatus.hp = m_totalStatus.hp;
+        if (m_hp >= m_totalStatus.hp) m_hp = m_totalStatus.hp;
+    }
+
+    public void MagicHeal(int value)
+    {
+        //回復
+        m_mp += value;
+
+        //上限値を超えないようにする
+        if (m_mp >= m_totalStatus.mp) m_mp = m_totalStatus.mp;
     }
 
     public void Damage(int power, AttackType attackType, int ConditionTypeNum, int grantRate)
@@ -156,7 +189,6 @@ public class PlayerStatus : MonoBehaviourPunCallbacks
                 break;
         }
 
-
 		Debug.Log("だまげ" + damage);
         //マイナスのダメージは与えない
         if (damage <= 0) return;
@@ -174,8 +206,6 @@ public class PlayerStatus : MonoBehaviourPunCallbacks
                 m_condition.Init(conditionType);
             }
         }
-
-		Debug.Log("現状の体力 : " + m_hp);
 
         //体力の確認
         if (m_hp <= 0)
