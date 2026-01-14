@@ -37,16 +37,22 @@ public class Item_Object : MonoBehaviour
 	private EquipmentStatus m_equipmentInfo = null;
 
 	// デバッグ用
-	[SerializeField] string m_name;
 	[SerializeField] GameObject m_mine;
 
 	// テスト用（自分のリストのindex）
 	private int m_index;
 
-	// アイテムの価値
-	[SerializeField] Info_ItemValue m_itemValue;
 	// アイテムが購入予定に選択されているか
 	private bool m_isSelected = false;
+
+	// アイテムの情報
+	MapObjectEntity m_itemData;
+
+	public MapObjectEntity ItemData
+	{
+		get { return m_itemData; }
+		set { m_itemData = value; }
+	}
 
 	// Start is called before the first frame update
 	void Start()
@@ -345,7 +351,7 @@ public class Item_Object : MonoBehaviour
 	// オブジェクトの名前を取得
 	public string GetName()
 	{
-		return m_name;
+		return m_itemData.displayName;
 	}
 
 	// 生成時にstashManagerとmoveTransformを設定する
@@ -370,7 +376,7 @@ public class Item_Object : MonoBehaviour
 	// アイテムの価値を取得する
 	public int GetValue()
 	{
-		return m_itemValue.GetValue();
+		return m_itemData.price;
 	}
 
 	public void PointerDownForShop()

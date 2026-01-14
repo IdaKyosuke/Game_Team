@@ -9,4 +9,9 @@ public static class Loader
 	{
 		return Addressables.LoadAssetAsync<GameObject>(address);
 	}
+
+	public static AsyncOperationHandle<Sprite> LoadSpritetAsync(string address)
+	{
+		return Addressables.LoadAssetAsync<Sprite>(address);
+	}
 }
