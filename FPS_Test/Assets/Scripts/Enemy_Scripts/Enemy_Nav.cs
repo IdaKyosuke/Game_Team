@@ -14,20 +14,20 @@ public class Enemy_Nav : MonoBehaviourPunCallbacks
 	// 通常の移動用
 	private CharacterController m_charaCon;
 	private Vector3 m_moveDir;
-	[SerializeField] float m_maxMoveTime;	// 移動時間の最大値
-	[SerializeField] float m_minMoveTime;	// 移動時間の最小値
+	[SerializeField] float m_maxMoveTime;   // 移動時間の最大値
+	[SerializeField] float m_minMoveTime;   // 移動時間の最小値
 	private float m_moveTime;
 	private float m_countTime;
 	private bool m_selected;    // 行動が選択されたか
 	private bool m_isAttack;    // 攻撃が選択されたか
 	private bool m_isDeath;     // 死亡したか
 	private bool m_isHit;   // 攻撃がプレイヤーに当たったか
-	private bool m_pastHit;	// 今の攻撃でプレイヤーの体力を減らしたか（当たり判定を1回に抑える用）
+	private bool m_pastHit; // 今の攻撃でプレイヤーの体力を減らしたか（当たり判定を1回に抑える用）
 
 	[SerializeField] float m_moveSpeed;
 
 	private bool m_combat;  // 戦闘モードか
-	private bool m_isGetHit;	// 攻撃を受けたか
+	private bool m_isGetHit;    // 攻撃を受けたか
 
 	// 攻撃可能か判断する用のコライダー
 	[SerializeField] GameObject m_checkAttackCol;
@@ -43,10 +43,10 @@ public class Enemy_Nav : MonoBehaviourPunCallbacks
 	// 動きを止めるための判定をするコライダー
 	[SerializeField] ForStop_Collider m_collider;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        m_agent = GetComponent<NavMeshAgent>();
+	// Start is called before the first frame update
+	void Start()
+	{
+		m_agent = GetComponent<NavMeshAgent>();
 		m_charaCon = GetComponent<CharacterController>();
 		m_moveDir = Vector3.zero;
 		m_combat = false;
@@ -63,14 +63,14 @@ public class Enemy_Nav : MonoBehaviourPunCallbacks
 
 	// Update is called once per frame
 	void Update()
-    {
+	{
 		if (!PhotonNetwork.IsMasterClient) return;
 
 		// 死亡したら行動しない
-		if(m_isDeath) return;
+		if (m_isDeath) return;
 
 		// 攻撃が命中した
-		if(!m_pastHit && m_isHit)
+		if (!m_pastHit && m_isHit)
 		{
 			m_pastHit = true;
 		}
@@ -88,7 +88,7 @@ public class Enemy_Nav : MonoBehaviourPunCallbacks
 		if (m_combat)
 		{
 			Combat();
-        }
+		}
 		else
 		{
 			//Wandering();
@@ -98,7 +98,7 @@ public class Enemy_Nav : MonoBehaviourPunCallbacks
 	// 徘徊モード
 	private void Wandering()
 	{
-		if(!m_selected)
+		if (!m_selected)
 		{
 			SelectMove();
 		}
@@ -111,7 +111,7 @@ public class Enemy_Nav : MonoBehaviourPunCallbacks
 	// 戦闘モード
 	private void Combat()
 	{
-		if(!m_collider.GetCheckFlg())
+		if (!m_collider.GetCheckFlg())
 		{
 			// プレイヤーに向かって移動
 			m_agent.SetDestination(m_target.position);
@@ -141,7 +141,7 @@ public class Enemy_Nav : MonoBehaviourPunCallbacks
 	{
 		m_countTime += Time.deltaTime;
 
-		if(m_countTime >= m_moveTime)
+		if (m_countTime >= m_moveTime)
 		{
 			// 移動時間を超えた
 			m_selected = false;
@@ -159,48 +159,70 @@ public class Enemy_Nav : MonoBehaviourPunCallbacks
 
 	private void OnTriggerEnter(Collider other)
 	{
-		if(!m_isDeath && !m_isGetHit && other.gameObject.CompareTag("weapon_player"))
+		// プレイヤーの物理攻撃を受けた
+		if (!m_isDeath && !m_isGetHit && other.gameObject.CompareTag("weapon_player"))
 		{
-			//プレイヤー情報の取得
-			PlayerStatus playerStatus = other.transform.root.GetComponent<PlayerStatus>();
-            Job playerJob = other.transform.root.GetComponent<Job>();
-			Weapon_Collider weapon = other.GetComponent<Weapon_Collider>();
+			Damage(other.gameObject);
+		}
 
-			//基礎攻撃力
-			float damage = playerStatus.Total.physicalPower;
+		// プレイヤーの魔法攻撃を受けた
+		if (!m_isDeath && !m_isGetHit && other.gameObject.CompareTag("weapon_magic"))
+		{
+			//Damage(other.GetComponent<MagicAttack>().Parent);
+			Debug.Log("魔法攻撃が当たった");
+		}
+	}
 
-            //僧侶の攻撃は1.2倍にする
-            if (weapon.AttackType == AttackType.Cleric) damage *= 1.2f;
+	private void Damage(GameObject other)
+	{
+		//プレイヤー情報の取得
+		PlayerStatus playerStatus = transform.root.GetComponent<PlayerStatus>();
+		Job playerJob = other.transform.root.GetComponent<Job>();
+		Weapon_Collider weapon = other.GetComponent<Weapon_Collider>();
 
-            //被弾処理
-            m_hp -= (int)damage;
-			
-			// 攻撃を受けたフラグを立てる
-			m_isGetHit = true;
-			
-			//死亡確認
-			if(m_hp <= 0)
+		//基礎攻撃力
+		float damage = playerStatus.Total.physicalPower;
+
+		//僧侶の攻撃は1.2倍にする
+		if (weapon.AttackType == AttackType.Cleric) damage *= 1.2f;
+
+		//プレイヤーが魔法使いかつ物理攻撃の時はMPを2回復させる
+		if (playerJob.JobType == JobType.Wizard)
+		{
+			if (weapon.AttackType == AttackType.Physical)
 			{
-				// 死亡状態にする
-				m_isDeath = true;
+				other.transform.root.GetComponent<PlayerStatus>().MagicHeal(2);
+			}
+		}
 
-				// 死亡アニメーション
-				GetComponent<Enemy_Animation>().IsDeath();
+		//被弾処理
+		m_hp -= (int)damage;
 
-				// 自分の当たり判定を無くす
-				GetComponent<CapsuleCollider>().enabled = false;
+		// 攻撃を受けたフラグを立てる
+		m_isGetHit = true;
 
-                // プレイヤーに経験値を加算する
-                playerStatus.AddExp(m_exp);
+		//死亡確認
+		if (m_hp <= 0)
+		{
+			// 死亡状態にする
+			m_isDeath = true;
 
-				//プレイヤーの職業が僧侶か魔法使いの場合はMPを5回復させる
-				if (playerJob.JobType == JobType.Cleric
-				|| playerJob.JobType == JobType.Wizard)
-				{
-                    playerStatus.MagicHeal(5);
-                }
-            }
-        }
+			// 死亡アニメーション
+			GetComponent<Enemy_Animation>().IsDeath();
+
+			// 自分の当たり判定を無くす
+			GetComponent<CapsuleCollider>().enabled = false;
+
+			// プレイヤーに経験値を加算する
+			other.transform.root.GetComponent<PlayerStatus>().AddExp(m_exp);
+
+			//プレイヤーの職業が僧侶か魔法使いの場合はMPを5回復させる
+			if (other.GetComponent<Job>().JobType == JobType.Cleric
+			|| other.GetComponent<Job>().JobType == JobType.Wizard)
+			{
+				transform.root.GetComponent<PlayerStatus>().MagicHeal(5);
+			}
+		}
 	}
 
 	// プレイヤーを発見してモードが変わる
@@ -213,9 +235,9 @@ public class Enemy_Nav : MonoBehaviourPunCallbacks
 		// 見つけたプレイヤーを追いかける
 		m_player = player;
 
-        if (m_target)
+		if (m_target)
 		{
-			if(Vector3.Distance(transform.position, m_target.transform.position) > Vector3.Distance(transform.position, player.transform.position))
+			if (Vector3.Distance(transform.position, m_target.transform.position) > Vector3.Distance(transform.position, player.transform.position))
 			{
 				// PlayerModel_TPS側のHipsが引っかかる
 				m_target = m_player.transform;
