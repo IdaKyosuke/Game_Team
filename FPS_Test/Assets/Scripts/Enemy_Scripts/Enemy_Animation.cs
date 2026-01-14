@@ -113,9 +113,15 @@ public class Enemy_Animation : MonoBehaviour
 		m_isDeath = true;
 	}
 
-	// ----武器の当たり判定の管理----
-	// 有効にする
-	public void EnableCol()
+	// 死亡アニメーションのフラグを折る
+	public void FinishDeath()
+	{
+		m_anim.SetBool("death", false);
+    }
+
+    // ----武器の当たり判定の管理----
+    // 有効にする
+    public void EnableCol()
 	{
 		m_weaponCol.SetActive(true);
 	}

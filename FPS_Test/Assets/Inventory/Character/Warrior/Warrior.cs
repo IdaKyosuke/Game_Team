@@ -22,7 +22,19 @@ public class Warrior : Job
         m_isDamageCut = false;
     }
 
-    protected override void Identity()
+    public override void Attack()
+    {
+        //攻撃コライダー有効化
+        m_weapon.enabled = true;
+    }
+
+    public override void AttackEnd()
+    {
+        //攻撃コライダー無効化
+        m_weapon.enabled = false;
+    }
+
+    public override void Identity()
     {
         //固有アクションなし
     }

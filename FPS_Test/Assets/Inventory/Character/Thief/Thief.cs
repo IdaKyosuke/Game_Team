@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class Thief : Job
 {
+    private const int PassiveValue = 10;
+
     [SerializeField] GameObject m_trap;
     [SerializeField] Weapon_Collider m_attackCollier;
 
@@ -22,26 +24,34 @@ public class Thief : Job
         Initialize(JobType.Thief, AttackType.Physical);
     }
 
-    protected override void Identity()
+    public override void Attack()
     {
-        //固有アクション
-        if (Input.GetKeyDown(KeyCode.Q))
-        {
-            //罠の設置
-            Instantiate(m_trap, transform.position, Quaternion.identity);
-        }
+        //攻撃コライダー有効化
+        m_weapon.enabled = true;
+    }
+
+    public override void AttackEnd()
+    {
+        //攻撃コライダー無効化
+        m_weapon.enabled = false;
+    }
+
+    public override void Identity()
+    {
+        //罠の設置
+        Instantiate(m_trap, transform.position, Quaternion.identity);
     }
 
     protected override void Passive1()
     {
         //移動速度UP
-        m_status.PassiveStatus.moveSpeed += 10;
+        m_status.PassiveStatus.moveSpeed += PassiveValue;
     }
 
     protected override void Passive2()
     {
         //開封速度UP
-        m_status.PassiveStatus.openSpeed += 10;
+        m_status.PassiveStatus.openSpeed += PassiveValue;
     }
 
     protected override void Passive3()

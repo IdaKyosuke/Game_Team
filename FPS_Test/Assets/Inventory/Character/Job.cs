@@ -24,6 +24,8 @@ public abstract class Job : MonoBehaviour
 
     private Action[] actions;
 
+    protected Weapon_Collider m_weapon;
+    protected GameObject m_magicBall;
     protected JobType m_jobType;
     protected AttackType m_attackType;
 
@@ -31,10 +33,11 @@ public abstract class Job : MonoBehaviour
 
     public AttackType AttackType => m_attackType;
 
-    private void Update()
+    private void Awake()
     {
-        //固有アクション
-        Identity();
+        //武器オブジェクトの取得
+        m_weapon = GetComponent<PlayerController>().Weapon;
+        m_magicBall = GetComponent<PlayerController>().MagicBall;
     }
 
     public void Initialize(JobType jobType, AttackType attackType)
@@ -55,13 +58,18 @@ public abstract class Job : MonoBehaviour
         m_attackType = attackType;
     }
 
-    //固有アクション
-    protected abstract void Identity();
-
     //各ジョブ固有のパッシブスキルは派生先で実装する
     protected abstract void Passive1();
                                       
     protected abstract void Passive2();
                                       
     protected abstract void Passive3();
+
+    //固有アクション
+    public abstract void Identity();
+
+    //攻撃処理
+    public abstract void Attack();
+
+    public abstract void AttackEnd();
 }

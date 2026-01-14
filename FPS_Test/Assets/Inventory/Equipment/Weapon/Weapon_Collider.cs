@@ -1,5 +1,6 @@
 using Photon.Pun;
 using System.Collections.Generic;
+using System.Net.Sockets;
 using UnityEngine;
 
 public class Weapon_Collider : MonoBehaviourPunCallbacks
@@ -23,13 +24,13 @@ public class Weapon_Collider : MonoBehaviourPunCallbacks
 	{
         // 自分の当たり判定を保持
         m_collider = GetComponent<Collider>();
-		m_collider.enabled = false;
+		if(gameObject.CompareTag("weapon_player")) m_collider.enabled = false;
 
-		if(m_parent == null) m_parent = transform.root.gameObject;
+        if (m_parent == null) m_parent = transform.root.gameObject;
 		m_parentID = m_parent.gameObject.GetInstanceID();
     }
 
-	public void StartAttack()
+    public void StartAttack()
 	{
 		// リストをリセット
 		m_hitMasterInfo.Clear();

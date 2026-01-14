@@ -3,31 +3,40 @@ using UnityEngine;
 
 public class MagicAttack : MonoBehaviour
 {
-    [SerializeField] float m_speed = 5;
-    [SerializeField] float m_lifeTime = 0.4f;
+    private const float Speed = 10;
+    private const float LifeTime = 0.3f;
 
+    private GameObject m_parent;
+    private Rigidbody m_rb;
     private Vector3 m_dir;
+
+    public GameObject Parent
+    {
+        get { return m_parent; }
+        set { m_parent = value; }
+    }
 
     private void Start()
     {
+        m_rb = GetComponent<Rigidbody>();
+
         //ˆê’èŠÔŒã‚Éíœ
-        Destroy(gameObject, m_lifeTime);
+        Destroy(gameObject, LifeTime);
     }
 
     private void FixedUpdate()
     {
-        //‘O•û‚ÉˆÚ“®
-        transform.position += m_dir * m_speed * Time.deltaTime;
+        //‘Oi
+        m_rb.MovePosition(m_rb.position + m_dir * Speed * Time.fixedDeltaTime);
+    }
+
+    public void Init(Vector3 dir)
+    {
+        m_dir = dir;
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        //‰½‚©‚É“–‚½‚Á‚½‚çíœ
-        Destroy(gameObject);
-    }
-
-    public void Init(Vector3 dir)
-    { 
-        m_dir = dir;
+       Destroy(gameObject);
     }
 }

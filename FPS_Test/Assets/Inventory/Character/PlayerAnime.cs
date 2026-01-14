@@ -10,12 +10,14 @@ public class PlayerAnime : MonoBehaviourPunCallbacks
 
     public void OnAttack1()
     { 
-        m_attackCollier?.StartAttack();
+        //E‹Æ•Ê‚ÌUŒ‚ˆ—
+        transform.root.GetComponent<Job>().Attack();
     }
 
     public void OnAttack1End()
-    { 
-		m_attackCollier?.EndAttack();
+    {
+        //E‹Æ•Ê‚ÌUŒ‚I—¹ˆ—
+        transform.root.GetComponent<Job>().AttackEnd();
     }
 
     public void ResetBool()

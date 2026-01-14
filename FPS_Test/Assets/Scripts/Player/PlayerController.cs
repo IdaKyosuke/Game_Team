@@ -15,6 +15,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
 	[SerializeField] PlayerAnime m_playerAnim;          // アニメーション管理用オブジェクト
 	[SerializeField] GameObject m_spine;
 	[SerializeField] Weapon_Collider m_weapon;
+	[SerializeField] GameObject m_magicBall;
 
 	private int m_playerId;
 	private CharacterController m_characterController;  // CharacterController型の変数
@@ -34,6 +35,10 @@ public class PlayerController : MonoBehaviourPunCallbacks
 	public Info_InventorySize InventortSize => m_inventortSize;
 
 	public PlayerStatus Status => m_status;
+
+	public Weapon_Collider Weapon => m_weapon;
+
+	public GameObject MagicBall => m_magicBall;
 
     private void Awake()
     {
@@ -108,8 +113,18 @@ public class PlayerController : MonoBehaviourPunCallbacks
             m_animator[1].SetBool("attack", true);
         }
 
-		// デバッグ用
-		if(Input.GetKeyDown("5"))
+		//固有アクション
+		if (Input.GetKeyDown(KeyCode.Q))
+		{
+            // 攻撃中は無視
+            if (m_playerAnim.IsAttack) return;
+
+            // 職業別の固有アクション
+            m_job.Identity();
+        }
+
+        // デバッグ用
+        if (Input.GetKeyDown("5"))
 		{
 			m_stashController.Save();
 			m_gameManager.ReturnLobby();

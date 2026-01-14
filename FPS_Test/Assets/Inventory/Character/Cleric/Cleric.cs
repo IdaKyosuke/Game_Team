@@ -3,10 +3,9 @@ using UnityEngine;
 
 public class Cleric : Job
 {
-    [SerializeField] Weapon_Collider m_attackCollier;
-
-    private const int HealAmount = 5;           //回復量
+    private const int HealAmount = 3;           //回復量
     private const float HealInterval = 5.0f;    //回復間隔
+    private const int BarrierMaxValue = 300;        //バリア最大値
 
     private PlayerStatus m_status;
     private int m_barrierPower;     //バリア量
@@ -40,7 +39,7 @@ public class Cleric : Job
         }
     }
 
-    protected override void Identity()
+    public override void Identity()
     {
         //固有アクション
     }
@@ -60,7 +59,19 @@ public class Cleric : Job
     protected override void Passive3()
     {
         //バリア付与
-        m_barrierPower = 300;
+        m_barrierPower = BarrierMaxValue;
+    }
+
+    public override void Attack()
+    {
+        //攻撃コライダー有効化
+        m_weapon.enabled = true;
+    }
+
+    public override void AttackEnd()
+    {
+        //攻撃コライダー無効化
+        m_weapon.enabled = false;
     }
 
     public int GetBarrierDamage(int damage)

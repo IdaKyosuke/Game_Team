@@ -157,76 +157,92 @@ public class Enemy_Nav : MonoBehaviourPunCallbacks
 		}
 	}
 
-	private void OnTriggerEnter(Collider other)
-	{
-		// プレイヤーの物理攻撃を受けた
-		if (!m_isDeath && !m_isGetHit && other.gameObject.CompareTag("weapon_player"))
-		{
-			Damage(other.gameObject);
-		}
+    private void OnTriggerEnter(Collider other)
+    {
+        //プレイヤ－情報の取得
+        PlayerStatus playerStatus;
+        Job playerJob;
+        Weapon_Collider weapon;
 
-		// プレイヤーの魔法攻撃を受けた
-		if (!m_isDeath && !m_isGetHit && other.gameObject.CompareTag("weapon_magic"))
-		{
-			//Damage(other.GetComponent<MagicAttack>().Parent);
-			Debug.Log("魔法攻撃が当たった");
-		}
-	}
+        // プレイヤーの物理攻撃を受けた
+        if (!m_isDeath && !m_isGetHit && other.gameObject.CompareTag("weapon_player"))
+        {
+            playerStatus = other.transform.root.GetComponent<PlayerStatus>();
+            playerJob = other.transform.root.GetComponent<Job>();
+            weapon = other.GetComponent<Weapon_Collider>();
+            Damage(playerStatus, playerJob, weapon, playerJob.AttackType);
+        }
 
-	private void Damage(GameObject other)
-	{
-		//プレイヤー情報の取得
-		PlayerStatus playerStatus = transform.root.GetComponent<PlayerStatus>();
-		Job playerJob = other.transform.root.GetComponent<Job>();
-		Weapon_Collider weapon = other.GetComponent<Weapon_Collider>();
+        // プレイヤーの魔法攻撃を受けた
+        if (!m_isDeath && !m_isGetHit && other.gameObject.CompareTag("weapon_magic"))
+        {
+            playerStatus = other.GetComponent<MagicAttack>().Parent.GetComponent<PlayerStatus>();
+            playerJob = other.GetComponent<MagicAttack>().Parent.GetComponent<Job>();
+            weapon = other.GetComponent<Weapon_Collider>();
+            Damage(playerStatus, playerJob, weapon, playerJob.AttackType);
+        }
+    }
 
-		//基礎攻撃力
-		float damage = playerStatus.Total.physicalPower;
+    private void Damage(PlayerStatus playerStatus, Job playerJob, Weapon_Collider weapon, AttackType attackType)
+    {
+        //ダメ―ジ計算
+        float damage = 0;
+        switch (attackType)
+        {
+            case AttackType.Physical:
+                damage += playerStatus.Total.physicalPower;
+                break;
 
-		//僧侶の攻撃は1.2倍にする
-		if (weapon.AttackType == AttackType.Cleric) damage *= 1.2f;
+            case AttackType.Magical:
+                damage += playerStatus.Total.magicPower;
+                break;
 
-		//プレイヤーが魔法使いかつ物理攻撃の時はMPを2回復させる
-		if (playerJob.JobType == JobType.Wizard)
-		{
-			if (weapon.AttackType == AttackType.Physical)
-			{
-				other.transform.root.GetComponent<PlayerStatus>().MagicHeal(2);
-			}
-		}
+            case AttackType.Cleric:
+                damage += playerStatus.Total.physicalPower * 1.2f;
+                break;
+        }
 
-		//被弾処理
-		m_hp -= (int)damage;
+        //プレイヤーが魔法使いかつ物理攻撃の時はMPを2回復させる
+        if (playerJob.JobType == JobType.Wizard)
+        {
+            if (weapon.AttackType == AttackType.Physical)
+            {
+                playerStatus.MagicHeal(2);
+            }
+        }
 
-		// 攻撃を受けたフラグを立てる
-		m_isGetHit = true;
+        //被弾処理
+        m_hp -= (int)damage;
 
-		//死亡確認
-		if (m_hp <= 0)
-		{
-			// 死亡状態にする
-			m_isDeath = true;
+        // 攻撃を受けたフラグを立てる
+        m_isGetHit = true;
 
-			// 死亡アニメーション
-			GetComponent<Enemy_Animation>().IsDeath();
+        //死亡確認
+        if (m_hp <= 0)
+        {
+            // 死亡状態にする
+            m_isDeath = true;
 
-			// 自分の当たり判定を無くす
-			GetComponent<CapsuleCollider>().enabled = false;
+            // 死亡アニメーション
+            GetComponent<Enemy_Animation>().IsDeath();
 
-			// プレイヤーに経験値を加算する
-			other.transform.root.GetComponent<PlayerStatus>().AddExp(m_exp);
+            // 自分の当たり判定を無くす
+            GetComponent<CapsuleCollider>().enabled = false;
 
-			//プレイヤーの職業が僧侶か魔法使いの場合はMPを5回復させる
-			if (other.GetComponent<Job>().JobType == JobType.Cleric
-			|| other.GetComponent<Job>().JobType == JobType.Wizard)
-			{
-				transform.root.GetComponent<PlayerStatus>().MagicHeal(5);
-			}
-		}
-	}
+            // プレイヤーに経験値を加算する
+            playerStatus.AddExp(m_exp);
 
-	// プレイヤーを発見してモードが変わる
-	public void InCombat(GameObject player)
+            //プレイヤーの職業が僧侶か魔法使いの場合はMPを5回復させる
+            if (playerJob.JobType == JobType.Cleric
+            || playerJob.JobType == JobType.Wizard)
+            {
+                playerStatus.MagicHeal(5);
+            }
+        }
+    }
+
+    // プレイヤーを発見してモードが変わる
+    public void InCombat(GameObject player)
 	{
 		m_combat = true;
 		// 移動をnavmeshに任せる

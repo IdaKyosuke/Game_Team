@@ -74,6 +74,7 @@ public class PlayerStatus : MonoBehaviourPunCallbacks
         //実行時ステータスの設定
         m_currentStatus = m_status;
         m_hp = m_currentStatus.hp;
+        m_mp = m_currentStatus.mp;
 
         //合計ステータスの初期化
         m_totalStatus = new PlayerParameter(m_level);
