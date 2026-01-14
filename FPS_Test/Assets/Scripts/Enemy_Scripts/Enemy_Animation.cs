@@ -40,6 +40,9 @@ public class Enemy_Animation : MonoBehaviour
 	{
 		if (m_isDeath) return;
 
+		Debug.Log("m_startCoolTime : " + m_startCoolTime);
+		Debug.Log("m_isAttack : " + m_isAttack);
+
 		// クールタイムのカウント
 		if (m_startCoolTime)
 		{
@@ -47,8 +50,8 @@ public class Enemy_Animation : MonoBehaviour
 			if(m_countTime >= m_coolTime)
 			{
 				m_startCoolTime = false;
-				m_isAttack = false;
 				m_countTime = 0;
+				m_isAttack = false;
 				// 攻撃フラグを折る
 				GetComponent<Enemy_Nav>().FinishAttack();
 			}
@@ -64,6 +67,9 @@ public class Enemy_Animation : MonoBehaviour
 			m_isAttack = true;
 			// 攻撃アニメーションを指定
 			m_anim.SetInteger("attack", UnityEngine.Random.Range(1, m_attackAnimNum + 1));
+
+			Debug.Log("start attack");
+
 		}
 	}
 
@@ -103,7 +109,7 @@ public class Enemy_Animation : MonoBehaviour
 	// 死亡アニメーションの開始
 	public void IsDeath()
 	{
-		m_anim.SetTrigger("death");
+		m_anim.SetBool("death", true);
 		m_isDeath = true;
 	}
 

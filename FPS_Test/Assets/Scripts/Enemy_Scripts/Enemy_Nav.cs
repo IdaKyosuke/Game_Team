@@ -40,6 +40,9 @@ public class Enemy_Nav : MonoBehaviourPunCallbacks
 	// 攻撃を受けたときの血しぶき
 	[SerializeField] GameObject m_blood;
 
+	// 動きを止めるための判定をするコライダー
+	[SerializeField] ForStop_Collider m_collider;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -108,10 +111,16 @@ public class Enemy_Nav : MonoBehaviourPunCallbacks
 	// 戦闘モード
 	private void Combat()
 	{
-		// プレイヤーに向かって移動
-		m_agent.SetDestination(m_target.position);
-
-		Debug.Log("[ " + m_target + " ]を追跡中");
+		if(!m_collider.GetCheckFlg())
+		{
+			// プレイヤーに向かって移動
+			m_agent.SetDestination(m_target.position);
+			m_agent.isStopped = false;
+		}
+		else
+		{
+			m_agent.isStopped = true;
+		}
 	}
 
 	// 徘徊モード中、移動方向と時間を決める

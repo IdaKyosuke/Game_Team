@@ -19,7 +19,6 @@ public class Collider_EnemyAttack : MonoBehaviour
 		if (other.gameObject.CompareTag("playerModel"))
 		{
 			m_canAttack = true;
-			Debug.Log("attackReady");
 		}
 	}
 
@@ -28,7 +27,6 @@ public class Collider_EnemyAttack : MonoBehaviour
 		if (other.gameObject.CompareTag("playerModel"))
 		{
 			m_canAttack = false;
-			Debug.Log("attackNotReady");
 		}
 	}
 
