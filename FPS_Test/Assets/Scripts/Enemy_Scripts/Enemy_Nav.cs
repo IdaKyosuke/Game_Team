@@ -81,7 +81,7 @@ public class Enemy_Nav : MonoBehaviourPunCallbacks
 		}
 		else
 		{
-			//Wandering();
+			Wandering();
 		}
 
 		if (!m_isAttack && m_checkAttackCol.GetComponent<Collider_EnemyAttack>().CanAttack())
