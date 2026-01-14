@@ -10,6 +10,8 @@ public class ForStop_Collider : MonoBehaviour
 	{
 		if(other.gameObject.CompareTag("playerModel"))
 		{
+			Debug.Log("hit player");
+
 			m_isCheck = true;
 		}
 	}
@@ -18,6 +20,7 @@ public class ForStop_Collider : MonoBehaviour
 	{
 		if (other.gameObject.CompareTag("playerModel"))
 		{
+			Debug.Log("leave player");
 			m_isCheck = false;
 		}
 	}

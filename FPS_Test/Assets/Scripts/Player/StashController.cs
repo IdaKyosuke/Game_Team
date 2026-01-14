@@ -146,7 +146,7 @@ public class StashController : MonoBehaviourPunCallbacks
     public void OnDeathStash()
     {
 		m_stashManager.GetComponent<StashManager>().Save();
-		Debug.Log("death");
+		//Debug.Log("death");
 		m_isDeath = true;
     }
 

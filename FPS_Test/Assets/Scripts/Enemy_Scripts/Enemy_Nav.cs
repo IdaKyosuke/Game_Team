@@ -75,16 +75,6 @@ public class Enemy_Nav : MonoBehaviourPunCallbacks
 			m_pastHit = true;
 		}
 
-		// 攻撃中は移動しない
-		if (m_isAttack) return;
-
-		if (!m_isAttack && m_checkAttackCol.GetComponent<Collider_EnemyAttack>().CanAttack())
-		{
-			// 攻撃アニメーションを指定
-			m_isAttack = true;
-			GetComponent<Enemy_Animation>().AttackAnim();
-		}
-
 		if (m_combat)
 		{
 			Combat();
@@ -93,6 +83,15 @@ public class Enemy_Nav : MonoBehaviourPunCallbacks
 		{
 			//Wandering();
 		}
+
+		if (!m_isAttack && m_checkAttackCol.GetComponent<Collider_EnemyAttack>().CanAttack())
+		{
+			// 攻撃アニメーションを指定
+			m_isAttack = true;
+			GetComponent<Enemy_Animation>().AttackAnim();
+		}
+
+		Debug.Log("EnemyNav m_attack : " + m_isAttack);
 	}
 
 	// 徘徊モード
@@ -120,6 +119,7 @@ public class Enemy_Nav : MonoBehaviourPunCallbacks
 		else
 		{
 			m_agent.isStopped = true;
+			Debug.Log("stop");
 		}
 	}
 
