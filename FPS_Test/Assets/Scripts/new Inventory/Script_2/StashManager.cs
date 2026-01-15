@@ -881,8 +881,9 @@ public class StashManager : MonoBehaviourPunCallbacks
 		ItemList info = ScriptableObject.CreateInstance<ItemList>();
 		// マス目座標を保存
 		info.SetGridIndex(item.GetComponent<Item_Object>().GetGridIndex());
+		Debug.Log(item.GetComponent<Item_Object>().ItemData.objectName);
 		// プレハブを取得
-		Loader.LoadGameObjectAsync(item.GetComponent<Item_Object>().GetName()).Completed += op =>
+		Loader.LoadGameObjectAsync(item.GetComponent<Item_Object>().ItemData.objectName).Completed += op =>
 		{
 			info.SetPrefab(op.Result);
 			Addressables.Release(op);

@@ -159,6 +159,7 @@ public class TreasureBoxItem : MonoBehaviourPunCallbacks
 		// ƒvƒŒƒnƒu‚ðŽæ“¾
 		Loader.LoadGameObjectAsync(treasureItem.objectName).Completed += op =>
 		{ 
+			op.Result.GetComponent<Item_Object>().ItemData = treasureItem;
 			info.SetPrefab(op.Result);
 		};
 
@@ -206,7 +207,6 @@ public class TreasureBoxItem : MonoBehaviourPunCallbacks
 		GetComponent<TreasureAnime>().Open();
 		Debug.Log("view.RPC s : " + view);
 		view.RPC("ReceiveInventoryData", view.Owner, GetInfo(), GetItemList());
-		Debug.Log(GetItemList()[0].name);
 		Debug.Log("view.RPC e");
 	}
 

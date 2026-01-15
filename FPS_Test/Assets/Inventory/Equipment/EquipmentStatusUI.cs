@@ -3,26 +3,25 @@ using UnityEngine.EventSystems;
 
 public class EquipmentStatusUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler  
 {
-    [SerializeField] GameObject m_ui;
 
     public void OnPointerEnter(PointerEventData eventData)
     { 
-        m_ui.SetActive(true);
+        transform.GetChild(1).gameObject.SetActive(true);
     }
 
     public void OnPointerDown(PointerEventData eventData)
     {
-       m_ui.SetActive(false);
+		transform.GetChild(1).gameObject.SetActive(false);
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-       m_ui.SetActive(false);
+		transform.GetChild(1).gameObject.SetActive(false);
     }
 
     //e‚ª”ñ•\¦‚É‚È‚Á‚½‚ç©g‚ğíœ
     private void OnDisable()
     {
-       m_ui.SetActive(false);
+		transform.GetChild(1).gameObject.SetActive(false);
     }
 }

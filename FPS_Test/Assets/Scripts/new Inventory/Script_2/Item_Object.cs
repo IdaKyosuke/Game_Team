@@ -46,7 +46,7 @@ public class Item_Object : MonoBehaviour
 	private bool m_isSelected = false;
 
 	// ƒAƒCƒeƒ€‚Ìî•ñ
-	MapObjectEntity m_itemData;
+	[SerializeField] MapObjectEntity m_itemData;
 
 	public MapObjectEntity ItemData
 	{
