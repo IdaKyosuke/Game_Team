@@ -5,11 +5,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class StashController : MonoBehaviourPunCallbacks
 {
 	private float m_scavengerTime = 3.5f;    // 箱開けにかかる時間
 
+	[SerializeField] Slider m_slider;
     [SerializeField] UnityEvent m_onPassiveSkill;
     [SerializeField] GameObject m_stashManager;
     [SerializeField] Info_InventorySize m_inventortSize;
@@ -88,6 +90,8 @@ public class StashController : MonoBehaviourPunCallbacks
 				//長押しされている間だけ経過時間を加算
 				if (Input.GetKey("e"))
 				{
+                    m_slider.gameObject.SetActive(true);
+
                     //宝箱
                     if (!hit.transform.gameObject.CompareTag("Treasure")) return;
                     m_nowScavenger = true;
@@ -97,8 +101,14 @@ public class StashController : MonoBehaviourPunCallbacks
 
                     // 経過時間を加算
                     m_elapsedTime += Time.deltaTime * openSpeedRate;
+                    m_slider.value = m_elapsedTime / m_scavengerTime;
                     if (m_elapsedTime < m_scavengerTime) return;
-					               
+
+                    // 経過時間と箱開け状態をリセット
+                    m_elapsedTime = 0;
+                    m_nowScavenger = false;
+                    m_slider.gameObject.SetActive(false);
+
                     // レイの当たった箱を保管
                     m_rayTarget = hit.transform.gameObject;
 
@@ -109,16 +119,13 @@ public class StashController : MonoBehaviourPunCallbacks
                         // rayが当たっているオブジェクトに自分へ情報を送るようリクエストする
                         view.RPC("RequestTreasureData", view.Owner, photonView.ViewID);
                     }
-
-                    // 経過時間と箱開け状態をリセット
-                    m_elapsedTime = 0;
-                    m_nowScavenger = false;
                 }
 
 				if (Input.GetKeyUp("e"))
 				{
 					m_elapsedTime = 0;
                     m_nowScavenger = false;
+                    m_slider.gameObject.SetActive(false);
                 }
             }
 
