@@ -48,6 +48,11 @@ public class Enemy_Nav : MonoBehaviourPunCallbacks
 	{
 		m_agent = GetComponent<NavMeshAgent>();
 		m_charaCon = GetComponent<CharacterController>();
+
+		// 徘徊モード用にCharaconをアクティブ、Navmeshを非アクティブ
+		m_charaCon.enabled = true;
+		m_agent.enabled = false;
+
 		m_moveDir = Vector3.zero;
 		m_combat = false;
 		m_moveTime = 0;
@@ -110,6 +115,12 @@ public class Enemy_Nav : MonoBehaviourPunCallbacks
 	// 戦闘モード
 	private void Combat()
 	{
+		// navmeshが非アクティブの時
+		if(!m_agent.enabled)
+		{
+			m_agent.enabled = true;
+		}
+
 		if (!m_collider.GetCheckFlg())
 		{
 			// プレイヤーに向かって移動
@@ -119,7 +130,6 @@ public class Enemy_Nav : MonoBehaviourPunCallbacks
 		else
 		{
 			m_agent.isStopped = true;
-			Debug.Log("stop");
 		}
 	}
 
@@ -244,12 +254,15 @@ public class Enemy_Nav : MonoBehaviourPunCallbacks
     // プレイヤーを発見してモードが変わる
     public void InCombat(GameObject player)
 	{
-		m_combat = true;
-		// 移動をnavmeshに任せる
-		m_charaCon.enabled = false;
+		if(!m_combat)
+		{
+			m_combat = true;
+			// 移動をnavmeshに任せる
+			m_charaCon.enabled = false;
 
-		// 見つけたプレイヤーを追いかける
-		m_player = player;
+			// 見つけたプレイヤーを追いかける
+			m_player = player;
+		}
 
 		if (m_target)
 		{
@@ -263,8 +276,6 @@ public class Enemy_Nav : MonoBehaviourPunCallbacks
 		{
 			m_target = m_player.transform;
 		}
-
-		Debug.Log("start");
 	}
 
 	// 攻撃が終了した
@@ -286,5 +297,20 @@ public class Enemy_Nav : MonoBehaviourPunCallbacks
 	public void GiveHit()
 	{
 		m_isHit = true;
+	}
+
+	// 追跡目標を見失った後に徘徊モードに戻す
+	public void ReWondering()
+	{
+		// 移動方法を切り替える
+		if(!m_charaCon.enabled)
+		{
+			m_agent.enabled = false;
+			m_charaCon.enabled = true;
+		}
+
+		// 戦闘用の情報をリセット
+		m_combat = false;
+		m_player = null;
 	}
 }

@@ -39,27 +39,22 @@ public class LobbyButton : MonoBehaviour
 		{
 			case LobbyButtonType.Battle:
 				m_func = new Button_Battle();
-				Debug.Log("battle");
 				break;
 
 			case LobbyButtonType.Job:
 				m_func = new Button_Job();
-				Debug.Log("job");
 				break;
 
 			case LobbyButtonType.Shop:
 				m_func = new Button_Shop();
-				Debug.Log("shop");
 				break;
 
 			case LobbyButtonType.Setting:
 				m_func = new Button_Setting();
-				Debug.Log("setting");
 				break;
 
 			case LobbyButtonType.ReturnLobby:
 				m_func = new Button_ReturnLobby();
-				Debug.Log("returnLobby");
 				break;
 		}
 

@@ -12501,7 +12501,7 @@ Canvas:
   m_GameObject: {fileID: 490694210028225341}
   m_Enabled: 1
   serializedVersion: 3
-  m_RenderMode: 1
+  m_RenderMode: 0
   m_Camera: {fileID: 0}
   m_PlaneDistance: 0.1
   m_PixelPerfect: 0
@@ -13560,6 +13560,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_objectList: {fileID: 11400000, guid: 2df879bd77ce60644b767811fcbf1385, type: 2}
+  m_excelData: {fileID: 11400000, guid: ab2bbc3fcd7c55d42a11dde1869d6e4c, type: 2}
+  m_rarity: 0
   m_manager: {fileID: 5604411342076464485}
   m_inventorySize: {fileID: 11400000, guid: 84e296e4b3b983a4d8436ec81f82a876, type: 2}
 --- !u!222 &2756635222275800317
@@ -16153,19 +16155,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_skillIndex: 0
-  m_attackCollier: {fileID: 4112248463564965219}
-  m_parameter:
-    level: 0
-    hp: 0
-    mp: 0
-    physicalPower: 0
-    magicPower: 0
-    physicalDefense: 0
-    magicDefense: 0
-    attackSpeed: 0
-    moveSpeed: 0
-    openSpeed: 0
-    requiredExp: 0
 --- !u!1 &4301110912283300705
 GameObject:
   m_ObjectHideFlags: 0
@@ -17003,6 +16992,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_objectList: {fileID: 11400000, guid: 374da3dc9357f5043a704fd86c0275f4, type: 2}
+  m_excelData: {fileID: 11400000, guid: ab2bbc3fcd7c55d42a11dde1869d6e4c, type: 2}
+  m_rarity: 0
   m_manager: {fileID: 5604411342076464485}
   m_inventorySize: {fileID: 11400000, guid: 84e296e4b3b983a4d8436ec81f82a876, type: 2}
 --- !u!4 &5446645333476884965
@@ -17525,6 +17516,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_objectList: {fileID: 11400000, guid: f35afbdb2fb558341957caa30d0a4270, type: 2}
+  m_excelData: {fileID: 11400000, guid: ab2bbc3fcd7c55d42a11dde1869d6e4c, type: 2}
+  m_rarity: 0
   m_manager: {fileID: 5604411342076464485}
   m_inventorySize: {fileID: 11400000, guid: 84e296e4b3b983a4d8436ec81f82a876, type: 2}
 --- !u!23 &5919203298599633051
@@ -18333,6 +18326,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ba37a72a4220321459a01c8f73e57ae0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_attackCollier: {fileID: 0}
   m_anim: {fileID: 89965640451794064}
 --- !u!114 &6523288990413387978
 MonoBehaviour:
@@ -18714,6 +18708,7 @@ MonoBehaviour:
   m_playerAnim: {fileID: 6460200284865560950}
   m_spine: {fileID: 0}
   m_weapon: {fileID: 0}
+  m_magicBall: {fileID: 0}
 --- !u!143 &6888842347876550061
 CharacterController:
   m_ObjectHideFlags: 0

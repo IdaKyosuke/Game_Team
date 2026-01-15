@@ -12,14 +12,52 @@ public class Search_Player : MonoBehaviour
 	// 判定しないレイヤーマスク(EnemyBody)
 	private int m_layerMask = 1 << 30 | 1 << 11;
 
+	// ターゲットを追跡中か
+	private bool m_isCombat = false;
+	// ターゲットを見失っている時間
+	private float m_countTime = 0;
+	// ターゲットをリセットするまでの時間
+	[SerializeField] float m_resetTime = 3.0f;
+	// 追跡しているターゲット
+	private GameObject m_target = null;
+
+	private void FixedUpdate()
+	{
+		if(m_isCombat)
+		{
+			Debug.Log("search");
+			m_countTime += Time.deltaTime;
+			if(m_countTime >= m_resetTime)
+			{
+				m_countTime = 0;
+				m_isCombat = false;
+				// プレイヤーが敵の感知範囲の外に出た時追跡をやめる
+				m_enemy.GetComponent<Enemy_Nav>().ReWondering();
+				m_target = null;
+			}
+		}
+	}
+
 	private void OnTriggerStay(Collider other)
 	{
 		if(other.gameObject.CompareTag("playerModel"))
 		{
+			Debug.Log("enter player");
 			if(CheckRay(other.gameObject))
 			{
 				// プレイヤーを認識
 				m_enemy.GetComponent<Enemy_Nav>().InCombat(other.gameObject);
+				m_isCombat = true;
+				if(m_target == other.gameObject)
+				{
+					// 追跡していたターゲットを再発見した時
+					m_countTime = 0;
+				}
+				else
+				{
+					// 新しいターゲットを見つけた時、ターゲットを保存
+					m_target = other.gameObject;
+				}
 			}
 		}
 	}
