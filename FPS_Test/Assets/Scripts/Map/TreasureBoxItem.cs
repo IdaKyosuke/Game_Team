@@ -157,20 +157,9 @@ public class TreasureBoxItem : MonoBehaviourPunCallbacks
 		}
 		
 		// ƒvƒŒƒnƒu‚ðŽæ“¾
-		Loader.LoadGameObjectAsync(treasureItem.width.ToString() + treasureItem.height.ToString()).Completed += op =>
-		{
-			GameObject obj = op.Result;
-			info.SetPrefab(obj);
-			if (obj.TryGetComponent(out Item_Object item))
-			{
-				item.ItemData = treasureItem;
-			}
-
-			Loader.LoadSpritetAsync(treasureItem.objectName).Completed += op =>
-			{
-				obj.GetComponent<Image>().sprite = op.Result;
-			};
-			//Addressables.Release(op);
+		Loader.LoadGameObjectAsync(treasureItem.objectName).Completed += op =>
+		{ 
+			info.SetPrefab(op.Result);
 		};
 
 		return info;
