@@ -235,6 +235,7 @@ public class PlayerStatus : MonoBehaviourPunCallbacks
                 if (warrior.IsOneLife)
                 {
                     m_hp = 1;
+                    warrior.IsOneLife = false;
                     return;
                 }
             }

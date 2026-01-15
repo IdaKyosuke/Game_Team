@@ -3,10 +3,9 @@ using UnityEngine;
 
 public class Thief : Job
 {
-    private const int PassiveValue = 10;
+    private const int PassiveMoveSpeedValue = 10;
 
     [SerializeField] GameObject m_trap;
-    [SerializeField] Weapon_Collider m_attackCollier;
 
     private PlayerStatus m_status;
     private Condition m_condition;
@@ -45,13 +44,13 @@ public class Thief : Job
     protected override void Passive1()
     {
         //移動速度UP
-        m_status.PassiveStatus.moveSpeed += PassiveValue;
+        m_status.PassiveStatus.moveSpeed += PassiveMoveSpeedValue;
     }
 
     protected override void Passive2()
     {
-        //開封速度UP
-        m_status.PassiveStatus.openSpeed += PassiveValue;
+        //開封速度を半分に時短
+        GetComponent<StashController>().ScavengerTime /= 2;
     }
 
     protected override void Passive3()

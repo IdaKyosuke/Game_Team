@@ -93,6 +93,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
 		if (!m_setPos) return;
         if (!photonView.IsMine) return;
 		if (m_isDeath) return;
+		if (m_stashController.NowScavenger) return;
 
         MiniMap();
 
@@ -146,6 +147,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
 		if (!m_setPos) return;
 		if (!photonView.IsMine) return;
 		if (m_isDeath) return;
+        if (m_stashController.NowScavenger) return;
 
         bool isMove = false;
 
@@ -193,6 +195,9 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
         //インベントリを開いているなら移動不可
         if (m_stashController.IsOpen) return;
+
+        //箱開け中なら移動不可
+        if (m_stashController.NowScavenger) return;
 
         // 視点移動
         float mouseX = Input.GetAxis("Mouse X") * MouseSensitivity * Time.deltaTime;

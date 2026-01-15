@@ -8,6 +8,8 @@ using UnityEngine.SceneManagement;
 
 public class StashController : MonoBehaviourPunCallbacks
 {
+	private float m_scavengerTime = 3.5f;    // 箱開けにかかる時間
+
     [SerializeField] UnityEvent m_onPassiveSkill;
     [SerializeField] GameObject m_stashManager;
     [SerializeField] Info_InventorySize m_inventortSize;
@@ -17,18 +19,30 @@ public class StashController : MonoBehaviourPunCallbacks
 	[SerializeField] Transform m_camera;
 	private GameObject m_miniMap = null;
 
-	private Rigidbody m_rb;         // レイの当たった敵を保管する用
+	private PlayerStatus m_status;
+    private Rigidbody m_rb;					// レイの当たった敵を保管する用
     private GameObject m_rayTarget;
 	private bool m_isDeath = false;
+	private bool m_nowScavenger = false;    // 現在箱開け中か状態か
+	private float m_elapsedTime;				// 箱開けの経過時間
 
     public Info_InventorySize InventortSize => m_inventortSize;
 
 	public bool IsOpen => m_manager.IsOpenInventory();
 
+	public bool NowScavenger => m_nowScavenger;
+
+	public float ScavengerTime
+	{
+		get { return m_scavengerTime; }
+		set { m_scavengerTime = value; }
+    }
+
     void Awake()
     {
 		m_uiParentCanvs.SetActive(true);
 		m_rb = GetComponent<Rigidbody>();
+        m_status = GetComponent<PlayerStatus>();
     }
 
     private async void Start()
@@ -49,7 +63,6 @@ public class StashController : MonoBehaviourPunCallbacks
 			//前方にRayを飛ばす
 			if (Physics.Raycast(m_camera.position, m_camera.forward, out var hit))
 			{
-				//Debug.Log("Hit : " + hit.transform.name);
 				//Eキーが押されていなければ無視
 				if (Input.GetKeyDown("e"))
 				{
@@ -69,23 +82,45 @@ public class StashController : MonoBehaviourPunCallbacks
 						}
 					}
 
-                    //宝箱
-                    if (hit.transform.gameObject.CompareTag("Treasure"))
-					{
-						// レイの当たった敵を保管
-						m_rayTarget = hit.transform.gameObject;
-
-						m_stashManager.GetComponent<StashManager>().IsScavenger(true);
-
-						if (m_rayTarget.TryGetComponent(out PhotonView view))
-						{ 
-							Debug.Log("Eをおした" + view);
-							// rayが当たっているオブジェクトに自分へ情報を送るようリクエストする
-							view.RPC("RequestTreasureData", view.Owner, photonView.ViewID);				
-						}
-					}
+					return;
 				}
-			}
+
+				//長押しされている間だけ経過時間を加算
+				if (Input.GetKey("e"))
+				{
+                    //宝箱
+                    if (!hit.transform.gameObject.CompareTag("Treasure")) return;
+                    m_nowScavenger = true;
+
+                    // 箱開け速度の補正
+                    float openSpeedRate = m_status.Total.openSpeed / 100.0f;
+
+                    // 経過時間を加算
+                    m_elapsedTime += Time.deltaTime * openSpeedRate;
+                    if (m_elapsedTime < m_scavengerTime) return;
+					               
+                    // レイの当たった箱を保管
+                    m_rayTarget = hit.transform.gameObject;
+
+                    m_stashManager.GetComponent<StashManager>().IsScavenger(true);
+
+                    if (m_rayTarget.TryGetComponent(out PhotonView view))
+                    {
+                        // rayが当たっているオブジェクトに自分へ情報を送るようリクエストする
+                        view.RPC("RequestTreasureData", view.Owner, photonView.ViewID);
+                    }
+
+                    // 経過時間と箱開け状態をリセット
+                    m_elapsedTime = 0;
+                    m_nowScavenger = false;
+                }
+
+				if (Input.GetKeyUp("e"))
+				{
+					m_elapsedTime = 0;
+                    m_nowScavenger = false;
+                }
+            }
 
 			if (Input.GetKeyDown("tab"))
 			{

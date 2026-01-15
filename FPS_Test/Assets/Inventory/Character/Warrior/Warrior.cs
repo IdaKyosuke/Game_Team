@@ -6,9 +6,13 @@ public class Warrior : Job
     private bool m_isOneLife;   //一度だけHP1で耐えるかどうか
     private bool m_isDamageCut; //ダメージカットが発動しているかどうか
 
-    public bool IsOneLife => m_isOneLife;
-
     public bool IsDamageCut => m_isDamageCut;
+
+    public bool IsOneLife
+    { 
+        get { return m_isOneLife; }
+        set { m_isOneLife = value; }
+    }
 
     private void Start()
     {
