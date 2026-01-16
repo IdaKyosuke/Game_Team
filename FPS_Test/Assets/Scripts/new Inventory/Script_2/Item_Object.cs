@@ -368,7 +368,7 @@ public class Item_Object : MonoBehaviour
 		// ƒJƒƒ‰‚ğİ’è
 		m_camera = transform.parent.GetComponent<MoveItemTransform>().GetCamera();
 
-		if (m_equipmentType != EquipmentType.None)
+		if (GetWeaponType() != EquipmentType.None)
 		{
 			m_equipmentManager = transform.parent.GetComponent<MoveItemTransform>().GetEquipmentManager().GetComponent<EquipmentManager>();
 		}

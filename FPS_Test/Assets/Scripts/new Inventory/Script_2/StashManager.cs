@@ -205,12 +205,6 @@ public class StashManager : MonoBehaviourPunCallbacks
 			m_checkType = GridType.Empty;
 		}
 
-		if (m_isShop)
-		{
-			// デバッグ用
-			if (Input.GetKeyDown("1")) AddItemInventory();
-		}
-
 		if (Input.GetKeyDown("0"))
 		{
 			// 現在のアイテムをセーブ
@@ -1065,28 +1059,6 @@ public class StashManager : MonoBehaviourPunCallbacks
 		return m_isBuyMode;
 	}
 	// ---------------------------------
-
-	// ----- デバッグ用関数 -----
-	public void AddItemInventory()
-	{
-		m_id = UnityEngine.Random.Range(0, items.Count);
-		GameObject item = Instantiate(items[m_id], m_moveItemTransform);
-		item.GetComponent<Item_Object>().SetBaseInfo();
-		item.GetComponent<Item_Object>().ChangeParent(m_moveItemTransform);
-		item.transform.localPosition = Vector3.zero;
-		AddItem(GridType.Stash, item, true);
-	}
-
-	public void AddItemStash()
-	{
-		if (!m_stashUi) return;
-		m_id = UnityEngine.Random.Range(0, items.Count);
-		GameObject item = Instantiate(items[m_id], m_moveItemTransform);
-		item.GetComponent<Item_Object>().SetBaseInfo();
-		item.transform.localPosition = Vector3.zero;
-		item.GetComponent<Item_Object>().ChangeParent(m_moveItemTransform);
-		AddItem(GridType.Inventory, item, true);
-	}
 
 	public void ResetItemList()
 	{

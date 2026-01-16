@@ -136,18 +136,6 @@ public class StashController : MonoBehaviourPunCallbacks
 					m_miniMap.SetActive(m_stashManager.GetComponent<StashManager>().ManageUiActiveInfo());
 				}
 			}
-
-			if(m_stashManager.GetComponent<StashManager>().IsOpenInventory())
-			{
-				if (Input.GetKeyDown("1"))
-				{
-					m_stashManager.GetComponent<StashManager>().AddItemInventory();
-				}
-				else if (Input.GetKeyDown("2"))
-				{
-					m_stashManager.GetComponent<StashManager>().AddItemStash();
-				}
-			}
 		}
 		else
 		{
