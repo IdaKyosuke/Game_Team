@@ -541,14 +541,16 @@ public class StashManager : MonoBehaviourPunCallbacks
 
 	private void CreateItem(int count, ItemList item, GridType type = GridType.Stash)
 	{
-		Loader.LoadGameObjectAsync(item.GetPrefabName()).Completed += op =>
+		Loader.LoadGameObjectAsync(item.ItemData.objectName).Completed += op =>
 		{
 			// リストからオブジェクトを生成
 			GameObject obj = Instantiate(
 				op.Result,
 				m_moveItemTransform
 				);
-				
+			// アイテムの情報を設定
+			obj.GetComponent<Item_Object>().ItemData = item.ItemData;
+
 			obj.GetComponent<Item_Object>().SetBaseInfo();     
 			
 			// 自分が入っている枠のタイプを設定

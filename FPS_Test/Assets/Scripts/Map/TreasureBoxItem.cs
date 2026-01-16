@@ -156,12 +156,14 @@ public class TreasureBoxItem : MonoBehaviourPunCallbacks
 			if (isSet) break;
 		}
 		
-		// プレハブを取得
-		Loader.LoadGameObjectAsync(treasureItem.objectName).Completed += op =>
-		{ 
-			op.Result.GetComponent<Item_Object>().ItemData = treasureItem;
-			info.SetPrefab(op.Result);
-		};
+		//// プレハブを取得
+		//Loader.LoadGameObjectAsync(treasureItem.objectName).Completed += op =>
+		//{ 
+		//	op.Result.GetComponent<Item_Object>().ItemData = treasureItem;
+		//	info.SetPrefab(op.Result);
+		//};
+
+		info.ItemData = treasureItem;
 
 		return info;
 	}

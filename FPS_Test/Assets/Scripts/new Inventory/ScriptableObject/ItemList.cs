@@ -21,6 +21,14 @@ public class ItemList : ScriptableObject
 	// インスタンス化されているオブジェクト
 	private GameObject m_activeObject;
 
+	// アイテムの情報
+	private MapObjectEntity m_data;
+
+	public MapObjectEntity ItemData
+	{
+		get { return m_data; }
+		set { m_data = value; }
+	}
 
 	// マス目取得
 	public Vector2Int GetGridIndex()
