@@ -168,6 +168,33 @@ MonoBehaviour:
     price: 50
   rare:
   - id: 0
+    objectName: Head
+    width: 1
+    height: 1
+    probability: 2
+    displayName: "\u982D\u88C5\u5099"
+    equipmentType: 0
+    typeName: Helmet
+    price: 200
+  - id: 1
+    objectName: Body
+    width: 1
+    height: 1
+    probability: 2
+    displayName: "\u4F53\u88C5\u5099"
+    equipmentType: 1
+    typeName: Armor
+    price: 200
+  - id: 2
+    objectName: Shoes
+    width: 1
+    height: 1
+    probability: 2
+    displayName: "\u9774\u88C5\u5099"
+    equipmentType: 3
+    typeName: Shoes
+    price: 200
+  - id: 3
     objectName: "Rare\u77ED\u5263"
     width: 1
     height: 1
@@ -176,7 +203,7 @@ MonoBehaviour:
     equipmentType: 4
     typeName: Weapon
     price: 200
-  - id: 1
+  - id: 4
     objectName: "Rare\u5927\u5263"
     width: 1
     height: 3
@@ -185,7 +212,7 @@ MonoBehaviour:
     equipmentType: 4
     typeName: Weapon
     price: 200
-  - id: 2
+  - id: 5
     objectName: "Rare\u30E1\u30A4\u30B9"
     width: 1
     height: 2
@@ -194,7 +221,7 @@ MonoBehaviour:
     equipmentType: 4
     typeName: Weapon
     price: 200
-  - id: 3
+  - id: 6
     objectName: "Rare\u6756"
     width: 1
     height: 2
@@ -203,200 +230,200 @@ MonoBehaviour:
     equipmentType: 4
     typeName: Weapon
     price: 200
-  - id: 4
+  - id: 7
     objectName: "\u30A2\u30AF\u30A2\u30DE\u30EA\u30F3"
     width: 1
     height: 1
-    probability: 3
+    probability: 2
     displayName: "\u30A2\u30AF\u30A2\u30DE\u30EA\u30F3"
     equipmentType: 5
     typeName: None
     price: 150
-  - id: 5
+  - id: 8
     objectName: "\u30A2\u30E1\u30B8\u30B9\u30C8"
     width: 1
     height: 1
-    probability: 3
+    probability: 2
     displayName: "\u30A2\u30E1\u30B8\u30B9\u30C8"
     equipmentType: 5
     typeName: None
     price: 150
-  - id: 6
+  - id: 9
     objectName: "\u30A4\u30A8\u30ED\u30FC\u30C8\u30D1\u30FC\u30BA"
     width: 1
     height: 1
-    probability: 3
+    probability: 2
     displayName: "\u30A4\u30A8\u30ED\u30FC\u30C8\u30D1\u30FC\u30BA"
     equipmentType: 5
     typeName: None
     price: 150
-  - id: 7
+  - id: 10
     objectName: "\u30A8\u30E1\u30E9\u30EB\u30C9"
     width: 1
     height: 1
-    probability: 3
+    probability: 2
     displayName: "\u30A8\u30E1\u30E9\u30EB\u30C9"
     equipmentType: 5
     typeName: None
     price: 150
-  - id: 8
+  - id: 11
     objectName: "\u30AF\u30EA\u30B9\u30BF\u30EB\u30AA\u30D1\u30FC\u30EB"
     width: 1
     height: 1
-    probability: 3
+    probability: 2
     displayName: "\u30AF\u30EA\u30B9\u30BF\u30EB\u30AA\u30D1\u30FC\u30EB"
     equipmentType: 5
     typeName: None
     price: 200
-  - id: 9
+  - id: 12
     objectName: "\u30AF\u30EA\u30B9\u30BF\u30EB\u30AB\u30D5\u30B9"
     width: 1
     height: 1
-    probability: 3
+    probability: 2
     displayName: "\u30AF\u30EA\u30B9\u30BF\u30EB\u30AB\u30D5\u30B9"
     equipmentType: 5
     typeName: None
     price: 230
-  - id: 10
+  - id: 13
     objectName: "\u30B4\u30FC\u30EB\u30C7\u30F3\u30C8\u30D1\u30FC\u30BA"
     width: 1
     height: 1
-    probability: 3
+    probability: 2
     displayName: "\u30B4\u30FC\u30EB\u30C7\u30F3\u30C8\u30D1\u30FC\u30BA"
     equipmentType: 5
     typeName: None
     price: 200
-  - id: 11
+  - id: 14
     objectName: "\u30B5\u30D5\u30A1\u30A4\u30A2\u306E\u30ED\u30B1\u30C3\u30C8"
     width: 1
     height: 1
-    probability: 3
+    probability: 2
     displayName: "\u30B5\u30D5\u30A1\u30A4\u30A2\u306E\u30ED\u30B1\u30C3\u30C8"
     equipmentType: 5
     typeName: None
     price: 230
-  - id: 12
+  - id: 15
     objectName: "\u30B7\u30C8\u30EA\u30F3"
     width: 1
     height: 1
-    probability: 3
+    probability: 2
     displayName: "\u30B7\u30C8\u30EA\u30F3"
     equipmentType: 5
     typeName: None
     price: 150
-  - id: 13
+  - id: 16
     objectName: "\u30CF\u30FC\u30C8\u306E\u30CD\u30C3\u30AF\u30EC\u30B9"
     width: 1
     height: 1
-    probability: 3
+    probability: 2
     displayName: "\u30CF\u30FC\u30C8\u306E\u30CD\u30C3\u30AF\u30EC\u30B9"
     equipmentType: 5
     typeName: None
     price: 200
-  - id: 14
+  - id: 17
     objectName: "\u30CF\u30FC\u30C8\u306E\u6307\u8F2A"
     width: 1
     height: 1
-    probability: 3
+    probability: 2
     displayName: "\u30CF\u30FC\u30C8\u306E\u6307\u8F2A"
     equipmentType: 5
     typeName: None
     price: 170
-  - id: 15
+  - id: 18
     objectName: "\u30D1\u30FC\u30EB\u30EA\u30F3\u30B0"
     width: 1
     height: 1
-    probability: 3
+    probability: 2
     displayName: "\u30D1\u30FC\u30EB\u30EA\u30F3\u30B0"
     equipmentType: 5
     typeName: None
     price: 170
-  - id: 16
+  - id: 19
     objectName: "\u30D2\u30B9\u30A4\u306E\u30EA\u30F3\u30B0"
     width: 1
     height: 1
-    probability: 3
+    probability: 2
     displayName: "\u30D2\u30B9\u30A4\u306E\u30EA\u30F3\u30B0"
     equipmentType: 5
     typeName: None
     price: 170
-  - id: 17
+  - id: 20
     objectName: "\u30D4\u30F3\u30AF\u30B9\u30D4\u30CD\u30EB"
     width: 1
     height: 1
-    probability: 3
+    probability: 2
     displayName: "\u30D4\u30F3\u30AF\u30B9\u30D4\u30CD\u30EB"
     equipmentType: 5
     typeName: None
     price: 130
-  - id: 18
+  - id: 21
     objectName: "\u30D4\u30F3\u30AF\u30CF\u30FC\u30C8\u30B8\u30A7\u30E0"
     width: 1
     height: 1
-    probability: 3
+    probability: 2
     displayName: "\u30D4\u30F3\u30AF\u30CF\u30FC\u30C8\u30B8\u30A7\u30E0"
     equipmentType: 5
     typeName: None
     price: 120
-  - id: 19
+  - id: 22
     objectName: "\u30D6\u30EB\u30FC\u30B5\u30D5\u30A1\u30A4\u30A2"
     width: 1
     height: 1
-    probability: 3
+    probability: 2
     displayName: "\u30D6\u30EB\u30FC\u30B5\u30D5\u30A1\u30A4\u30A2"
     equipmentType: 5
     typeName: None
     price: 220
-  - id: 20
+  - id: 23
     objectName: "\u30D6\u30EB\u30FC\u30C8\u30D1\u30FC\u30BA"
     width: 1
     height: 1
-    probability: 3
+    probability: 2
     displayName: "\u30D6\u30EB\u30FC\u30C8\u30D1\u30FC\u30BA"
     equipmentType: 5
     typeName: None
     price: 150
-  - id: 21
+  - id: 24
     objectName: "\u30DA\u30EA\u30C9\u30C3\u30C8"
     width: 1
     height: 1
-    probability: 3
+    probability: 2
     displayName: "\u30DA\u30EA\u30C9\u30C3\u30C8"
     equipmentType: 5
     typeName: None
     price: 150
-  - id: 22
+  - id: 25
     objectName: "\u30EB\u30D3\u30FC\u306E\u30CD\u30C3\u30AF\u30EC\u30B9"
     width: 1
     height: 1
-    probability: 3
+    probability: 2
     displayName: "\u30EB\u30D3\u30FC\u306E\u30CD\u30C3\u30AF\u30EC\u30B9"
     equipmentType: 5
     typeName: None
     price: 180
-  - id: 23
+  - id: 26
     objectName: "\u30EB\u30D3\u30FC\u30CF\u30FC\u30C8"
     width: 1
     height: 1
-    probability: 3
+    probability: 2
     displayName: "\u30EB\u30D3\u30FC\u30CF\u30FC\u30C8"
     equipmentType: 5
     typeName: None
     price: 150
-  - id: 24
+  - id: 27
     objectName: "\u6C34\u6676\u306E\u6307\u8F2A"
     width: 1
     height: 1
-    probability: 3
+    probability: 2
     displayName: "\u6C34\u6676\u306E\u6307\u8F2A"
     equipmentType: 5
     typeName: None
     price: 170
-  - id: 25
+  - id: 28
     objectName: "\u5929\u8272\u306E\u30D6\u30ED\u30FC\u30C1"
     width: 1
     height: 1
-    probability: 29
+    probability: 44
     displayName: "\u5929\u8272\u306E\u30D6\u30ED\u30FC\u30C1"
     equipmentType: 5
     typeName: None
