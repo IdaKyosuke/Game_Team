@@ -178,7 +178,7 @@ public class Item_Object : MonoBehaviour
 				// ショートカット開始
 				m_quickMove = true;
 			}
-			else if(Input.GetKey("left alt") && m_equipmentType != EquipmentType.None)
+			else if(Input.GetKey("left alt") && GetWeaponType() != EquipmentType.None)
 			{
 				// 高速装備する
 				m_quickEquip = true;
@@ -300,7 +300,8 @@ public class Item_Object : MonoBehaviour
 
 	public EquipmentType GetWeaponType()
 	{
-		return m_equipmentType;
+		//return m_equipmentType;
+		return (EquipmentType)ItemData.equipmentType;
 	}
 
 	// 装備の場合に性能を返す

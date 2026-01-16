@@ -113,6 +113,12 @@ public class GridIcon_Equipment : MonoBehaviour
 				o.GetComponent<Item_Object>().PointerUp(true, transform);
 				// 新しく装備された物を装備状態にする
 				o.GetComponent<Item_Object>().SetEquipValue(true, m_isMine);
+
+				// 武器の時だけプレイヤーに状態異常を付与する
+				if(o.GetComponent<Item_Object>().GetWeaponType() == EquipmentType.Weapon)
+				{
+					o.GetComponent<EquipmentStatus>().SetPassive();
+				}
 			}
 		}
 
@@ -125,7 +131,6 @@ public class GridIcon_Equipment : MonoBehaviour
 		if (transform.childCount != 0)
 		{
 			item.GetComponent<Item_Object>().PointerUp(false);
-			Debug.Log("中身を入れられなかった");
 			return;
 		}
 
@@ -133,7 +138,5 @@ public class GridIcon_Equipment : MonoBehaviour
 		item.GetComponent<Item_Object>().PointerUp(true, transform);
 		// 装備状態にする
 		item.GetComponent<Item_Object>().SetEquipValue(true, m_isMine, firstSetItemFlg);
-
-		Debug.Log("装備完了");
 	}
 }
