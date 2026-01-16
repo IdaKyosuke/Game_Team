@@ -168,7 +168,7 @@ MonoBehaviour:
     price: 50
   rare:
   - id: 0
-    objectName: Head
+    objectName: RareHead
     width: 1
     height: 1
     probability: 2
@@ -177,7 +177,7 @@ MonoBehaviour:
     typeName: Helmet
     price: 200
   - id: 1
-    objectName: Body
+    objectName: RareBody
     width: 1
     height: 1
     probability: 2
@@ -186,7 +186,7 @@ MonoBehaviour:
     typeName: Armor
     price: 200
   - id: 2
-    objectName: Shoes
+    objectName: RareShoes
     width: 1
     height: 1
     probability: 2
@@ -430,6 +430,33 @@ MonoBehaviour:
     price: 300
   unique:
   - id: 0
+    objectName: UniqueHead
+    width: 1
+    height: 1
+    probability: 2
+    displayName: "\u982D\u88C5\u5099"
+    equipmentType: 0
+    typeName: Helmet
+    price: 200
+  - id: 1
+    objectName: UniqueBody
+    width: 1
+    height: 1
+    probability: 2
+    displayName: "\u4F53\u88C5\u5099"
+    equipmentType: 1
+    typeName: Armor
+    price: 200
+  - id: 2
+    objectName: UniqueShoes
+    width: 1
+    height: 1
+    probability: 2
+    displayName: "\u9774\u88C5\u5099"
+    equipmentType: 3
+    typeName: Shoes
+    price: 200
+  - id: 3
     objectName: "Unique\u77ED\u5263"
     width: 1
     height: 1
@@ -438,7 +465,7 @@ MonoBehaviour:
     equipmentType: 4
     typeName: Weapon
     price: 500
-  - id: 1
+  - id: 4
     objectName: "Unique\u5927\u5263"
     width: 1
     height: 3
@@ -447,7 +474,7 @@ MonoBehaviour:
     equipmentType: 4
     typeName: Weapon
     price: 500
-  - id: 2
+  - id: 5
     objectName: "Unique\u30E1\u30A4\u30B9"
     width: 1
     height: 2
@@ -456,7 +483,7 @@ MonoBehaviour:
     equipmentType: 4
     typeName: Weapon
     price: 500
-  - id: 3
+  - id: 6
     objectName: "Unique\u6756"
     width: 1
     height: 2
@@ -465,7 +492,7 @@ MonoBehaviour:
     equipmentType: 4
     typeName: Weapon
     price: 500
-  - id: 4
+  - id: 7
     objectName: "\u30AF\u30EA\u30A2\u30C0\u30A4\u30E4\u30E2\u30F3\u30C9"
     width: 1
     height: 1
@@ -474,7 +501,7 @@ MonoBehaviour:
     equipmentType: 5
     typeName: None
     price: 500
-  - id: 5
+  - id: 8
     objectName: "\u30C8\u30FC\u30EB\u306E\u88C1\u304D"
     width: 2
     height: 2
@@ -483,7 +510,7 @@ MonoBehaviour:
     equipmentType: 5
     typeName: None
     price: 800
-  - id: 6
+  - id: 9
     objectName: "\u30C9\u30E9\u30B4\u30CD\u30A4\u30EB"
     width: 2
     height: 1
@@ -492,7 +519,7 @@ MonoBehaviour:
     equipmentType: 5
     typeName: None
     price: 600
-  - id: 7
+  - id: 10
     objectName: "\u30EB\u30D3\u30FC"
     width: 2
     height: 2
@@ -501,7 +528,7 @@ MonoBehaviour:
     equipmentType: 5
     typeName: None
     price: 1700
-  - id: 8
+  - id: 11
     objectName: "\u738B\u5983\u306E\u9AEA\u98FE\u308A"
     width: 1
     height: 1
@@ -510,7 +537,7 @@ MonoBehaviour:
     equipmentType: 5
     typeName: None
     price: 620
-  - id: 9
+  - id: 12
     objectName: "\u5DE8\u4EBA\u306E\u77F3"
     width: 2
     height: 2
@@ -519,7 +546,7 @@ MonoBehaviour:
     equipmentType: 5
     typeName: None
     price: 1500
-  - id: 10
+  - id: 13
     objectName: "\u865A\u6804\u306E\u738B\u51A0"
     width: 2
     height: 1
@@ -528,7 +555,7 @@ MonoBehaviour:
     equipmentType: 5
     typeName: None
     price: 800
-  - id: 11
+  - id: 14
     objectName: "\u7FE0\u7389\u306E\u8033\u98FE\u308A"
     width: 1
     height: 1
@@ -537,7 +564,7 @@ MonoBehaviour:
     equipmentType: 5
     typeName: None
     price: 800
-  - id: 12
+  - id: 15
     objectName: "\u8056\u99AC\u50CF"
     width: 2
     height: 2
@@ -546,17 +573,44 @@ MonoBehaviour:
     equipmentType: 5
     typeName: None
     price: 1200
-  - id: 13
+  - id: 16
     objectName: "\u592A\u967D\u795E\u306E\u77B3"
     width: 2
     height: 2
-    probability: 47
+    probability: 41
     displayName: "\u592A\u967D\u795E\u306E\u77B3"
     equipmentType: 5
     typeName: None
     price: 3000
   legendary:
   - id: 0
+    objectName: UniqueHead
+    width: 1
+    height: 1
+    probability: 2
+    displayName: "\u982D\u88C5\u5099"
+    equipmentType: 0
+    typeName: Helmet
+    price: 200
+  - id: 1
+    objectName: UniqueBody
+    width: 1
+    height: 1
+    probability: 2
+    displayName: "\u4F53\u88C5\u5099"
+    equipmentType: 1
+    typeName: Armor
+    price: 200
+  - id: 2
+    objectName: UniqueShoes
+    width: 1
+    height: 1
+    probability: 2
+    displayName: "\u9774\u88C5\u5099"
+    equipmentType: 3
+    typeName: Shoes
+    price: 200
+  - id: 3
     objectName: "Legendary\u77ED\u5263"
     width: 1
     height: 1
@@ -565,7 +619,7 @@ MonoBehaviour:
     equipmentType: 4
     typeName: Weapon
     price: 500
-  - id: 1
+  - id: 4
     objectName: "Legendary\u5927\u5263"
     width: 1
     height: 3
@@ -574,7 +628,7 @@ MonoBehaviour:
     equipmentType: 4
     typeName: Weapon
     price: 500
-  - id: 2
+  - id: 5
     objectName: "Legendary\u30E1\u30A4\u30B9"
     width: 1
     height: 2
@@ -583,7 +637,7 @@ MonoBehaviour:
     equipmentType: 4
     typeName: Weapon
     price: 500
-  - id: 3
+  - id: 6
     objectName: "Legendary\u6756"
     width: 1
     height: 2
@@ -592,7 +646,7 @@ MonoBehaviour:
     equipmentType: 4
     typeName: Weapon
     price: 500
-  - id: 4
+  - id: 7
     objectName: "\u30A2\u30EC\u30B9\u306E\u515C"
     width: 2
     height: 2
@@ -601,7 +655,7 @@ MonoBehaviour:
     equipmentType: 5
     typeName: None
     price: 3400
-  - id: 5
+  - id: 8
     objectName: "\u30A6\u30EA\u30A8\u30EB\u306E\u76C3"
     width: 1
     height: 1
@@ -610,7 +664,7 @@ MonoBehaviour:
     equipmentType: 5
     typeName: None
     price: 830
-  - id: 6
+  - id: 9
     objectName: "\u30AB\u30C9\u30A5\u30B1\u30A6\u30B9\u306E\u30D6\u30ED\u30FC\u30C1"
     width: 1
     height: 1
@@ -619,7 +673,7 @@ MonoBehaviour:
     equipmentType: 5
     typeName: None
     price: 900
-  - id: 7
+  - id: 10
     objectName: "\u30B4\u30EB\u30B4\u30F3\u306E\u76FE"
     width: 2
     height: 2
@@ -628,7 +682,7 @@ MonoBehaviour:
     equipmentType: 5
     typeName: None
     price: 3500
-  - id: 8
+  - id: 11
     objectName: "\u30B3\u30EB\u30CC\u30B3\u30D4\u30A2\u306E\u6075\u307F"
     width: 1
     height: 1
@@ -637,7 +691,7 @@ MonoBehaviour:
     equipmentType: 5
     typeName: None
     price: 1100
-  - id: 9
+  - id: 12
     objectName: "\u30C8\u30E9\u30A4\u30C7\u30F3\u30C8"
     width: 1
     height: 3
@@ -646,7 +700,7 @@ MonoBehaviour:
     equipmentType: 5
     typeName: None
     price: 2700
-  - id: 10
+  - id: 13
     objectName: "\u30D8\u30EB\u30E1\u30B9\u306E\u9774"
     width: 1
     height: 1
@@ -655,7 +709,7 @@ MonoBehaviour:
     equipmentType: 5
     typeName: None
     price: 810
-  - id: 11
+  - id: 14
     objectName: "\u6708\u5149\u6CE1\u5F71"
     width: 1
     height: 1
@@ -664,7 +718,7 @@ MonoBehaviour:
     equipmentType: 5
     typeName: None
     price: 1500
-  - id: 12
+  - id: 15
     objectName: "\u795E\u3005\u306E\u30D6\u30FC\u30C4"
     width: 2
     height: 2
@@ -673,7 +727,7 @@ MonoBehaviour:
     equipmentType: 5
     typeName: None
     price: 3300
-  - id: 13
+  - id: 16
     objectName: "\u795E\u3005\u306E\u8155\u8F2A"
     width: 1
     height: 1
@@ -682,7 +736,7 @@ MonoBehaviour:
     equipmentType: 5
     typeName: None
     price: 800
-  - id: 14
+  - id: 17
     objectName: "\u795E\u7F70\u306E\u67B7"
     width: 2
     height: 1
@@ -691,7 +745,7 @@ MonoBehaviour:
     equipmentType: 5
     typeName: None
     price: 1700
-  - id: 15
+  - id: 18
     objectName: "\u4E16\u754C\u6A39\u306E\u30CF\u30FC\u30D7"
     width: 2
     height: 3
@@ -700,11 +754,11 @@ MonoBehaviour:
     equipmentType: 5
     typeName: None
     price: 10000
-  - id: 16
+  - id: 19
     objectName: "\u5929\u7FD4\u5F13"
     width: 1
     height: 3
-    probability: 36
+    probability: 30
     displayName: "\u5929\u7FD4\u5F13"
     equipmentType: 5
     typeName: None
