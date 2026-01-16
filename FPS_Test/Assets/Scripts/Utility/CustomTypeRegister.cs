@@ -15,7 +15,6 @@ public class CustomTypeRegister : MonoBehaviour
 			SerializeItemList,
 			DeserializeItemList
 		);
-		Debug.Log("PhotonPeer.RegisterType : " + ret);
 
 		ret = PhotonPeer.RegisterType(
 			typeof(Info_InventorySize),
@@ -23,7 +22,6 @@ public class CustomTypeRegister : MonoBehaviour
 			SerializeInfo_InventorySize,
 			DeserializeInfo_InventorySize
 		);
-		Debug.Log("PhotonPeer.RegisterType : " + ret);
 	}
 
 	private static byte[] SerializeItemList(object customObject)

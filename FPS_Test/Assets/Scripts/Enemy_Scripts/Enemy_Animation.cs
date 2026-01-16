@@ -34,8 +34,6 @@ public class Enemy_Animation : MonoBehaviour
 		WalkAnim();
 
 		m_pastPos = transform.position;
-
-		Debug.Log("EnemyAnimation m_attack : " + m_isAttack);
 	}
 
 	private void FixedUpdate()

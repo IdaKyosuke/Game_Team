@@ -95,8 +95,6 @@ public class Enemy_Nav : MonoBehaviourPunCallbacks
 			m_isAttack = true;
 			GetComponent<Enemy_Animation>().AttackAnim();
 		}
-
-		Debug.Log("EnemyNav m_attack : " + m_isAttack);
 	}
 
 	// úpújÉÇÅ[Éh

@@ -169,6 +169,12 @@ public class StashManager : MonoBehaviourPunCallbacks
 			CreateInventory(GridType.Stash);
 			m_text.SetText("Money : " + m_infoMoney.GetCurrentMoney().ToString());
 		}
+		else
+		{
+			// ショップじゃないときはフラグを折る
+			m_isBuyMode = false;
+		}
+
 		m_saveInstance = SaveData.Instance;
 
 		Load();
@@ -216,7 +222,6 @@ public class StashManager : MonoBehaviourPunCallbacks
 	{
 		// 現在のアイテムをセーブ
 		m_saveInstance.SaveInventory(m_itemList);
-		Debug.Log("save");
 	}
 
 	public void Load()
@@ -225,7 +230,6 @@ public class StashManager : MonoBehaviourPunCallbacks
 		ResetItemList();
 		// セーブしたアイテムをロード
 		m_itemList = new List<ItemList>(m_saveInstance.ReloadInventory());
-		Debug.Log("itemList[" + m_itemList.Count + "]");
 		int count = 0;
 		// リストをUIに反映
 		foreach (ItemList item in m_itemList)
@@ -477,13 +481,16 @@ public class StashManager : MonoBehaviourPunCallbacks
 		// 購入モードでは無視
 		if (!isTest && m_isBuyMode)
 		{
+			Debug.Log("buy mode");
 			// アイテムが入るスペースがないので元の位置に戻す
 			item.GetComponent<Item_Object>().PointerUp(false);
 			return false;
 		}
 
+		Debug.Log("short cut");
+
 		return CheckGrid(type, item, isEquip, isAdd, isTest);
-}
+	}
 
 	// アイテムを外部から追加する
 	public void AddItem(GridType type, GameObject item, bool isTest = false)

@@ -85,14 +85,10 @@ public class Create_Maze : MonoBehaviourPunCallbacks
 		{
 			map.ReqestSetParent();
 		}
-		Debug.Log("Request End");
-
 		SetObjectSpawn(mapdatas);
-		Debug.Log("ObjectSet End");
 
 		// “®“I‚ÉnavMesh‚ðbake‚·‚é
 		m_mapParent.GetComponent<PhotonView>().RPC("SetBake", RpcTarget.All);
-		Debug.Log("bake");
 
 		PhotonNetwork.InstantiateRoomObject(m_wallOutSide.name, transform.position, Quaternion.identity);
 

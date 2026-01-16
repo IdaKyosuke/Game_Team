@@ -11,8 +11,6 @@ public class Button_Shop : Button_Function
 	{
 		m_shopUi = GameObject.FindWithTag("shopUi");
 
-		Debug.Log("shop start");
-
 		if(m_shopUi.activeSelf)
 		{
 			m_shopUi.SetActive(false);
@@ -25,7 +23,6 @@ public class Button_Shop : Button_Function
 		m_shopButtonInfo = GameObject.FindWithTag("shopInfoList").GetComponent<ShopInfoList>();
 		// 購入モードはとりあえずリストの最初のショップを表示する
 		m_shopButtonInfo.GetShopInfo(0).SetShopItem();
-		Debug.Log("set");
 	}
 
 	public override void PushOther()

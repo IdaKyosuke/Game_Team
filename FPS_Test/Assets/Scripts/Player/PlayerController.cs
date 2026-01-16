@@ -67,7 +67,6 @@ public class PlayerController : MonoBehaviourPunCallbacks
     [PunRPC]
 	void RequestPlayerSpawnPos(int viewId)
 	{
-		Debug.Log("プレイヤーがポスを受け取る" + Create_Maze.GetPlayerSpawnPos());
 		PhotonView.Find(viewId).RPC(nameof(SetPlayerPos), PhotonView.Find(viewId).Owner, Create_Maze.GetPlayerSpawnPos().position);
 	}
 

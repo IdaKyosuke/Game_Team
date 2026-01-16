@@ -107,6 +107,7 @@ public class Item_Object : MonoBehaviour
 	// ショートカット移動
 	private void QuickMove()
 	{
+		Debug.Log("quick move");
 		// 現在の自分の入っている枠のタイプに応じて入れ替える
 		m_inventoryManager.GetComponent<StashManager>().QuickMoveItem(m_gridType, gameObject, m_isEquip);
 	}

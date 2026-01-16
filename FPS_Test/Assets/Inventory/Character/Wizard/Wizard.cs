@@ -75,18 +75,15 @@ public class Wizard : Job
     protected override void Passive1()
     {
         m_condition.Grant = ConditionType.Burn;
-        Debug.Log("状態異常付与 : 火傷");
     }
 
     protected override void Passive2()
     {
         m_condition.Grant = ConditionType.Frost;
-        Debug.Log("状態異常付与 : 凍傷");
     }
 
     protected override void Passive3()
     {
         m_condition.Grant = ConditionType.Shock;
-        Debug.Log("状態異常付与 : 感電");
     }
 }

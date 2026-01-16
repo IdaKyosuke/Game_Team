@@ -170,9 +170,6 @@ public class SaveData
 #else
 		path = Application.persistentDataPath + "/" + path;
 #endif
-
-		Debug.Log(path);
-
 		return path;
 	}
 }
