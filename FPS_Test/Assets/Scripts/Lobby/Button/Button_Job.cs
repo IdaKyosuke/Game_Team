@@ -1,21 +1,26 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Button_Job : Button_Function
 {
-	public override void Initialize()
-	{
-		Debug.Log("Button_Job initialize");
-	}
+    private GameObject m_jobUi;
 
-	public override void PushThis()
-	{
-		Debug.Log("Button_Job pushThis");
-	}
+    public override void Initialize()
+    {
+        m_jobUi = GameObject.FindWithTag("jobUi");
 
-	public override void PushOther()
+        if (m_jobUi.activeSelf)
+        {
+            m_jobUi.SetActive(false);
+        }
+    }
+
+    public override void PushThis()
+    {
+        m_jobUi.SetActive(true);
+    }
+
+    public override void PushOther()
 	{
-		Debug.Log("Button_Job pushOther");
-	}
+        m_jobUi.SetActive(false);
+    }
 }

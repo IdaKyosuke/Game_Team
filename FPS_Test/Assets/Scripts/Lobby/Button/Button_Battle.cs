@@ -4,18 +4,20 @@ using UnityEngine;
 
 public class Button_Battle : Button_Function
 {
+	private GameObject m_startButton;
+
 	public override void Initialize()
 	{
-		Debug.Log("Button_Battle initialize");
-	}
+        m_startButton = GameObject.FindWithTag("gameStartButton");
+    }
 
 	public override void PushThis()
 	{
-		Debug.Log("Button_Battle pushThis");
-	}
+		m_startButton.SetActive(true);
+    }
 
 	public override void PushOther()
 	{
-		Debug.Log("Button_Battle pushOther");
-	}
+		m_startButton.SetActive(false);
+    }
 }
