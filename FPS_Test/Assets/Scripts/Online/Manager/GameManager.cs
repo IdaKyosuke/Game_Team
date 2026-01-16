@@ -1,5 +1,4 @@
 using Photon.Pun;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -10,7 +9,15 @@ public class GameManager : SingletonBase<GameManager>
 	[SerializeField] string m_lobbyScene;
 	[SerializeField] string m_mapScene;
 
-    // Start is called before the first frame update
+    // 選択されたプレイヤーの職業
+    private JobType m_playerJob;
+
+	public JobType PlayerJobType
+	{ 
+		get { return m_playerJob; }
+		set { m_playerJob = value; }
+    }
+
     void Start()
     {
 		// 最初にロビーシーンを読み込む
@@ -19,8 +26,11 @@ public class GameManager : SingletonBase<GameManager>
 		// プレイヤー自身の名前を"Player"に設定する
 		PhotonNetwork.NickName = "Player";
 
-		// PhotonServerSettingsの設定内容を使ってマスターサーバーへ接続する
-		PhotonNetwork.ConnectUsingSettings();
+        //初期の職業は戦士に設定
+		m_playerJob = JobType.Warrior;
+
+        // PhotonServerSettingsの設定内容を使ってマスターサーバーへ接続する
+        PhotonNetwork.ConnectUsingSettings();
 	}
 
 	public void StartGame()

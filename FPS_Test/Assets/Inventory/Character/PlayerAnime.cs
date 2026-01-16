@@ -1,15 +1,15 @@
 using Photon.Pun;
+using System.ComponentModel.Design.Serialization;
 using UnityEngine;
 
 public class PlayerAnime : MonoBehaviourPunCallbacks
 {
-    [SerializeField] Weapon_Collider m_attackCollier;
     [SerializeField] Animator m_anim;
 
-	public bool IsAttack => m_anim.GetBool("attack");
+    public bool IsAttack => m_anim.GetBool("attack");
 
     public void OnAttack1()
-    { 
+    {
         //E‹Æ•Ê‚ÌUŒ‚ˆ—
         transform.root.GetComponent<Job>().Attack();
     }

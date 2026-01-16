@@ -5,11 +5,12 @@ using UnityEngine.Events;
 
 public class PlayerStatus : MonoBehaviourPunCallbacks
 {
-    [SerializeField] StatusData m_statusData;
+    [SerializeField] StatusData[] m_statusData;
     [SerializeField] List<GameObject> m_equipments;  //装備枠
     [SerializeField] UnityEvent m_onDamage;
     [SerializeField] UnityEvent m_onDeath;
 
+    private JobType m_jobType;
     private Condition m_condition;
     private EquipmentParameter m_totalEquipmentStatus;  //装備のステータスの実数値(合計値)
     private PlayerParameter m_status;                   //自身の基礎ステータス
@@ -62,14 +63,17 @@ public class PlayerStatus : MonoBehaviourPunCallbacks
 
     public int MaxLevel
     {
-        get { return m_statusData.MaxLevel; }
+        get { return m_statusData[(int)m_jobType].MaxLevel; }
     }
 
-    private void Awake()
+    private void Start()
     {
+        //職業の取得
+        m_jobType = GameManager.Instance.PlayerJobType;
+
         //レベル1のステータスを設定
         m_level = 1;
-        m_status = m_statusData.GetStatus(m_level);
+        m_status = m_statusData[(int)m_jobType].GetStatus(m_level);
 
         //実行時ステータスの設定
         m_currentStatus = m_status;
@@ -127,7 +131,7 @@ public class PlayerStatus : MonoBehaviourPunCallbacks
     public void AddExp(int exp)
     {
         //既にレベルマックスなら何もしない
-        if (m_statusData.MaxLevel <= m_level) return;
+        if (m_statusData[(int)m_jobType].MaxLevel <= m_level) return;
         Debug.Log("現在のレベル[ " + m_level + " ]");
         Debug.Log("上限のレベル[ " + MaxLevel+ " ]");
 
@@ -143,7 +147,7 @@ public class PlayerStatus : MonoBehaviourPunCallbacks
         Debug.Log("レベルアップ");
 
         //ステータスの設定
-        m_status = m_statusData.GetStatus(m_level);
+        m_status = m_statusData[(int)m_jobType].GetStatus(m_level);
 
         //体力と魔力を全回復
         m_hp = m_status.hp;

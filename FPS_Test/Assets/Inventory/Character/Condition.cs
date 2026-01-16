@@ -40,7 +40,7 @@ public class Condition : MonoBehaviour
 
     private void Awake()
     {
-        m_jobType = GetComponent<Job>().JobType;
+        m_jobType = GameManager.Instance.PlayerJobType;
         m_status = GetComponent<PlayerStatus>();
 
         m_condition = ConditionType.None;

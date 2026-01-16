@@ -1,5 +1,6 @@
 using Cysharp.Threading.Tasks;
 using Photon.Pun;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviourPunCallbacks
@@ -16,8 +17,9 @@ public class PlayerController : MonoBehaviourPunCallbacks
 	[SerializeField] GameObject m_spine;
 	[SerializeField] Weapon_Collider m_weapon;
 	[SerializeField] GameObject m_magicBall;
+	[SerializeField] PlayerViewUI m_playerViewUI;
 
-	private int m_playerId;
+    private int m_playerId;
 	private CharacterController m_characterController;  // CharacterController型の変数
 	private PlayerStatus m_status;
 	private StashController m_stashController;
@@ -42,12 +44,11 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
     private void Awake()
     {
-		m_setPos = false;
+        m_setPos = false;
         m_characterController = GetComponent<CharacterController>();
         m_status = GetComponent<PlayerStatus>();
         m_stashController = GetComponent<StashController>();
         m_condition = GetComponent<Condition>();
-        m_job = GetComponent<Job>();
         m_isDeath = false;
         m_characterController.enabled = false;
 
@@ -61,6 +62,26 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
         // マスターの持つリストを参照
         photonView.RPC(nameof(RequestPlayerSpawnPos), RpcTarget.MasterClient, photonView.ViewID);
+
+		//職業の取得
+		switch (GameManager.Instance.PlayerJobType)
+		{ 
+			case JobType.Warrior:
+				m_job = gameObject.AddComponent<Warrior>();
+				break;
+
+			case JobType.Wizard:
+				m_job = gameObject.AddComponent<Wizard>();
+				break;
+
+			case JobType.Cleric:
+				m_job = gameObject.AddComponent<Cleric>();
+				break;
+
+			case JobType.Thief:
+				m_job = gameObject.AddComponent<Thief>();
+				break;
+        }
     }
 
     // マスターの中で個々にポジションを送る
@@ -77,8 +98,6 @@ public class PlayerController : MonoBehaviourPunCallbacks
 		transform.position = pos;
         m_characterController.enabled = true;
 		m_setPos = true;
-		
-		//Debug.Log(PhotonNetwork.IsMasterClient + ":" + photonView.ViewID);
 	}
 
 	private void MiniMap()
@@ -116,11 +135,14 @@ public class PlayerController : MonoBehaviourPunCallbacks
 		//固有アクション
 		if (Input.GetKeyDown(KeyCode.Q))
 		{
-            // 攻撃中は無視
+            //攻撃中は無視
             if (m_playerAnim.IsAttack) return;
 
-            // 職業別の固有アクション
+            //職業別の固有アクション
             m_job.Identity();
+
+			//プレイヤーUIに反映
+			m_playerViewUI.SetIcon(m_job.AttackType);
         }
 
         // デバッグ用
