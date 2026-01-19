@@ -5,10 +5,14 @@ using UnityEngine;
 public class TreasureAnime : MonoBehaviour
 {
 	Animator anime;
-	bool openTreasure = false;
+	bool m_isOpened = false;
+    bool openTreasure = false;
 	bool Transtion = false;
-	// Start is called before the first frame update
-	void Start()
+
+	public bool IsOpened => m_isOpened;
+
+    // Start is called before the first frame update
+    void Start()
 	{
 		anime = GetComponent<Animator>();
 	}
@@ -19,7 +23,8 @@ public class TreasureAnime : MonoBehaviour
 		{
 			openTreasure = true;
 			Transtion = true;
-			anime.SetTrigger("Open");
+            m_isOpened = true;
+            anime.SetTrigger("Open");
 		}
 	}
 

@@ -90,7 +90,8 @@ public class StashController : MonoBehaviourPunCallbacks
 				//長押しされている間だけ経過時間を加算
 				if (Input.GetKey("e"))
 				{
-                    m_slider.gameObject.SetActive(true);
+                    //既にインベントリを開いているときは無視
+                    if (!m_nowScavenger)  m_slider.gameObject.SetActive(true);
 
                     //宝箱
                     if (!hit.transform.gameObject.CompareTag("Treasure")) return;
@@ -99,10 +100,13 @@ public class StashController : MonoBehaviourPunCallbacks
                     // 箱開け速度の補正
                     float openSpeedRate = m_status.Total.openSpeed / 100.0f;
 
-                    // 経過時間を加算
-                    m_elapsedTime += Time.deltaTime * openSpeedRate;
-                    m_slider.value = m_elapsedTime / m_scavengerTime;
-                    if (m_elapsedTime < m_scavengerTime) return;
+					//未開封の箱なら経過時間を加算
+					if (!hit.transform.GetComponent<TreasureAnime>().IsOpened)
+					{
+                        m_elapsedTime += Time.deltaTime * openSpeedRate;
+                        m_slider.value = m_elapsedTime / m_scavengerTime;
+                        if (m_elapsedTime < m_scavengerTime) return;
+                    }
 
                     // 経過時間と箱開け状態をリセット
                     m_elapsedTime = 0;
