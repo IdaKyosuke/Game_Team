@@ -2,6 +2,7 @@ using Photon.Pun;
 using System.Collections.Generic;
 using Unity.AI.Navigation;
 using UnityEngine;
+using UnityEngine.Lumin;
 
 public class Create_Maze : MonoBehaviourPunCallbacks
 {
@@ -12,6 +13,8 @@ public class Create_Maze : MonoBehaviourPunCallbacks
 	[SerializeField] int m_frameSize = 7;
 	[SerializeField] int m_mapHeight = 3;
 
+	private float m_time = 0;
+
 	// 宝箱のそれぞれのレアリティの数
 	private const int CommonNum = 20;
 	private const int RareNum = 35;
@@ -19,16 +22,27 @@ public class Create_Maze : MonoBehaviourPunCallbacks
 
 	private const int m_playerSpawnPosAmount = 10;
 	private const int m_treasureAmount = 50;
-	private const int m_portalPosAmount = 10;
 	private const int m_enemyAmount = 50;
 
-	private int m_portalOffset = 2;
+	// 一回で出すポータルの数
+	private const int m_oncePortalPosAmount = 5;
+
+	private const int m_portalOffset = 2;
+
+	// 帰還ポータルの生成位置
+	private List<Transform> m_portalPosList;
+	private float firstPortalTime = 240.0f;
+	private float secondPortalTime = 420.0f;
+	// ポータルを生成したかどうか
+	private bool m_firstCreatePortal = false;
+	private bool m_secondCreatePortal = false;
 
 	[SerializeField] List<GameObject> m_mapPrefab;
 
 	[SerializeField] GameObject m_wallOutSide;
 
-	private int m_size = 42;
+	// 一区画のサイズ
+	private const int m_size = 42;
 
 	private static List<Transform> m_playerSpawnPosList = new List<Transform>();
 
@@ -131,16 +145,6 @@ public class Create_Maze : MonoBehaviourPunCallbacks
 			spawnPos.Remove(spawnPos[index]);
 		}
 
-		// 帰還場所設定
-		for (int i = 0; i < m_portalPosAmount; ++i)
-		{
-			int index = Random.Range(0, spawnPos.Count);
-			Vector3 pos = spawnPos[index].position;
-			pos.y += m_portalOffset;
-			PhotonNetwork.InstantiateRoomObject(m_portal.name, pos, spawnPos[index].rotation);
-			spawnPos.Remove(spawnPos[index]);
-		}
-
 		// 宝箱の場所設定
 		for (int i = 0; i < m_treasureAmount; ++i)
 		{
@@ -156,6 +160,8 @@ public class Create_Maze : MonoBehaviourPunCallbacks
 				spawnPos[index].rotation);
 			spawnPos.Remove(spawnPos[index]);
 		}
+
+		m_portalPosList = spawnPos;
 	}
 
 	private void SetEnemySpawn(List<SendMapData> mapData)
@@ -183,5 +189,37 @@ public class Create_Maze : MonoBehaviourPunCallbacks
 		Transform pos = m_playerSpawnPosList[0];
 		m_playerSpawnPosList.Remove(m_playerSpawnPosList[0]);
 		return pos;
+	}
+
+	private void Update()
+	{
+		m_time += Time.deltaTime;
+
+		// 最初のポータル出現
+		if (!m_firstCreatePortal && m_time >= firstPortalTime)
+		{
+			CreatePortal();
+			m_firstCreatePortal = true;
+		}
+
+		// 二回目のポータル出現
+		if (!m_secondCreatePortal && m_time >= secondPortalTime)
+		{
+			CreatePortal();
+			m_secondCreatePortal = true;
+		}
+	}
+
+	private void CreatePortal()
+	{
+		// 帰還場所設定
+		for (int i = 0; i < m_oncePortalPosAmount; ++i)
+		{
+			int index = Random.Range(0, m_portalPosList.Count);
+			Vector3 pos = m_portalPosList[index].position;
+			pos.y += m_portalOffset;
+			PhotonNetwork.InstantiateRoomObject(m_portal.name, pos, m_portalPosList[index].rotation);
+			m_portalPosList.Remove(m_portalPosList[index]);
+		}
 	}
 }
