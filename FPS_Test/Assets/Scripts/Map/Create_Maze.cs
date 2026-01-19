@@ -12,10 +12,15 @@ public class Create_Maze : MonoBehaviourPunCallbacks
 	[SerializeField] int m_frameSize = 7;
 	[SerializeField] int m_mapHeight = 3;
 
-	private int m_playerSpawnPosAmount = 10;
-	private int m_treasureAmount = 50;
-	private int m_portalPosAmount = 10;
-	private int m_enemyAmount = 50;
+	// 宝箱のそれぞれのレアリティの数
+	private const int CommonNum = 20;
+	private const int RareNum = 35;
+	private const int UniqueNum = 40;
+
+	private const int m_playerSpawnPosAmount = 10;
+	private const int m_treasureAmount = 50;
+	private const int m_portalPosAmount = 10;
+	private const int m_enemyAmount = 50;
 
 	private int m_portalOffset = 2;
 
@@ -140,9 +145,9 @@ public class Create_Maze : MonoBehaviourPunCallbacks
 		for (int i = 0; i < m_treasureAmount; ++i)
 		{
 			int treasureType =
-				i < 20 ? 0 :
-				i < 35 ? 1 :
-				i < 45 ? 2 : 3;
+				i < CommonNum ? 0 :
+				i < RareNum ? 1 :
+				i < UniqueNum ? 2 : 3;
 
 			// プレイヤーは一度無視する
 			int index = Random.Range(0, spawnPos.Count);
