@@ -11,11 +11,18 @@ public class GameManager : SingletonBase<GameManager>
 
     // 選択されたプレイヤーの職業
     private JobType m_playerJob;
-
-	public JobType PlayerJobType
+    public JobType PlayerJobType
 	{ 
 		get { return m_playerJob; }
 		set { m_playerJob = value; }
+    }
+
+	//選択された職業のパッシブスキル
+	private int m_playerPassiveSkill;
+	public int PlayerPassiveSkill
+    {
+		get { return m_playerPassiveSkill; }
+		set { m_playerPassiveSkill = value; }
     }
 
     void Start()

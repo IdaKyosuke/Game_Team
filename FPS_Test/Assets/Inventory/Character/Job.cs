@@ -20,7 +20,7 @@ public enum AttackType
 
 public abstract class Job : MonoBehaviour
 {
-    [SerializeField, Range(0, 2)] int m_skillIndex;
+    private int m_skillIndex;
 
     private Action[] actions;
 
@@ -38,6 +38,9 @@ public abstract class Job : MonoBehaviour
         //武器オブジェクトの取得
         m_weapon = GetComponent<PlayerController>().Weapon;
         m_magicBall = GetComponent<PlayerController>().MagicBall;
+
+        //選択されたスキルを取得
+        m_skillIndex = GameManager.Instance.PlayerPassiveSkill;
     }
 
     public void Initialize(JobType jobType, AttackType attackType)
@@ -52,6 +55,8 @@ public abstract class Job : MonoBehaviour
 
         //パッシブスキルの発動
         actions[m_skillIndex]?.Invoke();
+
+        Debug.Log("[" + (m_skillIndex + 1) + "]番目のパッシブスキルが発動");
 
         //ジョブタイプの設定
         m_jobType = jobType;

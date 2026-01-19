@@ -56,6 +56,6 @@ public class Thief : Job
     protected override void Passive3()
     {
         //Œ®‚Ìæ“¾
-        
+        Debug.Log("Œ®‚ğˆê‚Â“üè‚µ‚½I");
     }
 }
