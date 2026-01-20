@@ -5,9 +5,9 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "ScriptableObject/Trader ItemList")]
 public class Trader_ItemList : ScriptableObject
 {
-	[SerializeField] List<GameObject> m_shopList;
+	[SerializeField] List<Trader_ItemInfo> m_shopList;
 
-	public List<GameObject> GetList()
+	public List<Trader_ItemInfo> GetList()
 	{
 		return m_shopList;
 	}

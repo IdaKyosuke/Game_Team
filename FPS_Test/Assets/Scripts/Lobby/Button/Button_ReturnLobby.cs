@@ -15,9 +15,12 @@ public class Button_ReturnLobby : Button_Function
 
 	public override void PushThis()
 	{
-		// ロビー画面に遷移する時にショップ情報をリセットする
-		m_stashManager.ResetShop();
-		m_shopUi.SetActive(false);
+		if(m_shopUi.activeSelf)
+		{
+			// ロビー画面に遷移する時にショップ情報をリセットする
+			m_stashManager.ResetShop();
+			m_shopUi.SetActive(false);
+		}
 	}
 
 	public override void PushOther()

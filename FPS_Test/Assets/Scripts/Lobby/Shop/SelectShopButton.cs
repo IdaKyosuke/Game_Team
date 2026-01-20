@@ -3,14 +3,18 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
+using static UnityEditor.AddressableAssets.Build.Layout.BuildLayout;
 
 public class SelectShopButton : MonoBehaviour
 {
-	[SerializeField] Trader_ItemList m_objectList;				// Item_Obejct型
-	private List<ItemList> m_shopList = new List<ItemList>();	
+	[SerializeField] Trader_ItemList m_objectList;				// ExcelのRarityとid情報が入っている
+	private List<ItemList> m_shopList = new List<ItemList>();
 
 	[SerializeField] StashManager m_manager;
 	[SerializeField] Info_InventorySize m_inventorySize;
+
+	[SerializeField] ExcelData m_excelData;
+
 	// アイテムの座標を設定しているか
 	private bool m_isSet = false;
 
@@ -44,9 +48,30 @@ public class SelectShopButton : MonoBehaviour
 		for(int i = 0; i < itemCount; i++)
 		{
 			// アイテムを候補からランダムに取得
-			GameObject obj = m_objectList.GetList()[Random.Range(0, m_objectList.GetList().Count)];
 			ItemList item = ScriptableObject.CreateInstance<ItemList>();
-			item.SetPrefabName(obj.name);
+			List<MapObjectEntity> objectData = m_excelData.common;
+			Trader_ItemInfo info = m_objectList.GetList()[Random.Range(0, m_objectList.GetList().Count)];
+
+			switch (info.m_rarity)
+			{
+				case Rarity.Common:
+					objectData = m_excelData.common;
+					break;
+
+				case Rarity.Rare:
+					objectData = m_excelData.rare;
+					break;
+			}
+
+			foreach(var data in objectData)
+			{
+				if(data.id == info.m_id)
+				{
+					item.ItemData = data;
+
+					break;
+				}
+			}
 			m_shopList.Add(item);
 		}
 	}

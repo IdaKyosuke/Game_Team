@@ -7,7 +7,8 @@ public enum LobbyButtonType
     Shop,
     Setting,
 	GameStart,
-	ReturnLobby
+	ReturnLobby,
+	Stash
 }
 
 public class LobbyButtonManager : MonoBehaviour

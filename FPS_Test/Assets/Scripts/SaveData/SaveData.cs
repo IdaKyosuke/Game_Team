@@ -51,7 +51,7 @@ public class SaveData
 
 		List <ItemList> lists = new List<ItemList>();
 
-		foreach (var data in m_inventoryItem)
+		foreach (var data in m_stashItem)
 		{
 			lists.Add(LoadData(data));
 		}
@@ -126,7 +126,7 @@ public class SaveData
 		save.m_gridIndex = item.GetGridIndex();
 		save.m_id = item.m_id;
 		save.m_attack = item.m_attack;
-		save.m_prefabName = item.GetPrefabName();
+		save.m_itemData = item.ItemData;
 		save.m_isEquip = item.IsEquip();
 
 		return save;
@@ -139,7 +139,7 @@ public class SaveData
 		item.SetGridIndex(data.m_gridIndex);
 		item.m_id = data.m_id;
 		item.m_attack = data.m_attack;
-		item.SetPrefabName(data.m_prefabName);
+		item.ItemData = data.m_itemData;
 		item.SetEquipInfo(data.m_isEquip);
 
 		return item;

@@ -14,7 +14,7 @@ public class ItemInfo_ForSave
 	public float m_attack;
 	// ƒvƒŒƒnƒu
 	[SerializeField] GameObject m_prefab;
-	public string m_prefabName;
+	public MapObjectEntity m_itemData;
 	// ‘•”õ‚³‚ê‚Ä‚¢‚é‚©
 	public bool m_isEquip;
 }

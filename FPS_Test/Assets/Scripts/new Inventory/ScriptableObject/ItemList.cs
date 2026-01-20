@@ -47,19 +47,6 @@ public class ItemList : ScriptableObject
 		return m_prefabName;
 	}
 
-	// プレハブ(GameObject)を取得
-	public GameObject GetPrefabObject()
-	{
-		return m_prefab;
-	}
-
-	// プレハブを設定する
-	public void SetPrefab(GameObject prefab)
-	{
-		m_prefab = prefab;
-		SetPrefabName(prefab.name);
-	}
-
 	public void SetPrefabName(string name)
 	{
 		m_prefabName = name;

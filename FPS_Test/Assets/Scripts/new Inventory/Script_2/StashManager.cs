@@ -67,6 +67,9 @@ public class StashManager : MonoBehaviourPunCallbacks
 	private int m_inventoryWidth = 5;
 	private int m_inventoryHeight = 5;
 
+	// ロビーのスタッシュ用サイズ
+	[SerializeField] Info_InventorySize m_lobbyInfo;
+
 	[SerializeField] GameObject m_stashGridParent;  // スタッシュのマス目の親オブジェクト
 	[SerializeField] GameObject m_inventoryGridParent;	// インベントリのマス目の親オブジェクト
 
@@ -97,6 +100,8 @@ public class StashManager : MonoBehaviourPunCallbacks
 	private List<ItemList> m_sellItemList = new List<ItemList>();
 	// トレーダーの販売アイテムリスト
 	private List<ItemList> m_traderItemList = new List<ItemList>();
+	// ロビーのスタッシュのアイテムリスト
+	private List<ItemList> m_stashItemList = new List<ItemList>();
 
 	// UIを表示するときの座標用
 	[SerializeField] Transform m_inventoryPos;
@@ -106,8 +111,6 @@ public class StashManager : MonoBehaviourPunCallbacks
 	[SerializeField] Info_InventorySize m_infoStash;
 	[SerializeField] Info_InventorySize m_infoInventory;
 
-	// デバッグ用アイテムリスト
-	[SerializeField] List<GameObject> items = new List<GameObject>();
 	// 自分の親を保管
 	[SerializeField] GameObject m_parent;
 
@@ -116,7 +119,7 @@ public class StashManager : MonoBehaviourPunCallbacks
 	[SerializeField] Info_CurrentItem m_infoItem;
 
 	// 現在の状態が購入予定か（true : 購入, false : 売却）
-	private bool m_isBuyMode = true;
+	private bool m_isBuyMode;
 
 	// 交渉予定の金額
 	private int m_priceNegotiation;
@@ -140,15 +143,12 @@ public class StashManager : MonoBehaviourPunCallbacks
 	// セーブデータ管理用
 	private SaveData m_saveInstance = null;
 
-	// テスト用
 	[SerializeField] bool m_isPlayer = true;
 	private bool m_isScavenger = false;
-
-	private int m_id;
-
 	private bool m_isInventoryOpen = false;
-
 	[SerializeField] TextMeshProUGUI m_text;
+
+	private bool m_isStashOpen = false;
 
 	// Start is called before the first frame update
 	void Start()
@@ -161,27 +161,22 @@ public class StashManager : MonoBehaviourPunCallbacks
 			CreateInventory(GridType.Inventory);
 		}
 
-		if (m_isShop)
-		{
-			m_stashWidth = m_infoStash.GetSize.x;
-			m_stashHeight = m_infoStash.GetSize.y;
-			m_color = m_buyItemIcon.GetComponent<Image>().color;
-			CreateInventory(GridType.Stash);
-			m_text.SetText("Money : " + m_infoMoney.GetCurrentMoney().ToString());
-		}
-		else
-		{
-			// ショップじゃないときはフラグを折る
-			m_isBuyMode = false;
-		}
-
 		m_saveInstance = SaveData.Instance;
 
-		Load();
+		Load(GridType.Inventory);
+		// ダンジョンに入るタイミングでインベントリのセーブを削除
 		if(!SceneManager.GetSceneByName("LobbyScene").isLoaded)
 		{ 
 			m_saveInstance.DeleteInventory();
 		}
+		// ロビーに帰ってきたタイミングでスタッシュをコピー
+		if (SceneManager.GetSceneByName("LobbyScene").isLoaded)
+		{
+			Load(GridType.Stash);
+		}
+
+		// ショップの時だけ購入モードを有効にする
+		m_isBuyMode = m_isShop;
 	}
 
     // Update is called once per frame
@@ -218,18 +213,27 @@ public class StashManager : MonoBehaviourPunCallbacks
 		m_saveInstance.SaveInventory(m_itemList);
 	}
 
-	public void Load()
+	public void Load(GridType type)
 	{
 		// 現在のアイテムを全て削除
-		ResetItemList();
-		// セーブしたアイテムをロード
-		m_itemList = new List<ItemList>(m_saveInstance.ReloadInventory());
-		int count = 0;
-		// リストをUIに反映
-		foreach (ItemList item in m_itemList)
+		ResetItemList(type);
+
+		if(type == GridType.Inventory)
 		{
-			CreateItem(count, item, GridType.Inventory);
-			count++;
+			// セーブしたアイテムをロード
+			m_itemList = new List<ItemList>(m_saveInstance.ReloadInventory());
+
+			int count = 0;
+			// リストをUIに反映
+			foreach (ItemList item in m_itemList)
+			{
+				CreateItem(count, item, GridType.Inventory);
+				count++;
+			}
+		}
+		else if (type == GridType.Stash)
+		{
+			m_stashItemList = new List<ItemList>(m_saveInstance.ReloadStash());
 		}
 	}
 
@@ -326,9 +330,6 @@ public class StashManager : MonoBehaviourPunCallbacks
 									m_itemList[item.GetComponent<Item_Object>().GetIndex()].SetGridIndex(item.GetComponent<Item_Object>().GetGridIndex());
 									break;
 							}
-
-							// 装備の状態を変更
-							//item.GetComponent<Item_Object>().SetEquipValue(false, item.GetComponent<Item_Object>().GetGridType() == GridType.Inventory);
 						}
 					}
 					else
@@ -473,15 +474,12 @@ public class StashManager : MonoBehaviourPunCallbacks
 	)
 	{
 		// 購入モードでは無視
-		if (!isTest && m_isBuyMode)
+		if (!isTest && m_isBuyMode && m_isShop)
 		{
-			Debug.Log("buy mode");
 			// アイテムが入るスペースがないので元の位置に戻す
 			item.GetComponent<Item_Object>().PointerUp(false);
 			return false;
 		}
-
-		Debug.Log("short cut");
 
 		return CheckGrid(type, item, isEquip, isAdd, isTest);
 	}
@@ -502,6 +500,11 @@ public class StashManager : MonoBehaviourPunCallbacks
     public void CreateStashUi(Info_InventorySize info, List<ItemList> itemList)
 	{
 		if (m_isInventoryOpen) return;
+
+		if(m_stashUi != null)
+		{
+			Destroy(m_stashUi.gameObject);
+		}
 
 		// UIを表示
 		switch (info.GetInventoryType)
@@ -534,6 +537,7 @@ public class StashManager : MonoBehaviourPunCallbacks
 		// リストをUIに反映
 		foreach (ItemList item in m_otherItemList)
 		{
+			Debug.Log("itemの中身 : " + item.ItemData.displayName);
 			CreateItem(count, item);
 			count++;
 		}
@@ -885,15 +889,11 @@ public class StashManager : MonoBehaviourPunCallbacks
 		// マス目座標を保存
 		info.SetGridIndex(item.GetComponent<Item_Object>().GetGridIndex());
 		Debug.Log(item.GetComponent<Item_Object>().ItemData.objectName);
-		// プレハブを取得
-		Loader.LoadGameObjectAsync(item.GetComponent<Item_Object>().ItemData.objectName).Completed += op =>
-		{
-			info.SetPrefab(op.Result);
-			Addressables.Release(op);
-		};
 
 		// アクティブなオブジェクトを変更
 		info.SetActiveObject(item);
+		// リストにオブジェクトのExcel情報を追加
+		info.ItemData = item.GetComponent<Item_Object>().ItemData;
 
 		if(isNormal)
 		{
@@ -964,7 +964,6 @@ public class StashManager : MonoBehaviourPunCallbacks
 		for(int i = 0; i < itemList.Count; i++)
 		{
 			ItemList item = itemList[i];
-			
 			GetPrefabForShop(i, item);
 		}
 	}
@@ -973,13 +972,16 @@ public class StashManager : MonoBehaviourPunCallbacks
 	private void GetPrefabForShop(int index, ItemList item)
 	{
 		// プレハブを取得
-		Loader.LoadGameObjectAsync(item.GetPrefabName()).Completed += op =>
+		Loader.LoadGameObjectAsync(item.ItemData.objectName).Completed += op =>
 		{
 			GameObject g = Instantiate(op.Result, m_moveItemTransform);
 			g.GetComponent<Item_Object>().SetBaseInfo();
 
 			// アイテムリストのインデックス番号を処理した順に書き変える
 			g.GetComponent<Item_Object>().ChangeIndex(index);
+
+			// 自身の情報をオブジェクトに持たせる
+			g.GetComponent<Item_Object>().ItemData = item.ItemData;
 
 			// アイテムをスタッシュに並べる
 			CheckGrid(GridType.Inventory, g, false, true, true, false);
@@ -1060,15 +1062,27 @@ public class StashManager : MonoBehaviourPunCallbacks
 	}
 	// ---------------------------------
 
-	public void ResetItemList()
+	public void ResetItemList(GridType type)
 	{
-		foreach(var item in m_itemList)
+		List<ItemList> list = new List<ItemList>();
+		switch(type)
+		{
+			case GridType.Inventory:
+				list = m_itemList;
+				break;
+
+			case GridType.Stash:
+				list = m_stashItemList;
+				break;
+		}
+
+		foreach(var item in list)
 		{
 			item.GetActiveObject().GetComponent<Item_Object>().ReadyMove();
 			item.DeleteActiveObject();
 		}
 
-		m_itemList.Clear();
+		list.Clear();
 	}
 	// ----------------------------------
 
@@ -1178,6 +1192,7 @@ public class StashManager : MonoBehaviourPunCallbacks
 			{
 				// 当たり判定を復活させる
 				item.GetComponent<Item_Object>().ResetHitCol();
+				Debug.Log("購入前のitemのItemData.ObjectName[ " + item.GetComponent<Item_Object>().ItemData.objectName + " ]");
 				// お金を消費
 				m_infoMoney.UseMoney(m_buyItem.GetActiveObject().GetComponent<Item_Object>().GetValue());
 				// 購入予定のアイテムをリセットする
@@ -1262,9 +1277,11 @@ public class StashManager : MonoBehaviourPunCallbacks
 				}
 				m_sellItemList.Clear();
 			}
-			// 購入モードに切り替える
-			m_isBuyMode = true;
 		}
+		// 購入モードフラグを折る（折らないとショートカットがバグる）
+		m_isBuyMode = false;
+		m_isShop = false;
+		m_isInventoryOpen = false;
 	}
 
 	// 探索準備(選択されたGridType == 探索するGridType)
@@ -1320,5 +1337,63 @@ public class StashManager : MonoBehaviourPunCallbacks
 		{
 			list.Add(default(T));
 		}
+	}
+
+	// ショップ画面を開く際に準備をする
+	public void ReadyShop()
+	{
+		m_isShop = true;
+		m_stashWidth = m_infoStash.GetSize.x;
+		m_stashHeight = m_infoStash.GetSize.y;
+		m_color = m_buyItemIcon.GetComponent<Image>().color;
+		CreateInventory(GridType.Stash);
+		m_text.SetText("Money : " + m_infoMoney.GetCurrentMoney().ToString());
+	}
+
+	// ロビーのスタッシュ画面を作成する
+	public void CreateLobbyStash()
+	{
+		CreateStashUi(m_lobbyInfo, m_stashItemList);
+		m_isStashOpen = true;
+	}
+
+	// StashUiParentを付け替えるための関数
+	public void ChangeStashUiParent(GameObject parent)
+	{
+		m_stashUiParent = parent;
+	}
+
+	// ショップを開く
+	public void StartShopMode()
+	{
+		// ショップの挙動に変更する
+		m_isShop = true;
+		// 購入モードにする
+		m_isBuyMode = true;
+	}
+
+	// スタッシュ <=> インベントリのやり取りを保存する
+	public void SaveStash()
+	{
+		if(m_isStashOpen)
+		{
+			m_stashItemList = new List<ItemList>(m_otherItemList);
+
+			// スタッシュの内容をセーブする
+			m_saveInstance.SaveStash(m_stashItemList);
+
+			m_isStashOpen = false;
+
+			// 表示しているUIを削除する
+			Destroy(m_stashUi.gameObject);
+		}
+	}
+
+	// ゲームの終了
+	void OnApplicationQuit()
+	{
+		// アイテムの所持状況を保持
+		m_saveInstance.SaveInventory(m_itemList);
+		m_saveInstance.SaveStash(m_stashItemList);
 	}
 }

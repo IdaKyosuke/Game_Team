@@ -3,17 +3,18 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+public enum Rarity
+{
+	Common,
+	Rare,
+	Unipue,
+	Legendary,
+
+	Length,
+}
+
 public class TreasureBoxItem : MonoBehaviourPunCallbacks
 {
-	public enum Rarity
-	{
-		Common,
-		Rare,
-		Unipue,
-		Legendary,
-
-		Length,
-	}
 
 	[SerializeField] ExcelData m_excelData;
 	[SerializeField] Rarity m_rarity;

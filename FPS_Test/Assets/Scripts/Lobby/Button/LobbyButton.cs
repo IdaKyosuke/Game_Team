@@ -56,6 +56,10 @@ public class LobbyButton : MonoBehaviour
 			case LobbyButtonType.ReturnLobby:
 				m_func = new Button_ReturnLobby();
 				break;
+
+			case LobbyButtonType.Stash:
+				m_func = new Button_Stash();
+				break;
 		}
 
 		if(m_func != null)
