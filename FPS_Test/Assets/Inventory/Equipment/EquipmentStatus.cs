@@ -40,7 +40,7 @@ public class EquipmentStatus : MonoBehaviour
 		//•Ší‚È‚çó‘ÔˆÙí•t—^‚ÌƒXƒLƒ‹‚ğæ“¾
 		if (GetComponent<Item_Object>().GetWeaponType() == EquipmentType.Weapon)
 		{
-			transform.root.GetComponent<Condition>().Grant = (ConditionType)m_passiveSkillData.EquipmentAbility[m_statusData.id].condition;
+			//transform.root.GetComponent<Condition>().Grant = (ConditionType)m_passiveSkillData.EquipmentAbility[m_statusData.id].condition;
 		}
 	}
 }
