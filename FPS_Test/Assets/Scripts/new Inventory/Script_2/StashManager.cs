@@ -721,6 +721,11 @@ public class StashManager : MonoBehaviourPunCallbacks
 				RemoveItemList(item, m_otherItemList);
 				AddItemList(item, m_itemList);
 				item.GetComponent<Item_Object>().SetType(GridType.Inventory);
+				Debug.Log("equip stash");
+			}
+			else
+			{
+				Debug.Log("equip inventory");
 			}
 		}
 		else 

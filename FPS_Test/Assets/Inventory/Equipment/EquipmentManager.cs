@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class EquipmentManager : MonoBehaviour
 {
-    private List<GameObject> m_equipments;
+    [SerializeField] List<GameObject> m_equipments;
 
     private void Start()
     {

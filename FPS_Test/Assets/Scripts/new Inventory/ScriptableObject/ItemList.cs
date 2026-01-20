@@ -79,7 +79,6 @@ public class ItemList : ScriptableObject
 	// アクティブなオブジェクトのインデックスを変更する
 	public void ChangeIndex(int index)
 	{
-		Debug.Log(m_activeObject);
 		m_activeObject.GetComponent<Item_Object>().ChangeIndex(index);
 	}
 
