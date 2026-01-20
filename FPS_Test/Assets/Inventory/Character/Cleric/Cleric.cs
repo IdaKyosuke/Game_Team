@@ -65,13 +65,13 @@ public class Cleric : Job
     public override void Attack()
     {
         //攻撃コライダー有効化
-        m_weapon.enabled = true;
+        m_weapon.StartAttack();
     }
 
     public override void AttackEnd()
     {
         //攻撃コライダー無効化
-        m_weapon.enabled = false;
+        m_weapon.EndAttack();
     }
 
     public int GetBarrierDamage(int damage)

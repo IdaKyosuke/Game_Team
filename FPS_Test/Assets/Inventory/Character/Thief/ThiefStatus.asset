@@ -14,13 +14,46 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   parameters:
   - level: 1
-    hp: 100000
+    hp: 700
     mp: 0
-    physicalPower: 100000
+    physicalPower: 90
     magicPower: 0
-    physicalDefense: 50
-    magicDefense: 40
+    physicalDefense: 60
+    magicDefense: 60
+    attackSpeed: 20
+    moveSpeed: 120
+    openSpeed: 140
+    requiredExp: 600
+  - level: 2
+    hp: 700
+    mp: 0
+    physicalPower: 100
+    magicPower: 0
+    physicalDefense: 60
+    magicDefense: 60
     attackSpeed: 20
     moveSpeed: 125
-    openSpeed: 130
-    requiredExp: 999
+    openSpeed: 150
+    requiredExp: 800
+  - level: 3
+    hp: 750
+    mp: 0
+    physicalPower: 105
+    magicPower: 0
+    physicalDefense: 65
+    magicDefense: 65
+    attackSpeed: 20
+    moveSpeed: 130
+    openSpeed: 160
+    requiredExp: 1100
+  - level: 4
+    hp: 800
+    mp: 0
+    physicalPower: 110
+    magicPower: 0
+    physicalDefense: 70
+    magicDefense: 70
+    attackSpeed: 20
+    moveSpeed: 135
+    openSpeed: 165
+    requiredExp: 0

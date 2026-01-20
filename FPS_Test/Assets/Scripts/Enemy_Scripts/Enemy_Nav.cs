@@ -33,7 +33,7 @@ public class Enemy_Nav : MonoBehaviourPunCallbacks
 	[SerializeField] GameObject m_checkAttackCol;
 
 	// 自身のステータス
-	private int m_hp = 100;
+	private int m_hp = 1000;
 	private int m_atk;
 	private int m_exp;
 
@@ -43,8 +43,10 @@ public class Enemy_Nav : MonoBehaviourPunCallbacks
 	// 動きを止めるための判定をするコライダー
 	[SerializeField] ForStop_Collider m_collider;
 
-	// Start is called before the first frame update
-	void Start()
+	public bool IsDeath => m_isDeath;
+
+    // Start is called before the first frame update
+    void Start()
 	{
 		m_agent = GetComponent<NavMeshAgent>();
 		m_charaCon = GetComponent<CharacterController>();
@@ -165,92 +167,94 @@ public class Enemy_Nav : MonoBehaviourPunCallbacks
 		}
 	}
 
-    private void OnTriggerEnter(Collider other)
-    {
-        //プレイヤ－情報の取得
-        PlayerStatus playerStatus;
-        Job playerJob;
-        Weapon_Collider weapon;
+	//  private void OnTriggerEnter(Collider other)
+	//  {
+	//      //プレイヤ－情報の取得
+	//      PlayerStatus playerStatus;
+	//      Job playerJob;
+	//      Weapon_Collider weapon;
 
-        // プレイヤーの物理攻撃を受けた
-        if (!m_isDeath && !m_isGetHit && other.gameObject.CompareTag("weapon_player"))
-        {
-            playerStatus = other.transform.root.GetComponent<PlayerStatus>();
-            playerJob = other.transform.root.GetComponent<Job>();
-            weapon = other.GetComponent<Weapon_Collider>();
-            Damage(playerStatus, playerJob, weapon, playerJob.AttackType);
-        }
+	//      // プレイヤーの物理攻撃を受けた
+	//      if (!m_isDeath && !m_isGetHit && other.gameObject.CompareTag("weapon_player"))
+	//      {
+	//          playerStatus = other.transform.root.GetComponent<PlayerStatus>();
+	//          playerJob = other.transform.root.GetComponent<Job>();
+	//          weapon = other.GetComponent<Weapon_Collider>();
+	//          Damage(playerStatus, playerJob, weapon, playerJob.AttackType);
+	//      }
 
-        // プレイヤーの魔法攻撃を受けた
-        if (!m_isDeath && !m_isGetHit && other.gameObject.CompareTag("weapon_magic"))
-        {
-            playerStatus = other.GetComponent<MagicAttack>().Parent.GetComponent<PlayerStatus>();
-            playerJob = other.GetComponent<MagicAttack>().Parent.GetComponent<Job>();
-            weapon = other.GetComponent<Weapon_Collider>();
-            Damage(playerStatus, playerJob, weapon, playerJob.AttackType);
-        }
-    }
+	//      // プレイヤーの魔法攻撃を受けた
+	//      if (!m_isDeath && !m_isGetHit && other.gameObject.CompareTag("weapon_magic"))
+	//      {
+	//          playerStatus = other.GetComponent<MagicAttack>().Parent.GetComponent<PlayerStatus>();
+	//          playerJob = other.GetComponent<MagicAttack>().Parent.GetComponent<Job>();
+	//          weapon = other.GetComponent<Weapon_Collider>();
+	//          Damage(playerStatus, playerJob, weapon, playerJob.AttackType);
+	//      }
+	//  }
 
-    private void Damage(PlayerStatus playerStatus, Job playerJob, Weapon_Collider weapon, AttackType attackType)
-    {
-        //ダメ―ジ計算
-        float damage = 0;
-        switch (attackType)
-        {
-            case AttackType.Physical:
-                damage += playerStatus.Total.physicalPower;
-                break;
+	public void Damage(PlayerStatus playerStatus, Job playerJob, Weapon_Collider weapon)
+	{
+		//ダメ―ジ計算
+		float damage = 0;
+		switch (playerJob.AttackType)
+		{
+			case AttackType.Physical:
+				damage += playerStatus.Total.physicalPower;
+				break;
 
-            case AttackType.Magical:
-                damage += playerStatus.Total.magicPower;
-                break;
+			case AttackType.Magical:
+				damage += playerStatus.Total.magicPower;
+				break;
 
-            case AttackType.Cleric:
-                damage += playerStatus.Total.physicalPower * 1.2f;
-                break;
-        }
+			case AttackType.Cleric:
+				damage += playerStatus.Total.physicalPower * 1.2f;
+				break;
+		}
 
-        //プレイヤーが魔法使いかつ物理攻撃の時はMPを2回復させる
-        if (playerJob.JobType == JobType.Wizard)
-        {
-            if (weapon.AttackType == AttackType.Physical)
-            {
-                playerStatus.MagicHeal(2);
-            }
-        }
+		//プレイヤーが魔法使いかつ物理攻撃の時はMPを2回復させる
+		if (playerJob.JobType == JobType.Wizard)
+		{
+			if (playerJob.AttackType == AttackType.Physical)
+			{
+				playerStatus.MagicHeal(2);
+			}
+		}
 
-        //被弾処理
-        m_hp -= (int)damage;
+		//被弾処理
+		m_hp -= (int)damage;
 
-        // 攻撃を受けたフラグを立てる
-        m_isGetHit = true;
+		Debug.Log("エネミーに [ " + damage + " ] ダメージを与えた");
 
-        //死亡確認
-        if (m_hp <= 0)
-        {
-            // 死亡状態にする
-            m_isDeath = true;
+		// 攻撃を受けたフラグを立てる
+		m_isGetHit = true;
 
-            // 死亡アニメーション
-            GetComponent<Enemy_Animation>().IsDeath();
+		//死亡確認
+		if (m_hp <= 0)
+		{
+			// 死亡状態にする
+			m_isDeath = true;
 
-            // 自分の当たり判定を無くす
-            GetComponent<CapsuleCollider>().enabled = false;
+			// 死亡アニメーション
+			GetComponent<Enemy_Animation>().IsDeath();
 
-            // プレイヤーに経験値を加算する
-            playerStatus.AddExp(m_exp);
+			// 自分の当たり判定を無くす
+			GetComponent<CapsuleCollider>().enabled = false;
 
-            //プレイヤーの職業が僧侶か魔法使いの場合はMPを5回復させる
-            if (playerJob.JobType == JobType.Cleric
-            || playerJob.JobType == JobType.Wizard)
-            {
-                playerStatus.MagicHeal(5);
-            }
-        }
-    }
+			// プレイヤーに経験値を加算する
+			playerStatus.AddExp(m_exp);
 
-    // プレイヤーを発見してモードが変わる
-    public void InCombat(GameObject player)
+			//プレイヤーの職業が僧侶か魔法使いの場合はMPを5回復させる
+			if (playerJob.JobType == JobType.Cleric
+			|| playerJob.JobType == JobType.Wizard)
+			{
+				playerStatus.MagicHeal(5);
+			}
+		}
+	}
+
+	// プレイヤーを発見してモードが変わる
+	public void InCombat(GameObject player)
 	{
 		if(!m_combat)
 		{

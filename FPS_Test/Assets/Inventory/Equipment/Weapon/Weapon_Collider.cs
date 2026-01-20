@@ -1,11 +1,9 @@
 using Photon.Pun;
 using System.Collections.Generic;
-using System.Net.Sockets;
 using UnityEngine;
 
 public class Weapon_Collider : MonoBehaviourPunCallbacks
 {
-	[SerializeField] AttackType m_attackType;
 	[SerializeField] GameObject m_hitEffect;
 
 	private Dictionary<int, bool> m_hitMasterInfo { get; } = new Dictionary<int, bool>();
@@ -24,10 +22,13 @@ public class Weapon_Collider : MonoBehaviourPunCallbacks
 	{
         // 自分の当たり判定を保持
         m_collider = GetComponent<Collider>();
-		if(gameObject.CompareTag("weapon_player")) m_collider.enabled = false;
+		if (gameObject.CompareTag("weapon_player"))
+		{
+			m_collider.enabled = false;
+            m_parent = transform.root.gameObject;
+        }
 
-        if (m_parent == null) m_parent = transform.root.gameObject;
-		m_parentID = m_parent.gameObject.GetInstanceID();
+        m_parentID = m_parent.gameObject.GetInstanceID();
     }
 
     public void StartAttack()
@@ -42,15 +43,10 @@ public class Weapon_Collider : MonoBehaviourPunCallbacks
 		m_collider.enabled = false;
 	}
 
-	public AttackType AttackType
-	{
-		get { return m_attackType; }
-	}
-
 	private void OnTriggerEnter(Collider other)
 	{
-		// プレイヤーに当たったとき
-		if (other.gameObject.CompareTag("playerModel"))
+        // プレイヤーに当たったとき
+        if (other.gameObject.CompareTag("playerModel"))
 		{
 			//相手プレイヤーの親を取得
 			GameObject otherPlayer = other.transform.root.gameObject;
@@ -75,8 +71,28 @@ public class Weapon_Collider : MonoBehaviourPunCallbacks
 			Quaternion quaternion = Quaternion.identity;
 			quaternion.x = hitPos.x - other.transform.position.x;
 			quaternion.z = hitPos.z - other.transform.position.z;
-
-			//GameObject effect = Instantiate(m_hitEffect, hitPos, quaternion);
 		}
-	}
+
+        // 敵に当たったとき
+        if (other.TryGetComponent<Enemy_Nav>(out var enemyNav))
+		{
+            //敵オブジェクトを取得
+            GameObject otherEnemy = enemyNav.gameObject;
+
+            // 当たったオブジェクトのIDを貰ってくる
+            int id = otherEnemy.GetInstanceID();
+
+            // すでに当たったオブジェクトの時は無視する
+            if (m_hitMasterInfo.ContainsKey(id)) return;
+
+            // 初めて当たったときは相手のIDを登録
+            m_hitMasterInfo[id] = true;
+
+            //死体の場合は無視する
+            if (enemyNav.IsDeath) return;
+
+			//エネミーの被弾処理を呼び出す
+			enemyNav.Damage(m_parent.GetComponent<PlayerStatus>(), m_parent.GetComponent<Job>(), this);
+        }
+    }
 }

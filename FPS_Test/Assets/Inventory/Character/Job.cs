@@ -56,11 +56,12 @@ public abstract class Job : MonoBehaviour
         //パッシブスキルの発動
         actions[m_skillIndex]?.Invoke();
 
-        Debug.Log("[" + (m_skillIndex + 1) + "]番目のパッシブスキルが発動");
-
         //ジョブタイプの設定
         m_jobType = jobType;
         m_attackType = attackType;
+
+        //UIの更新
+        GetComponent<PlayerController>().ViewUI.SetIcon(m_attackType);
     }
 
     //各ジョブ固有のパッシブスキルは派生先で実装する

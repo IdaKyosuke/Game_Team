@@ -47,23 +47,21 @@ public class Wizard : Job
 
             //’e‚Ì¶¬
             GameObject magic = Instantiate(m_magicBall, transform.position + transform.forward * 1.5f + m_offset, Quaternion.identity);
-            magic.GetComponent<MagicAttack>().Init(transform.forward);
-            magic.GetComponent<MagicAttack>().Parent = gameObject;
+            magic.GetComponent<MagicAttack>().Init(transform.forward, gameObject);
 
             //MPÁ”ï
             m_status.CurrentMP -= UseMP;
-
             return;
         }
 
         //•¨—UŒ‚
-        m_weapon.GetComponent<Collider>().enabled = true;
+        m_weapon.StartAttack();
     }
 
     public override void AttackEnd()
     {
         //•¨—UŒ‚‚Ìê‡‚ÍUŒ‚ƒRƒ‰ƒCƒ_[–³Œø‰»
-        m_weapon.GetComponent<Collider>().enabled = false;
+        m_weapon.EndAttack();
     }
 
     public override void Identity()

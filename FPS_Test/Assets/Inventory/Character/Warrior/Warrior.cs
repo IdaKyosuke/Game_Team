@@ -5,6 +5,7 @@ public class Warrior : Job
     private PlayerStatus m_status;
     private bool m_isOneLife;   //一度だけHP1で耐えるかどうか
     private bool m_isDamageCut; //ダメージカットが発動しているかどうか
+    private GameObject m_hitEnemy;
 
     public bool IsDamageCut => m_isDamageCut;
 
@@ -12,6 +13,12 @@ public class Warrior : Job
     { 
         get { return m_isOneLife; }
         set { m_isOneLife = value; }
+    }
+
+    public GameObject HitEnemy
+    {
+        get { return m_hitEnemy; }
+        set { m_hitEnemy = value; }
     }
 
     private void Start()
@@ -29,13 +36,13 @@ public class Warrior : Job
     public override void Attack()
     {
         //攻撃コライダー有効化
-        m_weapon.enabled = true;
+        m_weapon.StartAttack();
     }
 
     public override void AttackEnd()
     {
         //攻撃コライダー無効化
-        m_weapon.enabled = false;
+        m_weapon.EndAttack();
     }
 
     public override void Identity()

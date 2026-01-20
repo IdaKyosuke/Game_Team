@@ -14292,27 +14292,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 35}
   m_SizeDelta: {x: 100, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!65 &2241838625047855829
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6722856551100036127}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 30, y: 4, z: 3}
-  m_Center: {x: 0, y: 0, z: 0.0003075083}
 --- !u!4 &2253037415630303309
 Transform:
   m_ObjectHideFlags: 0
@@ -15360,8 +15339,7 @@ Transform:
   m_LocalPosition: {x: 0.03679657, y: 4.50491, z: -3.9721642}
   m_LocalScale: {x: 0.013455456, y: 4.943036, z: 1.1907673}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 4011097672962871996}
+  m_Children: []
   m_Father: {fileID: 4100336584629531223}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &3064583094244905037
@@ -16324,22 +16302,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8933698029043415363}
   m_Mesh: {fileID: -593053110101353100, guid: 1254dcb25c99b344dab48b723fba3438, type: 3}
---- !u!4 &4011097672962871996
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6722856551100036127}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0.00000008940697, y: -0.00000014901161, z: -0.00000012665987,
-    w: 1}
-  m_LocalPosition: {x: 0.00038096064, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 3063229961842839978}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4040684201614730257
 Transform:
   m_ObjectHideFlags: 0
@@ -16539,20 +16501,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
---- !u!114 &4112248463564965219
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6722856551100036127}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6e27c0119bbb30148af03fc177af2b6a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_attackType: 0
-  m_hitEffect: {fileID: 0}
 --- !u!114 &4123596545458242035
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -21029,24 +20977,6 @@ GameObject:
   - component: {fileID: 7188539424580248989}
   m_Layer: 5
   m_Name: ShopButtons
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!1 &6722856551100036127
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 4011097672962871996}
-  - component: {fileID: 2241838625047855829}
-  - component: {fileID: 4112248463564965219}
-  m_Layer: 31
-  m_Name: Collider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

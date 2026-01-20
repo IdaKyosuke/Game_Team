@@ -1,6 +1,7 @@
 using Cysharp.Threading.Tasks;
 using Photon.Pun;
 using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviourPunCallbacks
@@ -41,6 +42,8 @@ public class PlayerController : MonoBehaviourPunCallbacks
 	public Weapon_Collider Weapon => m_weapon;
 
 	public GameObject MagicBall => m_magicBall;
+
+	public PlayerViewUI ViewUI => m_playerViewUI;
 
     private void Awake()
     {

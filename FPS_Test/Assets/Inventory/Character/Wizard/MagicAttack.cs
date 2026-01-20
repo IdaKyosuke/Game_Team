@@ -6,15 +6,8 @@ public class MagicAttack : MonoBehaviour
     private const float Speed = 10;
     private const float LifeTime = 0.3f;
 
-    private GameObject m_parent;
     private Rigidbody m_rb;
     private Vector3 m_dir;
-
-    public GameObject Parent
-    {
-        get { return m_parent; }
-        set { m_parent = value; }
-    }
 
     private void Start()
     {
@@ -30,9 +23,11 @@ public class MagicAttack : MonoBehaviour
         m_rb.MovePosition(m_rb.position + m_dir * Speed * Time.fixedDeltaTime);
     }
 
-    public void Init(Vector3 dir)
+    public void Init(Vector3 dir, GameObject parent)
     {
         m_dir = dir;
+        GetComponent<Weapon_Collider>().Parent = parent;
+        GetComponent<Collider>().enabled = true;
     }
 
     private void OnTriggerEnter(Collider other)
