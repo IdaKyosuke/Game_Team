@@ -45,7 +45,6 @@ public class Player_Equipment : MonoBehaviour
 			$"magicPower:{m_weaponStatus.magicPower}, " +
             $"physicalDefense:{m_weaponStatus.physicalDefense}," +
 			$"magicDefense:{m_weaponStatus.magicDefense}, " +
-            $"attackSpeed:{m_weaponStatus.attackSpeed}, " +
 			$"moveSpeed:{m_weaponStatus.moveSpeed}," +
 			$"openSpeed:{m_weaponStatus.openSpeed}"
         );

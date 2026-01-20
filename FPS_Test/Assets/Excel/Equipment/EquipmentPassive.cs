@@ -14,7 +14,6 @@ public class EquipmentPassive
     public int physicalDefense;
     public int magicDefense;
 
-    public int attackSpeed;
     public int moveSpeed;
     public int openSpeed;
 
@@ -32,7 +31,6 @@ public class EquipmentPassive
         result.magicPower = a.magicPower + b.magicPower;
         result.physicalDefense = a.physicalDefense + b.physicalDefense;
         result.magicDefense = a.magicDefense + b.magicDefense;
-        result.attackSpeed = a.attackSpeed + b.attackSpeed;
         result.moveSpeed =  a.moveSpeed + b.moveSpeed;
         result.openSpeed = a.openSpeed + b.openSpeed;
         return result;

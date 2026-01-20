@@ -18,7 +18,6 @@ public class EquipmentParameter : ScriptableObject
 
     public int moveSpeed;
     public int openSpeed;
-    public int attackSpeed;
 
     public static EquipmentParameter operator+ (EquipmentParameter a, EquipmentParameter b)
     {
@@ -30,7 +29,6 @@ public class EquipmentParameter : ScriptableObject
         result.magicPower = a.magicPower + b.magicPower;
         result.physicalDefense = a.physicalDefense + b.physicalDefense;
         result.magicDefense = a.magicDefense + b.magicDefense;
-        result.attackSpeed = a.attackSpeed + b.attackSpeed;
         result.moveSpeed = a.moveSpeed + b.moveSpeed;
         result.openSpeed = a.openSpeed + b.openSpeed;
         return result;
@@ -46,7 +44,6 @@ public class EquipmentParameter : ScriptableObject
         result.magicPower = a.magicPower - b.magicPower;
         result.physicalDefense = a.physicalDefense - b.physicalDefense;
         result.magicDefense = a.magicDefense - b.magicDefense;
-        result.attackSpeed = a.attackSpeed - b.attackSpeed;
         result.moveSpeed = a.moveSpeed - b.moveSpeed;
         result.openSpeed = a.openSpeed - b.openSpeed;
         return result;
@@ -61,7 +58,6 @@ public class EquipmentParameter : ScriptableObject
         result.magicPower = a.magicPower + b.magicPower;
         result.physicalDefense = a.physicalDefense + b.physicalDefense;
         result.magicDefense = a.magicDefense + b.magicDefense;
-        result.attackSpeed = a.attackSpeed + b.attackSpeed;
         result.moveSpeed = a.moveSpeed + b.moveSpeed;
         result.openSpeed = a.openSpeed + b.openSpeed;
         result.requiredExp = a.requiredExp; 
@@ -77,7 +73,6 @@ public class EquipmentParameter : ScriptableObject
         result.magicPower = a.magicPower - b.magicPower;
         result.physicalDefense = a.physicalDefense - b.physicalDefense;
         result.magicDefense = a.magicDefense - b.magicDefense;
-        result.attackSpeed = a.attackSpeed - b.attackSpeed;
         result.moveSpeed = a.moveSpeed - b.moveSpeed;
         result.openSpeed = a.openSpeed - b.openSpeed;
         result.requiredExp = a.requiredExp; 

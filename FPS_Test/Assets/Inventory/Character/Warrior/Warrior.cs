@@ -61,7 +61,6 @@ public class Warrior : Job
             magicPower = 0,
             physicalDefense = 100,
             magicDefense = 100,
-            attackSpeed = 0,
             moveSpeed = 4,
             openSpeed = 4
         };
