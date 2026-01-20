@@ -7,7 +7,8 @@ public enum EquipmentType
 	Gauntlet,	// ˜r
 	Shoes,		// ŒC
 	Weapon,		// •Ší
-	None,		// •Ší‚¶‚á‚È‚¢
+	None,       // •Ší‚¶‚á‚È‚¢
+	Potion,		// ƒ|[ƒVƒ‡ƒ“
 
 	Length,
 }

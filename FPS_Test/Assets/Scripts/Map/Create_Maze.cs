@@ -1,8 +1,7 @@
 using Photon.Pun;
+using System.Collections;
 using System.Collections.Generic;
-using Unity.AI.Navigation;
 using UnityEngine;
-using UnityEngine.Lumin;
 
 public class Create_Maze : MonoBehaviourPunCallbacks
 {
@@ -31,11 +30,14 @@ public class Create_Maze : MonoBehaviourPunCallbacks
 
 	// 帰還ポータルの生成位置
 	private List<Transform> m_portalPosList;
-	private float firstPortalTime = 240.0f;
-	private float secondPortalTime = 420.0f;
+	private float firstPortalTime = 4.0f;
+	private float secondPortalTime = 10.0f;
 	// ポータルを生成したかどうか
 	private bool m_firstCreatePortal = false;
 	private bool m_secondCreatePortal = false;
+
+	[SerializeField] GameObject m_portalTextPrefab;
+	private GameObject m_portalText;
 
 	[SerializeField] List<GameObject> m_mapPrefab;
 
@@ -221,5 +223,13 @@ public class Create_Maze : MonoBehaviourPunCallbacks
 			PhotonNetwork.InstantiateRoomObject(m_portal.name, pos, m_portalPosList[index].rotation);
 			m_portalPosList.Remove(m_portalPosList[index]);
 		}
+		m_portalText = PhotonNetwork.InstantiateRoomObject(m_portalTextPrefab.name, new Vector3(0, 0, 0), Quaternion.identity);
+		StartCoroutine(DestroyText());
+	}
+
+	IEnumerator DestroyText()
+	{
+		yield return new WaitForSeconds(2);
+		PhotonNetwork.Destroy(m_portalText);
 	}
 }
