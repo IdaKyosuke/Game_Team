@@ -13,11 +13,11 @@ public class Button_Battle : Button_Function
 
 	public override void PushThis()
 	{
-		//m_startButton.SetActive(true);
+		m_startButton.SetActive(true);
     }
 
 	public override void PushOther()
 	{
-		//m_startButton.SetActive(false);
+		m_startButton.SetActive(false);
     }
 }
