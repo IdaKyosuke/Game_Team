@@ -33,15 +33,18 @@ public class GridIcon_Equipment : MonoBehaviour
 	// 自分の装備枠かどうか
 	[SerializeField] bool m_isMine = false;
 
-	private StashManager m_stashManager;
+	[SerializeField] StashManager m_stashManager;
 
 	// Start is called before the first frame update
 	void Start()
 	{
 		m_pastInfo = m_fillUi;
-		if(!m_moveItemTransform)
+		if(!m_stashManager)
 		{
 			m_stashManager = m_parent.GetComponent<Inventory_Parent>().GetStashManager();
+		}
+		if(!m_moveItemTransform)
+		{
 			m_moveItemTransform = m_stashManager.GetMoveItemTransform();
 		}
 	}
@@ -128,16 +131,27 @@ public class GridIcon_Equipment : MonoBehaviour
 
 	public void QuickEquip(GameObject item, bool firstSetItemFlg = true)
 	{
-		// 中身があるときは飛ばす
 		if (transform.childCount != 0)
 		{
+			// すでに中身が設定されている時、新しく追加したものを元の場所に戻す
 			item.GetComponent<Item_Object>().PointerUp(false);
-			return;
 		}
+		else
+		{
+			Debug.Log("stashManager : " + m_stashManager);
+			m_stashManager.StartSet(GridType.Equipment);
+			// 新しく装備する
+			item.GetComponent<Item_Object>().PointerUp(true, transform);
+			// 新しく装備された物を装備状態にする
+			item.GetComponent<Item_Object>().SetEquipValue(true, m_isMine, firstSetItemFlg);
 
-		// 装備を枠に入れる
-		item.GetComponent<Item_Object>().PointerUp(true, transform);
-		// 装備状態にする
-		item.GetComponent<Item_Object>().SetEquipValue(true, m_isMine, firstSetItemFlg);
+			// 武器の時だけプレイヤーに状態異常を付与する
+			if (item.GetComponent<Item_Object>().GetWeaponType() == EquipmentType.Weapon)
+			{
+				item.GetComponent<EquipmentStatus>().SetPassive();
+			}
+
+			m_stashManager.StartSet(GridType.Empty);
+		}
 	}
 }

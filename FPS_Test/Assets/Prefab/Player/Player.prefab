@@ -279,6 +279,7 @@ MonoBehaviour:
   m_type: 3
   m_parent: {fileID: 9167261161933954168}
   m_isMine: 1
+  m_stashManager: {fileID: 0}
 --- !u!114 &5412165728699661544
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -399,6 +400,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c7d63503154f1e479fba8169543a5de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_equipments:
+  - {fileID: 5744363026202437228}
+  - {fileID: 2426529801671359649}
+  - {fileID: 4946404639205030686}
+  - {fileID: 106187828420355397}
+  - {fileID: 7330259162545538781}
 --- !u!1 &268589915210288962
 GameObject:
   m_ObjectHideFlags: 0
@@ -3731,6 +3738,7 @@ MonoBehaviour:
   m_type: 1
   m_parent: {fileID: 9167261161933954168}
   m_isMine: 1
+  m_stashManager: {fileID: 0}
 --- !u!114 &68230199710214119
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6414,6 +6422,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 181d7e91f9efde746b0112b2d94cd263, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_lobbyInfo: {fileID: 11400000, guid: 84e296e4b3b983a4d8436ec81f82a876, type: 2}
   m_stashGridParent: {fileID: 0}
   m_inventoryGridParent: {fileID: 3172032673963740415}
   m_moveItemTransform: {fileID: 7136094980449142664}
@@ -6430,14 +6439,6 @@ MonoBehaviour:
   m_stashPos: {fileID: 6339233544514925068}
   m_infoStash: {fileID: 11400000, guid: 84e296e4b3b983a4d8436ec81f82a876, type: 2}
   m_infoInventory: {fileID: 11400000, guid: de94df82eb88de24fb7aedad82edfebc, type: 2}
-  items:
-  - {fileID: 6859240578938640855, guid: 7c5070cb6ab9c0542a7d1ae13bde8e04, type: 3}
-  - {fileID: 6859240578938640855, guid: 39ef77d033a03034d910082ff4791a95, type: 3}
-  - {fileID: 6859240578938640855, guid: ee87f3fda351ab74c91cb4f7afb86092, type: 3}
-  - {fileID: 6859240578938640855, guid: 0e4e3865181989a43a44f5ddf93e023b, type: 3}
-  - {fileID: 6859240578938640855, guid: da3a3a4e9a177a242b391008f8b2ecad, type: 3}
-  - {fileID: 6859240578938640855, guid: 6d57a161f46862e448695f643b5b46c2, type: 3}
-  - {fileID: 4680076254182915247, guid: d656f10077e88a046934dfdf5365d26b, type: 3}
   m_parent: {fileID: 2970398514251725746}
   m_infoMoney: {fileID: 11400000, guid: a74372eaa338aa4449499b7bd1f69535, type: 2}
   m_infoItem: {fileID: 11400000, guid: 50dc0fdc65b24844081bb5d66a72eab3, type: 2}
@@ -8465,6 +8466,7 @@ MonoBehaviour:
   m_type: 2
   m_parent: {fileID: 9167261161933954168}
   m_isMine: 1
+  m_stashManager: {fileID: 0}
 --- !u!114 &6837434463857098060
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9745,6 +9747,7 @@ MonoBehaviour:
   m_type: 0
   m_parent: {fileID: 9167261161933954168}
   m_isMine: 1
+  m_stashManager: {fileID: 0}
 --- !u!114 &1425083639771560481
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11812,7 +11815,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6e27c0119bbb30148af03fc177af2b6a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_attackType: 0
   m_hitEffect: {fileID: 0}
 --- !u!1 &6725730232777206456
 GameObject:
@@ -12867,6 +12869,7 @@ MonoBehaviour:
   m_type: 4
   m_parent: {fileID: 9167261161933954168}
   m_isMine: 1
+  m_stashManager: {fileID: 0}
 --- !u!114 &2768778915036615024
 MonoBehaviour:
   m_ObjectHideFlags: 0
