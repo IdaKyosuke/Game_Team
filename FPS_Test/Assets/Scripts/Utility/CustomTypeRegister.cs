@@ -243,7 +243,7 @@ public class CustomTypeRegister : MonoBehaviour
 		{
 			strBytes += b + " ";
 		}
-		Debug.Log(strBytes);
+		//Debug.Log(strBytes);
 
 		ItemList data = ScriptableObject.CreateInstance<ItemList>();
 

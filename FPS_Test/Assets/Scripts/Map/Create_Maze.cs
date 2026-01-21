@@ -2,6 +2,8 @@ using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
 using System.Xml;
+using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine;
 
 public class Create_Maze : MonoBehaviourPunCallbacks
@@ -30,7 +32,7 @@ public class Create_Maze : MonoBehaviourPunCallbacks
 	private const int m_portalOffset = 2;
 
 	// 帰還ポータルの生成位置
-	private List<Transform> m_portalPosList;
+	private List<Vector3> m_portalPosList = new List<Vector3>();
 	private float firstPortalTime = 4.0f;
 	private float secondPortalTime = 10.0f;
 	// ポータルを生成したかどうか
@@ -116,9 +118,15 @@ public class Create_Maze : MonoBehaviourPunCallbacks
 
 		SetEnemySpawn(mapdatas);
 
-        // マップ生成完了
-		m_IsMapReady = true;
+		// マップ生成完了
+		photonView.RPC(nameof(SetReady), RpcTarget.All);
     }
+
+	[PunRPC]
+	void SetReady()
+	{
+		m_IsMapReady=true;
+	}
 
     [PunRPC]
 	void RequestChangeLayer(int layerNum, int viewId)
@@ -156,7 +164,6 @@ public class Create_Maze : MonoBehaviourPunCallbacks
 				i < RareNum ? 1 :
 				i < UniqueNum ? 2 : 3;
 
-			// プレイヤーは一度無視する
 			int index = Random.Range(0, spawnPos.Count);
 			PhotonNetwork.InstantiateRoomObject(m_treasure[treasureType].name, 
 				spawnPos[index].position,
@@ -168,7 +175,10 @@ public class Create_Maze : MonoBehaviourPunCallbacks
 			Vector3.zero,
 			Quaternion.identity);
 
-		m_portalPosList = spawnPos;
+		foreach (Transform tr in spawnPos)
+		{
+			photonView.RPC(nameof(SetPortalPos), RpcTarget.All, tr.position);
+		}
 	}
 
 	private void SetEnemySpawn(List<SendMapData> mapData)
@@ -200,22 +210,46 @@ public class Create_Maze : MonoBehaviourPunCallbacks
 
 	private void Update()
 	{
-		if (!PhotonNetwork.IsMasterClient) return;
 		m_time += Time.deltaTime;
+		if (!PhotonNetwork.IsMasterClient) return;
 
 		// 最初のポータル出現
 		if (!m_firstCreatePortal && m_time >= firstPortalTime)
 		{
 			CreatePortal();
-			m_firstCreatePortal = true;
+			photonView.RPC(nameof(SetFirstPortal), RpcTarget.All);
 		}
 
 		// 二回目のポータル出現
 		if (!m_secondCreatePortal && m_time >= secondPortalTime)
 		{
 			CreatePortal();
-			m_secondCreatePortal = true;
+			photonView.RPC(nameof(SetSecondPortal), RpcTarget.All);
 		}
+	}
+
+	[PunRPC]
+	void SetFirstPortal()
+	{
+		m_firstCreatePortal = true;
+	}
+
+	[PunRPC]
+	void SetSecondPortal()
+	{
+		m_secondCreatePortal = true;
+	}
+
+	[PunRPC]
+	void SetPortalPos(Vector3 pos)
+	{
+		m_portalPosList.Add(pos);
+	}
+
+	[PunRPC]
+	void RemovePortalPos(Vector3 pos)
+	{
+		m_portalPosList.Remove(pos);
 	}
 
 	private void CreatePortal()
@@ -224,18 +258,11 @@ public class Create_Maze : MonoBehaviourPunCallbacks
 		for (int i = 0; i < m_oncePortalPosAmount; ++i)
 		{
 			int index = Random.Range(0, m_portalPosList.Count);
-			Vector3 pos = m_portalPosList[index].position;
+			Vector3 pos = m_portalPosList[index];
 			pos.y += m_portalOffset;
-			PhotonNetwork.InstantiateRoomObject(m_portal.name, pos, m_portalPosList[index].rotation);
-			m_portalPosList.Remove(m_portalPosList[index]);
+			PhotonNetwork.InstantiateRoomObject(m_portal.name, pos, Quaternion.identity);
+			photonView.RPC(nameof(RemovePortalPos), RpcTarget.All, m_portalPosList[index]);
 		}
 		m_portalText = PhotonNetwork.InstantiateRoomObject(m_portalTextPrefab.name, new Vector3(0, 0, 0), Quaternion.identity);
-		StartCoroutine(DestroyText());
-	}
-
-	IEnumerator DestroyText()
-	{
-		yield return new WaitForSeconds(2);
-		PhotonNetwork.Destroy(m_portalText);
 	}
 }

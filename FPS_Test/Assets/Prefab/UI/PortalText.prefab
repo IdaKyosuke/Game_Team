@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 9828794747991922}
   - component: {fileID: 7363686167771565880}
   - component: {fileID: 871231438727456567}
+  - component: {fileID: 5291516391992162893}
   m_Layer: 5
   m_Name: PortalText
   m_TagString: Untagged
@@ -125,6 +126,19 @@ MonoBehaviour:
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
+--- !u!114 &5291516391992162893
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 34786352434266995}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 78530dd42475ed9478c293534912f4f7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_destroyTime: 2
 --- !u!1 &435466041230297820
 GameObject:
   m_ObjectHideFlags: 0
