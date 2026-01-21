@@ -10,6 +10,5 @@ public class MapObjectEntity
     public int probability;         // アイテムそれぞれの抽選確立
     public string displayName;      // 表示名
 	public int equipmentType;       // 装備アイテムタイプ
-	public string typeName;         // 装備アイテムタイプ名
 	public int price;				// 値段
 }

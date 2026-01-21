@@ -1,6 +1,7 @@
 using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
+using System.Xml;
 using UnityEngine;
 
 public class Create_Maze : MonoBehaviourPunCallbacks
@@ -162,6 +163,10 @@ public class Create_Maze : MonoBehaviourPunCallbacks
 				spawnPos[index].rotation);
 			spawnPos.Remove(spawnPos[index]);
 		}
+
+		PhotonNetwork.InstantiateRoomObject(m_treasure[Random.Range(0, 4)].name,
+			Vector3.zero,
+			Quaternion.identity);
 
 		m_portalPosList = spawnPos;
 	}

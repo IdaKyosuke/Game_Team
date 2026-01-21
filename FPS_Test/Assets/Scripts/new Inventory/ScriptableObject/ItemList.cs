@@ -15,7 +15,6 @@ public class ItemList : ScriptableObject
 	public float m_attack;
 	// プレハブ
 	[SerializeField] GameObject m_prefab;
-	private string m_prefabName;
 	// 装備されているか
 	private bool m_isEquip;
 	// インスタンス化されているオブジェクト
@@ -39,17 +38,6 @@ public class ItemList : ScriptableObject
 	public void SetGridIndex(Vector2Int index)
 	{
 		m_gridIndex = index;
-	}
-
-	// プレハブ(String)を取得する
-	public string GetPrefabName()
-	{
-		return m_prefabName;
-	}
-
-	public void SetPrefabName(string name)
-	{
-		m_prefabName = name;
 	}
 
 	// 装備状態の変更

@@ -1,7 +1,5 @@
 using ExitGames.Client.Photon;
 using System.Collections.Generic;
-using System;
-using UnityEditor.Rendering.Universal;
 using UnityEngine;
 
 public class CustomTypeRegister : MonoBehaviour
@@ -10,18 +8,94 @@ public class CustomTypeRegister : MonoBehaviour
 	{
 		bool ret;
 		ret = PhotonPeer.RegisterType(
-			typeof(List<ItemList>),
+			typeof(ItemList),
 			0,
+			SerializeItemData,
+			DeserializeItemData
+		);
+
+		ret = PhotonPeer.RegisterType(
+			typeof(List<ItemList>),
+			1,
 			SerializeItemList,
 			DeserializeItemList
 		);
 
 		ret = PhotonPeer.RegisterType(
 			typeof(Info_InventorySize),
-			1,
+			2,
 			SerializeInfo_InventorySize,
 			DeserializeInfo_InventorySize
 		);
+
+		ret = PhotonPeer.RegisterType(
+			typeof(MapObjectEntity),
+			3,
+			SerializeMapObjectEntity,
+			DeserializeMapObjectEntity
+			);
+	}
+
+	private static byte[] SerializeItemData(object customObject)
+	{
+		Debug.Log("SerializeItemData s");
+
+		ItemList data = (ItemList)customObject;
+
+		// int:4, float:4, bool:1, stringは長さ+文字列、Vector2: 8 Vector3:12
+		// 今回は簡単化のため stringは固定長40バイトにするbyte[]
+		// Vector2Int, int, float, string, bool
+		const int ItemListSize = 8 + 4 + 4 + 1 * 2 + 4 * 6 + 40 * 2 * 2;
+
+		// cout, ItemListSize * count
+		byte[] bytes = new byte[ItemListSize];
+		int offset = 0;
+
+		Protocol.Serialize(data.GetGridIndex().x, bytes, ref offset);
+		Protocol.Serialize(data.GetGridIndex().y, bytes, ref offset);
+		Protocol.Serialize(data.m_id, bytes, ref offset);
+
+		Protocol.Serialize(data.m_attack, bytes, ref offset);
+
+		Protocol.Serialize((short)(data.IsEquip() ? 1 : 0), bytes, ref offset);
+
+		// ===================MapObjectEntity===================//
+		Protocol.Serialize(data.ItemData.id, bytes, ref offset);
+
+		// stringは固定長40バイトでUTF-8エンコード
+		byte[] nameBytes = new byte[40];
+		byte[] tmp = System.Text.Encoding.UTF8.GetBytes(data.ItemData.objectName);
+		System.Array.Copy(tmp, nameBytes, Mathf.Min(tmp.Length, 40));   // 文字数が40を超えた場合は切り捨て
+		foreach (byte b in nameBytes)
+		{
+			Protocol.Serialize((short)b, bytes, ref offset);
+		}
+
+		Protocol.Serialize(data.ItemData.width, bytes, ref offset);
+		Protocol.Serialize(data.ItemData.height, bytes, ref offset);
+		Protocol.Serialize(data.ItemData.probability, bytes, ref offset);
+
+		// stringは固定長40バイトでUTF-8エンコード
+		nameBytes = new byte[40];
+		tmp = System.Text.Encoding.UTF8.GetBytes(data.ItemData.displayName);
+		System.Array.Copy(tmp, nameBytes, Mathf.Min(tmp.Length, 40));   // 文字数が40を超えた場合は切り捨て
+		foreach (byte b in nameBytes)
+		{
+			Protocol.Serialize((short)b, bytes, ref offset);
+		}
+		Protocol.Serialize(data.ItemData.equipmentType, bytes, ref offset);
+		Protocol.Serialize(data.ItemData.price, bytes, ref offset);
+
+		string str = "";
+		foreach (var b in bytes)
+		{
+			str += b + " ";
+		}
+		Debug.Log(str);
+
+		Debug.Log("SerializeItemList e:" + bytes);
+
+		return bytes;
 	}
 
 	private static byte[] SerializeItemList(object customObject)
@@ -33,7 +107,8 @@ public class CustomTypeRegister : MonoBehaviour
 		// int:4, float:4, bool:1, stringは長さ+文字列、Vector2: 8 Vector3:12
 		// 今回は簡単化のため stringは固定長40バイトにするbyte[]
 		// Vector2Int, int, float, string, bool
-		const int ItemListSize = 8 + 4 + 4 + 40 * 2 + 1 * 2;
+		// boolとstringはstortにするから×2
+		const int ItemListSize = 8 + 4 + 4 + 1 * 2 + 4 * 6 + 40 * 2 * 2;
 
 		// cout, ItemListSize * count
 		byte[] bytes = new byte[4 + ItemListSize * dataList.Count];
@@ -52,15 +127,32 @@ public class CustomTypeRegister : MonoBehaviour
 
 			Protocol.Serialize((short)(data.IsEquip() ? 1 : 0), bytes, ref offset);
 
+			// ===================MapObjectEntity===================//
+			Protocol.Serialize(data.ItemData.id, bytes, ref offset);
+
 			// stringは固定長40バイトでUTF-8エンコード
 			byte[] nameBytes = new byte[40];
-			byte[] tmp = System.Text.Encoding.UTF8.GetBytes(data.GetPrefabName());
-	//		byte[] tmp = System.Text.Encoding.UTF8.GetBytes("hogehoge");
+			byte[] tmp = System.Text.Encoding.UTF8.GetBytes(data.ItemData.objectName);
 			System.Array.Copy(tmp, nameBytes, Mathf.Min(tmp.Length, 40));   // 文字数が40を超えた場合は切り捨て
-			foreach(byte b in nameBytes)
+			foreach (byte b in nameBytes)
 			{
 				Protocol.Serialize((short)b, bytes, ref offset);
 			}
+
+			Protocol.Serialize(data.ItemData.width, bytes, ref offset);
+			Protocol.Serialize(data.ItemData.height, bytes, ref offset);
+			Protocol.Serialize(data.ItemData.probability, bytes, ref offset);
+
+			// stringは固定長40バイトでUTF-8エンコード
+			nameBytes = new byte[40];
+			tmp = System.Text.Encoding.UTF8.GetBytes(data.ItemData.displayName);
+			System.Array.Copy(tmp, nameBytes, Mathf.Min(tmp.Length, 40));   // 文字数が40を超えた場合は切り捨て
+			foreach (byte b in nameBytes)
+			{
+				Protocol.Serialize((short)b, bytes, ref offset);
+			}
+			Protocol.Serialize(data.ItemData.equipmentType, bytes, ref offset);
+			Protocol.Serialize(data.ItemData.price, bytes, ref offset);
 
 			c++;
 		}
@@ -71,30 +163,6 @@ public class CustomTypeRegister : MonoBehaviour
 			str += b + " ";
 		}
 		Debug.Log(str);
-
-
-
-		/*
-
-		// Helperでintとfloatとboolをbyteに変換
-		int[] ints = new int[] {data.GetGridIndex().x, data.GetGridIndex().y, data.m_id};
-		System.Buffer.BlockCopy(ints, 0, bytes, offset, 4*ints.Length);
-		offset += 4 * ints.Length;
-
-		float[] floats = new float[] { data.m_attack };
-		System.Buffer.BlockCopy(floats, 0, bytes, offset, 4 * floats.Length);
-		offset += 4* floats.Length;
-
-		// boolは一バイト
-		bytes[offset] = (byte)(data.IsEquip() ? 1 : 0);
-		offset += 1;
-
-		// stringは固定長40バイトでUTF-8エンコード
-		byte[] nameBytes = new byte[40];
-		byte[] tmp = System.Text.Encoding.UTF8.GetBytes(data.GetPrefabName());
-		System.Array.Copy(tmp, nameBytes, Mathf.Min(tmp.Length, 40));   // 文字数が40を超えた場合は切り捨て
-		Buffer.BlockCopy(nameBytes, 0, bytes, offset, 40);
-		*/
 
 		Debug.Log("SerializeItemList e:" + bytes);
 
@@ -116,11 +184,6 @@ public class CustomTypeRegister : MonoBehaviour
 		Protocol.Serialize(info.GetSize.x, bytes, ref offset);
 		Protocol.Serialize(info.GetSize.y, bytes, ref offset);
 
-		/*
-		int[] ints = new int[] { (int)info.GetInventoryType, info.GetSize.x, info.GetSize.y };
-		System.Buffer.BlockCopy(ints, 0, bytes, offset, 4*ints.Length);
-		*/
-
 		Debug.Log("SerializeInfo_InventorySize e");
 		foreach(var b in bytes)
 		{
@@ -128,6 +191,117 @@ public class CustomTypeRegister : MonoBehaviour
 		}
 
 		return bytes;
+	}
+
+	private static byte[] SerializeMapObjectEntity(object customObject)
+	{
+		Debug.Log("SerializeMapObjectEntity s");
+		MapObjectEntity mapObject = (MapObjectEntity)customObject;
+
+		byte[] bytes = new byte[4 * 6 + 40 * 3];
+		int offset = 0;
+
+		Protocol.Serialize(mapObject.id, bytes, ref offset);
+
+		// stringは固定長40バイトでUTF-8エンコード
+		byte[] nameBytes = new byte[40];
+		byte[] tmp = System.Text.Encoding.UTF8.GetBytes(mapObject.objectName);
+		System.Array.Copy(tmp, nameBytes, Mathf.Min(tmp.Length, 40));   // 文字数が40を超えた場合は切り捨て
+		foreach (byte b in nameBytes)
+		{
+			Protocol.Serialize((short)b, bytes, ref offset);
+		}
+
+		Protocol.Serialize(mapObject.width, bytes, ref offset);
+		Protocol.Serialize(mapObject.height, bytes, ref offset);
+		Protocol.Serialize(mapObject.probability, bytes, ref offset);
+
+		// stringは固定長40バイトでUTF-8エンコード
+		nameBytes = new byte[40];
+		tmp = System.Text.Encoding.UTF8.GetBytes(mapObject.displayName);
+		System.Array.Copy(tmp, nameBytes, Mathf.Min(tmp.Length, 40));   // 文字数が40を超えた場合は切り捨て
+		foreach (byte b in nameBytes)
+		{
+			Protocol.Serialize((short)b, bytes, ref offset);
+		}
+		Protocol.Serialize(mapObject.equipmentType, bytes, ref offset);
+		Protocol.Serialize(mapObject.price, bytes, ref offset);
+
+		Debug.Log("SerializeMapObjectEntity e");
+
+		return bytes;
+	}
+
+	private static object DeserializeItemData(byte[] bytes)
+	{
+		Debug.Log("DeserializeItemData s");
+
+		int offset = 0;
+
+		string strBytes = "";
+		foreach (var b in bytes)
+		{
+			strBytes += b + " ";
+		}
+		Debug.Log(strBytes);
+
+		ItemList data = ScriptableObject.CreateInstance<ItemList>();
+
+		int x, y;
+		Protocol.Deserialize(out x, bytes, ref offset);
+		Protocol.Deserialize(out y, bytes, ref offset);
+		data.SetGridIndex(new Vector2Int(x, y));
+
+		Protocol.Deserialize(out data.m_id, bytes, ref offset);
+
+
+		Protocol.Deserialize(out data.m_attack, bytes, ref offset);
+
+		short equipInfo;
+		Protocol.Deserialize(out equipInfo, bytes, ref offset);
+		data.SetEquipInfo(equipInfo == 1);
+
+		//=====================MapObjectEntity======================//
+		data.ItemData = new MapObjectEntity();
+		int id;
+		Protocol.Deserialize(out id, bytes, ref offset);
+		data.ItemData.id = id;
+
+		byte[] nameBytes = new byte[40];
+		for (int j = 0; j < 40; j++)
+		{
+			short str;
+			Protocol.Deserialize(out str, bytes, ref offset);
+			nameBytes[j] = (byte)str;
+		}
+		data.ItemData.objectName = (System.Text.Encoding.UTF8.GetString(nameBytes).TrimEnd('\0'));
+
+		int w, h, probability;
+		Protocol.Deserialize(out w, bytes, ref offset);
+		Protocol.Deserialize(out h, bytes, ref offset);
+		Protocol.Deserialize(out probability, bytes, ref offset);
+		data.ItemData.width = w;
+		data.ItemData.height = h;
+		data.ItemData.probability = probability;
+
+		nameBytes = new byte[40];
+		for (int j = 0; j < 40; j++)
+		{
+			short str;
+			Protocol.Deserialize(out str, bytes, ref offset);
+			nameBytes[j] = (byte)str;
+		}
+		data.ItemData.displayName = (System.Text.Encoding.UTF8.GetString(nameBytes).TrimEnd('\0'));
+
+		int equipmentType, price;
+		Protocol.Deserialize(out equipmentType, bytes, ref offset);
+		Protocol.Deserialize(out price, bytes, ref offset);
+		data.ItemData.equipmentType = equipmentType;
+		data.ItemData.price = price;
+
+		Debug.Log("DeserializeItemData e:");
+
+		return data;
 	}
 
 	// byte配列からItemListに復元する
@@ -167,46 +341,48 @@ public class CustomTypeRegister : MonoBehaviour
 			Protocol.Deserialize(out equipInfo, bytes, ref offset);
 			data.SetEquipInfo(equipInfo == 1);
 
+			//=================MapObjectEntity==================//
+			data.ItemData = new MapObjectEntity();
+			int id;
+			Protocol.Deserialize(out id, bytes, ref offset);
+			data.ItemData.id = id;
 
 			byte[] nameBytes = new byte[40];
-			for(int j=0; j<40; j++)
+			for (int j = 0; j < 40; j++)
 			{
 				short str;
 				Protocol.Deserialize(out str, bytes, ref offset);
 				nameBytes[j] = (byte)str;
 			}
-			data.SetPrefabName(System.Text.Encoding.UTF8.GetString(nameBytes).TrimEnd('\0'));
+			data.ItemData.objectName = (System.Text.Encoding.UTF8.GetString(nameBytes).TrimEnd('\0'));
+
+			int w, h, probability;
+			Protocol.Deserialize(out w, bytes, ref offset);
+			Protocol.Deserialize(out h, bytes, ref offset);
+			Protocol.Deserialize(out probability, bytes, ref offset);
+			data.ItemData.width = w;
+			data.ItemData.height = h;
+			data.ItemData.probability = probability;
+
+			nameBytes = new byte[40];
+			for (int j = 0; j < 40; j++)
+			{
+				short str;
+				Protocol.Deserialize(out str, bytes, ref offset);
+				nameBytes[j] = (byte)str;
+			}
+			data.ItemData.displayName = (System.Text.Encoding.UTF8.GetString(nameBytes).TrimEnd('\0'));
+
+			int equipmentType, price;
+			Protocol.Deserialize(out equipmentType, bytes, ref offset);
+			Protocol.Deserialize(out price, bytes, ref offset);
+			data.ItemData.equipmentType = equipmentType;
+			data.ItemData.price = price;
 
 			items.Add(data);
 
 			c++;
 		}
-
-
-
-		/*
-		// int復元
-		int[] ints = new int[3];
-		System.Buffer.BlockCopy(bytes, 0, ints, offset, 4*ints.Length);
-		data.SetGridIndex(new Vector2Int(ints[0], ints[1]));
-		data.m_id = ints[2];
-		offset += 4 * ints.Length;
-
-		// floatの復元
-		float[] floats = new float[1];
-		System.Buffer.BlockCopy(bytes, 0, floats, offset, 4 * floats.Length);
-		data.m_attack = floats[0];
-		offset += 4* floats.Length;
-
-		// boolの復元
-		data.SetEquipInfo(bytes[offset] == 1);
-		offset++;
-
-		// stringの復元
-		byte[] nameBytes = new byte[40];
-		System.Buffer.BlockCopy(bytes, 0, nameBytes, offset, 40);
-		data.SetPrefabName(System.Text.Encoding.UTF8.GetString(nameBytes).TrimEnd('\0'));
-		*/
 
 		Debug.Log("DeserializeItemList e:" + items.Count);
 
@@ -229,16 +405,56 @@ public class CustomTypeRegister : MonoBehaviour
 		Protocol.Deserialize(out y, bytes, ref offset);
 		info.SetSize(x, y);
 
-		/*
-		// int復元
-		int[] ints = new int[3];
-		System.Buffer.BlockCopy(bytes, 0, ints, offset, 4 * ints.Length);
-		info.SetInventoryType(ints[0]);
-		info.SetSize(ints[1], ints[2]);
-		*/
-
 		Debug.Log("DeserializeInfo_InventorySize e:" + info);
 
 		return info;
+	}
+
+	private static object DeserializeMapObjectEntity(byte[] bytes)
+	{
+		Debug.Log("DeserializeMapObjectEntity s");
+
+		MapObjectEntity mapObject = new MapObjectEntity();
+		int offset = 0;
+
+		int id;
+		Protocol.Deserialize(out id, bytes, ref offset);
+		mapObject.id = id;
+
+		byte[] nameBytes = new byte[40];
+		for (int j = 0; j < 40; j++)
+		{
+			short str;
+			Protocol.Deserialize(out str, bytes, ref offset);
+			nameBytes[j] = (byte)str;
+		}
+		mapObject.objectName = (System.Text.Encoding.UTF8.GetString(nameBytes).TrimEnd('\0'));
+
+		int w, h, probability;
+		Protocol.Deserialize(out w, bytes, ref offset);
+		Protocol.Deserialize(out h, bytes, ref offset);
+		Protocol.Deserialize(out probability, bytes, ref offset);
+		mapObject.width = w;
+		mapObject.height = h;
+		mapObject.probability = probability;
+
+		nameBytes = new byte[40];
+		for (int j = 0; j < 40; j++)
+		{
+			short str;
+			Protocol.Deserialize(out str, bytes, ref offset);
+			nameBytes[j] = (byte)str;
+		}
+		mapObject.displayName = (System.Text.Encoding.UTF8.GetString(nameBytes).TrimEnd('\0'));
+
+		int equipmentType, price;
+		Protocol.Deserialize(out equipmentType, bytes, ref offset);
+		Protocol.Deserialize(out price, bytes, ref offset);
+		mapObject.equipmentType = equipmentType;
+		mapObject.price = price;
+
+		Debug.Log("DeserializeMapObjectEntity e");
+
+		return mapObject;
 	}
 }

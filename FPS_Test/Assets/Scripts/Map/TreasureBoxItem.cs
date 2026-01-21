@@ -48,6 +48,12 @@ public class TreasureBoxItem : MonoBehaviourPunCallbacks
 		return m_inventorySize;
 	}
 
+	[PunRPC]
+	public void SetItemList(ItemList info)
+	{
+		m_itemList.Add(info);
+	}
+
 	public List<ItemList> GetItemList()
 	{
 		return m_itemList;
@@ -63,7 +69,7 @@ public class TreasureBoxItem : MonoBehaviourPunCallbacks
 		probability[3] = m_excelData.treasureBox[(int)m_rarity].legendary;
 
 		// 宝箱のレアリティに応じて確定のレアリティのアイテムを一つ抽選
-		m_itemList.Add(SetItemData(SelectObject(m_rarity)));
+		photonView.RPC(nameof(SetItemList), RpcTarget.All, SetItemData(SelectObject(m_rarity)));
 
 		// selectAmountの数だけ抽選する
 		for (int i = 0; i < selectAmount; ++i)
@@ -72,7 +78,7 @@ public class TreasureBoxItem : MonoBehaviourPunCallbacks
 			MapObjectEntity treasureItem =  SelectObject(treasureType);
 			ItemList item = SetItemData(treasureItem);
 
-			m_itemList.Add(item);
+			photonView.RPC(nameof(SetItemList), RpcTarget.All, item);
 		}
 
 		/////////////////////////////////////////////////
