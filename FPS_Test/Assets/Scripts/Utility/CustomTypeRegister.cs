@@ -31,9 +31,9 @@ public class CustomTypeRegister : MonoBehaviour
 		List<ItemList> dataList = (List<ItemList>)customObject;
 
 		// int:4, float:4, bool:1, stringは長さ+文字列、Vector2: 8 Vector3:12
-		// 今回は簡単化のため stringは固定長20バイトにするbyte[]
+		// 今回は簡単化のため stringは固定長40バイトにするbyte[]
 		// Vector2Int, int, float, string, bool
-		const int ItemListSize = 8 + 4 + 4 + 20 * 2 + 1 * 2;
+		const int ItemListSize = 8 + 4 + 4 + 40 * 2 + 1 * 2;
 
 		// cout, ItemListSize * count
 		byte[] bytes = new byte[4 + ItemListSize * dataList.Count];
@@ -52,11 +52,11 @@ public class CustomTypeRegister : MonoBehaviour
 
 			Protocol.Serialize((short)(data.IsEquip() ? 1 : 0), bytes, ref offset);
 
-			// stringは固定長20バイトでUTF-8エンコード
-			byte[] nameBytes = new byte[20];
+			// stringは固定長40バイトでUTF-8エンコード
+			byte[] nameBytes = new byte[40];
 			byte[] tmp = System.Text.Encoding.UTF8.GetBytes(data.GetPrefabName());
 	//		byte[] tmp = System.Text.Encoding.UTF8.GetBytes("hogehoge");
-			System.Array.Copy(tmp, nameBytes, Mathf.Min(tmp.Length, 20));   // 文字数が20を超えた場合は切り捨て
+			System.Array.Copy(tmp, nameBytes, Mathf.Min(tmp.Length, 40));   // 文字数が40を超えた場合は切り捨て
 			foreach(byte b in nameBytes)
 			{
 				Protocol.Serialize((short)b, bytes, ref offset);
@@ -89,11 +89,11 @@ public class CustomTypeRegister : MonoBehaviour
 		bytes[offset] = (byte)(data.IsEquip() ? 1 : 0);
 		offset += 1;
 
-		// stringは固定長20バイトでUTF-8エンコード
-		byte[] nameBytes = new byte[20];
+		// stringは固定長40バイトでUTF-8エンコード
+		byte[] nameBytes = new byte[40];
 		byte[] tmp = System.Text.Encoding.UTF8.GetBytes(data.GetPrefabName());
-		System.Array.Copy(tmp, nameBytes, Mathf.Min(tmp.Length, 20));   // 文字数が20を超えた場合は切り捨て
-		Buffer.BlockCopy(nameBytes, 0, bytes, offset, 20);
+		System.Array.Copy(tmp, nameBytes, Mathf.Min(tmp.Length, 40));   // 文字数が40を超えた場合は切り捨て
+		Buffer.BlockCopy(nameBytes, 0, bytes, offset, 40);
 		*/
 
 		Debug.Log("SerializeItemList e:" + bytes);
@@ -168,8 +168,8 @@ public class CustomTypeRegister : MonoBehaviour
 			data.SetEquipInfo(equipInfo == 1);
 
 
-			byte[] nameBytes = new byte[20];
-			for(int j=0; j<20; j++)
+			byte[] nameBytes = new byte[40];
+			for(int j=0; j<40; j++)
 			{
 				short str;
 				Protocol.Deserialize(out str, bytes, ref offset);
@@ -203,8 +203,8 @@ public class CustomTypeRegister : MonoBehaviour
 		offset++;
 
 		// stringの復元
-		byte[] nameBytes = new byte[20];
-		System.Buffer.BlockCopy(bytes, 0, nameBytes, offset, 20);
+		byte[] nameBytes = new byte[40];
+		System.Buffer.BlockCopy(bytes, 0, nameBytes, offset, 40);
 		data.SetPrefabName(System.Text.Encoding.UTF8.GetString(nameBytes).TrimEnd('\0'));
 		*/
 

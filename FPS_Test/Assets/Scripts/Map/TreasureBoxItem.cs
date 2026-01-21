@@ -210,7 +210,6 @@ public class TreasureBoxItem : MonoBehaviourPunCallbacks
 		GetComponent<TreasureAnime>().Open();
 		Debug.Log("view.RPC s : " + view);
 		view.RPC("ReceiveInventoryData", view.Owner, GetInfo(), GetItemList());
-		Debug.Log("view.RPC e");
 	}
 
 	// string‚É‚æ‚éQÆ‚Ì‚½‚ß•K—v‚ÈŠÖ”(StashController‚ÌReturnItemList)

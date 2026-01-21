@@ -1,8 +1,10 @@
+using Photon.Pun;
+using Photon.Pun.Demo.Cockpit;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TreasureAnime : MonoBehaviour
+public class TreasureAnime : MonoBehaviourPunCallbacks
 {
 	Animator anime;
 	bool m_isOpened = false;
@@ -24,17 +26,7 @@ public class TreasureAnime : MonoBehaviour
 			openTreasure = true;
 			Transtion = true;
             m_isOpened = true;
-            anime.SetTrigger("Open");
-		}
-	}
-
-	public void Close()
-	{
-		if (!Transtion && openTreasure)
-		{
-			openTreasure = false;
-			Transtion = true;
-			anime.SetTrigger("Close");
+            anime.SetBool("Open", true);
 		}
 	}
 
@@ -52,5 +44,11 @@ public class TreasureAnime : MonoBehaviour
 	{ 
 		get { return openTreasure; }
 		set { openTreasure = value; }
+	}
+
+	[PunRPC]
+	public void IsOpen()
+	{
+		m_isOpened = true;
 	}
 }

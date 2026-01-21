@@ -195,6 +195,7 @@ public class Create_Maze : MonoBehaviourPunCallbacks
 
 	private void Update()
 	{
+		if (!PhotonNetwork.IsMasterClient) return;
 		m_time += Time.deltaTime;
 
 		// 最初のポータル出現

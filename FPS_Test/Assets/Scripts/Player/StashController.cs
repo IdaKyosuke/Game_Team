@@ -122,6 +122,9 @@ public class StashController : MonoBehaviourPunCallbacks
                     {
                         // rayが当たっているオブジェクトに自分へ情報を送るようリクエストする
                         view.RPC("RequestTreasureData", view.Owner, photonView.ViewID);
+
+						// 宝箱を空いた状態にする
+						view.RPC("IsOpen", RpcTarget.All);
                     }
                 }
 
