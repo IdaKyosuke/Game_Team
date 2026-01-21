@@ -1,16 +1,22 @@
+using System.Collections;
 using System.Net;
 using UnityEngine;
 
 public class Cleric : Job
 {
+    private const int ManaCost = 15;        //スキル使用時の消費MP
+    private const int BuffValue = 100;      //スキル効果値
+    private const int Duration = 20;        //スキル効果時間(秒)
+
     private const int HealAmount = 3;           //回復量
     private const float HealInterval = 5.0f;    //回復間隔
-    private const int BarrierMaxValue = 300;        //バリア最大値
+    private const int BarrierMaxValue = 300;    //バリア最大値
 
     private PlayerStatus m_status;
     private int m_barrierPower;     //バリア量
     private float m_elapsedTime;    //回復用タイマー
     private bool m_canHeal;         //回復が可能かどうか   
+    private bool m_isBuffActive;     //バフが有効かどうか
 
     public int Barrier => m_barrierPower;
 
@@ -41,7 +47,33 @@ public class Cleric : Job
 
     public override void Identity()
     {
-        //固有アクション
+        //既にバフが有効なら何もしない
+        if (m_isBuffActive) return;
+        m_isBuffActive = true;
+
+        //MP不足なら何もしない
+        if (m_status.Current.mp <= ManaCost) return;
+        m_status.Current.mp -= ManaCost;
+
+        //バフ付与
+        StartCoroutine(BuffDuration());
+    }
+
+    private IEnumerator BuffDuration()
+    {
+        //MPを消費して強化
+        m_status.Total.physicalDefense += BuffValue;
+        m_status.Total.magicDefense += BuffValue;
+        Debug.Log("一定時間防御力UP");
+
+        //効果時間が終了するまで待機
+        yield return new WaitForSeconds(Duration);
+
+        //強化効果を解除
+        m_status.Total.physicalDefense -= BuffValue;
+        m_status.Total.magicDefense -= BuffValue;
+        m_isBuffActive = false;
+        Debug.Log("防御力UPの効果が切れた");
     }
 
     protected override void Passive1()

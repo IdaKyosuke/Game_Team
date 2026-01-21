@@ -12,59 +12,23 @@ public class PlayerStatus : MonoBehaviourPunCallbacks
 
     private JobType m_jobType;
     private Condition m_condition;
-    private EquipmentParameter m_totalEquipmentStatus;  //装備のステータスの実数値(合計値)
     private PlayerParameter m_status;                   //自身の基礎ステータス
     private PlayerParameter m_currentStatus;            //実行時の変動ステータス
     private PlayerParameter m_passiveStatus;            //パッシブスキルによるステータス 
     private PlayerParameter m_totalStatus;              //合計ステータス
-    private int m_hp;   //残り体力
-    private int m_mp;   //残り魔力
-    private int m_exp;  //現在の経験値
     private int m_level;
 
-    public PlayerParameter Value => m_status;
+    public int Level => m_level;
+
+    public int MaxLevel => m_statusData[(int)m_jobType].MaxLevel;
+
+    public PlayerParameter Base => m_status;
 
     public PlayerParameter Current => m_currentStatus;
 
     public PlayerParameter Total => m_totalStatus;
 
     public List<GameObject> Equipments => m_equipments;
-
-    public int Health => m_currentStatus.hp;
-
-    public PlayerParameter PassiveStatus
-    {
-        get { return m_passiveStatus; }
-        set { m_passiveStatus = value; }
-    }
-
-    public int CurrentHP
-    {
-        get { return m_hp; }
-        set { m_hp = value; }
-    }
-
-    public int CurrentMP
-    {
-        get { return m_mp; }
-        set { m_mp = value; }
-    }
-
-    public int CurrentExp
-    {
-        get { return m_exp; }
-        set { m_exp = value; }
-    }
-
-    public int Level
-    {
-        get { return m_level; }
-    }
-
-    public int MaxLevel
-    {
-        get { return m_statusData[(int)m_jobType].MaxLevel; }
-    }
 
     private void Start()
     {
@@ -73,28 +37,40 @@ public class PlayerStatus : MonoBehaviourPunCallbacks
 
         //レベル1のステータスを設定
         m_level = 1;
-        m_status = m_statusData[(int)m_jobType].GetStatus(m_level);
 
-        //実行時ステータスの設定
-        m_currentStatus = m_status;
-        m_hp = m_currentStatus.hp;
-        m_mp = m_currentStatus.mp;
-
-        //合計ステータスの初期化
-        m_totalStatus = new PlayerParameter(m_level);
+        //ステータスデータをクローンする
+        m_status = m_statusData[(int)m_jobType].GetStatus(m_level).Clone();
 
         //パッシブステータスの初期化
         m_passiveStatus = new PlayerParameter(m_level);
 
+        //実行時ステータスは基礎ステータスのクローンで初期化
+        m_currentStatus = m_status.Clone(); 
+        m_currentStatus += m_passiveStatus;
+        m_currentStatus += EquipmentStatus();
+
         //状態の取得
         m_condition = GetComponent<Condition>();
     }
-
+        
     private void Update()
     {
         // 数値をリセット
         m_totalStatus = new PlayerParameter(m_level);
-        m_totalEquipmentStatus =  ScriptableObject.CreateInstance<EquipmentParameter>();
+
+        //パッシブスキルのステータスを加算
+        m_totalStatus += m_passiveStatus;
+
+        //装備ステータスを加算
+        m_totalStatus += EquipmentStatus();
+
+        //基礎ステータスを加算
+        m_totalStatus += m_status;
+    }
+
+    private EquipmentParameter EquipmentStatus()
+    {
+        EquipmentParameter parameter = ScriptableObject.CreateInstance<EquipmentParameter>();
 
         // 装備枠分回す
         foreach (GameObject slot in m_equipments)
@@ -105,71 +81,55 @@ public class PlayerStatus : MonoBehaviourPunCallbacks
             // 装備のステータスを加算
             Item_Object info = slot.transform.GetChild(0).GetComponent<Item_Object>();
 
-			// まだ性能が未割当の時は無視
-			if(!info.GetEquipmentInfo()) continue;
+            // まだ性能が未割当の時は無視
+            if (!info.GetEquipmentInfo()) continue;
 
             // 装備のステータスを合計ステータスに加算
-            m_totalEquipmentStatus += info.GetEquipmentInfo();
+            parameter += info.GetEquipmentInfo();
         }
 
-        // 合計ステータスに装備の合計ステータスを加算
-        m_totalStatus += m_totalEquipmentStatus;
-
-        //パッシブスキルのステータスを加算
-        m_totalStatus += m_passiveStatus;
-
-        //基礎ステータスを加算
-        m_totalStatus += m_status;
-
-        //デバッグ用
-        if (Input.GetKeyDown(KeyCode.O))
-        {
-            PenetrationDamage(53);
-        }
+        return parameter;
     }
 
     public void AddExp(int exp)
     {
         //既にレベルマックスなら何もしない
         if (m_statusData[(int)m_jobType].MaxLevel <= m_level) return;
-        Debug.Log("現在のレベル[ " + m_level + " ]");
-        Debug.Log("上限のレベル[ " + MaxLevel+ " ]");
 
         //経験値の加算
-        m_exp += exp;
+        m_currentStatus.requiredExp += exp;
 
         //レベルアップ
-        if (m_exp <= m_status.requiredExp) return;
+        if (m_currentStatus.requiredExp < m_status.requiredExp) return;
 
         //レベルの加算
         m_level++;
-        m_exp = 0;
-        Debug.Log("レベルアップ");
+        m_currentStatus.requiredExp = 0;
 
         //ステータスの設定
-        m_status = m_statusData[(int)m_jobType].GetStatus(m_level);
+        m_status = m_statusData[(int)m_jobType].GetStatus(m_level).Clone();
 
         //体力と魔力を全回復
-        m_hp = m_status.hp;
-        m_mp = m_status.mp;
+        m_currentStatus.hp = m_totalStatus.hp;
+        m_currentStatus.mp = m_totalStatus.mp;
     }
 
     public void Heal(int value)
     {
         //回復
-        m_hp += value;
+        m_currentStatus.hp += value;
 
         //上限値を超えないようにする
-        if (m_hp >= m_totalStatus.hp) m_hp = m_totalStatus.hp;
+        if (m_currentStatus.hp >= m_totalStatus.hp) m_currentStatus.hp = m_totalStatus.hp;
     }
 
     public void MagicHeal(int value)
     {
         //回復
-        m_mp += value;
+        m_currentStatus.mp += value;
 
         //上限値を超えないようにする
-        if (m_mp >= m_totalStatus.mp) m_mp = m_totalStatus.mp;
+        if (m_currentStatus.mp >= m_totalStatus.mp) m_currentStatus.mp = m_totalStatus.mp;
     }
 
     public void Damage(int power, AttackType attackType, int ConditionTypeNum, int grantRate)
@@ -179,7 +139,7 @@ public class PlayerStatus : MonoBehaviourPunCallbacks
         Cleric cleric;
 
         //既に死んでいるならダメージを与えない
-        if (m_hp <= 0) return;
+        if (m_currentStatus.hp <= 0) return;
 
         //ダメージ計算
         float damage = 0;
@@ -213,14 +173,14 @@ public class PlayerStatus : MonoBehaviourPunCallbacks
 
         //僧侶のバリアスキル確認
         if (TryGetComponent(out cleric))
-        { 
+        {
             cleric.GetBarrierDamage((int)damage);
         }
 
-        m_hp -= (int)damage;
-        Debug.Log("Damage : " + damage);
+        m_currentStatus.hp -= (int)damage;
+        Debug.Log("プレイヤーが [" + damage + "] ダメージ受けた!");
 
-		//状態異常付与の抽選
+        //状態異常付与の抽選
         ConditionType conditionType = (ConditionType)ConditionTypeNum;
         if (conditionType != ConditionType.None)
         {
@@ -231,24 +191,24 @@ public class PlayerStatus : MonoBehaviourPunCallbacks
         }
 
         //体力の確認
-        if (m_hp <= 0)
+        if (m_currentStatus.hp <= 0)
         {
             //戦士の一度だけ耐えるスキル確認
             if (TryGetComponent(out warrior))
             {
                 if (warrior.IsOneLife)
                 {
-                    m_hp = 1;
+                    m_currentStatus.hp = 1;
                     warrior.IsOneLife = false;
                     return;
                 }
             }
 
             //死亡通知
-            m_hp = 0;
+            m_currentStatus.hp = 0;
             photonView.RPC("OnDeathPlayer", RpcTarget.All);
-			photonView.RPC("OnDeathStash", RpcTarget.All);
-			m_onDeath?.Invoke();
+            photonView.RPC("OnDeathStash", RpcTarget.All);
+            m_onDeath?.Invoke();
         }
         else
         {
@@ -260,29 +220,42 @@ public class PlayerStatus : MonoBehaviourPunCallbacks
     public void PenetrationDamage(int value)
     {
         //既に死んでいるならダメージを与えない
-        if (m_hp <= 0) return;
+        if (m_currentStatus.hp <= 0) return;
 
         //マイナスのダメージは与えない
         if (value <= 0) return;
 
         //ダメージ
-        m_hp -= value;
+        m_currentStatus.hp -= value;
 
         //体力の確認
-        if (m_hp <= 0)
+        if (m_currentStatus.hp <= 0)
         {
-            m_hp = 0;
+            m_currentStatus.hp = 0;
 
             //死亡通知
             Debug.Log("死亡");
             photonView.RPC("OnDeathPlayer", RpcTarget.All);
-			photonView.RPC("OnDeathStash", RpcTarget.All);
-			m_onDeath?.Invoke();
+            photonView.RPC("OnDeathStash", RpcTarget.All);
+            m_onDeath?.Invoke();
         }
         else
         {
             //被弾通知
             m_onDamage?.Invoke();
         }
+    }
+
+    public void PassiveStatus(PlayerParameter parameter)
+    {
+        //パッシブスキルでのステータス強化を更新
+        m_passiveStatus = parameter;
+        m_currentStatus += m_passiveStatus;
+    }
+
+    public void PassiveMoveSpeed(int value)
+    { 
+        m_passiveStatus.moveSpeed += value;
+        m_currentStatus += m_passiveStatus;
     }
 }

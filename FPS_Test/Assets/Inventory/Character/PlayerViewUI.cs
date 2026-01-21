@@ -19,11 +19,11 @@ public class PlayerViewUI : MonoBehaviour
         m_stashController = transform.root.GetComponent<StashController>();
 
         //UIの初期化
-        m_statusUI[0].maxValue = m_playerStatus.CurrentHP;
-        m_statusUI[0].value = m_playerStatus.CurrentHP;
+        m_statusUI[0].maxValue = m_playerStatus.Current.hp;
+        m_statusUI[0].value = m_playerStatus.Current.hp;
 
-        m_statusUI[1].maxValue = m_playerStatus.CurrentMP;
-        m_statusUI[1].value = m_playerStatus.CurrentMP;
+        m_statusUI[1].maxValue = m_playerStatus.Current.mp;
+        m_statusUI[1].value = m_playerStatus.Current.mp;
     }
 
     private void Update()
@@ -33,8 +33,8 @@ public class PlayerViewUI : MonoBehaviour
         if (m_stashController.IsOpen) return;
 
         //ステータスの更新
-        m_statusUI[0].value = m_playerStatus.CurrentHP;
-        m_statusUI[1].value = m_playerStatus.CurrentMP;
+        m_statusUI[0].value = m_playerStatus.Current.hp;
+        m_statusUI[1].value = m_playerStatus.Current.mp;
 
         //レベルの更新
         m_levelText.text = "Lv. " + m_playerStatus.Level.ToString();

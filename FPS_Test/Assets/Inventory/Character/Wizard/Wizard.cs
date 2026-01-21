@@ -26,13 +26,13 @@ public class Wizard : Job
     private void FixedUpdate()
     {
         //MP‚ªÅ‘å’l‚È‚çˆ—‚µ‚È‚¢
-        if (m_status.CurrentMP >= m_status.Total.mp) return;
+        if (m_status.Current.mp >= m_status.Total.mp) return;
         
         //MP©“®‰ñ•œ
         m_elapsedTime += Time.deltaTime;
         if (m_elapsedTime >= Interval)
         {
-            m_status.CurrentMP += RecoveryMP;
+            m_status.Current.mp += RecoveryMP;
             m_elapsedTime = 0;
         }
     }
@@ -43,14 +43,14 @@ public class Wizard : Job
         if (m_attackType == AttackType.Magical)
         {
             //MP•s‘«‚È‚çUŒ‚‚µ‚È‚¢
-            if (m_status.CurrentMP <= UseMP) return;
+            if (m_status.Current.mp <= UseMP) return;
 
             //’e‚Ì¶¬
             GameObject magic = Instantiate(m_magicBall, transform.position + transform.forward * 1.5f + m_offset, Quaternion.identity);
             magic.GetComponent<MagicAttack>().Init(transform.forward, gameObject);
 
             //MPÁ”ï
-            m_status.CurrentMP -= UseMP;
+            m_status.Current.mp -= UseMP;
             return;
         }
 

@@ -44,7 +44,7 @@ public class Thief : Job
     protected override void Passive1()
     {
         //ˆÚ“®‘¬“xUP
-        m_status.PassiveStatus.moveSpeed += PassiveMoveSpeedValue;
+        m_status.PassiveMoveSpeed(PassiveMoveSpeedValue);
     }
 
     protected override void Passive2()

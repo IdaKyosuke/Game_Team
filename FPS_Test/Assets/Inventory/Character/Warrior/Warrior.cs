@@ -3,9 +3,9 @@ using UnityEngine;
 public class Warrior : Job
 {
     private PlayerStatus m_status;
+    private PlayerParameter m_passiveStatus;
     private bool m_isOneLife;   //一度だけHP1で耐えるかどうか
     private bool m_isDamageCut; //ダメージカットが発動しているかどうか
-    private GameObject m_hitEnemy;
 
     public bool IsDamageCut => m_isDamageCut;
 
@@ -13,12 +13,6 @@ public class Warrior : Job
     { 
         get { return m_isOneLife; }
         set { m_isOneLife = value; }
-    }
-
-    public GameObject HitEnemy
-    {
-        get { return m_hitEnemy; }
-        set { m_hitEnemy = value; }
     }
 
     private void Start()
@@ -53,17 +47,20 @@ public class Warrior : Job
     protected override void Passive1()
     {
         //全ステータス強化
-        m_status.PassiveStatus += new PlayerParameter(0)
+        m_passiveStatus = new PlayerParameter(0)
         {
             hp = 200,
             mp = 0,
-            physicalPower = 200,
+            physicalPower = 150,
             magicPower = 0,
-            physicalDefense = 100,
-            magicDefense = 100,
-            moveSpeed = 4,
-            openSpeed = 4
+            physicalDefense = 70,
+            magicDefense = 70,
+            moveSpeed = 5,
+            openSpeed = 5
         };
+
+        //ステータス反映
+        m_status.PassiveStatus(m_passiveStatus);
     }
 
     protected override void Passive2()

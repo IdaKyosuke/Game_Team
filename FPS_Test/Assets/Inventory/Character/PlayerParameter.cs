@@ -27,6 +27,26 @@ public class PlayerParameter
         this.level = level;
     }
 
+    // コピーコンストラクタ
+    public PlayerParameter(PlayerParameter other)
+    {
+        level = other.level;
+        hp = other.hp;
+        mp = other.mp;
+        physicalPower = other.physicalPower;
+        magicPower = other.magicPower;
+        physicalDefense = other.physicalDefense;
+        magicDefense = other.magicDefense;
+        moveSpeed = other.moveSpeed;
+        openSpeed = other.openSpeed;
+        requiredExp = other.requiredExp;
+    }
+
+    public PlayerParameter Clone()
+    {
+        return new PlayerParameter(this);
+    }
+
     static public PlayerParameter operator +(PlayerParameter a, PlayerParameter b)
     {
         PlayerParameter result = new PlayerParameter(a.level);
@@ -60,7 +80,7 @@ public class PlayerParameter
     public static EquipmentParameter operator +(EquipmentParameter a, PlayerParameter b)
     {
         EquipmentParameter result = new EquipmentParameter();
-        result.id = a.id; 
+        result.id = a.id;
         result.hp = a.hp + b.hp;
         result.mp = a.mp + b.mp;
         result.physicalPower = a.physicalPower + b.physicalPower;
@@ -75,7 +95,7 @@ public class PlayerParameter
     public static EquipmentParameter operator -(EquipmentParameter a, PlayerParameter b)
     {
         EquipmentParameter result = new EquipmentParameter();
-        result.id = a.id; 
+        result.id = a.id;
         result.hp = a.hp - b.hp;
         result.mp = a.mp - b.mp;
         result.physicalPower = a.physicalPower - b.physicalPower;
@@ -85,5 +105,19 @@ public class PlayerParameter
         result.moveSpeed = a.moveSpeed - b.moveSpeed;
         result.openSpeed = a.openSpeed - b.openSpeed;
         return result;
+    }
+
+    public string DrawStatus()
+    {
+        return $"レベル: {level}" +
+               $"HP: {hp}" +
+               $"MP: {mp}" +
+               $"物理攻撃: {physicalPower}" +
+               $"魔法攻撃: {magicPower}" +
+               $"物理防御: {physicalDefense}" +
+               $"魔法防御: {magicDefense}" +
+               $"移動速度: {moveSpeed}" +
+               $"開封速度: {openSpeed}" +
+               $"必要経験値: {requiredExp}";
     }
 }
