@@ -172,6 +172,12 @@ public class StashManager : MonoBehaviourPunCallbacks
 			Load(GridType.Stash);
 		}
 
+		if(m_stashUiParent.activeSelf)
+		{
+			m_stashUiParent.SetActive(false);
+		}
+		Debug.Log("m_stashUiParent : " + m_stashUiParent);
+
 		// ショップの時だけ購入モードを有効にする
 		m_isBuyMode = m_isShop;
 	}
@@ -516,6 +522,7 @@ public class StashManager : MonoBehaviourPunCallbacks
 
 			case Info_InventorySize.InventoryType.Stash:
 				m_stashUi = Instantiate(m_stashUiPrefab, m_stashPos);
+				Debug.Log("m_stashUi : " + m_stashUi);
 				break;
 		}
 
@@ -782,14 +789,11 @@ public class StashManager : MonoBehaviourPunCallbacks
 					RemoveItemList(item, m_itemList);
 					AddItemList(item, m_otherItemList);
 					list = m_otherItemList;
-
-					Debug.Log("release : otherItemList : isMine");
 				}
 				else
 				{
 					// 自身の装備枠 => インベントリ
 					list = m_itemList;
-					Debug.Log("release : itemList : isMine");
 				}
 			}
 			else
@@ -800,19 +804,15 @@ public class StashManager : MonoBehaviourPunCallbacks
 					RemoveItemList(item, m_otherItemList);
 					AddItemList(item, m_itemList);
 					list = m_itemList;
-					Debug.Log("release : itemList");
 				}
 				else
 				{
 					// 相手の装備枠 => スタッシュ
 					list = m_otherItemList;
-					Debug.Log("release : otherItemList");
 				}
 			}
 		}
 
-		Debug.Log("装備のindex [ " + item.GetComponent<Item_Object>().GetIndex() + " ]");
-		Debug.Log("listの要素数 [ " + list.Count + " ]");
 		// リストに装備状況を保存
 		list[item.GetComponent<Item_Object>().GetIndex()].SetEquipInfo(value);
 	}
@@ -920,10 +920,6 @@ public class StashManager : MonoBehaviourPunCallbacks
 							false,
 							item.GetComponent<Item_Object>().GetGridType() == GridType.Inventory
 							);
-						//// アイテムリストに追加する
-						//AddItemList(item, m_itemList);
-						//// gridTypeをインベントリに変更する
-						//item.GetComponent<Item_Object>().SetType(GridType.Inventory);
 					}
 					else
 					{
@@ -1271,7 +1267,6 @@ public class StashManager : MonoBehaviourPunCallbacks
 			{
 				// 当たり判定を復活させる
 				item.GetComponent<Item_Object>().ResetHitCol();
-				Debug.Log("購入前のitemのItemData.ObjectName[ " + item.GetComponent<Item_Object>().ItemData.objectName + " ]");
 				// お金を消費
 				m_infoMoney.UseMoney(m_buyItem.GetActiveObject().GetComponent<Item_Object>().GetValue());
 				// 購入予定のアイテムをリセットする
@@ -1437,12 +1432,6 @@ public class StashManager : MonoBehaviourPunCallbacks
 	{
 		CreateStashUi(m_lobbyInfo, m_stashItemList);
 		m_isStashOpen = true;
-	}
-
-	// StashUiParentを付け替えるための関数
-	public void ChangeStashUiParent(GameObject parent)
-	{
-		m_stashUiParent = parent;
 	}
 
 	// ショップを開く

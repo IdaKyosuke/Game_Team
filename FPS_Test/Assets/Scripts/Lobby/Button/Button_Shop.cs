@@ -14,11 +14,11 @@ public class Button_Shop : Button_Function
 		m_shopUi = GameObject.FindWithTag("shopUi");
 		m_buttonForShop = GameObject.FindWithTag("buttonForShop");
 		m_inventoryManager = GameObject.FindWithTag("inventoryManager").GetComponent<StashManager>();
-
-		if (m_shopUi.activeSelf)
-		{
-			m_shopUi.SetActive(false);
-		}
+		Debug.Log("buttonShop : " + m_inventoryManager);
+		//if (m_shopUi.activeSelf)
+		//{
+		//	m_shopUi.SetActive(false);
+		//}
 
 		m_buttonForShop.SetActive(false);
 	}

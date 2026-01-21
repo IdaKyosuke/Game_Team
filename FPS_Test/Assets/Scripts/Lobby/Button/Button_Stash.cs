@@ -12,6 +12,8 @@ public class Button_Stash : Button_Function
 		m_buttonForShop = GameObject.FindWithTag("buttonForStash");
 		m_buttonForShop.SetActive(false);
 		m_inventoryManager = GameObject.FindWithTag("inventoryManager").GetComponent<StashManager>();
+
+		Debug.Log("buttonStash : " + m_inventoryManager);
 	}
 
 	public override void PushThis()
