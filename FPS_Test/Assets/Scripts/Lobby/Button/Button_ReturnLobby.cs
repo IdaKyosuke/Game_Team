@@ -10,7 +10,7 @@ public class Button_ReturnLobby : Button_Function
 	public override void Initialize()
 	{
 		m_shopUi = GameObject.FindWithTag("shopUi");
-		m_stashManager = GameObject.FindWithTag("inventoryManager").GetComponent<StashManager>();
+		m_stashManager = GameObject.FindWithTag("inventoryManagerShop").GetComponent<StashManager>();
 	}
 
 	public override void PushThis()

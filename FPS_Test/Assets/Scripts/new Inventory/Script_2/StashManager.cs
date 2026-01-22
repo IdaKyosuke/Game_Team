@@ -177,6 +177,8 @@ public class StashManager : MonoBehaviourPunCallbacks
 			m_stashUiParent.SetActive(false);
 		}
 
+		Debug.Log("Start stashUiPrefab[ " + m_stashUiPrefab + " ]");
+
 		// ショップの時だけ購入モードを有効にする
 		m_isBuyMode = m_isShop;
 	}
@@ -523,8 +525,8 @@ public class StashManager : MonoBehaviourPunCallbacks
 
 			case Info_InventorySize.InventoryType.Stash:
 				m_stashUi = Instantiate(m_stashUiPrefab, m_stashPos);
-				Debug.Log("m_stashUiPrefab : " + m_stashUiPrefab);
-				Debug.Log("m_stashUi : " + m_stashUi);
+				Debug.Log("CreateStashUi m_stashUiPrefab : " + m_stashUiPrefab);
+				Debug.Log("CreateStashUi m_stashUi : " + m_stashUi);
 				break;
 		}
 
@@ -649,33 +651,20 @@ public class StashManager : MonoBehaviourPunCallbacks
                 break;
         }
 
-		Debug.Log("height : " + height);
-		Debug.Log("width : " + width);
-		Debug.Log("m_stashHeight : " + m_stashHeight);
-		Debug.Log("m_stashWidth : " + m_stashWidth);
-
 		// スタッシュ用配列を作成
 		// 配列とマス目の状態を合わせる
 		int count = 0;
 		for (int i = 0; i < height; i++)
-		//for (int i = 0; i < width; i++)
 		{
 			for (int j = 0; j < width; j++)
-			//for (int j = 0; j < height; j++)
 			{
                 // オブジェクトを追加
                 GameObject g = parent.transform.GetChild(count).gameObject;
 				list[j, i].SetGrid(g);
-				//list[i, j].SetGrid(g);
 				count++;
 				// 中身を空にする
 				list[j, i].SetInfo(false);
 				list[j, i].SetGridType(type);
-
-				//list[i, j].SetInfo(false);
-				//list[i, j].SetGridType(type);
-
-				Debug.Log("[ " + j + ", " + i + " ] のオブジェクトは [ " + g.name + " ]");
             }
         }
     }
