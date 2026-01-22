@@ -25,7 +25,6 @@ public class Search_Player : MonoBehaviour
 	{
 		if(m_isCombat)
 		{
-			Debug.Log("search");
 			m_countTime += Time.deltaTime;
 			if(m_countTime >= m_resetTime)
 			{
@@ -42,7 +41,6 @@ public class Search_Player : MonoBehaviour
 	{
 		if(other.gameObject.CompareTag("playerModel"))
 		{
-			Debug.Log("enter player");
 			if(CheckRay(other.gameObject))
 			{
 				// プレイヤーを認識

@@ -135,7 +135,7 @@ public class SaveData
 	// アイテムのデータをロードする
 	private ItemList LoadData(ItemInfo_ForSave data)
 	{
-		ItemList item = new ItemList();
+		ItemList item = ScriptableObject.CreateInstance<ItemList>();
 		item.SetGridIndex(data.m_gridIndex);
 		item.m_id = data.m_id;
 		item.m_attack = data.m_attack;

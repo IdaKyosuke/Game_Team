@@ -176,7 +176,6 @@ public class StashManager : MonoBehaviourPunCallbacks
 		{
 			m_stashUiParent.SetActive(false);
 		}
-		Debug.Log("m_stashUiParent : " + m_stashUiParent);
 
 		// ショップの時だけ購入モードを有効にする
 		m_isBuyMode = m_isShop;
@@ -293,7 +292,6 @@ public class StashManager : MonoBehaviourPunCallbacks
 
 						if(item.GetComponent<Item_Object>().GetEquipValue())
 						{
-							Debug.Log("move item");
 							// 装備されていたら装備状態を解除する
 							item.GetComponent<Item_Object>().SetEquipValue(
 								false, 
@@ -378,7 +376,9 @@ public class StashManager : MonoBehaviourPunCallbacks
 				SearchEqualType(ref list, ref height, ref width); 
 			}
 		}
-		
+
+		Debug.Log("アイテムのサイズは[ " + size.x + ", " + size.y + " ]");
+
 		// 枠外にはみ出すときはそもそも確認しない
 		if (startGrid.x + (size.x - 1) >= width) return false;
 		if (startGrid.y + (size.y - 1) >= height) return false;
@@ -402,6 +402,7 @@ public class StashManager : MonoBehaviourPunCallbacks
 			for (int j = startGrid.x; j < startGrid.x + size.x; j++)
 			{
 				list[j, i].SetInfo(true);
+				Debug.Log("埋められたマス[ " + j + ", " + i + " ]");
 			}
 		}
 
@@ -522,6 +523,7 @@ public class StashManager : MonoBehaviourPunCallbacks
 
 			case Info_InventorySize.InventoryType.Stash:
 				m_stashUi = Instantiate(m_stashUiPrefab, m_stashPos);
+				Debug.Log("m_stashUiPrefab : " + m_stashUiPrefab);
 				Debug.Log("m_stashUi : " + m_stashUi);
 				break;
 		}
@@ -545,7 +547,6 @@ public class StashManager : MonoBehaviourPunCallbacks
 		// リストをUIに反映
 		foreach (ItemList item in m_otherItemList)
 		{
-			Debug.Log("itemの中身 : " + item.ItemData.displayName);
 			CreateItem(count, item);
 			count++;
 		}
@@ -632,6 +633,7 @@ public class StashManager : MonoBehaviourPunCallbacks
 			case GridType.Inventory:
 				// インベントリ用マス目の配列を作成
 				list = new Grid[m_inventoryWidth, m_inventoryHeight];
+				//list = new Grid[m_inventoryHeight, m_inventoryWidth];
 				m_inventoryGridList = list;
 				SetInventorySize(ref height, ref width);
 				parent = m_inventoryGridParent;
@@ -640,26 +642,40 @@ public class StashManager : MonoBehaviourPunCallbacks
 			case GridType.Stash:
 				// スタッシュ用マス目の配列を作成
 				list = new Grid[m_stashWidth, m_stashHeight];
+				//list = new Grid[m_stashHeight, m_stashWidth];
 				m_stashGridList = list;
 				SetStashSize(ref height, ref width);
 				parent = m_stashGridParent;
                 break;
         }
 
+		Debug.Log("height : " + height);
+		Debug.Log("width : " + width);
+		Debug.Log("m_stashHeight : " + m_stashHeight);
+		Debug.Log("m_stashWidth : " + m_stashWidth);
+
 		// スタッシュ用配列を作成
 		// 配列とマス目の状態を合わせる
 		int count = 0;
-        for (int i = 0; i < height; i++)
-        {
-            for (int j = 0; j < width; j++)
-            {
+		for (int i = 0; i < height; i++)
+		//for (int i = 0; i < width; i++)
+		{
+			for (int j = 0; j < width; j++)
+			//for (int j = 0; j < height; j++)
+			{
                 // オブジェクトを追加
                 GameObject g = parent.transform.GetChild(count).gameObject;
-                list[j, i].SetGrid(g);
-                count++;
-                // 中身を空にする
-                list[j, i].SetInfo(false);
-                list[j, i].SetGridType(type);
+				list[j, i].SetGrid(g);
+				//list[i, j].SetGrid(g);
+				count++;
+				// 中身を空にする
+				list[j, i].SetInfo(false);
+				list[j, i].SetGridType(type);
+
+				//list[i, j].SetInfo(false);
+				//list[i, j].SetGridType(type);
+
+				Debug.Log("[ " + j + ", " + i + " ] のオブジェクトは [ " + g.name + " ]");
             }
         }
     }

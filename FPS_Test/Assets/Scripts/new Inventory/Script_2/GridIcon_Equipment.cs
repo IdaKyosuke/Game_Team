@@ -138,7 +138,6 @@ public class GridIcon_Equipment : MonoBehaviour
 		}
 		else
 		{
-			Debug.Log("stashManager : " + m_stashManager);
 			m_stashManager.StartSet(GridType.Equipment);
 			// V‚µ‚­‘•”õ‚·‚é
 			item.GetComponent<Item_Object>().PointerUp(true, transform);
