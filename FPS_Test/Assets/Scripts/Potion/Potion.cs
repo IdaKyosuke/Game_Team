@@ -7,6 +7,8 @@ public abstract class Potion : MonoBehaviour
 
     protected PlayerStatus m_playerStatus;
 
+    public PotionData Data => m_data;
+
     public void Use()
     {
         StartCoroutine(UsePotion());
