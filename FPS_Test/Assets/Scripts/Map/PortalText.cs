@@ -1,7 +1,7 @@
 using Photon.Pun;
 using UnityEngine;
 
-public class CreatePortalText : MonoBehaviourPunCallbacks
+public class PortalText : MonoBehaviourPunCallbacks
 {
 	[SerializeField] float m_destroyTime;
 	float m_time;
@@ -9,6 +9,7 @@ public class CreatePortalText : MonoBehaviourPunCallbacks
     // Update is called once per frame
     void Update()
     {
+		if (!PhotonNetwork.IsMasterClient) return;
 		m_time += Time.deltaTime;
 		
 		if (m_time >= m_destroyTime)
