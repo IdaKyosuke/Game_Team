@@ -38,8 +38,6 @@ public class CustomTypeRegister : MonoBehaviour
 
 	private static byte[] SerializeItemData(object customObject)
 	{
-		Debug.Log("SerializeItemData s");
-
 		ItemList data = (ItemList)customObject;
 
 		// int:4, float:4, bool:1, stringÇÕí∑Ç≥+ï∂éöóÒÅAVector2: 8 Vector3:12
@@ -91,17 +89,11 @@ public class CustomTypeRegister : MonoBehaviour
 		{
 			str += b + " ";
 		}
-		Debug.Log(str);
-
-		Debug.Log("SerializeItemList e:" + bytes);
-
 		return bytes;
 	}
 
 	private static byte[] SerializeItemList(object customObject)
 	{
-		Debug.Log("SerializeItemList s");
-
 		List<ItemList> dataList = (List<ItemList>)customObject;
 
 		// int:4, float:4, bool:1, stringÇÕí∑Ç≥+ï∂éöóÒÅAVector2: 8 Vector3:12
@@ -162,18 +154,12 @@ public class CustomTypeRegister : MonoBehaviour
 		{
 			str += b + " ";
 		}
-		Debug.Log(str);
-
-		Debug.Log("SerializeItemList e:" + bytes);
-
 		return bytes;
 	}
 
 
 	private static byte[] SerializeInfo_InventorySize(object customObject)
 	{
-		Debug.Log("SerializeInfo_InventorySize s");
-
 		Info_InventorySize info = (Info_InventorySize)customObject;
 
 		byte[] bytes = new byte[4*3];
@@ -184,7 +170,6 @@ public class CustomTypeRegister : MonoBehaviour
 		Protocol.Serialize(info.GetSize.x, bytes, ref offset);
 		Protocol.Serialize(info.GetSize.y, bytes, ref offset);
 
-		Debug.Log("SerializeInfo_InventorySize e");
 		foreach(var b in bytes)
 		{
 			Debug.Log(b);
@@ -195,7 +180,6 @@ public class CustomTypeRegister : MonoBehaviour
 
 	private static byte[] SerializeMapObjectEntity(object customObject)
 	{
-		Debug.Log("SerializeMapObjectEntity s");
 		MapObjectEntity mapObject = (MapObjectEntity)customObject;
 
 		byte[] bytes = new byte[4 * 6 + 40 * 3];
@@ -227,15 +211,11 @@ public class CustomTypeRegister : MonoBehaviour
 		Protocol.Serialize(mapObject.equipmentType, bytes, ref offset);
 		Protocol.Serialize(mapObject.price, bytes, ref offset);
 
-		Debug.Log("SerializeMapObjectEntity e");
-
 		return bytes;
 	}
 
 	private static object DeserializeItemData(byte[] bytes)
 	{
-		Debug.Log("DeserializeItemData s");
-
 		int offset = 0;
 
 		string strBytes = "";
@@ -243,8 +223,6 @@ public class CustomTypeRegister : MonoBehaviour
 		{
 			strBytes += b + " ";
 		}
-		//Debug.Log(strBytes);
-
 		ItemList data = ScriptableObject.CreateInstance<ItemList>();
 
 		int x, y;
@@ -299,16 +277,12 @@ public class CustomTypeRegister : MonoBehaviour
 		data.ItemData.equipmentType = equipmentType;
 		data.ItemData.price = price;
 
-		Debug.Log("DeserializeItemData e:");
-
 		return data;
 	}
 
 	// byteîzóÒÇ©ÇÁItemListÇ…ïúå≥Ç∑ÇÈ
 	private static object DeserializeItemList(byte[] bytes)
 	{
-		Debug.Log("DeserializeItemList s");
-
 		int offset = 0;
 
 		string strBytes = "";
@@ -384,15 +358,11 @@ public class CustomTypeRegister : MonoBehaviour
 			c++;
 		}
 
-		Debug.Log("DeserializeItemList e:" + items.Count);
-
 		return items;
 	}
 
 	private static object DeserializeInfo_InventorySize(byte[] bytes)
 	{
-		Debug.Log("DeserializeInfo_InventorySize s");
-
 		Info_InventorySize info = ScriptableObject.CreateInstance<Info_InventorySize>();
 		int offset = 0;
 
@@ -405,15 +375,11 @@ public class CustomTypeRegister : MonoBehaviour
 		Protocol.Deserialize(out y, bytes, ref offset);
 		info.SetSize(x, y);
 
-		Debug.Log("DeserializeInfo_InventorySize e:" + info);
-
 		return info;
 	}
 
 	private static object DeserializeMapObjectEntity(byte[] bytes)
 	{
-		Debug.Log("DeserializeMapObjectEntity s");
-
 		MapObjectEntity mapObject = new MapObjectEntity();
 		int offset = 0;
 
@@ -452,8 +418,6 @@ public class CustomTypeRegister : MonoBehaviour
 		Protocol.Deserialize(out price, bytes, ref offset);
 		mapObject.equipmentType = equipmentType;
 		mapObject.price = price;
-
-		Debug.Log("DeserializeMapObjectEntity e");
 
 		return mapObject;
 	}

@@ -192,19 +192,25 @@ public class StashManager : MonoBehaviourPunCallbacks
     {
 		if (photonView)
 		{
-			if (!photonView.IsMine || !m_isPlayer) return;
-		}
-
-		if (m_playerCon != null && !m_isDeath)
-		{
-			if (m_playerCon.IsDeath)
+			if (!photonView.IsMine || !m_isPlayer)
 			{
-				m_isDeath = true;
+				return;
 			}
 		}
-		else
+
+		if (m_playerCon != null)
 		{
-			return;
+			if(!m_isDeath)
+			{
+				if (m_playerCon.IsDeath)
+				{
+					m_isDeath = true;
+				}
+			}
+			else
+			{
+				return;
+			}
 		}
 
 		if (Input.GetMouseButtonUp(0))
@@ -463,8 +469,6 @@ public class StashManager : MonoBehaviourPunCallbacks
 				break;
 		}
 
-		Debug.Log("アイテムのサイズは[x, y] = [" + size.x + ", " + size.y + "]");
-
 		// スペースが空いているときは中身が入っていることにする
 		for (int i = basePos.y; i < basePos.y + size.y; i++)
 		{
@@ -552,8 +556,6 @@ public class StashManager : MonoBehaviourPunCallbacks
 
 			case Info_InventorySize.InventoryType.Stash:
 				m_stashUi = Instantiate(m_stashUiPrefab, m_stashPos);
-				Debug.Log("CreateStashUi m_stashUiPrefab : " + m_stashUiPrefab);
-				Debug.Log("CreateStashUi m_stashUi : " + m_stashUi);
 				break;
 		}
 

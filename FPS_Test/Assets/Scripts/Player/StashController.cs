@@ -95,35 +95,41 @@ public class StashController : MonoBehaviourPunCallbacks
                     if (!hit.transform.gameObject.CompareTag("Treasure")) return;
                     //既にインベントリを開いているときは無視
                     if (!m_nowScavenger)  m_slider.gameObject.SetActive(true);
-                    m_nowScavenger = true;
 
 					// 箱開け速度の補正
 					float openSpeedRate = m_status.Total.openSpeed / 100.0f;
 
-					if(m_nowScavenger && m_rayTarget == hit.transform.gameObject)
+					//未開封の箱なら経過時間を加算
+					if (!m_nowScavenger && !hit.transform.GetComponent<TreasureAnime>().IsOpened)
+					{
+						if (hit.transform.GetComponent<TreasureBoxItem>().IsLock)
+						{
+							// 鍵がないときはreturn
+						}
+						// レイの当たった箱を保管
+						m_rayTarget = hit.transform.gameObject;
+						m_nowScavenger = true;
+                    }
+					// すでに空いている宝箱を調べた時
+					else if(hit.transform.GetComponent<TreasureAnime>().IsOpened)
+					{
+						m_rayTarget = hit.transform.gameObject;
+					}
+
+					if (m_nowScavenger && m_rayTarget == hit.transform.gameObject)
 					{
 						// 同じ箱を見た時
 						m_elapsedTime += Time.deltaTime * openSpeedRate;
 						m_slider.value = m_elapsedTime / m_scavengerTime;
 						if (m_elapsedTime < m_scavengerTime) return;
 					}
-					//未開封の箱なら経過時間を加算
-					if (!hit.transform.GetComponent<TreasureAnime>().IsOpened)
-					{
-						// レイの当たった箱を保管
-						m_rayTarget = hit.transform.gameObject;
-						if (m_rayTarget.GetComponent<TreasureBoxItem>().IsLock)
-						{
-							// 鍵がないときはreturn
-						}
-                    }
 
-                    // 経過時間と箱開け状態をリセット
-                    m_elapsedTime = 0;
+					// 経過時間と箱開け状態をリセット
+					m_elapsedTime = 0;
                     m_nowScavenger = false;
                     m_slider.gameObject.SetActive(false);
 
-                    m_stashManager.GetComponent<StashManager>().IsScavenger(true);
+					m_stashManager.GetComponent<StashManager>().IsScavenger(true);
 
                     if (m_rayTarget.TryGetComponent(out PhotonView view))
                     {
@@ -140,7 +146,7 @@ public class StashController : MonoBehaviourPunCallbacks
 					m_elapsedTime = 0;
                     m_nowScavenger = false;
                     m_slider.gameObject.SetActive(false);
-                }
+				}
             }
 
 			if (Input.GetKeyDown("tab"))
