@@ -17,13 +17,13 @@ public abstract class Potion : MonoBehaviour
     //ポーションの効果は継承先で実装
     private IEnumerator UsePotion()
     {
-        for (int i = 0; i < m_data.m_count; ++i)
+        for (int i = 0; i < m_data.count; ++i)
         {
             //効果を発動
             PotionEffect();
 
             //次の効果発動まで待機
-            yield return new WaitForSeconds(m_data.m_interval);
+            yield return new WaitForSeconds(m_data.interval);
         }
 
         //効果終了時の処理

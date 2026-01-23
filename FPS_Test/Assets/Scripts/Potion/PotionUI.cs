@@ -2,16 +2,18 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class ItemUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler
+public class PotionUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler
 {
     [SerializeField] TextMeshProUGUI m_itemText;
+    [SerializeField] TextMeshProUGUI m_itemName;
     [SerializeField] Potion m_potion;
 
     public void OnPointerEnter(PointerEventData eventData)
     {
         //ê‡ñæï∂ï\é¶
         transform.GetChild(0).gameObject.SetActive(true);
-        m_itemText.text = m_potion.Data.m_description;
+        m_itemText.text = m_potion.Data.description;
+        m_itemName.text = m_potion.Data.potionName;
     }
 
     public void OnPointerDown(PointerEventData eventData)
