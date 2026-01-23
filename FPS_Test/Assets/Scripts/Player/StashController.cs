@@ -2,6 +2,7 @@ using Cysharp.Threading.Tasks;
 using Photon.Pun;
 using Photon.Realtime;
 using System.Collections.Generic;
+using System.Transactions;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
@@ -85,6 +86,28 @@ public class StashController : MonoBehaviourPunCallbacks
 						}
 					}
 
+					// 宝箱
+					if (hit.transform.gameObject.CompareTag("Treasure"))
+					{
+						if (hit.transform.GetComponent<TreasureBoxItem>().IsLock)
+						{
+							List<ItemList> items = new List<ItemList>(m_stashManager.GetComponent<StashManager>().GetItemList());
+
+							// インベントリに鍵があるか確認
+							foreach(var item in items)
+							{
+								if (item.ItemData.equipmentType == (int)EquipmentType.Key)
+								{
+									// インベントリから鍵を一つ消費
+									m_stashManager.GetComponent<StashManager>().RemoveInventory(item);
+									// 宝箱のロックを解除
+									hit.transform.GetComponent<PhotonView>().RPC("SetLock", RpcTarget.All, false);
+									break;
+								}
+							}
+						}
+					}
+
 					return;
 				}
 
@@ -93,25 +116,47 @@ public class StashController : MonoBehaviourPunCallbacks
 				{
                     //宝箱
                     if (!hit.transform.gameObject.CompareTag("Treasure")) return;
-                    //既にインベントリを開いているときは無視
-                    if (!m_nowScavenger)  m_slider.gameObject.SetActive(true);
+
+					hit.transform.TryGetComponent(out TreasureBoxItem treasureBox);
+					hit.transform.TryGetComponent(out TreasureAnime treasureAnime);
+
+					// 開けているかどうか
+					if (treasureBox.IsNowOpen)
+					{
+						// 他の人かどうか
+						if (treasureBox.OpenPlayerNum != photonView.ViewID) return;
+					}
+					else
+					{
+						if (hit.transform.TryGetComponent(out PhotonView photon))
+						{
+							photon.RPC("SetNowOpen", RpcTarget.All, true);
+							photon.RPC("SetOpenPlayerNum", RpcTarget.All, photonView.ViewID);						
+						}
+					}
+
+					//既にインベントリを開いているときは無視
+					if (!m_nowScavenger) m_slider.gameObject.SetActive(true);
 
 					// 箱開け速度の補正
 					float openSpeedRate = m_status.Total.openSpeed / 100.0f;
 
 					//未開封の箱なら経過時間を加算
-					if (!m_nowScavenger && !hit.transform.GetComponent<TreasureAnime>().IsOpened)
+					if (!m_nowScavenger && !treasureAnime.IsOpened)
 					{
-						if (hit.transform.GetComponent<TreasureBoxItem>().IsLock)
+						if (!treasureBox.IsLock)
 						{
-							// 鍵がないときはreturn
+							// レイの当たった箱を保管
+							m_rayTarget = hit.transform.gameObject;
+							m_nowScavenger = true;
 						}
-						// レイの当たった箱を保管
-						m_rayTarget = hit.transform.gameObject;
-						m_nowScavenger = true;
+						else
+						{
+							return;
+						}
                     }
 					// すでに空いている宝箱を調べた時
-					else if(hit.transform.GetComponent<TreasureAnime>().IsOpened)
+					else if(treasureAnime.IsOpened)
 					{
 						m_rayTarget = hit.transform.gameObject;
 					}
@@ -146,6 +191,16 @@ public class StashController : MonoBehaviourPunCallbacks
 					m_elapsedTime = 0;
                     m_nowScavenger = false;
                     m_slider.gameObject.SetActive(false);
+
+					// 宝箱を開き切ってるかどうか
+					if (!IsOpen)
+					{
+						// 宝箱にRayが当たっているかどうか
+						if (m_rayTarget && m_rayTarget.transform.CompareTag("Treasure"))
+						{
+							m_rayTarget.GetComponent<PhotonView>().RPC("SetNowOpen", RpcTarget.All, false);
+						}
+					}
 				}
             }
 
@@ -153,6 +208,13 @@ public class StashController : MonoBehaviourPunCallbacks
 			{
 				if (m_miniMap != null)
 				{
+						Debug.Log("rayTarget : " + m_rayTarget);
+					// 宝箱を開いていた時
+					if (m_rayTarget && m_rayTarget.transform.CompareTag("Treasure"))
+					{
+						m_rayTarget.GetComponent<PhotonView>().RPC("SetNowOpen", RpcTarget.All, false);
+					}
+
 					m_miniMap.SetActive(m_stashManager.GetComponent<StashManager>().ManageUiActiveInfo());
 				}
 			}

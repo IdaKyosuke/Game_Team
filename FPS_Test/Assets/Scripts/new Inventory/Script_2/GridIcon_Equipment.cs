@@ -9,6 +9,7 @@ public enum EquipmentType
 	Weapon,		// •Ší
 	None,       // •Ší‚¶‚á‚È‚¢
 	Potion,		// ƒ|[ƒVƒ‡ƒ“
+	Key,
 
 	Length,
 }

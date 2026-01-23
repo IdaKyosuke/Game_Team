@@ -23,12 +23,19 @@ public class TreasureBoxItem : MonoBehaviourPunCallbacks
 	private List<ItemList> m_itemList = new List<ItemList>();
 	private bool[,] m_isEquipped;
 	private bool m_isLock;
+	private bool m_isNowOpen;
+	private int m_openPlayerNum;
 
 	public bool IsLock => m_isLock;
+
+	public bool IsNowOpen => m_isNowOpen;
+
+	public int OpenPlayerNum => m_openPlayerNum;
 
 	void Start()
 	{
 		m_isLock = (m_rarity == Rarity.Legendary);
+		m_isNowOpen = false;
 		if (!photonView.IsMine) return;
 		m_isEquipped = new bool[m_inventorySize.GetSize.x, m_inventorySize.GetSize.y];
 		for (int i = 0; i < m_inventorySize.GetSize.y; i++)
@@ -215,6 +222,25 @@ public class TreasureBoxItem : MonoBehaviourPunCallbacks
 	void RequestCopyItemList(List<ItemList> list)
 	{
 		CopyItemList(list);
+	}
+
+	// ƒXƒ^ƒRƒ“‚ÌUpdate
+	[PunRPC]
+	void SetNowOpen(bool isOpen)
+	{
+		m_isNowOpen = isOpen;
+	}
+
+	[PunRPC]
+	void SetOpenPlayerNum(int playerNum)
+	{
+		m_openPlayerNum = playerNum;
+	}
+
+	[PunRPC]
+	void SetLock(bool isLock)
+	{
+		m_isLock = isLock;
 	}
 
 	private void CopyItemList(List<ItemList> list)

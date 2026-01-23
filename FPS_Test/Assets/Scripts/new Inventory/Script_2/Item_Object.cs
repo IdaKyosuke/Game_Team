@@ -332,6 +332,12 @@ public class Item_Object : MonoBehaviour
 		Destroy(gameObject);
 	}
 
+	// オブジェクトのマスを開放 => 削除
+	public void DeleteObject()
+	{
+		Release();
+		Remove();
+	}
 
 	public GameObject GetPrefab()
 	{

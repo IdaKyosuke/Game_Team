@@ -1023,13 +1023,26 @@ public class StashManager : MonoBehaviourPunCallbacks
 	}
 
 	// リストから除外する(リストを指定する)
-	private void RemoveItemList(GameObject item, List<ItemList> list)
+	private void RemoveItemList(GameObject item, List<ItemList> list, bool isDelete = false)
 	{
 		list.RemoveAt(item.GetComponent<Item_Object>().GetIndex());
+
+		// オブジェクトを削除する
+		if (isDelete)
+		{
+			item.GetComponent<Item_Object>().DeleteObject();
+		}
+
 		for (int i = 0; i < list.Count; i++)
 		{
 			list[i].ChangeIndex(i);
 		}
+	}
+
+	// 自分のインベントリからアイテムから削除する
+	public void RemoveInventory(ItemList item)
+	{
+		RemoveItemList(item.GetActiveObject(), m_itemList, true);
 	}
 
 	// リストから削除する(アイテムが今入っている枠のタイプを指定する)
