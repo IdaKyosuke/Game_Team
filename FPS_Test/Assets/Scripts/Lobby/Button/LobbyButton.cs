@@ -22,9 +22,9 @@ public class LobbyButton : MonoBehaviour
 
     public void OnClick()
     {
+        m_manager.OnClick(m_buttonType);
 		if(m_func != null) m_func.PushThis();
         m_image.sprite = m_clickSprite;
-        m_manager.OnClick(m_buttonType);
     }
 
     public void OnRelease()

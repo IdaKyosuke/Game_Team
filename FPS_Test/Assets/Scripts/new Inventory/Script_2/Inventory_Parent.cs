@@ -14,7 +14,7 @@ public class Inventory_Parent : MonoBehaviour
 	public void SetStashManager(StashManager manager)
 	{
 		m_stashManager = manager;
-	}
+    }
 
 	public StashManager GetStashManager() { return m_stashManager; }
 

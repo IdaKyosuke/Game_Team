@@ -540,7 +540,11 @@ public class StashManager : MonoBehaviourPunCallbacks
     // アイテム欄を作成する
     public void CreateStashUi(Info_InventorySize info, List<ItemList> itemList)
 	{
-		if (m_isInventoryOpen) return;
+		if (m_isInventoryOpen)
+		{
+			Debug.Log("already open stash ui");
+            return;
+		}
 
 		if(m_stashUi != null)
 		{
@@ -1094,8 +1098,6 @@ public class StashManager : MonoBehaviourPunCallbacks
 
 			// アイテムをスタッシュに並べる
 			CheckGrid(GridType.Inventory, g, false, true, true, false);
-
-			Addressables.Release(op);
 		};
 	}
 
@@ -1294,10 +1296,9 @@ public class StashManager : MonoBehaviourPunCallbacks
 			// アイテムを移動する
 			GameObject item = m_buyItem.GetActiveObject();
 
-			// 販売リストを更新
-			m_traderItemList.RemoveAt(item.GetComponent<Item_Object>().GetIndex());
+			Debug.Log("itemのgridType[" + item.GetComponent<Item_Object>().GetGridType() + "]");
 
-			if (CheckGrid(item.GetComponent<Item_Object>().GetGridType(), item, false))
+            if (CheckGrid(item.GetComponent<Item_Object>().GetGridType(), item, false))
 			{
 				// 当たり判定を復活させる
 				item.GetComponent<Item_Object>().ResetHitCol();
@@ -1488,9 +1489,10 @@ public class StashManager : MonoBehaviourPunCallbacks
 			m_saveInstance.SaveStash(m_stashItemList);
 
 			m_isStashOpen = false;
+            m_isInventoryOpen = false;
 
-			// 表示しているUIを削除する
-			Destroy(m_stashUi.gameObject);
+            // 表示しているUIを削除する
+            Destroy(m_stashUi.gameObject);
 		}
 	}
 
