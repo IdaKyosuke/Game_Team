@@ -130,6 +130,9 @@ public class PlayerController : MonoBehaviourPunCallbacks
             // 攻撃中は無視
             if (m_playerAnim.IsAttack) return;
 
+            //インベントリを開いているなら無視
+			if (m_stashController.IsOpen) return;
+
             //攻撃アニメーション
             m_animator[0].SetBool("attack", true);
             m_animator[1].SetBool("attack", true);
