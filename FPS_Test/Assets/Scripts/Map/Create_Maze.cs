@@ -20,7 +20,7 @@ public class Create_Maze : MonoBehaviourPunCallbacks
 	// •ó” ‚Ì‚»‚ê‚¼‚ê‚ÌƒŒƒAƒŠƒeƒB‚Ì”
 	private const int CommonNum = 20;
 	private const int RareNum = 35;
-	private const int UniqueNum = 40;
+	private const int UniqueNum = 45;
 
 	private const int m_playerSpawnPosAmount = 10;
 	private const int m_treasureAmount = 50;

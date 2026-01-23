@@ -48,6 +48,7 @@ public class GridIcon : MonoBehaviour
 		if(Input.GetMouseButtonUp(0) && m_onPointer)
 		{
 			m_stashManager.StartSet(m_type);
+			//m_stashManager.MoveItem();
 		}
     }
 

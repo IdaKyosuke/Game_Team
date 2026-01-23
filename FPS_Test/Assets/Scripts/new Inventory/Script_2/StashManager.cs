@@ -147,6 +147,9 @@ public class StashManager : MonoBehaviourPunCallbacks
 
 	private bool m_isStashOpen = false;
 
+	private PlayerController m_playerCon = null;
+	private bool m_isDeath = false;
+
 	// Start is called before the first frame update
 	void Start()
     {
@@ -165,6 +168,7 @@ public class StashManager : MonoBehaviourPunCallbacks
 		if(!SceneManager.GetSceneByName("LobbyScene").isLoaded)
 		{ 
 			m_saveInstance.DeleteInventory();
+			m_playerCon = transform.root.GetComponent<PlayerController>();
 		}
 		// ロビーに帰ってきたタイミングでスタッシュをコピー
 		if (SceneManager.GetSceneByName("LobbyScene").isLoaded)
@@ -191,6 +195,17 @@ public class StashManager : MonoBehaviourPunCallbacks
 			if (!photonView.IsMine || !m_isPlayer) return;
 		}
 
+		if (m_playerCon != null && !m_isDeath)
+		{
+			if (m_playerCon.IsDeath)
+			{
+				m_isDeath = true;
+			}
+		}
+		else
+		{
+			return;
+		}
 
 		if (Input.GetMouseButtonUp(0))
 		{
@@ -199,6 +214,7 @@ public class StashManager : MonoBehaviourPunCallbacks
 			{
 				return;
 			}
+
 			SetItem();
 			// 未選択状態に戻す
 			m_checkType = GridType.Empty;
@@ -209,6 +225,18 @@ public class StashManager : MonoBehaviourPunCallbacks
 			// 現在のアイテムをセーブ
 			m_saveInstance.SaveInventory(m_itemList);
 		}
+	}
+
+	public void MoveItem()
+	{
+		// 装備枠が選択されたときは無視
+		if (m_checkType == GridType.Equipment)
+		{
+			return;
+		}
+		SetItem();
+		// 未選択状態に戻す
+		m_checkType = GridType.Empty;
 	}
 
 	public void Save()
@@ -379,8 +407,6 @@ public class StashManager : MonoBehaviourPunCallbacks
 			}
 		}
 
-		Debug.Log("アイテムのサイズは[ " + size.x + ", " + size.y + " ]");
-
 		// 枠外にはみ出すときはそもそも確認しない
 		if (startGrid.x + (size.x - 1) >= width) return false;
 		if (startGrid.y + (size.y - 1) >= height) return false;
@@ -404,7 +430,6 @@ public class StashManager : MonoBehaviourPunCallbacks
 			for (int j = startGrid.x; j < startGrid.x + size.x; j++)
 			{
 				list[j, i].SetInfo(true);
-				Debug.Log("埋められたマス[ " + j + ", " + i + " ]");
 			}
 		}
 
@@ -437,6 +462,8 @@ public class StashManager : MonoBehaviourPunCallbacks
 				items = m_itemList;
 				break;
 		}
+
+		Debug.Log("アイテムのサイズは[x, y] = [" + size.x + ", " + size.y + "]");
 
 		// スペースが空いているときは中身が入っていることにする
 		for (int i = basePos.y; i < basePos.y + size.y; i++)

@@ -2,6 +2,7 @@ using Cysharp.Threading.Tasks;
 using Photon.Pun;
 using Photon.Realtime;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
@@ -90,31 +91,37 @@ public class StashController : MonoBehaviourPunCallbacks
 				//長押しされている間だけ経過時間を加算
 				if (Input.GetKey("e"))
 				{
-                    //既にインベントリを開いているときは無視
-                    if (!m_nowScavenger)  m_slider.gameObject.SetActive(true);
-
                     //宝箱
                     if (!hit.transform.gameObject.CompareTag("Treasure")) return;
+                    //既にインベントリを開いているときは無視
+                    if (!m_nowScavenger)  m_slider.gameObject.SetActive(true);
                     m_nowScavenger = true;
 
-                    // 箱開け速度の補正
-                    float openSpeedRate = m_status.Total.openSpeed / 100.0f;
+					// 箱開け速度の補正
+					float openSpeedRate = m_status.Total.openSpeed / 100.0f;
 
+					if(m_nowScavenger && m_rayTarget == hit.transform.gameObject)
+					{
+						// 同じ箱を見た時
+						m_elapsedTime += Time.deltaTime * openSpeedRate;
+						m_slider.value = m_elapsedTime / m_scavengerTime;
+						if (m_elapsedTime < m_scavengerTime) return;
+					}
 					//未開封の箱なら経過時間を加算
 					if (!hit.transform.GetComponent<TreasureAnime>().IsOpened)
 					{
-                        m_elapsedTime += Time.deltaTime * openSpeedRate;
-                        m_slider.value = m_elapsedTime / m_scavengerTime;
-                        if (m_elapsedTime < m_scavengerTime) return;
+						// レイの当たった箱を保管
+						m_rayTarget = hit.transform.gameObject;
+						if (m_rayTarget.GetComponent<TreasureBoxItem>().IsLock)
+						{
+							// 鍵がないときはreturn
+						}
                     }
 
                     // 経過時間と箱開け状態をリセット
                     m_elapsedTime = 0;
                     m_nowScavenger = false;
                     m_slider.gameObject.SetActive(false);
-
-                    // レイの当たった箱を保管
-                    m_rayTarget = hit.transform.gameObject;
 
                     m_stashManager.GetComponent<StashManager>().IsScavenger(true);
 

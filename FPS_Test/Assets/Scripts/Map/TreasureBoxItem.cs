@@ -22,9 +22,13 @@ public class TreasureBoxItem : MonoBehaviourPunCallbacks
 	private List<MapObjectEntity> m_treasureList = new List<MapObjectEntity>();
 	private List<ItemList> m_itemList = new List<ItemList>();
 	private bool[,] m_isEquipped;
+	private bool m_isLock;
+
+	public bool IsLock => m_isLock;
 
 	void Start()
 	{
+		m_isLock = (m_rarity == Rarity.Legendary);
 		if (!photonView.IsMine) return;
 		m_isEquipped = new bool[m_inventorySize.GetSize.x, m_inventorySize.GetSize.y];
 		for (int i = 0; i < m_inventorySize.GetSize.y; i++)
@@ -80,10 +84,6 @@ public class TreasureBoxItem : MonoBehaviourPunCallbacks
 
 			photonView.RPC(nameof(SetItemList), RpcTarget.All, item);
 		}
-
-		/////////////////////////////////////////////////
-		// 宝箱の中に空きがあるかどうかを調べる適なやつ//
-		/////////////////////////////////////////////////
 	}
 
 	private Rarity SelectRarity(int[] probability)
@@ -153,7 +153,7 @@ public class TreasureBoxItem : MonoBehaviourPunCallbacks
 			for (int j = 0; j < m_inventorySize.GetSize.x; ++j)
 			{
 				// マス目座標を保存
-				if (CheckSpace(new Vector2Int(i, j), new Vector2Int(treasureItem.height, treasureItem.width)))
+				if (CheckSpace(new Vector2Int(j, i), new Vector2Int(treasureItem.width, treasureItem.height)))
 				{
 					isSet = true;
 					info.SetGridIndex(new Vector2Int(j, i));
@@ -163,13 +163,6 @@ public class TreasureBoxItem : MonoBehaviourPunCallbacks
 			if (isSet) break;
 		}
 		
-		//// プレハブを取得
-		//Loader.LoadGameObjectAsync(treasureItem.objectName).Completed += op =>
-		//{ 
-		//	op.Result.GetComponent<Item_Object>().ItemData = treasureItem;
-		//	info.SetPrefab(op.Result);
-		//};
-
 		info.ItemData = treasureItem;
 
 		return info;
@@ -193,7 +186,6 @@ public class TreasureBoxItem : MonoBehaviourPunCallbacks
 				}
 			}
 		}
-		//Debug.Log(startGrid.x + ":" + startGrid.y);
 
 		// スペースが空いているときは中身が入っていることにする
 		for (int i = startGrid.y; i < startGrid.y + size.y; i++)
