@@ -1200,8 +1200,11 @@ public class StashManager : MonoBehaviourPunCallbacks
 	// ----- ショップ画面作成の共通の処理 -----
 	private void CreateNewShop()
 	{
-		// 表示しているUIを削除する
-		Destroy(m_stashUi.gameObject);
+		if(m_stashUi)
+		{
+			// 表示しているUIを削除する
+			Destroy(m_stashUi.gameObject);
+		}
 		// 新しくUIを表示する
 		m_stashUi = Instantiate(m_stashUiPrefab, m_stashPos);
 		// インベントリの枠の親オブジェクトを取得
