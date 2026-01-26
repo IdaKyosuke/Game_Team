@@ -6,10 +6,21 @@ public class Job_SelectButton : MonoBehaviour
     [SerializeField] GameObject m_frame;
     [SerializeField] Job_SelectButton[] m_otherButtons;
 
+	private SkillText_Manager m_textManager;
+
     private void Awake()
     {
+		// スキルのテキストを変更するためのマネージャーを取得
+		m_textManager = GameObject.FindWithTag("skillTextManager").GetComponent<SkillText_Manager>();
         //選択されている職業ボタンの枠画像を表示する
         m_frame.SetActive(GameManager.Instance.PlayerJobType == m_jobType);
+
+		// 現在選択されている職業と一致している時にスキルテキストを変更する
+		if (m_jobType == GameManager.Instance.PlayerJobType)
+		{
+			// スキルのテキストを設定
+			m_textManager.ChangeSkillText((int)m_jobType);
+		}
     }
 
     public void OnClick()
@@ -28,6 +39,9 @@ public class Job_SelectButton : MonoBehaviour
         {
             button.Release();
         }
+
+		// スキルのテキストを設定
+		m_textManager.ChangeSkillText((int)m_jobType);
     }
 
     public void Release()
