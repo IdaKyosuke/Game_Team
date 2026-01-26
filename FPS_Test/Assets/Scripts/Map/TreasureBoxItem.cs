@@ -232,12 +232,6 @@ public class TreasureBoxItem : MonoBehaviourPunCallbacks
 	}
 
 	[PunRPC]
-	void SetOpenPlayerNum(int playerNum)
-	{
-		m_openPlayerNum = playerNum;
-	}
-
-	[PunRPC]
 	void SetLock(bool isLock)
 	{
 		m_isLock = isLock;

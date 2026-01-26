@@ -233,7 +233,7 @@ public class Enemy_Nav : MonoBehaviourPunCallbacks
 		if (m_hp <= 0)
 		{
 			// 死亡状態にする
-			m_isDeath = true;
+			photonView.RPC(nameof(SetDeath), RpcTarget.All, true);
 
 			// 死亡アニメーション
 			GetComponent<Enemy_Animation>().IsDeath();
@@ -314,5 +314,11 @@ public class Enemy_Nav : MonoBehaviourPunCallbacks
 		// 戦闘用の情報をリセット
 		m_combat = false;
 		m_player = null;
+	}
+
+	[PunRPC]
+	void SetDeath(bool isDeath)
+	{
+		m_isDeath = isDeath;
 	}
 }
