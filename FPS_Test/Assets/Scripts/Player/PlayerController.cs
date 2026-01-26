@@ -155,7 +155,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
         if (Input.GetKeyDown("5"))
 		{
 			m_stashController.Save();
-			m_gameManager.ReturnLobby();
+			m_gameManager.ReturnLobby(photonView.IsMine);
 		}
     }
 
@@ -165,7 +165,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
 		{
 			PhotonView.Destroy(other);
 			m_stashController.Save();
-			m_gameManager.ReturnLobby();
+			m_gameManager.ReturnLobby(photonView.IsMine);
 		}
 	}
 

@@ -49,8 +49,9 @@ public class GameManager : SingletonBase<GameManager>
 		SceneManager.UnloadSceneAsync(m_lobbyScene);
 	}
 
-	public void ReturnLobby()
+	public void ReturnLobby(bool isMine)
 	{
+		if (!isMine) return;
 		Cursor.visible = true;
 		Cursor.lockState = CursorLockMode.None;
 
