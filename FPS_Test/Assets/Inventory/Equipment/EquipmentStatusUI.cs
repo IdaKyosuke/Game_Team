@@ -6,22 +6,22 @@ public class EquipmentStatusUI : MonoBehaviour, IPointerEnterHandler, IPointerEx
 
     public void OnPointerEnter(PointerEventData eventData)
     { 
-        transform.GetChild(1).gameObject.SetActive(true);
+        transform.GetChild(2).gameObject.SetActive(true);
     }
 
     public void OnPointerDown(PointerEventData eventData)
     {
-		transform.GetChild(1).gameObject.SetActive(false);
+		transform.GetChild(2).gameObject.SetActive(false);
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-		transform.GetChild(1).gameObject.SetActive(false);
+		transform.GetChild(2).gameObject.SetActive(false);
     }
 
     //e‚ª”ñ•\¦‚É‚È‚Á‚½‚ç©g‚ğíœ
     private void OnDisable()
     {
-		transform.GetChild(1).gameObject.SetActive(false);
+		transform.GetChild(2).gameObject.SetActive(false);
     }
 }
