@@ -1,8 +1,9 @@
+using Photon.Pun;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class StatusUI : MonoBehaviour
+public class StatusUI : MonoBehaviourPunCallbacks
 {
     [SerializeField] Slider[] m_slider;
     [SerializeField] TextMeshProUGUI[] m_sliderValue;
@@ -12,11 +13,9 @@ public class StatusUI : MonoBehaviour
 
     private void LateUpdate()
     {
-        SetupText();
-    }
+        //自分のキャラクターでなければ処理しない
+        if (!photonView.IsMine) return;
 
-    private void SetupText()
-    {
         //ステータスの更新
         m_slider[0].maxValue = m_playerStatus.Total.hp;
         m_slider[0].value = m_playerStatus.Current.hp;

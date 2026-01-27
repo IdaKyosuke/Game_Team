@@ -24,6 +24,8 @@ public class ItemUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, 
         m_itemValue.text = "îÑãpäz [ Åê " + (m_item.ItemData.price / 2).ToString() + " ]";
     }
 
+
+
     public void OnPointerDown(PointerEventData eventData)
     {
         transform.GetChild(0).gameObject.SetActive(false);

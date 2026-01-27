@@ -9,6 +9,11 @@ public abstract class Potion : MonoBehaviour
 
     public PotionData Data => m_data;
 
+    private void Start()
+    {
+        m_playerStatus = transform.root.GetComponent<PlayerStatus>();
+    }
+
     public void Use()
     {
         StartCoroutine(UsePotion());

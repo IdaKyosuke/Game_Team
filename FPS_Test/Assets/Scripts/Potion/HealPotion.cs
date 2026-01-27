@@ -4,7 +4,7 @@ public class HealPotion : Potion
 {
     protected override void PotionEffect()
     {
-        Debug.Log("回復ポーションを使用!");
+        Debug.Log("ポーションで体力を回復");
        m_playerStatus.Heal(m_data.value);
     }
 
