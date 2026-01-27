@@ -15,27 +15,35 @@ public enum Rarity
 
 public class TreasureBoxItem : MonoBehaviourPunCallbacks
 {
-
 	[SerializeField] ExcelData m_excelData;
 	[SerializeField] Rarity m_rarity;
 	[SerializeField] Info_InventorySize m_inventorySize;
+
+	private Animator m_anime;
+
 	private List<MapObjectEntity> m_treasureList = new List<MapObjectEntity>();
 	private List<ItemList> m_itemList = new List<ItemList>();
 	private bool[,] m_isEquipped;
+
+	// 宝箱の鍵が開いているかどうか
 	private bool m_isLock;
+	// 今誰かが宝箱を開けているかどうか
 	private bool m_isNowOpen;
-	private int m_openPlayerNum;
+	// 宝箱が開けられたかどうか
+	private bool m_isOpened;
 
 	public bool IsLock => m_isLock;
 
 	public bool IsNowOpen => m_isNowOpen;
 
-	public int OpenPlayerNum => m_openPlayerNum;
+	public bool IsOpened => m_isOpened;
 
 	void Start()
 	{
 		m_isLock = (m_rarity == Rarity.Legendary);
+		m_anime = GetComponent<Animator>();
 		m_isNowOpen = false;
+		m_isOpened = false;
 		if (!photonView.IsMine) return;
 		m_isEquipped = new bool[m_inventorySize.GetSize.x, m_inventorySize.GetSize.y];
 		for (int i = 0; i < m_inventorySize.GetSize.y; i++)
@@ -212,7 +220,7 @@ public class TreasureBoxItem : MonoBehaviourPunCallbacks
 	{
 		PhotonView view = PhotonView.Find(requestId);
 
-		GetComponent<TreasureAnime>().Open();
+		GetComponent<TreasureBoxItem>().Open();
 		Debug.Log("view.RPC s : " + view);
 		view.RPC("ReceiveInventoryData", view.Owner, GetInfo(), GetItemList());
 	}
@@ -237,8 +245,19 @@ public class TreasureBoxItem : MonoBehaviourPunCallbacks
 		m_isLock = isLock;
 	}
 
+	[PunRPC]
+	void IsOpen()
+	{
+		m_isOpened = true;
+	}
+
 	private void CopyItemList(List<ItemList> list)
 	{
 		m_itemList = new List<ItemList>(list);
+	}
+
+	public void Open()
+	{
+		m_anime.SetBool("Open", true);
 	}
 }

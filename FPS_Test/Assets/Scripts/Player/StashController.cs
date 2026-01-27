@@ -131,7 +131,6 @@ public class StashController : MonoBehaviourPunCallbacks
                     if (!hit.transform.gameObject.CompareTag("Treasure")) return;
 
 					hit.transform.TryGetComponent(out TreasureBoxItem treasureBox);
-					hit.transform.TryGetComponent(out TreasureAnime treasureAnime);
 
 					// 誰かが開いてるかどうか
 					if (treasureBox.IsNowOpen)
@@ -155,7 +154,7 @@ public class StashController : MonoBehaviourPunCallbacks
 					float openSpeedRate = m_status.Total.openSpeed / 100.0f;
 
 					//未開封の箱なら経過時間を加算
-					if (!m_nowScavenger && !treasureAnime.IsOpened)
+					if (!m_nowScavenger && !treasureBox.IsOpened)
 					{
 						if (!treasureBox.IsLock)
 						{
@@ -169,7 +168,7 @@ public class StashController : MonoBehaviourPunCallbacks
 						}
                     }
 					// すでに空いている宝箱を調べた時
-					else if(treasureAnime.IsOpened)
+					else if(treasureBox.IsOpened)
 					{
 						m_rayTarget = hit.transform.gameObject;
 					}
