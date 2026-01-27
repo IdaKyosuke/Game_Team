@@ -146,9 +146,12 @@ public class StashManager : MonoBehaviourPunCallbacks
 	[SerializeField] TextMeshProUGUI m_text;
 
 	private bool m_isStashOpen = false;
+	private bool m_isLobby = false;
 
 	private PlayerController m_playerCon = null;
 	private bool m_isDeath = false;
+
+	public bool IsLobby => m_isLobby;
 
 	// Start is called before the first frame update
 	void Start()
@@ -173,10 +176,14 @@ public class StashManager : MonoBehaviourPunCallbacks
 		// ロビーに帰ってきたタイミングでスタッシュをコピー
 		if (SceneManager.GetSceneByName("LobbyScene").isLoaded)
 		{
-			Load(GridType.Stash);// 表示しているUIを削除する
-			Destroy(m_stashUi.gameObject);
+			Load(GridType.Stash);
 			m_stashUiParent.SetActive(false);
+			m_isLobby = true;
 		}
+
+		m_isBuyMode = false;
+		m_isShop = false;
+		m_isInventoryOpen = false;
 	}
 
     // Update is called once per frame
@@ -507,7 +514,7 @@ public class StashManager : MonoBehaviourPunCallbacks
 	)
 	{
 		// 何も漁っていない時は無視する
-		if (!m_isScavenger) return false;
+		if (!m_isLobby && !m_isScavenger) return false;
 
 		// 購入モードでは無視
 		if (!isTest && m_isBuyMode && m_isShop)

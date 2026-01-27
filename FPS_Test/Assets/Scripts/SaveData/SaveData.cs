@@ -42,6 +42,7 @@ public class SaveData
 			lists.Add(LoadData(data));
 		}
 
+		Debug.Log("load inventory");
 		return lists;
 	}
 	// スタッシュ用
@@ -56,6 +57,7 @@ public class SaveData
 			lists.Add(LoadData(data));
 		}
 
+		Debug.Log("load stash");
 		return lists;
 	}
 
@@ -102,6 +104,7 @@ public class SaveData
 			m_inventoryItem.Add(save);
 		}
 
+		Debug.Log("save inventory");
 		m_jsonText = JsonUtility.ToJson(this);
 		File.WriteAllText(GetFilePath(), m_jsonText);
 	}
@@ -116,6 +119,7 @@ public class SaveData
 			m_stashItem.Add(save);
 		}
 
+		Debug.Log("save stash");
 		m_jsonText = JsonUtility.ToJson(this);
 		File.WriteAllText(GetFilePath(), m_jsonText);
 	}

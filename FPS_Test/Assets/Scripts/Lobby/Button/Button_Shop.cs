@@ -17,6 +17,7 @@ public class Button_Shop : Button_Function
 		m_buttonForShop = GameObject.FindWithTag("buttonForShop");
 		m_inventoryManager = GameObject.FindWithTag("inventoryManagerShop").GetComponent<StashManager>();
 
+		m_shopButtonInfo = GameObject.FindWithTag("shopInfoList").GetComponent<ShopInfoList>();
 		m_buttonForShop.SetActive(false);
 	}
 
@@ -25,7 +26,6 @@ public class Button_Shop : Button_Function
 		if (m_isPushed) return;
 		m_inventoryManager.StartShopMode();
 		m_shopUi.SetActive(true);
-		m_shopButtonInfo = GameObject.FindWithTag("shopInfoList").GetComponent<ShopInfoList>();
 		// 購入モードはとりあえずリストの最初のショップを表示する
 		m_shopButtonInfo.GetShopInfo(0).SetShopItem();
 		m_buttonForShop.SetActive(true);
