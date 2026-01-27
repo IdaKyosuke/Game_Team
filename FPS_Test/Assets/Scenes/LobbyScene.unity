@@ -6019,8 +6019,8 @@ Canvas:
   m_GameObject: {fileID: 1085564475}
   m_Enabled: 1
   serializedVersion: 3
-  m_RenderMode: 1
-  m_Camera: {fileID: 0}
+  m_RenderMode: 0
+  m_Camera: {fileID: 312335809}
   m_PlaneDistance: 100
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
@@ -14957,7 +14957,7 @@ Canvas:
   m_Enabled: 1
   serializedVersion: 3
   m_RenderMode: 0
-  m_Camera: {fileID: 0}
+  m_Camera: {fileID: 312335809}
   m_PlaneDistance: 0.1
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
@@ -15454,7 +15454,7 @@ Canvas:
   m_GameObject: {fileID: 8773137579053283771}
   m_Enabled: 1
   serializedVersion: 3
-  m_RenderMode: 1
+  m_RenderMode: 0
   m_Camera: {fileID: 312335809}
   m_PlaneDistance: 0.1
   m_PixelPerfect: 0
@@ -16094,7 +16094,7 @@ Canvas:
   m_Enabled: 1
   serializedVersion: 3
   m_RenderMode: 0
-  m_Camera: {fileID: 0}
+  m_Camera: {fileID: 312335809}
   m_PlaneDistance: 100
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
@@ -19002,6 +19002,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 359330212316768484, guid: 8488b2ca2ac506147af8cc5ef1345a7a,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 2.292628
       objectReference: {fileID: 0}
     - target: {fileID: 383995668251003599, guid: 8488b2ca2ac506147af8cc5ef1345a7a,
         type: 3}

@@ -173,20 +173,10 @@ public class StashManager : MonoBehaviourPunCallbacks
 		// ロビーに帰ってきたタイミングでスタッシュをコピー
 		if (SceneManager.GetSceneByName("LobbyScene").isLoaded)
 		{
-			Load(GridType.Stash);
+			Load(GridType.Stash);// 表示しているUIを削除する
+			Destroy(m_stashUi.gameObject);
 			m_stashUiParent.SetActive(false);
 		}
-		/*
-		if(m_stashUiParent.activeSelf)
-		{
-			m_stashUiParent.SetActive(false);
-		}
-		*/
-
-		Debug.Log("Start stashUiPrefab[ " + m_stashUiPrefab + " ]");
-
-		// ショップの時だけ購入モードを有効にする
-		m_isBuyMode = m_isShop;
 	}
 
     // Update is called once per frame
