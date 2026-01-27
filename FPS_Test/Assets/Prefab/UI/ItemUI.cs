@@ -33,10 +33,4 @@ public class ItemUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, 
     {
         transform.GetChild(0).gameObject.SetActive(false);
     }
-
-    //e‚ª”ñ•\¦‚É‚È‚Á‚½‚ç©g‚ğíœ
-    private void OnDisable()
-    {
-        transform.GetChild(0).gameObject.SetActive(false);
-    }
 }
