@@ -164,11 +164,7 @@ public class PlayerStatus : MonoBehaviourPunCallbacks
         //戦士のダメージカットスキル確認
         if (TryGetComponent(out warrior))
         {
-            if (warrior.IsDamageCut)
-            {
-                damage *= 0.9f;
-                return;
-            }
+            if (warrior.IsDamageCut) damage *= 0.8f;
         }
 
         //僧侶のバリアスキル確認
@@ -178,7 +174,7 @@ public class PlayerStatus : MonoBehaviourPunCallbacks
         }
 
         m_currentStatus.hp -= (int)damage;
-        Debug.Log("プレイヤーが [" + damage + "] ダメージ受けた!");
+        Debug.Log("プレイヤーが [" + (int)damage + "] ダメージ受けた!");
 
         //状態異常付与の抽選
         ConditionType conditionType = (ConditionType)ConditionTypeNum;

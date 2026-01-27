@@ -4,8 +4,8 @@ public class Warrior : Job
 {
     private PlayerStatus m_status;
     private PlayerParameter m_passiveStatus;
-    private bool m_isOneLife;   //一度だけHP1で耐えるかどうか
-    private bool m_isDamageCut; //ダメージカットが発動しているかどうか
+    private bool m_isOneLife = false;   //一度だけHP1で耐えるかどうか
+    private bool m_isDamageCut = false; //ダメージカットが発動しているかどうか
 
     public bool IsDamageCut => m_isDamageCut;
 
@@ -22,9 +22,6 @@ public class Warrior : Job
 
         //パッシブスキルの初期化
         Initialize(JobType.Warrior, AttackType.Physical);
-
-        m_isOneLife = false;
-        m_isDamageCut = false;
     }
 
     public override void Attack()
