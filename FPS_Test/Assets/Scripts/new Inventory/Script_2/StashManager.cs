@@ -174,12 +174,14 @@ public class StashManager : MonoBehaviourPunCallbacks
 		if (SceneManager.GetSceneByName("LobbyScene").isLoaded)
 		{
 			Load(GridType.Stash);
+			m_stashUiParent.SetActive(false);
 		}
-
+		/*
 		if(m_stashUiParent.activeSelf)
 		{
 			m_stashUiParent.SetActive(false);
 		}
+		*/
 
 		Debug.Log("Start stashUiPrefab[ " + m_stashUiPrefab + " ]");
 
@@ -514,6 +516,9 @@ public class StashManager : MonoBehaviourPunCallbacks
 		bool isTest = false
 	)
 	{
+		// 何も漁っていない時は無視する
+		if (!m_isScavenger) return false;
+
 		// 購入モードでは無視
 		if (!isTest && m_isBuyMode && m_isShop)
 		{
@@ -732,6 +737,7 @@ public class StashManager : MonoBehaviourPunCallbacks
 
             m_stashUiParent.SetActive(true);
 			m_isInventoryOpen = true;
+
 			return false;
         }
     }
@@ -739,6 +745,11 @@ public class StashManager : MonoBehaviourPunCallbacks
 	public void IsScavenger(bool value)
 	{
 		m_isScavenger = value;
+	}
+
+	public bool GetScavengerFlg()
+	{
+		return m_isScavenger;
 	}
 
 	// インベントリを開いているかを取得

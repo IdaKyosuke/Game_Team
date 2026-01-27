@@ -28,7 +28,9 @@ public class StashController : MonoBehaviourPunCallbacks
     private GameObject m_rayTarget;
 	private bool m_isDeath = false;
 	private bool m_nowScavenger = false;    // 現在箱開け中か状態か
-	private float m_elapsedTime;				// 箱開けの経過時間
+	private float m_elapsedTime;                // 箱開けの経過時間
+
+	private bool m_startReady = false;		// ゲーム開始時にインベントリを消したか
 
     public Info_InventorySize InventortSize => m_inventortSize;
 
@@ -54,12 +56,17 @@ public class StashController : MonoBehaviourPunCallbacks
         var token = this.GetCancellationTokenOnDestroy();
         await UniTask.WaitUntil(() => SceneManager.GetSceneByName("MapScene").isLoaded, cancellationToken: token);
 		m_miniMap = GameObject.FindWithTag("MiniMap");
-    }
+	}
 
     private void Update()
 	{
 		if (m_isDeath) return;
 		if (!m_isPlayer) return;
+		if(!m_startReady)
+		{
+			m_stashManager.GetComponent<StashManager>().ManageUiActiveInfo();
+			m_startReady = true;
+		}
 
 		// 自身が生成したオブジェクトだけに移動処理を行う
 		if (photonView.IsMine)

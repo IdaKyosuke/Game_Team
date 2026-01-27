@@ -85,6 +85,8 @@ public class PlayerController : MonoBehaviourPunCallbacks
 				m_job = gameObject.AddComponent<Thief>();
 				break;
         }
+
+
     }
 
     // マスターの中で個々にポジションを送る

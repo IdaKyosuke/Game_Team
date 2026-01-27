@@ -174,6 +174,7 @@ public class Item_Object : MonoBehaviour
 		{
 			if (Input.GetKey("left ctrl"))
 			{
+				if (!m_inventoryManager.GetComponent<StashManager>().GetScavengerFlg()) return;
 				// ショートカット開始
 				m_quickMove = true;
 			}
