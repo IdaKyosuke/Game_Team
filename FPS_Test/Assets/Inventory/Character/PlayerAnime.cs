@@ -1,4 +1,5 @@
 using Photon.Pun;
+using System.Collections.Generic;
 using System.ComponentModel.Design.Serialization;
 using UnityEngine;
 
@@ -6,7 +7,10 @@ public class PlayerAnime : MonoBehaviourPunCallbacks
 {
     [SerializeField] Animator m_anim;
 
-    public bool IsAttack => m_anim.GetBool("attack");
+	[SerializeField] List<GameObject> m_models = new List<GameObject>();
+	[SerializeField] GameObject m_deathModel;
+
+	public bool IsAttack => m_anim.GetBool("attack");
 
     public void OnAttack1()
     {
@@ -23,5 +27,16 @@ public class PlayerAnime : MonoBehaviourPunCallbacks
     public void ResetBool()
     { 
         m_anim.SetBool("attack", false);
-    }
+	}
+
+	[PunRPC]
+	public void ChangeModel()
+	{
+		m_deathModel.SetActive(true);
+		// ¶‚«‚Ä‚¢‚éŠÔ‚Ìƒ‚ƒfƒ‹‚ğ”ñ•\¦‚É
+		foreach (var m in m_models)
+		{
+			m.SetActive(false);
+		}
+	}
 }
