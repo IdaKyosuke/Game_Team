@@ -21,7 +21,7 @@ public class Thief : Job
 
         //パッシブスキルの初期化
         Initialize(JobType.Thief, AttackType.Physical);
-    }
+	}
 
     public override void Attack()
     {
@@ -57,5 +57,8 @@ public class Thief : Job
     {
         //鍵の取得
         Debug.Log("鍵を一つ入手した！");
-    }
+		ItemList item = ScriptableObject.CreateInstance<ItemList>();
+		item.ItemData = GetComponent<StashController>().GetExcel.unique[8];
+		GetComponent<StashController>().GetManager().AddKey(item);
+	}
 }

@@ -1,4 +1,5 @@
 using Photon.Pun;
+using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -242,6 +243,27 @@ public class StashManager : MonoBehaviourPunCallbacks
 		SetItem();
 		// 未選択状態に戻す
 		m_checkType = GridType.Empty;
+	}
+
+	// シーフのパッシブスキル専用
+	public void AddKey(ItemList item)
+	{
+		// プレハブを取得
+		Loader.LoadGameObjectAsync(item.ItemData.objectName).Completed += op =>
+		{
+			GameObject g = Instantiate(op.Result, m_moveItemTransform);
+			g.GetComponent<Item_Object>().SetBaseInfo();
+
+			Debug.Log("add key");
+			// アイテムリストのインデックス番号を処理した順に書き変える
+			//g.GetComponent<Item_Object>().ChangeIndex(m_itemList.Count);
+
+			// 自身の情報をオブジェクトに持たせる
+			g.GetComponent<Item_Object>().ItemData = item.ItemData;
+
+			// アイテムをインベントリに並べる
+			CheckGrid(GridType.Stash, g, false, true, true, true);
+		};
 	}
 
 	public void Save()

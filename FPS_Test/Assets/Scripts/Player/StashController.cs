@@ -30,9 +30,11 @@ public class StashController : MonoBehaviourPunCallbacks
 	private bool m_nowScavenger = false;    // 現在箱開け中か状態か
 	private float m_elapsedTime;                // 箱開けの経過時間
 
-	private bool m_startReady = false;		// ゲーム開始時にインベントリを消したか
+	private bool m_startReady = false;      // ゲーム開始時にインベントリを消したか
 
-    public Info_InventorySize InventortSize => m_inventortSize;
+	[SerializeField] ExcelData m_excelData = null;	
+
+	public Info_InventorySize InventortSize => m_inventortSize;
 
 	public bool IsOpen => m_manager.IsOpenInventory();
 
@@ -44,7 +46,9 @@ public class StashController : MonoBehaviourPunCallbacks
 		set { m_scavengerTime = value; }
     }
 
-    void Awake()
+	public ExcelData GetExcel => m_excelData;
+
+	void Awake()
     {
 		m_uiParentCanvs.SetActive(true);
 		m_rb = GetComponent<Rigidbody>();
