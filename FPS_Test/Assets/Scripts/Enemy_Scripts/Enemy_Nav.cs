@@ -3,6 +3,7 @@ using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine;
 using UnityEngine.AI;
+using static UnityEngine.GraphicsBuffer;
 
 public class Enemy_Nav : MonoBehaviourPunCallbacks
 {
@@ -42,6 +43,9 @@ public class Enemy_Nav : MonoBehaviourPunCallbacks
 
 	// 動きを止めるための判定をするコライダー
 	[SerializeField] ForStop_Collider m_collider;
+
+	// プレイヤーに近づいた時にその場で回転する速度
+	[SerializeField] float m_rotSpeed = 3.0f;
 
 	public bool IsDeath => m_isDeath;
 
@@ -130,6 +134,10 @@ public class Enemy_Nav : MonoBehaviourPunCallbacks
 		else
 		{
 			m_agent.isStopped = true;
+
+			Vector3 direction = m_target.position - transform.position;
+			Quaternion rotation = Quaternion.LookRotation(direction);
+			transform.rotation = Quaternion.Slerp(transform.rotation, rotation, Time.deltaTime * m_rotSpeed);
 		}
 	}
 
