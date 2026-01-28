@@ -14,30 +14,25 @@ public class SelectShopButton : MonoBehaviour
 	// アイテムの座標を設定しているか
 	private bool m_isSet = false;
 
-	private void Start()
+	public void SetShopItem()
 	{
-		if(!m_manager)
+		m_manager.SetShopItemUI(m_inventorySize, m_shopList, m_isSet, gameObject);
+	}
+
+	// トレーダーを切り替えるときにアイテムリストの更新を保存する
+	public void RefreshShopList(List<ItemList> list)
+	{
+		m_shopList = new List<ItemList>(list);
+	}
+
+	// m_objectList(GameObject) => m_shopList(ItemList) 販売アイテムリストの作成
+	public void MakeList()
+	{
+		if (!m_manager)
 		{
 			m_manager = GameObject.FindWithTag("inventoryManager").GetComponent<StashManager>();
 		}
 
-		MakeList();
-	}
-
-	public void SetShopItem()
-	{
-		m_manager.SetShopItemUI(m_inventorySize, ref m_shopList, m_isSet, gameObject);
-	}
-
-	// アイテムの座標を設定し終えた時に呼ぶ
-	public void FinishSetItem()
-	{
-		m_isSet = true;
-	}
-
-	// m_objectList(GameObject) => m_shopList(ItemList) 販売アイテムリストの作成
-	private void MakeList()
-	{
 		// 販売アイテムの数
 		int itemCount = Random.Range(5, 21);
 

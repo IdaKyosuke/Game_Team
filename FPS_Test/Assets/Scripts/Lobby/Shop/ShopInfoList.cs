@@ -31,4 +31,12 @@ public class ShopInfoList : MonoBehaviour
 			m_dealButton.SetActive(true);
 		}
 	}
+
+	public void SetStart()
+	{
+		foreach(var v in m_shopList)
+		{
+			v.MakeList();
+		}
+	}
 }

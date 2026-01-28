@@ -18,17 +18,21 @@ public class Button_Shop : Button_Function
 		m_inventoryManager = GameObject.FindWithTag("inventoryManagerShop").GetComponent<StashManager>();
 
 		m_shopButtonInfo = GameObject.FindWithTag("shopInfoList").GetComponent<ShopInfoList>();
+		// トレーダーの初期設定
+		m_shopButtonInfo.SetStart();
 		m_buttonForShop.SetActive(false);
+
+		m_shopUi.SetActive(false);
 	}
 
 	public override void PushThis()
 	{
 		if (m_isPushed) return;
 		m_inventoryManager.StartShopMode();
-		m_shopUi.SetActive(true);
 		// 購入モードはとりあえずリストの最初のショップを表示する
-		m_shopButtonInfo.GetShopInfo(0).SetShopItem();
+		//m_shopButtonInfo.GetShopInfo(0).SetShopItem();
 		m_buttonForShop.SetActive(true);
+		m_shopUi.SetActive(true);
 
 		m_isPushed = true;
 	}

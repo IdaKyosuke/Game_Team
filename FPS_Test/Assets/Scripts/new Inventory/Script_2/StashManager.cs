@@ -129,6 +129,13 @@ public class StashManager : MonoBehaviourPunCallbacks
 	[SerializeField] Image m_buyItemIcon;
 	[SerializeField] TextMeshProUGUI m_price;
 	[SerializeField] TextMeshProUGUI m_itemName;
+	// 売却金額を表示するテキスト
+	[SerializeField] TextMeshProUGUI m_sellValue;
+
+	// 購入モードで使用するUI
+	[SerializeField] GameObject m_forBuyModeUI;
+	// 売却モードで使用するUI
+	[SerializeField] GameObject m_forSellModeUI;
 
 	// 購入予定のアイテムのアイコン
 	private Color m_color;
@@ -136,7 +143,7 @@ public class StashManager : MonoBehaviourPunCallbacks
 	private ItemList m_buyItem;
 	// ショップのボタン関係を管理しているオブジェクト
 	[SerializeField] ShopInfoList m_shopButtonInfo;
-	private GameObject m_buyTrader = null;	// 購入しようとしているトレーダー
+	private GameObject m_buyTrader = null;  // 購入しようとしているトレーダー
 
 	// セーブデータ管理用
 	private SaveData m_saveInstance = null;
@@ -178,7 +185,6 @@ public class StashManager : MonoBehaviourPunCallbacks
 		if (SceneManager.GetSceneByName("LobbyScene").isLoaded)
 		{
 			Load(GridType.Stash);
-			m_stashUiParent.SetActive(false);
 			m_isLobby = true;
 		}
 
@@ -224,12 +230,6 @@ public class StashManager : MonoBehaviourPunCallbacks
 			SetItem();
 			// 未選択状態に戻す
 			m_checkType = GridType.Empty;
-		}
-
-		if (Input.GetKeyDown("0"))
-		{
-			// 現在のアイテムをセーブ
-			m_saveInstance.SaveInventory(m_itemList);
 		}
 	}
 
@@ -1050,6 +1050,12 @@ public class StashManager : MonoBehaviourPunCallbacks
 			info.ChangeIndex(item.GetComponent<Item_Object>().GetIndex());
 			list[item.GetComponent<Item_Object>().GetIndex()] = info;
 		}
+
+		// ショップの売却金額の合計を更新
+		if (m_isShop && !m_isBuyMode)
+		{
+			CalcSoldValue();
+		}
 	}
 
 	// リストから除外する(リストを指定する)
@@ -1066,6 +1072,12 @@ public class StashManager : MonoBehaviourPunCallbacks
 		for (int i = 0; i < list.Count; i++)
 		{
 			list[i].ChangeIndex(i);
+		}
+
+		// ショップの売却金額の合計を更新
+		if (m_isShop && !m_isBuyMode)
+		{
+			CalcSoldValue();
 		}
 	}
 
@@ -1096,12 +1108,19 @@ public class StashManager : MonoBehaviourPunCallbacks
 
 	// ----- ボタンの処理 ------
 	// 販売アイテムUIを作成
-	public void SetShopItemUI(Info_InventorySize info, ref List<ItemList> itemList, bool isSet, GameObject trader)
+	public void SetShopItemUI(Info_InventorySize info, List<ItemList> itemList, bool isSet, GameObject trader)
 	{
 		// 購入モード以外では無視
 		if (!m_isBuyMode) return;
 		// 今取引しているトレーダーを再選択したときは無視
 		if (m_buyTrader == trader) return;
+		else
+		{
+			if(m_buyTrader)
+			{
+				m_buyTrader.GetComponent<SelectShopButton>().RefreshShopList(m_otherItemList);
+			}
+		}
 
 		// 現在取引しているトレーダーを保持
 		m_buyTrader = trader;
@@ -1300,32 +1319,24 @@ public class StashManager : MonoBehaviourPunCallbacks
 			m_infoMoney.AddMoney(add);
 
 			m_text.SetText("Money : " + m_infoMoney.GetCurrentMoney().ToString());
+
+			CalcSoldValue();
 		}
 	}
 
 	// 売却用アイテムの総額を計算する
-	private int CalcSoldValue()
+	private void CalcSoldValue()
 	{
-		int add = 0;
+		int value = 0;
 
 		// 売却予定のアイテムを削除
 		foreach (ItemList item in m_sellItemList)
 		{
-			// 売却したアイテムが入っていたマスを空ける
-			Vector2Int basePos = item.GetGridIndex();
-			Vector2Int size = item.GetActiveObject().GetComponent<Item_Object>().GetSize();
-			for (int i = basePos.x; i < basePos.x + size.x; i++)
-			{
-				for (int j = basePos.y; j < basePos.y + size.y; j++)
-				{
-					m_stashGridList[i, j].SetInfo(false);
-				}
-			}
 			// 売値を加算
-			add += item.GetActiveObject().GetComponent<Item_Object>().GetValue();
+			value += item.GetActiveObject().GetComponent<Item_Object>().GetValue();
 		}
 
-		return add;
+		m_sellValue.SetText(value.ToString());
 	}
 
 	// 購入用ボタン
@@ -1369,6 +1380,16 @@ public class StashManager : MonoBehaviourPunCallbacks
 		// すでに購入モードの時は無視する
 		if (m_isBuyMode) return;
 
+		// UIの管理
+		if(!m_forBuyModeUI.activeSelf)
+		{
+			m_forBuyModeUI.SetActive(true);
+		}
+		if(m_forSellModeUI.activeSelf)
+		{
+			m_forSellModeUI.SetActive(false);
+		}
+
 		m_buyTrader = null;
 
 		if (m_sellItemList.Count != 0)
@@ -1395,6 +1416,16 @@ public class StashManager : MonoBehaviourPunCallbacks
 		// すでに売却モードの時は無視する
 		if (!m_isBuyMode) return;
 
+		// UIの管理
+		if (!m_forSellModeUI.activeSelf)
+		{
+			m_forSellModeUI.SetActive(true);
+		}
+		if (m_forBuyModeUI.activeSelf)
+		{
+			m_forBuyModeUI.SetActive(false);
+		}
+
 		// 売却ボタンが隠れていた時用
 		m_shopButtonInfo.ShowDealButton();
 
@@ -1402,13 +1433,18 @@ public class StashManager : MonoBehaviourPunCallbacks
 		m_isBuyMode = false;
 
 		// 購入予定のアイテムが選択されている時は元に戻す
-		ResetBuyItemInfo();
+		ResetBuyItemInfo();     
+		
+		// 直前まで取引していたトレーダーの情報を返す
+		m_buyTrader.GetComponent<SelectShopButton>().RefreshShopList(m_otherItemList);
 
 		// 内部的なリストをリセット
 		m_sellItemList.Clear();
 
 		// 処理を統合するために参照渡し
 		m_otherItemList = m_sellItemList;
+
+		CalcSoldValue();
 
 		CreateNewShop();
 	}
@@ -1520,8 +1556,8 @@ public class StashManager : MonoBehaviourPunCallbacks
 	{
 		// ショップの挙動に変更する
 		m_isShop = true;
-		// 購入モードにする
-		m_isBuyMode = true;
+		// 購入モードで開始する
+		ChangeBuyMode();
 	}
 
 	// スタッシュ <=> インベントリのやり取りを保存する
