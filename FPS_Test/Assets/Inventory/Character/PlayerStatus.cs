@@ -1,3 +1,4 @@
+using ExitGames.Client.Photon;
 using Photon.Pun;
 using System.Collections.Generic;
 using UnityEngine;
@@ -132,34 +133,36 @@ public class PlayerStatus : MonoBehaviourPunCallbacks
         if (m_currentStatus.mp >= m_totalStatus.mp) m_currentStatus.mp = m_totalStatus.mp;
     }
 
-    public void Damage(int power, AttackType attackType, int ConditionTypeNum, int grantRate)
+    public bool Damage(int power, AttackType attackType, int ConditionTypeNum, int grantRate)
     {
         //職業情報
         Warrior warrior;
         Cleric cleric;
 
         //既に死んでいるならダメージを与えない
-        if (m_currentStatus.hp <= 0) return;
+        if (m_currentStatus.hp <= 0) return true;
 
         //ダメージ計算
         float damage = 0;
         switch (attackType)
         {
             case AttackType.Physical:
-                damage = (power * 2) - (m_status.physicalDefense / 3);
+                damage = (power * 2) - (m_totalStatus.physicalDefense / 3);
                 break;
 
             case AttackType.Magical:
-                damage = (power * 2) - (m_status.magicDefense / 3);
+                damage = (power * 2) - (m_totalStatus.magicDefense / 3);
                 break;
 
             case AttackType.Cleric:
-                damage = (power * 2) - (m_status.physicalDefense / 3);
+                damage = (power * 2) - (m_totalStatus.physicalDefense / 3);
                 break;
         }
 
+		Debug.Log(m_status.physicalDefense);
+
         //マイナスのダメージは与えない
-        if (damage <= 0) return;
+        if (damage <= 0) return false;
 
         //戦士のダメージカットスキル確認
         if (TryGetComponent(out warrior))
@@ -196,7 +199,7 @@ public class PlayerStatus : MonoBehaviourPunCallbacks
                 {
                     m_currentStatus.hp = 1;
                     warrior.IsOneLife = false;
-                    return;
+                    return false;
                 }
             }
 
@@ -205,11 +208,13 @@ public class PlayerStatus : MonoBehaviourPunCallbacks
             photonView.RPC("OnDeathPlayer", RpcTarget.All);
             photonView.RPC("OnDeathStash", RpcTarget.All);
             m_onDeath?.Invoke();
+			return true;
         }
         else
         {
             //被弾通知
             m_onDamage?.Invoke();
+			return false;
         }
     }
 

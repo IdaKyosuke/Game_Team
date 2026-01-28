@@ -1,9 +1,10 @@
+using Photon.Pun;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Enemy_Animation : MonoBehaviour
+public class Enemy_Animation : MonoBehaviourPunCallbacks
 {
 	[SerializeField] int m_attackAnimNum;	// 攻撃アニメーションの数
 	private Animator m_anim;
@@ -29,6 +30,7 @@ public class Enemy_Animation : MonoBehaviour
 	private void Update()
 	{
 		if (m_isDeath) return;
+		if (!photonView.IsMine) return;
 
 		// 移動アニメーション
 		WalkAnim();
@@ -39,6 +41,7 @@ public class Enemy_Animation : MonoBehaviour
 	private void FixedUpdate()
 	{
 		if (m_isDeath) return;
+		if (!photonView.IsMine) return;
 
 		// クールタイムのカウント
 		if (m_startCoolTime)
@@ -57,6 +60,7 @@ public class Enemy_Animation : MonoBehaviour
 		}
 	}
 
+	[PunRPC]
 	// 攻撃アニメーションを指定する
 	public void AttackAnim()
 	{
@@ -64,8 +68,9 @@ public class Enemy_Animation : MonoBehaviour
 		if (!m_isAttack)
 		{
 			m_isAttack = true;
+
 			// 攻撃アニメーションを指定
-			m_anim.SetInteger("attack", UnityEngine.Random.Range(1, m_attackAnimNum + 1));
+			m_anim.SetTrigger("Attack");
 		}
 	}
 
@@ -86,7 +91,7 @@ public class Enemy_Animation : MonoBehaviour
 	// 攻撃モーションの開始
 	public void StartAttackAnim()
 	{
-		m_anim.SetInteger("attack", 0);
+		m_anim.SetBool("attack", false);
 	}
 
 	// 攻撃モーションの終了(アニメーション用)
@@ -95,7 +100,7 @@ public class Enemy_Animation : MonoBehaviour
 		// クールタイムカウントを開始する
 		m_startCoolTime = true;
 		// 攻撃の選択番号をリセット
-		m_anim.SetInteger("attack", 0);
+		m_anim.SetBool("attack", false);
 	}
 
 	// 攻撃中か

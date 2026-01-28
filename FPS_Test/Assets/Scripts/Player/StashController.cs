@@ -248,7 +248,7 @@ public class StashController : MonoBehaviourPunCallbacks
 	{
 		PhotonView view = PhotonView.Find(requestId);
 		// Ž€‚ñ‚Å‚¢‚È‚¯‚ê‚Îreturn
-		if (!view.GetComponent<PlayerController>().IsDeath) return;
+		if (!photonView.GetComponent<PlayerController>().IsDeath) return;
 
 		Debug.Log("view.RPC s : " + view);
 		view.RPC(nameof(ReceiveInventoryData), view.Owner, GetComponent<Inventory_Info>().GetInfo(), GetManager().GetItemList());

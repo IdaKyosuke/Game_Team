@@ -1,9 +1,10 @@
+using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 // 敵がプレイヤーを発見するためのコライダー
-public class Search_Player : MonoBehaviour
+public class Search_Player : MonoBehaviourPunCallbacks
 {
 	[SerializeField] GameObject m_enemy;    // コライダーの親オブジェクト
 	[SerializeField] float m_rayLength;	// レイの長さ
@@ -23,6 +24,7 @@ public class Search_Player : MonoBehaviour
 
 	private void FixedUpdate()
 	{
+		if (!photonView.IsMine) return;
 		if(m_isCombat)
 		{
 			m_countTime += Time.deltaTime;
@@ -31,7 +33,7 @@ public class Search_Player : MonoBehaviour
 				m_countTime = 0;
 				m_isCombat = false;
 				// プレイヤーが敵の感知範囲の外に出た時追跡をやめる
-				m_enemy.GetComponent<Enemy_Nav>().ReWondering();
+				photonView.RPC("ReWondering", RpcTarget.All);
 				m_target = null;
 			}
 		}

@@ -246,6 +246,8 @@ public class PlayerController : MonoBehaviourPunCallbacks
 	[PunRPC]
     public void OnDeathPlayer()
 	{
+		Debug.Log(photonView);
+		if (m_isDeath) return;
 		m_isDeath = true;
 		m_animator[0].SetTrigger("Death");
         m_animator[1].SetTrigger("Death");

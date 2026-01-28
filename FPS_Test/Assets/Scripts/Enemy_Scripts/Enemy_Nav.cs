@@ -75,7 +75,7 @@ public class Enemy_Nav : MonoBehaviourPunCallbacks
 	// Update is called once per frame
 	void Update()
 	{
-		if (!PhotonNetwork.IsMasterClient) return;
+		if (!photonView.IsMine) return;
 
 		// 死亡したら行動しない
 		if (m_isDeath) return;
@@ -97,9 +97,10 @@ public class Enemy_Nav : MonoBehaviourPunCallbacks
 
 		if (!m_isAttack && m_checkAttackCol.GetComponent<Collider_EnemyAttack>().CanAttack())
 		{
+			Debug.Log("tinntinn");
 			// 攻撃アニメーションを指定
 			m_isAttack = true;
-			GetComponent<Enemy_Animation>().AttackAnim();
+			photonView.RPC("AttackAnim", RpcTarget.All);
 		}
 	}
 
@@ -310,6 +311,7 @@ public class Enemy_Nav : MonoBehaviourPunCallbacks
 	}
 
 	// 追跡目標を見失った後に徘徊モードに戻す
+	[PunRPC]
 	public void ReWondering()
 	{
 		// 移動方法を切り替える
@@ -328,5 +330,6 @@ public class Enemy_Nav : MonoBehaviourPunCallbacks
 	void SetDeath(bool isDeath)
 	{
 		m_isDeath = isDeath;
+		GetComponent<Enemy_Animation>().IsDeath();
 	}
 }
