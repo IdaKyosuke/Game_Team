@@ -261,7 +261,7 @@ public class Item_Object : MonoBehaviour
 		RectTransformUtility.ScreenPointToLocalPointInRectangle(
 			parentRectTransform, 
 			screenPosition, 
-			m_camera, 
+			null, 
 			out result
 			);
 
