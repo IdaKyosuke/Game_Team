@@ -1308,8 +1308,18 @@ public class StashManager : MonoBehaviourPunCallbacks
 						m_stashGridList[i, j].SetInfo(false);
 					}
 				}
-				// 売値を加算
-				add += item.GetActiveObject().GetComponent<Item_Object>().GetValue();
+				// 売却用アイテム(半額)
+				if(item.ItemData.equipmentType == 5)
+				{
+					// 売値を加算
+					add += item.GetActiveObject().GetComponent<Item_Object>().GetValue() / 2;
+				}
+				// 売却用以外のアイテム(1/3)
+				else
+				{
+					// 売値を加算
+					add += item.GetActiveObject().GetComponent<Item_Object>().GetValue() / 3;
+				}
 				// インスタンス化されたオブジェクトを削除する
 				item.DeleteActiveObject();
 			}
@@ -1332,8 +1342,18 @@ public class StashManager : MonoBehaviourPunCallbacks
 		// 売却予定のアイテムを削除
 		foreach (ItemList item in m_sellItemList)
 		{
-			// 売値を加算
-			value += item.GetActiveObject().GetComponent<Item_Object>().GetValue();
+			// 売却用アイテム(半額)
+			if (item.ItemData.equipmentType == 5)
+			{
+				// 売値を加算
+				value += item.GetActiveObject().GetComponent<Item_Object>().GetValue() / 2;
+			}
+			// 売却用以外のアイテム(1/3)
+			else
+			{
+				// 売値を加算
+				value += item.GetActiveObject().GetComponent<Item_Object>().GetValue() / 3;
+			}
 		}
 
 		m_sellValue.SetText(value.ToString());

@@ -10,6 +10,13 @@ using UnityEngine;
 public class CreateAvatar : MonoBehaviourPunCallbacks
 {
 	private static List<GameObject> m_player = new List<GameObject>();
+	private string[] m_jobNames =
+	{
+		"Warrior",
+		"Wizard",
+		"Cleric",
+		"Thief",
+	};
 
 	// ゲームサーバーへの接続が成功した時に呼ばれるコールバック
 	async void Awake()
@@ -27,7 +34,10 @@ public class CreateAvatar : MonoBehaviourPunCallbacks
 
 		for (int i = 0; i < PhotonNetwork.PlayerList.Length; ++i)
 		{
-			GameObject player = PhotonNetwork.InstantiateRoomObject("Player", new Vector3(0, 1, 0), Quaternion.identity);
+			object job = null;
+			PhotonNetwork.PlayerList[i].CustomProperties.TryGetValue("Job", out job);
+
+			GameObject player = PhotonNetwork.InstantiateRoomObject(m_jobNames[(int)job], new Vector3(0, 1, 0), Quaternion.identity);
 			await UniTask.WaitUntil(() => player != null, cancellationToken: token);
 			// プレイヤーを取得するまで待つ
 			//GameObject player = await GetPlayer();

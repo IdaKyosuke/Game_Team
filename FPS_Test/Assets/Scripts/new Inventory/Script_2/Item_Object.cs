@@ -24,9 +24,6 @@ public class Item_Object : MonoBehaviour
 	[SerializeField] GameObject m_inventoryManager;
 	[SerializeField] EquipmentManager m_equipmentManager;
 
-	// カメラ
-	private Camera m_camera;
-
 	private GridType m_gridType = GridType.Inventory;
 
 	// 装備かどうか & 装備のタイプは
@@ -371,9 +368,6 @@ public class Item_Object : MonoBehaviour
 		//Debug.Log(m_inventoryManager);
 		// 移動中に格納される場所
 		m_moveItemTransform = m_inventoryManager.GetComponent<StashManager>().GetMoveItemTransform();
-
-		// カメラを設定
-		m_camera = transform.parent.GetComponent<MoveItemTransform>().GetCamera();
 
 		if (GetWeaponType() != EquipmentType.None)
 		{

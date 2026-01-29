@@ -1,5 +1,6 @@
 ﻿using Photon.Pun;
 using Photon.Realtime;
+using ExitGames.Client.Photon;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -38,6 +39,7 @@ public class StartGameButton : MonoBehaviourPunCallbacks
 				m_stashManager.Save();
 				clickStart = true;
 				m_startButtonText.text = "STOP";
+				PhotonNetwork.LocalPlayer.SetCustomProperties(GetHash());
 			}
 		}
 		else
@@ -68,6 +70,8 @@ public class StartGameButton : MonoBehaviourPunCallbacks
 		string roomName = sb.ToString();
 		// ルームを作成して参加する
 		PhotonNetwork.CreateRoom(roomName, options, TypedLobby.Default);
+
+		PhotonNetwork.LocalPlayer.SetCustomProperties(GetHash());
 	}
 
 	private void Update()
@@ -132,5 +136,12 @@ public class StartGameButton : MonoBehaviourPunCallbacks
 	{
 		isProcessingRoom = false;
 		base.OnLeftRoom();
+	}
+
+	private ExitGames.Client.Photon.Hashtable GetHash()
+	{
+		ExitGames.Client.Photon.Hashtable hash = new ExitGames.Client.Photon.Hashtable();
+		hash["Job"] = (int)GameManager.Instance.PlayerJobType;
+		return hash;
 	}
 }

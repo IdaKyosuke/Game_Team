@@ -6,7 +6,6 @@ public class MoveItemTransform : MonoBehaviour
 {
 	[SerializeField] GameObject m_stashManager;
 	[SerializeField] GameObject m_equipmentManager;
-	[SerializeField] Camera m_camera;
 
 	public GameObject GetStashManager()
 	{
@@ -16,10 +15,5 @@ public class MoveItemTransform : MonoBehaviour
 	public GameObject GetEquipmentManager()
 	{
 		return m_equipmentManager;
-	}
-
-	public Camera GetCamera()
-	{
-		return m_camera;
 	}
 }
