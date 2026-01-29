@@ -1,11 +1,15 @@
+using Cysharp.Threading.Tasks;
 using Photon.Pun;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using static UnityEditor.Progress;
 
 public struct Grid
 {
@@ -1136,20 +1140,17 @@ public class StashManager : MonoBehaviourPunCallbacks
 		// 商品リストのコピー
 		m_traderItemList = itemList;
 
-		for(int i = 0; i < itemList.Count; i++)
-		{
-			ItemList item = itemList[i];
-			GetPrefabForShop(i, item);
-		}
+		GetPrefabForShop(itemList);
 	}
 
 	// ショップ用のプレハブ取得関数
-	private void GetPrefabForShop(int index, ItemList item)
+	//private async void GetPrefabForShop(int index, ItemList item)
+	private async void GetPrefabForShop(List<ItemList> list)
 	{
-		// プレハブを取得
-		Loader.LoadGameObjectAsync(item.ItemData.objectName).Completed += op =>
+		int index = 0;
+		foreach(var item in list)
 		{
-			GameObject g = Instantiate(op.Result, m_moveItemTransform);
+			GameObject g = Instantiate(await LoadAsync(item.ItemData.objectName), m_moveItemTransform);
 			g.GetComponent<Item_Object>().SetBaseInfo();
 
 			// アイテムリストのインデックス番号を処理した順に書き変える
@@ -1160,7 +1161,24 @@ public class StashManager : MonoBehaviourPunCallbacks
 
 			// アイテムをスタッシュに並べる
 			CheckGrid(GridType.Inventory, g, false, true, true, false);
+
+			Debug.Log("index : " + index);
+			index++;
+		}
+	}
+
+	// ---- テスト用 ----
+	private Task<GameObject> LoadAsync(string name)
+	{
+		var tcs = new TaskCompletionSource<GameObject>();
+
+		var handle = Loader.LoadGameObjectAsync(name);
+		handle.Completed += op =>
+		{
+			tcs.SetResult(op.Result);
 		};
+
+		return tcs.Task;
 	}
 
 	// 購入前にアイテムの情報を表示する
@@ -1372,8 +1390,6 @@ public class StashManager : MonoBehaviourPunCallbacks
 		{
 			// アイテムを移動する
 			GameObject item = m_buyItem.GetActiveObject();
-
-			Debug.Log("itemのgridType[" + item.GetComponent<Item_Object>().GetGridType() + "]");
 
             if (CheckGrid(item.GetComponent<Item_Object>().GetGridType(), item, false))
 			{
