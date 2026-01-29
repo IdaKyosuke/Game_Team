@@ -19,13 +19,13 @@ public class DamageBody : MonoBehaviourPunCallbacks
 		if (!photonView.IsMine) return;
 		if (other.TryGetComponent(out Enemy_WeaponCollider enemy))
 		{
-			PhotonView otherView = transform.root.GetComponent<PhotonView>();
+			PhotonView otherView = other.transform.root.GetComponent<PhotonView>();
 
 			// éÄÇÒÇæèÍçá
 			if (transform.root.GetComponent<PlayerStatus>().Damage(
 				enemy.attackPower, (int)AttackType.Physical, (int)ConditionType.None, 0))
 			{
-				other.transform.root.GetComponent<PhotonView>().RPC("ReWondering", RpcTarget.All);
+                otherView.RPC("ReWondering", RpcTarget.All);
 			}
 		}
 	}

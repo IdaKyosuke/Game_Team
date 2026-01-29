@@ -53,9 +53,9 @@ public class Enemy_Animation : MonoBehaviourPunCallbacks
 
 				m_startCoolTime = false;
 				m_countTime = 0;
-				m_isAttack = false;
-				// 攻撃フラグを折る
-				GetComponent<Enemy_Nav>().FinishAttack();
+                photonView.RPC("SetIsAttack", RpcTarget.All, false);
+                // 攻撃フラグを折る
+                GetComponent<Enemy_Nav>().FinishAttack();
 			}
 		}
 	}
@@ -67,15 +67,22 @@ public class Enemy_Animation : MonoBehaviourPunCallbacks
 		// 攻撃中はモーションを再指定しない
 		if (!m_isAttack)
 		{
-			m_isAttack = true;
+            photonView.RPC("SetIsAttack", RpcTarget.All, true);
 
 			// 攻撃アニメーションを指定
 			m_anim.SetTrigger("Attack");
 		}
 	}
 
+	[PunRPC]
+	void SetIsAttack(bool isAttack)
+	{
+		m_isAttack = isAttack;
+	}
+
 	private void WalkAnim()
 	{
+		Debug.Log(m_pastPos == transform.position);
 		// 移動中
 		if(m_isAttack || m_pastPos == transform.position)
 		{
