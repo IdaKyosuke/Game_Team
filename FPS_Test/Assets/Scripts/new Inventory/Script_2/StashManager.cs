@@ -448,20 +448,17 @@ public class StashManager : MonoBehaviourPunCallbacks
 				if (list[j, i].GetInfo())
 				{
 					// 中身があるときはfalse
-					Debug.Log("埋まっているマス[x,y] = [" + j + "," + i + "]");
 					return false;
 				}
 			}
 		}
 
-		Debug.Log("アイテムのサイズ[x, y] = [" + size.x + "," + size.y + "]");
 		// スペースが空いているときは中身が入っていることにする
 		for (int i = startGrid.y; i < startGrid.y + size.y; i++)
 		{
 			for (int j = startGrid.x; j < startGrid.x + size.x; j++)
 			{
 				list[j, i].SetInfo(true);
-				Debug.Log("[" + j + ", " + i + "]");
 			}
 		}
 
