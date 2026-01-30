@@ -15,8 +15,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
 	[SerializeField] float m_jumpPower;
 	[SerializeField] float m_gravity;
 	[SerializeField] Info_InventorySize m_inventortSize;
-	[SerializeField] PlayerAnime m_playerAnim;          // アニメーション管理用オブジェクト
-	[SerializeField] GameObject m_spine;
+	[SerializeField] PlayerAnime m_playerAnimFPS;          // アニメーション管理用オブジェクト
 	[SerializeField] Weapon_Collider m_weapon;
 	[SerializeField] GameObject m_magicBall;
 	[SerializeField] PlayerViewUI m_playerViewUI;
@@ -131,7 +130,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
         if (Input.GetMouseButtonDown(0))
         {
             // 攻撃中は無視
-            if (m_playerAnim.IsAttack) return;
+            if (m_playerAnimFPS.IsAttack) return;
 
             //インベントリを開いているなら無視
 			if (m_stashController.IsOpen) return;
@@ -145,7 +144,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
 		if (Input.GetKeyDown(KeyCode.Q))
 		{
             //攻撃中は無視
-            if (m_playerAnim.IsAttack) return;
+            if (m_playerAnimFPS.IsAttack) return;
 
             //職業別の固有アクション
             m_job.Identity();
@@ -239,7 +238,6 @@ public class PlayerController : MonoBehaviourPunCallbacks
         // 腰の回転
         m_rotateX -= mouseY;
         m_rotateX = Mathf.Clamp(m_rotateX, -40.0f, 30.0f);
-        m_spine.transform.localRotation = Quaternion.Euler(m_rotateX, 0, 0);
         m_mainCamera.transform.localRotation = Quaternion.Euler(m_rotateX, 0f, 0f);
     }
 

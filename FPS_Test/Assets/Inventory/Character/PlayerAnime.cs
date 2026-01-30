@@ -5,12 +5,17 @@ using UnityEngine;
 
 public class PlayerAnime : MonoBehaviourPunCallbacks
 {
-    [SerializeField] Animator m_anim;
+    private Animator m_anim;
 
 	[SerializeField] List<GameObject> m_models = new List<GameObject>();
 	[SerializeField] GameObject m_deathModel;
 
 	public bool IsAttack => m_anim.GetBool("attack");
+
+    private void Start()
+    {
+        m_anim = GetComponent<Animator>();
+    }
 
     public void OnAttack1()
     {

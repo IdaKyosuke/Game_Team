@@ -1,14 +1,13 @@
 using Photon.Pun;
 using UnityEngine;
+using System.Collections.Generic;
 
 public class PlayerSetup : MonoBehaviourPunCallbacks
 {
-    private const int ModelMeshAmount = 3;
-   
-    [SerializeField] SkinnedMeshRenderer[] m_firstPersonModel;  //自身
-    [SerializeField] MeshRenderer[] m_firstPersonSowrd;  
-    [SerializeField] SkinnedMeshRenderer[] m_thirdPersonModel;  //相手
-    [SerializeField] MeshRenderer[] m_thirdPersonSowrd;  
+    [SerializeField] List<SkinnedMeshRenderer> m_firstPersonModel;  //自身
+    [SerializeField] List<MeshRenderer> m_firstPersonSowrd;  
+    [SerializeField] List<SkinnedMeshRenderer> m_thirdPersonModel;  //相手
+    [SerializeField] List<MeshRenderer> m_thirdPersonSowrd;  
     [SerializeField] GameObject[] m_camera;
 	[SerializeField] GameObject m_miniMapCamera;
 
@@ -17,14 +16,14 @@ public class PlayerSetup : MonoBehaviourPunCallbacks
         if (photonView.IsMine)
         {
             //プレイヤーのモデル
-            for (int i = 0; i < ModelMeshAmount; ++i)
+            for (int i = 0; i < m_firstPersonModel.Count; ++i)
             {
                 m_firstPersonModel[i].enabled = true;
                 m_thirdPersonModel[i].enabled = false;
             }
 
             //剣のモデル
-            for (int i = 0; i < m_firstPersonSowrd.Length; ++i)
+            for (int i = 0; i < m_firstPersonSowrd.Count; ++i)
             {
                 m_firstPersonSowrd[i].enabled = true;
                 m_thirdPersonSowrd[i].enabled = false;
@@ -38,14 +37,14 @@ public class PlayerSetup : MonoBehaviourPunCallbacks
         else
         {
             //プレイヤーのモデル
-            for (int i = 0; i < ModelMeshAmount; ++i)
+            for (int i = 0; i < m_firstPersonModel.Count; ++i)
             {
                 m_firstPersonModel[i].enabled = false;
                 m_thirdPersonModel[i].enabled = true;
             }
 
             //剣のモデル
-            for (int i = 0; i < m_firstPersonSowrd.Length; ++i)
+            for (int i = 0; i < m_firstPersonSowrd.Count; ++i)
             {
                 m_firstPersonSowrd[i].enabled = false;
                 m_thirdPersonSowrd[i].enabled = true;
