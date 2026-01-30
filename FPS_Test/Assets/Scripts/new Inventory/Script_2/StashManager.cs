@@ -184,6 +184,8 @@ public class StashManager : MonoBehaviourPunCallbacks
 		// ロビーに帰ってきたタイミングでスタッシュをコピー
 		if (SceneManager.GetSceneByName("LobbyScene").isLoaded)
 		{
+			m_stashWidth = m_infoStash.GetSize.x;
+			m_stashHeight = m_infoStash.GetSize.y;
 			Load(GridType.Stash);
 			m_isLobby = true;
 		}
@@ -446,17 +448,20 @@ public class StashManager : MonoBehaviourPunCallbacks
 				if (list[j, i].GetInfo())
 				{
 					// 中身があるときはfalse
+					Debug.Log("埋まっているマス[x,y] = [" + j + "," + i + "]");
 					return false;
 				}
 			}
 		}
 
+		Debug.Log("アイテムのサイズ[x, y] = [" + size.x + "," + size.y + "]");
 		// スペースが空いているときは中身が入っていることにする
 		for (int i = startGrid.y; i < startGrid.y + size.y; i++)
 		{
 			for (int j = startGrid.x; j < startGrid.x + size.x; j++)
 			{
 				list[j, i].SetInfo(true);
+				Debug.Log("[" + j + ", " + i + "]");
 			}
 		}
 
@@ -933,7 +938,6 @@ public class StashManager : MonoBehaviourPunCallbacks
 	}
 
 	// 指定したタイプのマス目を探索してリストを管理する
-
 	private bool CheckGrid(
 		GridType type,      // アイテムのGridType
 		GameObject item,    // item自身
@@ -961,6 +965,8 @@ public class StashManager : MonoBehaviourPunCallbacks
 			list = m_inventoryGridList;
 			SetInventorySize(ref height, ref width);
 		}
+
+		Debug.Log("[height,width] = [" + height + "," + width + "]");
 
 		// リストを回す
 		for (int i = 0; i < height; i++)
