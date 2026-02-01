@@ -82,7 +82,6 @@ public class Enemy_Animation : MonoBehaviourPunCallbacks
 
 	private void WalkAnim()
 	{
-		Debug.Log(m_pastPos == transform.position);
 		// ˆÚ“®’†
 		if(m_isAttack || m_pastPos == transform.position)
 		{
