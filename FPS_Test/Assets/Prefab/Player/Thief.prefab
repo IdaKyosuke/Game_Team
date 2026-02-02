@@ -11539,7 +11539,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ba37a72a4220321459a01c8f73e57ae0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_models: []
+  m_models:
+  - {fileID: 6694384987045609158}
+  - {fileID: 8142040569006210465}
   m_deathModel: {fileID: 928859764684627190}
 --- !u!137 &6757690560150481368 stripped
 SkinnedMeshRenderer:
@@ -12492,11 +12494,11 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 3509740819135944537, guid: 8e572a00e4c85764382a950a51ab771c,
         type: 3}
       insertIndex: -1
-      addedObject: {fileID: 5457255765382973897}
+      addedObject: {fileID: 8539689911759308781}
     - targetCorrespondingSourceObject: {fileID: 3509740819135944537, guid: 8e572a00e4c85764382a950a51ab771c,
         type: 3}
       insertIndex: -1
-      addedObject: {fileID: 8539689911759308781}
+      addedObject: {fileID: 763810629965624684}
   m_SourcePrefab: {fileID: 100100000, guid: 8e572a00e4c85764382a950a51ab771c, type: 3}
 --- !u!137 &118394252675588441 stripped
 SkinnedMeshRenderer:
@@ -12564,7 +12566,19 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 7050597469231805564}
   m_PrefabAsset: {fileID: 0}
---- !u!136 &5457255765382973897
+--- !u!114 &8539689911759308781
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5867587400336483109}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 42d4471adbc4e0a4680f35d05d82a58b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!136 &763810629965624684
 CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -12583,22 +12597,10 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.5
-  m_Height: 1.5
+  m_Radius: 0.005
+  m_Height: 0.015
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &8539689911759308781
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5867587400336483109}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 42d4471adbc4e0a4680f35d05d82a58b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!137 &6363120583916504919 stripped
 SkinnedMeshRenderer:
   m_CorrespondingSourceObject: {fileID: 4149672880973919019, guid: 8e572a00e4c85764382a950a51ab771c,
@@ -12629,7 +12631,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ba37a72a4220321459a01c8f73e57ae0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_models: []
+  m_models:
+  - {fileID: 6694384987045609158}
+  - {fileID: 8142040569006210465}
   m_deathModel: {fileID: 928859764684627190}
 --- !u!114 &3581036922786306066
 MonoBehaviour:
