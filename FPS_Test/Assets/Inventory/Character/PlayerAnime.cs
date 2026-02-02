@@ -1,6 +1,5 @@
 using Photon.Pun;
 using System.Collections.Generic;
-using System.ComponentModel.Design.Serialization;
 using UnityEngine;
 
 public class PlayerAnime : MonoBehaviourPunCallbacks

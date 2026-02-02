@@ -228,6 +228,10 @@ public class PlayerController : MonoBehaviourPunCallbacks
         //箱開け中なら移動不可
         if (m_stashController.NowScavenger) return;
 
+		//モデルの位置を補正
+		transform.GetChild(0).localPosition = new Vector3(0, -1, 0);
+		transform.GetChild(1).localPosition = new Vector3(0, -1, 0);
+
         // 視点移動
         float mouseX = Input.GetAxis("Mouse X") * MouseSensitivity * Time.deltaTime;
         float mouseY = Input.GetAxis("Mouse Y") * MouseSensitivity * Time.deltaTime;
