@@ -151,8 +151,8 @@ public class StashController : MonoBehaviourPunCallbacks
 						treasureBox.GetComponent<PhotonView>().RPC("SetNowOpen", RpcTarget.All, true);
 					}
 
-					//既にインベントリを開いているときは無視
-					if (!m_nowScavenger) m_slider.gameObject.SetActive(true);
+					//既にインベントリを開いているとき or 鍵がかかっている時は無視
+					if (!m_nowScavenger && !treasureBox.IsLock) m_slider.gameObject.SetActive(true);
 
 					// 箱開け速度の補正
 					float openSpeedRate = m_status.Total.openSpeed / 100.0f;
@@ -272,7 +272,7 @@ public class StashController : MonoBehaviourPunCallbacks
 	[PunRPC]
     public void OnDeathStash()
     {
-		m_stashManager.GetComponent<StashManager>().Save();
+		//m_stashManager.GetComponent<StashManager>().Save();
 		//Debug.Log("death");
 		m_isDeath = true;
     }
@@ -305,5 +305,10 @@ public class StashController : MonoBehaviourPunCallbacks
 	public void Save()
 	{
 		m_manager.Save();
+	}
+
+	public void DeleteInventory()
+	{
+		m_manager.DeleteInventory();
 	}
 }

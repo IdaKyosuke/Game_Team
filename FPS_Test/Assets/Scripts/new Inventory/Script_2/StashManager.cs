@@ -288,6 +288,11 @@ public class StashManager : MonoBehaviourPunCallbacks
 		m_saveInstance.SaveInventory(m_itemList);
 	}
 
+	public void DeleteInventory()
+	{
+		m_saveInstance.DeleteInventory();
+	}
+
 	public void Load(GridType type)
 	{
 		// 現在のアイテムを全て削除
@@ -1684,8 +1689,11 @@ public class StashManager : MonoBehaviourPunCallbacks
 	// ゲームの終了
 	void OnApplicationQuit()
 	{
-		// アイテムの所持状況を保持
-		m_saveInstance.SaveInventory(m_itemList);
-		m_saveInstance.SaveStash(m_stashItemList);
+		if (SceneManager.GetSceneByName("LobbyScene").isLoaded)
+		{
+			// アイテムの所持状況を保持
+			m_saveInstance.SaveInventory(m_itemList);
+			m_saveInstance.SaveStash(m_stashItemList);
+		}
 	}
 }

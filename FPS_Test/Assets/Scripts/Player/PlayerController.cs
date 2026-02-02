@@ -253,7 +253,10 @@ public class PlayerController : MonoBehaviourPunCallbacks
 		m_isDeath = true;
 		m_animator[0].SetTrigger("Death");
         m_animator[1].SetTrigger("Death");
-    }
+
+		m_stashController.DeleteInventory();
+		m_gameManager.ReturnLobby(photonView.IsMine);
+	}
 
 	// (DamageBody‚ÌOnTriggerEnter)
 	[PunRPC]

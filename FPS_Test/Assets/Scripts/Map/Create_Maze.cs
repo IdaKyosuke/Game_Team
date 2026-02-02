@@ -24,7 +24,7 @@ public class Create_Maze : MonoBehaviourPunCallbacks
 
 	private const int m_playerSpawnPosAmount = 10;
 	private const int m_treasureAmount = 50;
-	private const int m_enemyAmount = 50;
+	private const int m_enemyAmount = 0;
 
 	// 一回で出すポータルの数
 	private const int m_oncePortalPosAmount = 5;
@@ -199,6 +199,8 @@ public class Create_Maze : MonoBehaviourPunCallbacks
 			PhotonNetwork.InstantiateRoomObject(m_enemy.name, spawnPos[index].position, spawnPos[index].rotation);
 			spawnPos.Remove(spawnPos[index]);
 		}
+
+		PhotonNetwork.InstantiateRoomObject(m_enemy.name, new Vector3(10, 0, 0), Quaternion.identity);
 	}
 
 	public static Transform GetPlayerSpawnPos()

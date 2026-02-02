@@ -95,10 +95,12 @@ public class Enemy_Nav : MonoBehaviourPunCallbacks
 			Wandering();
 		}
 
+		Debug.Log("m_isAttack" + m_isAttack);
 		if (!m_isAttack && m_checkAttackCol.GetComponent<Collider_EnemyAttack>().CanAttack())
 		{
 			// 攻撃アニメーションを指定
 			m_isAttack = true;
+			Debug.Log("attack");
 			photonView.RPC("AttackAnim", RpcTarget.All);
 		}
 	}

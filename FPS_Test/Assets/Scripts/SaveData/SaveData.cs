@@ -151,14 +151,15 @@ public class SaveData
 	// ---- データを全て削除し、初期化 ----
 	public void DeleteInventory()
 	{
+		Debug.Log("delete");
 		m_inventoryItem.Clear();
-		m_jsonText = JsonUtility.ToJson(new SaveData());
+		m_jsonText = JsonUtility.ToJson(this);
 		File.WriteAllText(GetFilePath(), m_jsonText);
 	}
 	public void DeleteStash()
 	{
 		m_stashItem.Clear();
-		m_jsonText = JsonUtility.ToJson(new SaveData());
+		m_jsonText = JsonUtility.ToJson(this);
 		File.WriteAllText(GetFilePath(), m_jsonText);
 	}
 
