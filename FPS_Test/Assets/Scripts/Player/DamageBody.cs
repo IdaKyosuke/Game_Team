@@ -1,5 +1,4 @@
 using Photon.Pun;
-using System.Net.Sockets;
 using UnityEngine;
 
 public class DamageBody : MonoBehaviourPunCallbacks
@@ -9,7 +8,7 @@ public class DamageBody : MonoBehaviourPunCallbacks
 		// •Ší‚Ìî•ñ‚ğæ“¾
 		if (other.TryGetComponent(out Weapon_Collider weapon))
 		{
-			PhotonView otherView = weapon.transform.root.GetComponent<PhotonView>();
+			PhotonView otherView = weapon.Parent.GetComponent<PhotonView>();
 
 			// ©•ª©g‚ÌŒ•‚Í”»’è‚ğæ‚ç‚È‚¢
 			if (otherView == transform.root.GetComponent<PhotonView>()) return;

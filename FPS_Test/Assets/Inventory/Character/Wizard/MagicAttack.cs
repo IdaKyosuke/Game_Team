@@ -3,11 +3,10 @@ using UnityEngine;
 
 public class MagicAttack : MonoBehaviour
 {
-    private const float Speed = 10;
-    private const float LifeTime = 0.3f;
+    private const float Speed = 13;
+    private const float LifeTime = 0.4f;
 
     private Rigidbody m_rb;
-    private Vector3 m_dir;
 
     private void Start()
     {
@@ -20,18 +19,22 @@ public class MagicAttack : MonoBehaviour
     private void FixedUpdate()
     {
         //前進
-        m_rb.MovePosition(m_rb.position + m_dir * Speed * Time.fixedDeltaTime);
+        m_rb.MovePosition(m_rb.position + transform.forward * Speed * Time.fixedDeltaTime);
     }
 
     public void Init(Vector3 dir, GameObject parent)
     {
-        m_dir = dir;
+        transform.forward = dir;
         GetComponent<Weapon_Collider>().Parent = parent;
         GetComponent<Collider>().enabled = true;
     }
 
     private void OnTriggerEnter(Collider other)
     {
-       Destroy(gameObject);
+        //攻撃したキャラクター自身には当たらないようにする
+        if (other.transform.root.gameObject == GetComponent<Weapon_Collider>().Parent) return;
+
+        //当たったら消える
+        Destroy(gameObject);
     }
 }
