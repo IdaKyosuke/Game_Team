@@ -7,6 +7,7 @@ public enum JobType
     Wizard,
     Cleric,
     Thief,
+	None,
 
     Length,
 }

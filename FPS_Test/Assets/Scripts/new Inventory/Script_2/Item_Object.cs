@@ -27,14 +27,11 @@ public class Item_Object : MonoBehaviour
 	private GridType m_gridType = GridType.Inventory;
 
 	// 装備かどうか & 装備のタイプは
-	[SerializeField] EquipmentType m_equipmentType = EquipmentType.None;
+	[SerializeField] JobType m_jobType = JobType.None;
 	private bool m_isEquip = false;     // 現在装備されているか
 
 	// 装備の情報
 	private EquipmentStatus m_equipmentInfo = null;
-
-	// デバッグ用
-	[SerializeField] GameObject m_mine;
 
 	// テスト用（自分のリストのindex）
 	private int m_index;
@@ -338,11 +335,6 @@ public class Item_Object : MonoBehaviour
 		Remove();
 	}
 
-	public GameObject GetPrefab()
-	{
-		return m_mine;
-	}
-
 	// 自分と紐づくリストのインデックスを変更
 	public void ChangeIndex(int index)
 	{
@@ -403,6 +395,12 @@ public class Item_Object : MonoBehaviour
 	public void ResetHitCol()
 	{
 		m_collider.SetActive(true);
+	}
+
+	// 装備可能な職業
+	public JobType GetJobType()
+	{
+		return m_jobType;
 	}
 
 	// --------------------------------

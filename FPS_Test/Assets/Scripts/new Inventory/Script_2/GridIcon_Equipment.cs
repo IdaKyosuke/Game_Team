@@ -100,7 +100,8 @@ public class GridIcon_Equipment : MonoBehaviour
 		// アイテムが装備じゃないとき || 装備枠に対応した装備じゃないときは無視
 		if (
 			o.GetComponent<Item_Object>().GetWeaponType() == EquipmentType.None ||
-			o.GetComponent<Item_Object>().GetWeaponType() != m_type
+			o.GetComponent<Item_Object>().GetWeaponType() != m_type ||
+			o.GetComponent<Item_Object>().GetJobType() != GameManager.Instance.PlayerJobType
 			)
 		{
 			o.GetComponent<Item_Object>().PointerUp(false);
@@ -152,6 +153,20 @@ public class GridIcon_Equipment : MonoBehaviour
 			}
 
 			m_stashManager.StartSet(GridType.Empty);
+		}
+	}
+
+	// ジョブを変更したときに武器枠の判定を行う
+	public void CheckWeaponType()
+	{
+		// 武器枠が空いていたら無視
+		if (transform.childCount == 0) return;
+
+		GameObject o = transform.GetChild(0).gameObject;
+		if (o.GetComponent<Item_Object>().GetJobType() != GameManager.Instance.PlayerJobType)
+		{
+			// 職業に対応していない武器の時はスタッシュに戻す
+
 		}
 	}
 }

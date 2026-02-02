@@ -248,24 +248,38 @@ public class StashManager : MonoBehaviourPunCallbacks
 	}
 
 	// シーフのパッシブスキル専用
-	public void AddKey(ItemList item)
+	public async void AddKey(ItemList item)
 	{
+		//// プレハブを取得
+		//Loader.LoadGameObjectAsync(item.ItemData.objectName).Completed += op =>
+		//{
+		//	GameObject g = Instantiate(op.Result, m_moveItemTransform);
+		//	g.GetComponent<Item_Object>().SetBaseInfo();
+
+		//	Debug.Log("add key");
+		//	// アイテムリストのインデックス番号を処理した順に書き変える
+		//	//g.GetComponent<Item_Object>().ChangeIndex(m_itemList.Count);
+
+		//	// 自身の情報をオブジェクトに持たせる
+		//	g.GetComponent<Item_Object>().ItemData = item.ItemData;
+
+		//	// アイテムをインベントリに並べる
+		//	CheckGrid(GridType.Stash, g, false, true, true, true);
+		//};
+
 		// プレハブを取得
-		Loader.LoadGameObjectAsync(item.ItemData.objectName).Completed += op =>
-		{
-			GameObject g = Instantiate(op.Result, m_moveItemTransform);
-			g.GetComponent<Item_Object>().SetBaseInfo();
+		GameObject g = Instantiate(await LoadAsync(item.ItemData.objectName), m_moveItemTransform);
+		g.GetComponent<Item_Object>().SetBaseInfo();
 
-			Debug.Log("add key");
-			// アイテムリストのインデックス番号を処理した順に書き変える
-			//g.GetComponent<Item_Object>().ChangeIndex(m_itemList.Count);
+		Debug.Log("add key");
+		// アイテムリストのインデックス番号を処理した順に書き変える
+		//g.GetComponent<Item_Object>().ChangeIndex(m_itemList.Count);
 
-			// 自身の情報をオブジェクトに持たせる
-			g.GetComponent<Item_Object>().ItemData = item.ItemData;
+		// 自身の情報をオブジェクトに持たせる
+		g.GetComponent<Item_Object>().ItemData = item.ItemData;
 
-			// アイテムをインベントリに並べる
-			CheckGrid(GridType.Stash, g, false, true, true, true);
-		};
+		// アイテムをインベントリに並べる
+		CheckGrid(GridType.Stash, g, false, true, true, true);
 	}
 
 	public void Save()
@@ -568,7 +582,6 @@ public class StashManager : MonoBehaviourPunCallbacks
 	{
 		if (m_isInventoryOpen)
 		{
-			Debug.Log("already open stash ui");
             return;
 		}
 
@@ -614,71 +627,129 @@ public class StashManager : MonoBehaviourPunCallbacks
 		ManageUiActiveInfo();
 	}
 
-	private void CreateItem(int count, ItemList item, GridType type = GridType.Stash)
+	private async void CreateItem(int count, ItemList item, GridType type = GridType.Stash)
 	{
-		Loader.LoadGameObjectAsync(item.ItemData.objectName).Completed += op =>
-		{
-			// リストからオブジェクトを生成
-			GameObject obj = Instantiate(
-				op.Result,
-				m_moveItemTransform
-				);
-			// アイテムの情報を設定
-			obj.GetComponent<Item_Object>().ItemData = item.ItemData;
+		//Loader.LoadGameObjectAsync(item.ItemData.objectName).Completed += op =>
+		//{
+		//	// リストからオブジェクトを生成
+		//	GameObject obj = Instantiate(
+		//		op.Result,
+		//		m_moveItemTransform
+		//		);
+		//	// アイテムの情報を設定
+		//	obj.GetComponent<Item_Object>().ItemData = item.ItemData;
 
-			obj.GetComponent<Item_Object>().SetBaseInfo();     
+		//	obj.GetComponent<Item_Object>().SetBaseInfo();     
 			
-			// 自分が入っている枠のタイプを設定
-			obj.GetComponent<Item_Object>().SetType(type);
+		//	// 自分が入っている枠のタイプを設定
+		//	obj.GetComponent<Item_Object>().SetType(type);
 
-			if (item.IsEquip())
-			{
-				if(type == GridType.Inventory)
-				{	
-					// 装備されていたアイテム
-					m_inventoryUi.GetComponent<Inventory_Parent>().GetEquipments.GetComponent<EquipmentManager>().QuickEquip(obj, true);
-				}
-				else
-				{
-					// 装備されていたアイテム
-					m_stashUi.GetComponent<Inventory_Parent>().GetEquipments.GetComponent<EquipmentManager>().QuickEquip(obj, true);
-				}
+		//	if (item.IsEquip())
+		//	{
+		//		if(type == GridType.Inventory)
+		//		{	
+		//			// 装備されていたアイテム
+		//			m_inventoryUi.GetComponent<Inventory_Parent>().GetEquipments.GetComponent<EquipmentManager>().QuickEquip(obj, true);
+		//		}
+		//		else
+		//		{
+		//			// 装備されていたアイテム
+		//			m_stashUi.GetComponent<Inventory_Parent>().GetEquipments.GetComponent<EquipmentManager>().QuickEquip(obj, true);
+		//		}
+		//	}
+		//	else
+		//	{
+		//		// マス目を記憶
+		//		obj.GetComponent<Item_Object>().SetGridIndex(item.GetGridIndex());
+		//		// 普通のアイテムのマス目を埋める
+		//		MoveItem(
+		//			obj,
+		//			item.GetGridIndex(),
+		//			obj.GetComponent<Item_Object>().GetSize(),
+		//			true,
+		//			type
+		//			);
+
+		//		// UIを移動
+		//		if (type == GridType.Inventory)
+		//		{
+		//			obj.GetComponent<Item_Object>().PointerUp(
+		//				true,
+		//				m_inventoryGridList[item.GetGridIndex().x, item.GetGridIndex().y].GetTransform()
+		//				);
+		//		}
+		//		else
+		//		{
+		//			obj.GetComponent<Item_Object>().PointerUp(
+		//				true,
+		//				m_stashGridList[item.GetGridIndex().x, item.GetGridIndex().y].GetTransform()
+		//				);
+		//		}
+		//	}
+
+		//	// リストのアクティブなオブジェクトを保存
+		//	item.SetActiveObject(obj);
+
+		//	item.ChangeIndex(count);
+		//};
+
+		// リストからオブジェクトを生成
+		GameObject obj = Instantiate(await LoadAsync(item.ItemData.objectName), m_moveItemTransform);
+		// アイテムの情報を設定
+		obj.GetComponent<Item_Object>().ItemData = item.ItemData;
+
+		obj.GetComponent<Item_Object>().SetBaseInfo();     
+			
+		// 自分が入っている枠のタイプを設定
+		obj.GetComponent<Item_Object>().SetType(type);
+
+		if (item.IsEquip())
+		{
+			if(type == GridType.Inventory)
+			{	
+				// 装備されていたアイテム
+				m_inventoryUi.GetComponent<Inventory_Parent>().GetEquipments.GetComponent<EquipmentManager>().QuickEquip(obj, true);
 			}
 			else
 			{
-				// マス目を記憶
-				obj.GetComponent<Item_Object>().SetGridIndex(item.GetGridIndex());
-				// 普通のアイテムのマス目を埋める
-				MoveItem(
-					obj,
-					item.GetGridIndex(),
-					obj.GetComponent<Item_Object>().GetSize(),
-					true,
-					type
-					);
-
-				// UIを移動
-				if (type == GridType.Inventory)
-				{
-					obj.GetComponent<Item_Object>().PointerUp(
-						true,
-						m_inventoryGridList[item.GetGridIndex().x, item.GetGridIndex().y].GetTransform()
-						);
-				}
-				else
-				{
-					obj.GetComponent<Item_Object>().PointerUp(
-						true,
-						m_stashGridList[item.GetGridIndex().x, item.GetGridIndex().y].GetTransform()
-						);
-				}
+				// 装備されていたアイテム
+				m_stashUi.GetComponent<Inventory_Parent>().GetEquipments.GetComponent<EquipmentManager>().QuickEquip(obj, true);
 			}
+		}
+		else
+		{
+			// マス目を記憶
+			obj.GetComponent<Item_Object>().SetGridIndex(item.GetGridIndex());
+			// 普通のアイテムのマス目を埋める
+			MoveItem(
+				obj,
+				item.GetGridIndex(),
+				obj.GetComponent<Item_Object>().GetSize(),
+				true,
+				type
+				);
 
-			// リストのアクティブなオブジェクトを保存
-			item.SetActiveObject(obj);
+			// UIを移動
+			if (type == GridType.Inventory)
+			{
+				obj.GetComponent<Item_Object>().PointerUp(
+					true,
+					m_inventoryGridList[item.GetGridIndex().x, item.GetGridIndex().y].GetTransform()
+					);
+			}
+			else
+			{
+				obj.GetComponent<Item_Object>().PointerUp(
+					true,
+					m_stashGridList[item.GetGridIndex().x, item.GetGridIndex().y].GetTransform()
+					);
+			}
+		}
 
-			item.ChangeIndex(count);
-		};
+		// リストのアクティブなオブジェクトを保存
+		item.SetActiveObject(obj);
+
+		item.ChangeIndex(count);
 	}
 
 	// 内部的なインベントリを作成する
@@ -1034,7 +1105,6 @@ public class StashManager : MonoBehaviourPunCallbacks
 		ItemList info = ScriptableObject.CreateInstance<ItemList>();
 		// マス目座標を保存
 		info.SetGridIndex(item.GetComponent<Item_Object>().GetGridIndex());
-		Debug.Log(item.GetComponent<Item_Object>().ItemData.objectName);
 
 		// アクティブなオブジェクトを変更
 		info.SetActiveObject(item);
@@ -1161,12 +1231,10 @@ public class StashManager : MonoBehaviourPunCallbacks
 			// アイテムをスタッシュに並べる
 			CheckGrid(GridType.Inventory, g, false, true, true, false);
 
-			Debug.Log("index : " + index);
 			index++;
 		}
 	}
 
-	// ---- テスト用 ----
 	private Task<GameObject> LoadAsync(string name)
 	{
 		var tcs = new TaskCompletionSource<GameObject>();
