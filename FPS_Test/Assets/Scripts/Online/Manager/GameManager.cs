@@ -14,7 +14,14 @@ public class GameManager : SingletonBase<GameManager>
     public JobType PlayerJobType
 	{ 
 		get { return m_playerJob; }
-		set { m_playerJob = value; }
+		set 
+		{
+			if(m_playerJob != value)
+			{
+				SaveData.Instance.SaveJob(value);
+			}
+			m_playerJob = value; 
+		}
     }
 
 	//選択された職業のパッシブスキル
@@ -33,8 +40,8 @@ public class GameManager : SingletonBase<GameManager>
 		// プレイヤー自身の名前を"Player"に設定する
 		PhotonNetwork.NickName = "Player";
 
-        //初期の職業は戦士に設定
-		m_playerJob = JobType.Warrior;
+		//初期の職業は戦士に設定
+		m_playerJob = SaveData.Instance.ReloadJob();
 
         // PhotonServerSettingsの設定内容を使ってマスターサーバーへ接続する
         PhotonNetwork.ConnectUsingSettings();

@@ -6,6 +6,8 @@ public class Job_SelectButton : MonoBehaviour
     [SerializeField] GameObject m_frame;
     [SerializeField] GameObject m_jobModel;
     [SerializeField] Job_SelectButton[] m_otherButtons;
+	[SerializeField] GridIcon_Equipment m_grid;
+	[SerializeField] GameObject m_caution;
 
 	private SkillText_Manager m_textManager;
 
@@ -33,8 +35,21 @@ public class Job_SelectButton : MonoBehaviour
         //既に選択されている場合は何もしない
         if (GameManager.Instance.PlayerJobType == m_jobType) return;
 
-        //選択された職業をGameManagerに伝える
-        GameManager.Instance.PlayerJobType = m_jobType;
+		if(m_grid.CheckWeaponType() != JobType.None && 
+			m_grid.CheckWeaponType() != m_jobType
+		)
+		{
+			// 装備枠に変更したいジョブが装備できない武器が入っている時は警告文
+			if(!m_caution.activeSelf)
+			{
+				m_caution.SetActive(true);
+				m_caution.GetComponent<Text_Caution>().ShowText();
+			}
+			return;
+		}
+
+		//選択された職業をGameManagerに伝える
+		GameManager.Instance.PlayerJobType = m_jobType;
 
         //選択された職業ボタンの枠画像を表示する
         m_frame.SetActive(true);

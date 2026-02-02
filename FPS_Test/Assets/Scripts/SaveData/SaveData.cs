@@ -28,6 +28,7 @@ public class SaveData
 	// ---- 保存されるデータ("public" か "SerializeField" をつける) ----
 	public List<ItemInfo_ForSave> m_inventoryItem = new List<ItemInfo_ForSave>();	// インベントリ内のアイテム
 	public List<ItemInfo_ForSave> m_stashItem = new List<ItemInfo_ForSave>();		// スタッシュ内のアイテム
+	public JobType m_job = JobType.Warrior;		// 選択されていた職業
 
 	// ---- データを再読み込みする ----
 	// インベントリ用
@@ -42,7 +43,6 @@ public class SaveData
 			lists.Add(LoadData(data));
 		}
 
-		Debug.Log("load inventory");
 		return lists;
 	}
 	// スタッシュ用
@@ -57,7 +57,6 @@ public class SaveData
 			lists.Add(LoadData(data));
 		}
 
-		Debug.Log("load stash");
 		return lists;
 	}
 
@@ -161,6 +160,20 @@ public class SaveData
 		m_stashItem.Clear();
 		m_jsonText = JsonUtility.ToJson(new SaveData());
 		File.WriteAllText(GetFilePath(), m_jsonText);
+	}
+
+	// 選択されていた職業を保存
+	public void SaveJob(JobType job)
+	{
+		m_job = job;
+		m_jsonText = JsonUtility.ToJson(this);
+		File.WriteAllText(GetFilePath(), m_jsonText);
+	}
+	// 職業をロード
+	public JobType ReloadJob()
+	{
+		JsonUtility.FromJsonOverwrite(GetJson(), this);
+		return m_job;
 	}
 
 	// ---- 保存先のパスを取得 ----

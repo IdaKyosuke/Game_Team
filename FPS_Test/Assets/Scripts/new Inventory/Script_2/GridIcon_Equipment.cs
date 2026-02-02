@@ -156,17 +156,12 @@ public class GridIcon_Equipment : MonoBehaviour
 		}
 	}
 
-	// ジョブを変更したときに武器枠の判定を行う
-	public void CheckWeaponType()
+	// 装備している武器の職業タイプを返す
+	public JobType CheckWeaponType()
 	{
 		// 武器枠が空いていたら無視
-		if (transform.childCount == 0) return;
+		if (transform.childCount == 0) return JobType.None;
 
-		GameObject o = transform.GetChild(0).gameObject;
-		if (o.GetComponent<Item_Object>().GetJobType() != GameManager.Instance.PlayerJobType)
-		{
-			// 職業に対応していない武器の時はスタッシュに戻す
-			o.GetComponent<Item_Object>().ChangeJob();
-		}
+		return transform.GetChild(0).gameObject.GetComponent<Item_Object>().GetJobType();
 	}
 }
