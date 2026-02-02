@@ -42,4 +42,9 @@ public class SoundManager
         //再生停止用にオブジェクトを返す
         return audio;
     }
+
+	static public void DestroySe(AudioSource source)
+	{
+		MonoBehaviour.Destroy(source.gameObject);
+	}
 }
