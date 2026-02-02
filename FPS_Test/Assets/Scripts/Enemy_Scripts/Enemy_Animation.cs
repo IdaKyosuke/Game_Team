@@ -103,6 +103,8 @@ public class Enemy_Animation : MonoBehaviourPunCallbacks
 	// 攻撃モーションの終了(アニメーション用)
 	public void FinishAttackAnim()
 	{
+		Debug.Log("アタックのアニメーションをfalse");
+
 		// クールタイムカウントを開始する
 		m_startCoolTime = true;
 		// 攻撃の選択番号をリセット

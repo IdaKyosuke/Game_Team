@@ -10496,6 +10496,11 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 3718593026009913477, guid: f8c6a7199245003419a425a401de38c5,
+        type: 3}
+      propertyPath: m_TagString
+      value: playerModel
+      objectReference: {fileID: 0}
     - target: {fileID: 3742314318968321846, guid: f8c6a7199245003419a425a401de38c5,
         type: 3}
       propertyPath: m_Layer
@@ -11526,6 +11531,11 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 3718593026009913477, guid: f8c6a7199245003419a425a401de38c5,
+        type: 3}
+      propertyPath: m_TagString
+      value: playerModel
+      objectReference: {fileID: 0}
     - target: {fileID: 3742314318968321846, guid: f8c6a7199245003419a425a401de38c5,
         type: 3}
       propertyPath: m_Layer
@@ -12300,7 +12310,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowLayerWeightsInspector: 1
   ShowParameterInspector: 1
-  m_SynchronizeParameters: []
+  m_SynchronizeParameters:
+  - Type: 4
+    SynchronizeType: 0
+    Name: Move
+  - Type: 9
+    SynchronizeType: 0
+    Name: Attack1
+  - Type: 9
+    SynchronizeType: 0
+    Name: Death
+  - Type: 4
+    SynchronizeType: 0
+    Name: attack
   m_SynchronizeLayers:
   - SynchronizeType: 1
     LayerIndex: 0
@@ -12679,7 +12701,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6e27c0119bbb30148af03fc177af2b6a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_hitEffect: {fileID: 0}
+  m_hitEffect: {fileID: 1000013355911406, guid: d32aa916f50cac94db11e6f19821a58f,
+    type: 3}
 --- !u!23 &5058359505857002957 stripped
 MeshRenderer:
   m_CorrespondingSourceObject: {fileID: -5627550536026561981, guid: 52b938f0884b19949a2dff92e61cc076,

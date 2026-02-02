@@ -6,6 +6,8 @@ public class Weapon_Collider : MonoBehaviourPunCallbacks
 {
 	[SerializeField] GameObject m_hitEffect;
 
+	private const float HitEffectTime = 0.5f;
+
 	private Dictionary<int, bool> m_hitMasterInfo { get; } = new Dictionary<int, bool>();
 	private Collider m_collider;
 	private int m_parentID;
@@ -71,6 +73,9 @@ public class Weapon_Collider : MonoBehaviourPunCallbacks
 			Quaternion quaternion = Quaternion.identity;
 			quaternion.x = hitPos.x - other.transform.position.x;
 			quaternion.z = hitPos.z - other.transform.position.z;
+
+			// 当たった場所にエフェクトを表示
+			HitEffect(other.ClosestPoint(transform.position));
 		}
 
         // 敵に当たったとき
@@ -93,6 +98,15 @@ public class Weapon_Collider : MonoBehaviourPunCallbacks
 
 			//エネミーの被弾処理を呼び出す
 			enemyNav.Damage(m_parent.GetComponent<PlayerStatus>(), m_parent.GetComponent<Job>(), this);
-        }
+
+			// 当たった場所にエフェクトを表示
+			HitEffect(other.ClosestPoint(transform.position));
+		}
     }
+
+	private void HitEffect(Vector3 pos)
+	{
+		GameObject effect = Instantiate(m_hitEffect, pos, Quaternion.identity);
+		Destroy(effect, HitEffectTime);
+	}
 }
