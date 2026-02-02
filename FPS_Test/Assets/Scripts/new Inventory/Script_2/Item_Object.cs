@@ -403,5 +403,9 @@ public class Item_Object : MonoBehaviour
 		return m_jobType;
 	}
 
+	public void ChangeJob()
+	{
+		QuickMove();
+	}
 	// --------------------------------
 }

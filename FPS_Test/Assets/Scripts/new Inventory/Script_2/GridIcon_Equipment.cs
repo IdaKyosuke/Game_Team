@@ -166,7 +166,7 @@ public class GridIcon_Equipment : MonoBehaviour
 		if (o.GetComponent<Item_Object>().GetJobType() != GameManager.Instance.PlayerJobType)
 		{
 			// 職業に対応していない武器の時はスタッシュに戻す
-
+			o.GetComponent<Item_Object>().ChangeJob();
 		}
 	}
 }
