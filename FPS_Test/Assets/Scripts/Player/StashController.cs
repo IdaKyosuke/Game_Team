@@ -1,9 +1,6 @@
 using Cysharp.Threading.Tasks;
 using Photon.Pun;
-using Photon.Realtime;
 using System.Collections.Generic;
-using System.Transactions;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
@@ -229,8 +226,15 @@ public class StashController : MonoBehaviourPunCallbacks
 					if (m_rayTarget && m_rayTarget.transform.CompareTag("Treasure"))
 					{
 						m_nowScavenger = false;
-						m_rayTarget.GetComponent<PhotonView>().RPC("SetNowOpen", RpcTarget.All, false);
+						if (m_rayTarget.TryGetComponent(out PhotonView view))
+						{
+							// 宝箱の開け状態をfalseにする
+							view.RPC("SetNowOpen", RpcTarget.All, false);
+						}
 					}
+
+					// インベントリを閉じたときに自分のコピーにも反映させる
+					photonView.RPC(nameof(RequestCopyItemList), RpcTarget.All, GetManager().GetItemList());
 
 					m_miniMap.SetActive(m_stashManager.GetComponent<StashManager>().ManageUiActiveInfo());
 				}
@@ -286,7 +290,7 @@ public class StashController : MonoBehaviourPunCallbacks
 
 		if (m_rayTarget.TryGetComponent(out PhotonView view))
 		{
-			view.RPC(nameof(RequestCopyItemList), view.Owner, items);
+			view.RPC("RequestCopyItemList", RpcTarget.All, items);
 			// ターゲットを空にする
 			m_rayTarget = null;
 		}
