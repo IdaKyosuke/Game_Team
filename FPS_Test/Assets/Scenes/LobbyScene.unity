@@ -26917,6 +26917,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2879671968235482117}
   - component: {fileID: 4739262996157833316}
+  - component: {fileID: 4739262996157833317}
   m_Layer: 31
   m_Name: Wizard
   m_TagString: Untagged
@@ -30498,6 +30499,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3576487153105177646}
   - component: {fileID: 7440527991553709652}
+  - component: {fileID: 7440527991553709653}
   m_Layer: 10
   m_Name: Warrior
   m_TagString: Untagged
@@ -32186,6 +32188,20 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &4739262996157833317
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3355548722449909374}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ba37a72a4220321459a01c8f73e57ae0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_models: []
+  m_deathModel: {fileID: 0}
 --- !u!137 &4743950310511247508
 SkinnedMeshRenderer:
   m_ObjectHideFlags: 0
@@ -39273,6 +39289,7 @@ MonoBehaviour:
   m_onDeath:
     m_PersistentCalls:
       m_Calls: []
+  m_damageEffect: {fileID: 0}
 --- !u!1 &6445613218173011765
 GameObject:
   m_ObjectHideFlags: 0
@@ -43625,6 +43642,20 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &7440527991553709653
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4245184370776037012}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ba37a72a4220321459a01c8f73e57ae0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_models: []
+  m_deathModel: {fileID: 0}
 --- !u!1 &7446499049335750590
 GameObject:
   m_ObjectHideFlags: 0
@@ -44341,6 +44372,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7074657724992987352}
   - component: {fileID: 7012935987826141422}
+  - component: {fileID: 7594734848483162723}
   m_Layer: 31
   m_Name: Cleric
   m_TagString: Untagged
@@ -44348,6 +44380,20 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 0
+--- !u!114 &7594734848483162723
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7594734848483162722}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ba37a72a4220321459a01c8f73e57ae0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_models: []
+  m_deathModel: {fileID: 0}
 --- !u!4 &7597175519127932252
 Transform:
   m_ObjectHideFlags: 0
@@ -46721,6 +46767,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8914178848263988093}
   - component: {fileID: 3266704822286334215}
+  - component: {fileID: 8914178848263988094}
   m_Layer: 31
   m_Name: Thief
   m_TagString: Untagged
@@ -50190,6 +50237,20 @@ Transform:
   - {fileID: 8582729603895077691}
   m_Father: {fileID: 860052383}
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
+--- !u!114 &8914178848263988094
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8142040569596819911}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ba37a72a4220321459a01c8f73e57ae0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_models: []
+  m_deathModel: {fileID: 0}
 --- !u!1 &8917021424047399207
 GameObject:
   m_ObjectHideFlags: 0
