@@ -133,9 +133,9 @@ public class GridIcon_Equipment : MonoBehaviour
 
 	public void QuickEquip(GameObject item, bool firstSetItemFlg = true)
 	{
-		if (transform.childCount != 0)
+		if (transform.childCount != 0 || GameManager.Instance.PlayerJobType != item.GetComponent<Item_Object>().GetJobType())
 		{
-			// すでに中身が設定されている時、新しく追加したものを元の場所に戻す
+			// すでに中身が設定されている or 現在の職業に対応した武器じゃない時、新しく追加したものを元の場所に戻す
 			item.GetComponent<Item_Object>().PointerUp(false);
 		}
 		else
