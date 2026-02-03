@@ -278,6 +278,21 @@ public class StashController : MonoBehaviourPunCallbacks
 	[PunRPC]
     public void OnDeathStash()
     {
+		// 宝箱を開いていた時
+		if (m_rayTarget && m_rayTarget.transform.CompareTag("Treasure"))
+		{
+			m_nowScavenger = false;
+			if (m_rayTarget.TryGetComponent(out PhotonView view))
+			{
+				// 宝箱の開け状態をfalseにする
+				view.RPC("SetNowOpen", RpcTarget.All, false);
+			}
+		}
+
+		// インベントリを閉じたときに自分のコピーにも反映させる
+		photonView.RPC(nameof(RequestCopyItemList), RpcTarget.All, GetManager().GetItemList());
+
+		m_miniMap.SetActive(m_stashManager.GetComponent<StashManager>().ManageUiActiveInfo());
 		//m_stashManager.GetComponent<StashManager>().Save();
 		//Debug.Log("death");
 		m_isDeath = true;

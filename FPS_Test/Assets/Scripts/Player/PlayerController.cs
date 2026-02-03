@@ -99,7 +99,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
 	[PunRPC]
 	void SetPlayerPos(Vector3 pos)
 	{
-		pos = new Vector3(0, 1, 0);
+		pos += new Vector3(0, 1, 0);
 		transform.position = pos;
         m_characterController.enabled = true;
 		m_setPos = true;
@@ -255,7 +255,6 @@ public class PlayerController : MonoBehaviourPunCallbacks
         m_animator[1].SetTrigger("Death");
 
 		m_stashController.DeleteInventory();
-		m_gameManager.ReturnLobby(photonView.IsMine);
 	}
 
 	// (DamageBody‚ÌOnTriggerEnter)
@@ -279,7 +278,10 @@ public class PlayerController : MonoBehaviourPunCallbacks
 	[PunRPC]
 	void Damage(int power, int attackTypeNum, int ConditionTypeNum, int grantRate)
 	{
-        m_status.Damage(power, (AttackType)attackTypeNum, ConditionTypeNum, grantRate);
+        if (m_status.Damage(power, (AttackType)attackTypeNum, ConditionTypeNum, grantRate))
+		{
+			m_gameManager.ReturnLobby(photonView.IsMine);
+		}
 	}
 
 	[PunRPC]

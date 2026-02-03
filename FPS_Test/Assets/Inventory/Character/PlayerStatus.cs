@@ -181,9 +181,6 @@ public class PlayerStatus : MonoBehaviourPunCallbacks
         m_currentStatus.hp -= (int)damage;
         Debug.Log("プレイヤーが [" + (int)damage + "] ダメージ受けた!");
 
-		m_damageEffect.color = Color.white;
-		m_damageEffect.GetComponent<DamageEffect>().StartDamageEffect();
-
 		//状態異常付与の抽選
 		ConditionType conditionType = (ConditionType)ConditionTypeNum;
         if (conditionType != ConditionType.None)
@@ -210,8 +207,8 @@ public class PlayerStatus : MonoBehaviourPunCallbacks
 
             //死亡通知
             m_currentStatus.hp = 0;
-            photonView.RPC("OnDeathPlayer", RpcTarget.All);
             photonView.RPC("OnDeathStash", RpcTarget.All);
+            photonView.RPC("OnDeathPlayer", RpcTarget.All);
             m_onDeath?.Invoke();
 			return true;
         }

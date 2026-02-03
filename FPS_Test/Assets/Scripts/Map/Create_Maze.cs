@@ -33,8 +33,8 @@ public class Create_Maze : MonoBehaviourPunCallbacks
 
 	// 帰還ポータルの生成位置
 	private List<Vector3> m_portalPosList = new List<Vector3>();
-	private float firstPortalTime = 4.0f;
-	private float secondPortalTime = 10.0f;
+	private float firstPortalTime = 240.0f;
+	private float secondPortalTime = 420.0f;
 	// ポータルを生成したかどうか
 	private bool m_firstCreatePortal = false;
 	private bool m_secondCreatePortal = false;
@@ -171,10 +171,6 @@ public class Create_Maze : MonoBehaviourPunCallbacks
 			spawnPos.Remove(spawnPos[index]);
 		}
 
-		PhotonNetwork.InstantiateRoomObject(m_treasure[Random.Range(0, 4)].name,
-			Vector3.zero,
-			Quaternion.identity);
-
 		foreach (Transform tr in spawnPos)
 		{
 			photonView.RPC(nameof(SetPortalPos), RpcTarget.All, tr.position);
@@ -199,13 +195,12 @@ public class Create_Maze : MonoBehaviourPunCallbacks
 			PhotonNetwork.InstantiateRoomObject(m_enemy.name, spawnPos[index].position, spawnPos[index].rotation);
 			spawnPos.Remove(spawnPos[index]);
 		}
-
-		PhotonNetwork.InstantiateRoomObject(m_enemy.name, new Vector3(10, 0, 0), Quaternion.identity);
 	}
 
 	public static Transform GetPlayerSpawnPos()
 	{
 		Transform pos = m_playerSpawnPosList[0];
+		pos.position += pos.forward;
 		m_playerSpawnPosList.Remove(m_playerSpawnPosList[0]);
 		return pos;
 	}

@@ -1,4 +1,5 @@
 using Photon.Pun;
+using Photon.Pun.Demo.PunBasics;
 using UnityEngine;
 
 public class DamageBody : MonoBehaviourPunCallbacks
@@ -25,6 +26,7 @@ public class DamageBody : MonoBehaviourPunCallbacks
 				enemy.attackPower, (int)AttackType.Physical, (int)ConditionType.None, 0))
 			{
                 otherView.RPC("ReWondering", RpcTarget.All);
+				GameManager.Instance.ReturnLobby(photonView.IsMine);
 			}
 		}
 	}
