@@ -23,14 +23,14 @@ public class PotionUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        StashManager manager = transform.root.GetComponent<StashManager>();
+        StashManager manager = transform.parent.GetComponent<Item_Object>().GetManager();
 
         // 左クリックでポーション使用
         if (eventData.button == PointerEventData.InputButton.Right)
         {
             int index = transform.parent.GetComponent<Item_Object>().GetIndex();
-            manager.RemoveInventory(manager.GetItemList()[index]);
-        }
+			manager.RemoveInventory(manager.GetItemList()[index]);
+		}
     }
 
     //親が非表示になったら自身を削除

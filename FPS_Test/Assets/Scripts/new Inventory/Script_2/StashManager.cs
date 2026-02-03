@@ -179,7 +179,7 @@ public class StashManager : MonoBehaviourPunCallbacks
 		Load(GridType.Inventory);
 		// ダンジョンに入るタイミングでインベントリのセーブを削除
 		if(!SceneManager.GetSceneByName("LobbyScene").isLoaded)
-		{ 
+		{
 			m_saveInstance.DeleteInventory();
 			m_playerCon = transform.root.GetComponent<PlayerController>();
 		}
@@ -292,7 +292,10 @@ public class StashManager : MonoBehaviourPunCallbacks
 
 	public void DeleteInventory()
 	{
+		Debug.Log("before inventory[" +  m_itemList.Count + "]");
 		m_saveInstance.DeleteInventory();
+
+		Debug.Log("after inventory[" + m_itemList.Count + "]");
 	}
 
 	public void Load(GridType type)
@@ -1040,8 +1043,6 @@ public class StashManager : MonoBehaviourPunCallbacks
 			list = m_inventoryGridList;
 			SetInventorySize(ref height, ref width);
 		}
-
-		Debug.Log("[height,width] = [" + height + "," + width + "]");
 
 		// リストを回す
 		for (int i = 0; i < height; i++)

@@ -42,6 +42,11 @@ public class Item_Object : MonoBehaviour
 	// アイテムの情報
 	[SerializeField] MapObjectEntity m_itemData;
 
+	// pivotの中心
+	private static Vector2 Center = new Vector2(0.5f, 0.5f);
+	// オブジェクトの元々のpivot
+	private Vector2 m_defaultPivot;
+
 	public MapObjectEntity ItemData
 	{
 		get { return m_itemData; }
@@ -53,8 +58,9 @@ public class Item_Object : MonoBehaviour
     {
 		rectTransform = GetComponent<RectTransform>();
 		m_equipmentInfo = GetComponent<EquipmentStatus>();
+		m_defaultPivot = GetComponent<RectTransform>().pivot;
 
-        parentRectTransform = rectTransform.parent as RectTransform;       
+		parentRectTransform = rectTransform.parent as RectTransform;       
 		if(!iconParent)
 		{
 			// 現時点の親を保存
@@ -313,6 +319,17 @@ public class Item_Object : MonoBehaviour
 	public void SetEquipValue(bool value, bool isMine = false, bool isChangeList = true)
 	{
 		m_isEquip = value;
+		// 装備のUIのpivotを変更する
+		if(m_isEquip)
+		{
+			// 中央
+			GetComponent<RectTransform>().pivot = Center;
+		}
+		else
+		{
+			// インベントリ用のpivot
+			GetComponent<RectTransform>().pivot = m_defaultPivot;
+		}
 
 		if (!isChangeList) return;
 		m_inventoryManager.GetComponent<StashManager>().SetEquipment(gameObject, value, isMine);
@@ -401,6 +418,18 @@ public class Item_Object : MonoBehaviour
 	public JobType GetJobType()
 	{
 		return m_jobType;
+	}
+
+	// 使用可能なアイテムの時に自分を消す
+	public void UseItem()
+	{
+		m_inventoryManager.GetComponent<StashManager>().RemoveInventory(m_inventoryManager.GetComponent<StashManager>().GetItemList()[m_index]);
+	}
+
+	// マネージャーを渡す
+	public StashManager GetManager()
+	{
+		return m_inventoryManager.GetComponent<StashManager>();
 	}
 	// --------------------------------
 }
