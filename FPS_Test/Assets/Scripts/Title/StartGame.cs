@@ -18,6 +18,7 @@ public class StartGame : MonoBehaviour
 
 	private bool m_isTextFade = false;
 	private bool m_isFadeIn = false;
+	private bool m_isStart = false;
 
 	private void Start()
 	{
@@ -29,8 +30,9 @@ public class StartGame : MonoBehaviour
 	void Update()
 	{
 		// タイトル => ロビー
-		if (Input.anyKeyDown)
+		if (!m_isStart && Input.anyKeyDown)
 		{
+			m_isStart = true;
 			m_click.Play();
 			StartCoroutine(Fade(m_black, true, m_blackFadeTime, true));
 		}
