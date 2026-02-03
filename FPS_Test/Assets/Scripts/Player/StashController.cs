@@ -134,6 +134,8 @@ public class StashController : MonoBehaviourPunCallbacks
                     //•ó” 
                     if (!hit.transform.gameObject.CompareTag("Treasure")) return;
 
+					Debug.Log("treasure");
+
 					hit.transform.TryGetComponent(out TreasureBoxItem treasureBox);
 
 					// ’N‚©‚ªŠJ‚¢‚Ä‚é‚©‚Ç‚¤‚©

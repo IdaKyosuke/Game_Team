@@ -16,6 +16,7 @@ public class SelectShopButton : MonoBehaviour
 
 	public void SetShopItem()
 	{
+		if (m_manager.IsChangeShopItem) return;
 		m_manager.SetShopItemUI(m_inventorySize, m_shopList, m_isSet, gameObject);
 	}
 

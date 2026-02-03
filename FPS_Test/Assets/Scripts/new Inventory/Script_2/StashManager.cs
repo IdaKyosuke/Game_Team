@@ -158,8 +158,10 @@ public class StashManager : MonoBehaviourPunCallbacks
 
 	private PlayerController m_playerCon = null;
 	private bool m_isDeath = false;
+	private bool m_isChangeShopItem = false;	// ショップのアイテムを更新中はトレーダーを変更できないようにする
 
 	public bool IsLobby => m_isLobby;
+	public bool IsChangeShopItem => m_isChangeShopItem;
 
 	// Start is called before the first frame update
 	void Start()
@@ -1200,6 +1202,9 @@ public class StashManager : MonoBehaviourPunCallbacks
 			}
 		}
 
+		// 商品の交換中フラグを立てる
+		m_isChangeShopItem = true;
+
 		// 現在取引しているトレーダーを保持
 		m_buyTrader = trader;
 
@@ -1238,6 +1243,9 @@ public class StashManager : MonoBehaviourPunCallbacks
 
 			index++;
 		}
+
+		// 商品の交換中フラグを折る
+		m_isChangeShopItem = false;
 	}
 
 	private Task<GameObject> LoadAsync(string name)
@@ -1509,7 +1517,9 @@ public class StashManager : MonoBehaviourPunCallbacks
 				// アイテムをインベントリに返す
 				QuickMoveItem(GridType.Stash, item.GetActiveObject(), false, true, false);
 			}
+
 			m_sellItemList.Clear();
+			m_otherItemList = null;
 		}
 		// 購入モードに切り替える
 		m_isBuyMode = true;
@@ -1550,7 +1560,7 @@ public class StashManager : MonoBehaviourPunCallbacks
 		m_sellItemList.Clear();
 
 		// 処理を統合するために参照渡し
-		m_otherItemList = m_sellItemList;
+		//m_otherItemList = m_sellItemList;
 
 		CalcSoldValue();
 
@@ -1578,6 +1588,7 @@ public class StashManager : MonoBehaviourPunCallbacks
 					QuickMoveItem(GridType.Stash, item.GetActiveObject(), false, true, false);
 				}
 				m_sellItemList.Clear();
+				m_otherItemList = null;
 			}
 		}
 		// 購入モードフラグを折る（折らないとショートカットがバグる）
