@@ -15,7 +15,7 @@ public class DamageBody : MonoBehaviourPunCallbacks
             otherView.RPC("RequestDamageValue", otherView.Owner, transform.root.GetComponent<PhotonView>().ViewID);
 		}
 
-		if (!photonView.IsMine) return;
+		if (photonView && !photonView.IsMine) return;
 		if (other.TryGetComponent(out Enemy_WeaponCollider enemy))
 		{
 			PhotonView otherView = other.transform.root.GetComponent<PhotonView>();

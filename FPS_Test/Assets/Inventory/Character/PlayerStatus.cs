@@ -3,6 +3,7 @@ using Photon.Pun;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.UI;
 
 public class PlayerStatus : MonoBehaviourPunCallbacks
 {
@@ -10,6 +11,7 @@ public class PlayerStatus : MonoBehaviourPunCallbacks
     [SerializeField] List<GameObject> m_equipments;  //装備枠
     [SerializeField] UnityEvent m_onDamage;
     [SerializeField] UnityEvent m_onDeath;
+	[SerializeField] Image m_damageEffect;
 
     private JobType m_jobType;
     private Condition m_condition;
@@ -179,8 +181,11 @@ public class PlayerStatus : MonoBehaviourPunCallbacks
         m_currentStatus.hp -= (int)damage;
         Debug.Log("プレイヤーが [" + (int)damage + "] ダメージ受けた!");
 
-        //状態異常付与の抽選
-        ConditionType conditionType = (ConditionType)ConditionTypeNum;
+		m_damageEffect.color = Color.white;
+		m_damageEffect.GetComponent<DamageEffect>().StartDamageEffect();
+
+		//状態異常付与の抽選
+		ConditionType conditionType = (ConditionType)ConditionTypeNum;
         if (conditionType != ConditionType.None)
         {
             if (grantRate >= Random.Range(0, 100))
