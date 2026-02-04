@@ -45,6 +45,7 @@ public class Search_Player : MonoBehaviourPunCallbacks
 		{
 			if(CheckRay(other.gameObject))
 			{
+				Debug.Log("m_enemy : " + other.gameObject);
 				// プレイヤーを認識
 				m_enemy.GetComponent<Enemy_Nav>().InCombat(other.gameObject);
 				m_isCombat = true;

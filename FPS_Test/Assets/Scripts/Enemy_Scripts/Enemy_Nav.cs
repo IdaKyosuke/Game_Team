@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using Cysharp.Threading.Tasks.Triggers;
 using Photon.Pun;
 using Photon.Realtime;
@@ -47,11 +48,16 @@ public class Enemy_Nav : MonoBehaviourPunCallbacks
 	// プレイヤーに近づいた時にその場で回転する速度
 	[SerializeField] float m_rotSpeed = 3.0f;
 
+	private bool m_isReady = false;
+
 	public bool IsDeath => m_isDeath;
 
     // Start is called before the first frame update
-    void Start()
+    async void Start()
 	{
+		// マップ生成が終わるまで待つ
+		await UniTask.WaitUntil(() => Create_Maze.IsMapReady);
+
 		m_agent = GetComponent<NavMeshAgent>();
 		m_charaCon = GetComponent<CharacterController>();
 
@@ -70,11 +76,13 @@ public class Enemy_Nav : MonoBehaviourPunCallbacks
 		m_isHit = false;
 		m_pastHit = m_isHit;
 		m_exp = 300;
+		m_isReady = true;
 	}
 
 	// Update is called once per frame
 	void Update()
 	{
+		if (!m_isReady) return;
 		if (!photonView.IsMine) return;
 
 		// 死亡したら行動しない
@@ -95,7 +103,6 @@ public class Enemy_Nav : MonoBehaviourPunCallbacks
 			Wandering();
 		}
 
-		Debug.Log("m_isAttack" + m_isAttack);
 		if (!m_isAttack && m_checkAttackCol.GetComponent<Collider_EnemyAttack>().CanAttack())
 		{
 			// 攻撃アニメーションを指定
@@ -267,7 +274,8 @@ public class Enemy_Nav : MonoBehaviourPunCallbacks
 	// プレイヤーを発見してモードが変わる
 	public void InCombat(GameObject player)
 	{
-		if(!m_combat)
+		if (!m_isReady) return;
+		if (!m_combat)
 		{
 			m_combat = true;
 			// 移動をnavmeshに任せる
@@ -275,6 +283,8 @@ public class Enemy_Nav : MonoBehaviourPunCallbacks
 
 			// 見つけたプレイヤーを追いかける
 			m_player = player;
+
+			Debug.Log("m_player[" + m_player.gameObject.name + "]");
 		}
 
 		if (m_target)
@@ -288,6 +298,7 @@ public class Enemy_Nav : MonoBehaviourPunCallbacks
 		else
 		{
 			m_target = m_player.transform;
+			Debug.Log("set m_targer");
 		}
 	}
 
