@@ -45,8 +45,6 @@ public class Search_Player : MonoBehaviourPunCallbacks
 		{
 			if(CheckRay(other.gameObject))
 			{
-				// プレイヤーを認識
-				m_enemy.GetComponent<Enemy_Nav>().InCombat(other.gameObject);
 				m_isCombat = true;
 				if(m_target == other.gameObject)
 				{
@@ -55,6 +53,8 @@ public class Search_Player : MonoBehaviourPunCallbacks
 				}
 				else
 				{
+					// プレイヤーを認識
+					m_enemy.GetComponent<Enemy_Nav>().InCombat(other.gameObject);
 					// 新しいターゲットを見つけた時、ターゲットを保存
 					m_target = other.gameObject;
 				}
