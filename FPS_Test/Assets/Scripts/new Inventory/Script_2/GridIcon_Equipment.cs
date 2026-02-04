@@ -100,30 +100,38 @@ public class GridIcon_Equipment : MonoBehaviour
 		// アイテムが装備じゃないとき || 装備枠に対応した装備じゃないときは無視
 		if (
 			o.GetComponent<Item_Object>().GetWeaponType() == EquipmentType.None ||
-			o.GetComponent<Item_Object>().GetWeaponType() != m_type ||
-			o.GetComponent<Item_Object>().GetJobType() != GameManager.Instance.PlayerJobType
+			o.GetComponent<Item_Object>().GetWeaponType() != m_type
 			)
 		{
 			o.GetComponent<Item_Object>().PointerUp(false);
 		}
 		else
 		{
-			if (transform.childCount != 0)
+			// 武器の時だけジョブタイプと合うかを確認する
+			if(o.GetComponent<Item_Object>().GetWeaponType() == EquipmentType.Weapon &&
+				o.GetComponent<Item_Object>().GetJobType() != GameManager.Instance.PlayerJobType)
 			{
-				// すでに中身が設定されている時、新しく追加したものを元の場所に戻す
 				o.GetComponent<Item_Object>().PointerUp(false);
 			}
 			else
 			{
-				// 新しく装備する
-				o.GetComponent<Item_Object>().PointerUp(true, transform);
-				// 新しく装備された物を装備状態にする
-				o.GetComponent<Item_Object>().SetEquipValue(true, m_isMine);
-
-				// 武器の時だけプレイヤーに状態異常を付与する
-				if(o.GetComponent<Item_Object>().GetWeaponType() == EquipmentType.Weapon)
+				if (transform.childCount != 0)
 				{
-					o.GetComponent<EquipmentStatus>().SetPassive();
+					// すでに中身が設定されている時、新しく追加したものを元の場所に戻す
+					o.GetComponent<Item_Object>().PointerUp(false);
+				}
+				else
+				{
+					// 新しく装備する
+					o.GetComponent<Item_Object>().PointerUp(true, transform);
+					// 新しく装備された物を装備状態にする
+					o.GetComponent<Item_Object>().SetEquipValue(true, m_isMine);
+
+					// 武器の時だけプレイヤーに状態異常を付与する
+					if (o.GetComponent<Item_Object>().GetWeaponType() == EquipmentType.Weapon)
+					{
+						o.GetComponent<EquipmentStatus>().SetPassive();
+					}
 				}
 			}
 		}
@@ -133,26 +141,36 @@ public class GridIcon_Equipment : MonoBehaviour
 
 	public void QuickEquip(GameObject item, bool firstSetItemFlg = true)
 	{
-		if (transform.childCount != 0 || GameManager.Instance.PlayerJobType != item.GetComponent<Item_Object>().GetJobType())
+		if (transform.childCount != 0)
 		{
-			// すでに中身が設定されている or 現在の職業に対応した武器じゃない時、新しく追加したものを元の場所に戻す
+			// すでに中身が設定されている新しく追加したものを元の場所に戻す
 			item.GetComponent<Item_Object>().PointerUp(false);
 		}
 		else
 		{
-			m_stashManager.StartSet(GridType.Equipment);
-			// 新しく装備する
-			item.GetComponent<Item_Object>().PointerUp(true, transform);
-			// 新しく装備された物を装備状態にする
-			item.GetComponent<Item_Object>().SetEquipValue(true, m_isMine, firstSetItemFlg);
-
-			// 武器の時だけプレイヤーに状態異常を付与する
-			if (item.GetComponent<Item_Object>().GetWeaponType() == EquipmentType.Weapon)
+			// 現在の職業に対応した武器じゃない時、新しく追加したものを元の場所に戻す
+			if (item.GetComponent<Item_Object>().GetWeaponType() == EquipmentType.Weapon &&
+				item.GetComponent<Item_Object>().GetJobType() != GameManager.Instance.PlayerJobType
+			)
 			{
-				item.GetComponent<EquipmentStatus>().SetPassive();
+				item.GetComponent<Item_Object>().PointerUp(false);
 			}
+			else
+			{
+				m_stashManager.StartSet(GridType.Equipment);
+				// 新しく装備する
+				item.GetComponent<Item_Object>().PointerUp(true, transform);
+				// 新しく装備された物を装備状態にする
+				item.GetComponent<Item_Object>().SetEquipValue(true, m_isMine, firstSetItemFlg);
 
-			m_stashManager.StartSet(GridType.Empty);
+				// 武器の時だけプレイヤーに状態異常を付与する
+				if (item.GetComponent<Item_Object>().GetWeaponType() == EquipmentType.Weapon)
+				{
+					item.GetComponent<EquipmentStatus>().SetPassive();
+				}
+
+				m_stashManager.StartSet(GridType.Empty);
+			}
 		}
 	}
 
