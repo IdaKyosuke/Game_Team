@@ -1,3 +1,4 @@
+using Photon.Pun;
 using TMPro;
 using UnityEngine;
 
@@ -46,7 +47,7 @@ public class Wizard : Job
             if (m_status.Current.mp <= UseMP) return;
 
             //íeÇÃê∂ê¨
-            GameObject magic = Instantiate(m_magicBall, transform.position + transform.forward * 1.7f + m_offset, Quaternion.identity);
+            GameObject magic = PhotonNetwork.Instantiate(m_magicBall.name, transform.position + transform.forward * 1.7f + m_offset, Quaternion.identity);
             magic.GetComponent<MagicAttack>().Init(transform.forward, gameObject);
 
             //MPè¡îÔ

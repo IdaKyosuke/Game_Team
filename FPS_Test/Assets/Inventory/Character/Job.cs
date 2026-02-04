@@ -1,3 +1,4 @@
+using Photon.Pun;
 using System;
 using UnityEngine;
 
@@ -19,7 +20,7 @@ public enum AttackType
     Cleric,     //エネミー特攻
 }
 
-public abstract class Job : MonoBehaviour
+public abstract class Job : MonoBehaviourPunCallbacks
 {
     private int m_skillIndex;
 
