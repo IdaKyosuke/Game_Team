@@ -4,7 +4,7 @@ public class ManaPotion : Potion
 {
     protected override void PotionEffect()
     {
-        Debug.Log("マナポーションを使用!");
+        //MP回復
         m_playerStatus.MagicHeal(m_data.value);
     }
 

@@ -4,8 +4,8 @@ public class HealPotion : Potion
 {
     protected override void PotionEffect()
     {
-        Debug.Log("ƒ|[ƒVƒ‡ƒ“‚Å‘Ì—Í‚ğ‰ñ•œ");
-       m_playerStatus.Heal(m_data.value);
+        //HP‰ñ•œ
+        m_playerStatus.Heal(m_data.value);
     }
 
     protected override void EffectExpires()

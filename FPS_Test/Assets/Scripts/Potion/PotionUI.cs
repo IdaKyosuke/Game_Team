@@ -25,9 +25,13 @@ public class PotionUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
         StashManager manager = transform.parent.GetComponent<Item_Object>().GetManager();
 
-        // 左クリックでポーション使用
+        // 右クリックでポーション使用
         if (eventData.button == PointerEventData.InputButton.Right)
         {
+            //ポーションが使用不可なら何もしない
+            if(!m_potion.Use()) return;
+
+            //インベントリから削除
             int index = transform.parent.GetComponent<Item_Object>().GetIndex();
 			manager.RemoveInventory(manager.GetItemList()[index]);
 		}

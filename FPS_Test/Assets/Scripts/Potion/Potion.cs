@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public abstract class Potion : MonoBehaviour
 {
@@ -14,9 +15,18 @@ public abstract class Potion : MonoBehaviour
         m_playerStatus = transform.root.GetComponent<PlayerStatus>();
     }
 
-    public void Use()
+    public bool Use()
     {
+        //ゲーム中のみ使用可能
+        if(!SceneManager.GetSceneByName("GameScene").isLoaded) return false;
+
+        //インベントリ内でのみ使用可能
+        if (GetComponent<Item_Object>().GetGridType() != GridType.Inventory) return false;
+
+        //ポーション効果開始
         StartCoroutine(UsePotion());
+
+        return true;
     }
 
     //ポーションの効果は継承先で実装
