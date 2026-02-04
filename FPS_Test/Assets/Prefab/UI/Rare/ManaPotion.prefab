@@ -119,8 +119,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1624b547ca8512c4092ec91ed429ecae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_itemText: {fileID: 5490766927191314836}
   m_itemName: {fileID: 2718242005759295932}
+  m_itemText: {fileID: 5490766927191314836}
   m_potion: {fileID: 4507157709454564946}
 --- !u!1 &6398923458816349631
 GameObject:
@@ -294,8 +294,7 @@ MonoBehaviour:
   m_collider: {fileID: 4149542976945477391}
   m_inventoryManager: {fileID: 0}
   m_equipmentManager: {fileID: 0}
-  m_equipmentType: 5
-  m_mine: {fileID: 0}
+  m_jobType: 4
   m_itemData:
     id: 0
     objectName: 
@@ -305,6 +304,7 @@ MonoBehaviour:
     displayName: 
     equipmentType: 0
     price: 0
+  m_se: {fileID: 8300000, guid: 00c52a7f18c48ce4d98e703dca238d15, type: 3}
 --- !u!114 &4507157709454564946
 MonoBehaviour:
   m_ObjectHideFlags: 0

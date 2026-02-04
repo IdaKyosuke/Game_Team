@@ -1244,6 +1244,7 @@ public class StashManager : MonoBehaviourPunCallbacks
 
 			// アイテムをスタッシュに並べる
 			CheckGrid(GridType.Inventory, g, false, true, true, false);
+			g.GetComponent<Item_Object>().FinishSet();
 
 			index++;
 		}
