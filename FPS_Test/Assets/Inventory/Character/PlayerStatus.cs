@@ -11,7 +11,6 @@ public class PlayerStatus : MonoBehaviourPunCallbacks
     [SerializeField] List<GameObject> m_equipments;  //‘•”õ˜g
     [SerializeField] UnityEvent m_onDamage;
     [SerializeField] UnityEvent m_onDeath;
-	[SerializeField] Image m_damageEffect;
 
     private JobType m_jobType;
     private Condition m_condition;

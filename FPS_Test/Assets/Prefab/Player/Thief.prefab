@@ -2689,6 +2689,7 @@ Transform:
   - {fileID: 2629484530992491799}
   - {fileID: 8112306351323099171}
   - {fileID: 3990211276493450782}
+  - {fileID: 5068770932780572673}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!143 &6888842347149093431
@@ -2773,7 +2774,6 @@ MonoBehaviour:
   m_onDeath:
     m_PersistentCalls:
       m_Calls: []
-  m_damageEffect: {fileID: 0}
 --- !u!114 &4873756508487685046
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7374,7 +7374,6 @@ Transform:
   - {fileID: 6782781479362316520}
   - {fileID: 8422922583587159402}
   - {fileID: 5639226679069504848}
-  - {fileID: 5068770932780572673}
   m_Father: {fileID: 4405870202886141769}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7330259162545538781
@@ -7515,7 +7514,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2525555389644180110}
-  m_Father: {fileID: 3990211276493450782}
+  m_Father: {fileID: 4405870202886141769}
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
 --- !u!20 &4136492349199375893
 Camera:
