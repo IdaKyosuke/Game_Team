@@ -6,7 +6,15 @@ public class EquipmentUI : MonoBehaviour
     [SerializeField] TextMeshProUGUI[] m_texts;
     [SerializeField] EquipmentStatus m_status;
 
-    private void OnEnable()
+	private void Start()
+	{
+		for(int i = 0; i < m_texts.Length; i++)
+		{
+			m_texts[i].raycastTarget = false;
+		}
+	}
+
+	private void OnEnable()
     {
         m_texts[0].text = m_status.TotalStatus.hp.ToString();
         m_texts[1].text = m_status.TotalStatus.mp.ToString();

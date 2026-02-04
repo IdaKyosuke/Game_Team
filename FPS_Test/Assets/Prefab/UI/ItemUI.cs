@@ -13,15 +13,19 @@ public class ItemUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, 
     private void Start()
     {
         m_item = transform.parent.GetComponent<Item_Object>();
-    }
+		m_itemText.text = "換金用アイテム";
+		m_itemName.text = m_item.ItemData.displayName;
+		m_itemValue.text = "売却額 [ ＄ " + (m_item.ItemData.price / 2).ToString() + " ]";
+
+		m_itemText.raycastTarget = false;
+		m_itemName.raycastTarget = false;
+		m_itemValue.raycastTarget = false;
+	}
 
     public void OnPointerEnter(PointerEventData eventData)
     {
         //説明文表示
         transform.GetChild(0).gameObject.SetActive(true);
-        m_itemText.text = "換金用アイテム";
-        m_itemName.text = m_item.ItemData.displayName;
-        m_itemValue.text = "売却額 [ ＄ " + (m_item.ItemData.price / 2).ToString() + " ]";
     }
 
 

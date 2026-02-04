@@ -292,8 +292,7 @@ MonoBehaviour:
   m_collider: {fileID: 4149542976945477391}
   m_inventoryManager: {fileID: 0}
   m_equipmentManager: {fileID: 0}
-  m_equipmentType: 5
-  m_mine: {fileID: 0}
+  m_jobType: 4
   m_itemData:
     id: 0
     objectName: 
@@ -315,6 +314,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: UI
+      objectReference: {fileID: 0}
+    - target: {fileID: 5643433509555362792, guid: f9809d32fb20faa4294b2202b7f66d38,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7592942281028484255, guid: f9809d32fb20faa4294b2202b7f66d38,
         type: 3}
