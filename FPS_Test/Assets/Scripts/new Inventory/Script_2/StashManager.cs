@@ -760,6 +760,9 @@ public class StashManager : MonoBehaviourPunCallbacks
 		item.SetActiveObject(obj);
 
 		item.ChangeIndex(count);
+
+		// アイテムの効果音を有効にする
+		obj.GetComponent<Item_Object>().FinishSet();
 	}
 
 	// 内部的なインベントリを作成する

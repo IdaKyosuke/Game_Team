@@ -47,10 +47,21 @@ public class Item_Object : MonoBehaviour
 	// オブジェクトの元々のpivot
 	private Vector2 m_defaultPivot;
 
+	// アイテムを掴んだ時の音
+	[SerializeField] AudioClip m_se;
+
+	// アイテムの生成が完了したフラグ
+	private bool m_isFinishSet = false;
+
 	public MapObjectEntity ItemData
 	{
 		get { return m_itemData; }
 		set { m_itemData = value; }
+	}
+
+	public void FinishSet()
+	{
+		m_isFinishSet = true;
 	}
 
 	// Start is called before the first frame update
@@ -121,6 +132,8 @@ public class Item_Object : MonoBehaviour
 	// アイテムを移動させる前の準備
 	public void ReadyMove()
 	{
+		// 掴んだ音を流す
+		SoundManager.Play2D(m_se, m_isFinishSet ? 1 : 0);
 		// 当たり判定用の画像を非アクティブにする
 		m_collider.SetActive(false);
 		// 現時点の親を保存
@@ -211,6 +224,7 @@ public class Item_Object : MonoBehaviour
 		{
 			// 移動可能
 			MoveItem(nextPos);
+			SoundManager.Play2D(m_se, m_isFinishSet ? 1 : 0);
 		}
 		else
 		{
