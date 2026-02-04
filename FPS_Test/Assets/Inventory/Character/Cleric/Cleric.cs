@@ -27,7 +27,7 @@ public class Cleric : Job
         m_barrierPower = 0;
 
         //パッシブスキルの初期化
-        Initialize(JobType.Cleric, AttackType.Physical);
+        Initialize(JobType.Cleric, AttackType.Cleric);
     }
 
     private void Update()

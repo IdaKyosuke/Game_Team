@@ -4,8 +4,8 @@ using UnityEngine;
 public class Wizard : Job
 {
     private const float Interval = 3;
-    private const int RecoveryMP = 1;
-    private const int UseMP = 5;
+    private const int RecoveryMP = 2;
+    private const int UseMP = 15;
 
     private Vector3 m_offset;
     private PlayerStatus m_status;
@@ -17,7 +17,7 @@ public class Wizard : Job
         m_status = GetComponent<PlayerStatus>();
         m_condition = GetComponent<Condition>();
         m_elapsedTime = 0;
-        m_offset = new Vector3(0, 0.5f, 0);
+        m_offset = new Vector3(-0.2f, 0.5f, 0);
 
         //パッシブスキルの初期化
         Initialize(JobType.Wizard, AttackType.Magical);
@@ -46,7 +46,7 @@ public class Wizard : Job
             if (m_status.Current.mp <= UseMP) return;
 
             //弾の生成
-            GameObject magic = Instantiate(m_magicBall, transform.position + transform.forward * 1.5f + m_offset, Quaternion.identity);
+            GameObject magic = Instantiate(m_magicBall, transform.position + transform.forward * 1.7f + m_offset, Quaternion.identity);
             magic.GetComponent<MagicAttack>().Init(transform.forward, gameObject);
 
             //MP消費

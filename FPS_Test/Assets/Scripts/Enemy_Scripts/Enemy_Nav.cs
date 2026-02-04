@@ -218,7 +218,8 @@ public class Enemy_Nav : MonoBehaviourPunCallbacks
 				break;
 
 			case AttackType.Cleric:
-				damage += playerStatus.Total.physicalPower * 1.2f;
+                //‘m—µ‚ÌUŒ‚‚Í•¨—UŒ‚—Í‚Ì8”{ƒ_ƒ[ƒW
+                damage += (playerStatus.Total.physicalPower * 8);
 				break;
 		}
 

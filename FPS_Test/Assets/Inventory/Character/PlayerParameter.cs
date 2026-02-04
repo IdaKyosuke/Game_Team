@@ -107,7 +107,7 @@ public class PlayerParameter
         return result;
     }
 
-    public string DrawStatus()
+    public override string ToString()
     {
         return $"レベル: {level}" +
                $"HP: {hp}" +
@@ -119,5 +119,5 @@ public class PlayerParameter
                $"移動速度: {moveSpeed}" +
                $"開封速度: {openSpeed}" +
                $"必要経験値: {requiredExp}";
-    }
+    }  
 }

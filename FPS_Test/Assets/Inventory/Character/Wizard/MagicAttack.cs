@@ -3,8 +3,8 @@ using UnityEngine;
 
 public class MagicAttack : MonoBehaviour
 {
-    private const float Speed = 13;
-    private const float LifeTime = 0.4f;
+    private const float Speed = 14;
+    private const float LifeTime = 0.6f;
 
     private Rigidbody m_rb;
 
