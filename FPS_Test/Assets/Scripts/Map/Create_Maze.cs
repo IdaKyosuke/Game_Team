@@ -24,7 +24,7 @@ public class Create_Maze : MonoBehaviourPunCallbacks
 
 	private const int m_playerSpawnPosAmount = 10;
 	private const int m_treasureAmount = 50;
-	private const int m_enemyAmount = 0;
+	private const int m_enemyAmount = 50;
 
 	// 一回で出すポータルの数
 	private const int m_oncePortalPosAmount = 5;

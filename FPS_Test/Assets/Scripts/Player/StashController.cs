@@ -295,6 +295,8 @@ public class StashController : MonoBehaviourPunCallbacks
 		m_miniMap.SetActive(m_stashManager.GetComponent<StashManager>().ManageUiActiveInfo());
 		//m_stashManager.GetComponent<StashManager>().Save();
 		//Debug.Log("death");
+
+		Destroy(m_uiParentCanvs);
 		m_isDeath = true;
     }
 
