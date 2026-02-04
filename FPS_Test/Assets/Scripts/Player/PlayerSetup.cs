@@ -7,7 +7,7 @@ public class PlayerSetup : MonoBehaviourPunCallbacks
     [SerializeField] List<SkinnedMeshRenderer> m_firstPersonModel;  //é©êg
     [SerializeField] List<MeshRenderer> m_firstPersonSowrd;  
     [SerializeField] List<SkinnedMeshRenderer> m_thirdPersonModel;  //ëäéË
-    [SerializeField] List<MeshRenderer> m_thirdPersonSowrd;  
+    [SerializeField] List<MeshRenderer> m_thirdPersonSowrd;
     [SerializeField] GameObject[] m_camera;
 	[SerializeField] GameObject m_miniMapCamera;
 
