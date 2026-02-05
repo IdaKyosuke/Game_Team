@@ -1219,8 +1219,11 @@ public class StashManager : MonoBehaviourPunCallbacks
 		ResetBuyItemInfo();
 		// 表示しているUIを削除する
 		CreateNewShop();
-		// 商品リストをリセット
-		m_otherItemList.Clear();
+		if(m_otherItemList.Count != 0)
+		{
+			// 商品リストをリセット
+			m_otherItemList.Clear();
+		}
 		// 商品リストの長さを渡されたリストの長さに変更
 		SetListLength(ref m_otherItemList, itemList.Count);
 
@@ -1539,7 +1542,7 @@ public class StashManager : MonoBehaviourPunCallbacks
 			}
 
 			m_sellItemList.Clear();
-			m_otherItemList = null;
+			//m_otherItemList = null;
 		}
 		// 購入モードに切り替える
 		m_isBuyMode = true;
