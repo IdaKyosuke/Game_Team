@@ -1282,6 +1282,8 @@ public class StashManager : MonoBehaviourPunCallbacks
 		else
 		{
 			m_buyItem.GetActiveObject().GetComponent<Image>().color = new Color(255, 255, 255, 255);
+			m_buyItem.GetActiveObject().transform.GetChild(0).GetComponent<Image>().color = new Color(255, 255, 255, 255);
+
 			// それまで選択されていたアイテムを選択状態から外す
 			m_buyItem.GetActiveObject().GetComponent<Item_Object>().RemoveSelected();
 			// 解放したマス目を埋めなおす
@@ -1291,6 +1293,7 @@ public class StashManager : MonoBehaviourPunCallbacks
 		m_buyItem = m_otherItemList[index];
 		m_buyItem.GetActiveObject().GetComponent<Item_Object>().PointerDownForShop();
 		m_buyItem.GetActiveObject().GetComponent<Image>().color = new Color(255, 255, 255, 0);
+		m_buyItem.GetActiveObject().transform.GetChild(0).GetComponent<Image>().color = new Color(255, 255, 255, 0);
 
 		// アイテムの情報を表示する
 		m_buyItemIcon.sprite = icon;
@@ -1322,6 +1325,9 @@ public class StashManager : MonoBehaviourPunCallbacks
 		m_price.SetText("");
 		if (m_buyItem)
 		{
+			// 元に戻す
+			//m_buyItem.GetActiveObject().GetComponent<Image>().color = new Color(255, 255, 255, 255);
+			//m_buyItem.GetActiveObject().transform.GetChild(0).GetComponent<Image>().color = new Color(255, 255, 255, 255);
 			if (m_isBuyMode)
 			{
 				// 解放したマス目を埋めなおす
@@ -1479,12 +1485,14 @@ public class StashManager : MonoBehaviourPunCallbacks
 			m_infoMoney.GetCurrentMoney() >= m_buyItem.GetActiveObject().GetComponent<Item_Object>().GetValue()
 		)
 		{
-			m_buyItem.GetActiveObject().GetComponent<Image>().color = new Color(255, 255, 255, 255);
 			// アイテムを移動する
 			GameObject item = m_buyItem.GetActiveObject();
 
             if (CheckGrid(item.GetComponent<Item_Object>().GetGridType(), item, false))
 			{
+				// 見た目を戻す
+				m_buyItem.GetActiveObject().GetComponent<Image>().color = new Color(255, 255, 255, 255);
+				m_buyItem.GetActiveObject().transform.GetChild(0).GetComponent<Image>().color = new Color(255, 255, 255, 255);
 				// 当たり判定を復活させる
 				item.GetComponent<Item_Object>().ResetHitCol();
 				// お金を消費
