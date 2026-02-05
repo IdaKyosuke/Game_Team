@@ -18,7 +18,7 @@ public class Wizard : Job
         m_status = GetComponent<PlayerStatus>();
         m_condition = GetComponent<Condition>();
         m_elapsedTime = 0;
-        m_offset = new Vector3(-0.2f, 0.5f, 0);
+        m_offset = new Vector3(0, 0.5f, 0);
 
         //パッシブスキルの初期化
         Initialize(JobType.Wizard, AttackType.Magical);
@@ -47,7 +47,7 @@ public class Wizard : Job
             if (m_status.Current.mp <= UseMP) return;
 
             //弾の生成
-            GameObject magic = PhotonNetwork.Instantiate(m_magicBall.name, transform.position + transform.forward * 1.7f + m_offset, Quaternion.identity);
+            GameObject magic = PhotonNetwork.Instantiate(m_magicBall.name, transform.position + transform.forward * 2 + m_offset, Quaternion.identity);
             magic.GetComponent<MagicAttack>().Init(transform.forward, gameObject);
 
             //MP消費
