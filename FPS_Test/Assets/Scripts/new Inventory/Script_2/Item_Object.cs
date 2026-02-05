@@ -175,7 +175,7 @@ public class Item_Object : MonoBehaviour
 				// w“üƒ‚[ƒh‚Ì‚Í’Ç]‚µ‚È‚¢‚æ‚¤‚É‚·‚é
 				m_inventoryManager.GetComponent<StashManager>().SetBuyItemInfo(
 					GetComponent<Image>().sprite,
-					name,
+					ItemData.objectName,
 					GetValue(),
 					m_index
 					);

@@ -3,6 +3,7 @@ using Photon.Pun;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using TMPro;
+using UnityEditor.Rendering;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -190,6 +191,9 @@ public class StashManager : MonoBehaviourPunCallbacks
 			m_stashHeight = m_infoStash.GetSize.y;
 			Load(GridType.Stash);
 			m_isLobby = true;
+			// アイテムの枠用
+			m_color = Color.white;
+			m_color.a = 0;
 		}
 
 		m_isBuyMode = false;
@@ -1277,6 +1281,7 @@ public class StashManager : MonoBehaviourPunCallbacks
 		}
 		else
 		{
+			m_buyItem.GetActiveObject().GetComponent<Image>().color = new Color(255, 255, 255, 255);
 			// それまで選択されていたアイテムを選択状態から外す
 			m_buyItem.GetActiveObject().GetComponent<Item_Object>().RemoveSelected();
 			// 解放したマス目を埋めなおす
@@ -1285,6 +1290,7 @@ public class StashManager : MonoBehaviourPunCallbacks
 		// アイテムのオブジェクトを購入予定にする
 		m_buyItem = m_otherItemList[index];
 		m_buyItem.GetActiveObject().GetComponent<Item_Object>().PointerDownForShop();
+		m_buyItem.GetActiveObject().GetComponent<Image>().color = new Color(255, 255, 255, 0);
 
 		// アイテムの情報を表示する
 		m_buyItemIcon.sprite = icon;
@@ -1473,6 +1479,7 @@ public class StashManager : MonoBehaviourPunCallbacks
 			m_infoMoney.GetCurrentMoney() >= m_buyItem.GetActiveObject().GetComponent<Item_Object>().GetValue()
 		)
 		{
+			m_buyItem.GetActiveObject().GetComponent<Image>().color = new Color(255, 255, 255, 255);
 			// アイテムを移動する
 			GameObject item = m_buyItem.GetActiveObject();
 
