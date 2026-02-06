@@ -25,7 +25,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
 	private PlayerStatus m_status;
 	private StashController m_stashController;
 	private Condition m_condition;
-	private Job m_job;
+	private Job m_job = null;
 	private Vector3 m_moveDirection;
 	private float m_rotateX;
 	private bool m_isDeath;
@@ -61,7 +61,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
     async void Start()
     {
         // マップ生成が終わるまで待つ
-        await UniTask.WaitUntil(() => Create_Maze.IsMapReady);
+        await UniTask.WaitUntil(() => FlgMan.Instance.IsCreatedMaze);
 
         // マスターの持つリストを参照
         photonView.RPC(nameof(RequestPlayerSpawnPos), RpcTarget.MasterClient, photonView.ViewID);
@@ -113,7 +113,8 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
 	void Update()
 	{
-		if (!m_setPos) return;
+		if (m_job == null) return;
+        if (!m_setPos) return;
         if (!photonView.IsMine) return;
 		if (m_isDeath) return;
 		if (m_stashController.NowScavenger) return;

@@ -21,8 +21,12 @@ public class CreateAvatar : MonoBehaviourPunCallbacks
 	// ゲームサーバーへの接続が成功した時に呼ばれるコールバック
 	async void Awake()
 	{
-		//if (PhotonNetwork.IsMasterClient) StartCoroutine(CreateCharactor());
-		if (PhotonNetwork.IsMasterClient) await CreateCharactor();
+        await UniTask.WaitUntil(() => FlgMan.Instance != null);
+        // マップ生成が終わるまで待つ
+        await UniTask.WaitUntil(() => FlgMan.Instance.IsCreatedMaze);
+
+        //if (PhotonNetwork.IsMasterClient) StartCoroutine(CreateCharactor());
+        if (PhotonNetwork.IsMasterClient) await CreateCharactor();
 	}
 
 	async UniTask CreateCharactor()

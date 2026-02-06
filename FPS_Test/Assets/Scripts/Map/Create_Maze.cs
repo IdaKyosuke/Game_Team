@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
@@ -51,23 +52,18 @@ public class Create_Maze : MonoBehaviourPunCallbacks
 
 	private static List<Transform> m_playerSpawnPosList = new List<Transform>();
 
-    public static bool m_IsMapReady = false;
-
-    public static bool IsMapReady => m_IsMapReady;
-
     [SerializeField] GameObject m_mapParent;			// 生成したマップのプレハブを入れる
 
 	// Start is called before the first frame update
 	void Awake()
     {
-		if (PhotonNetwork.IsMasterClient) SetMap();
+		// マップ生成開始
+		FlgMan.Instance.SetFlg(false);
+        if (PhotonNetwork.IsMasterClient) SetMap();
 	}
 
-	private void SetMap()
+    void SetMap()
 	{
-        // マップ生成開始
-        m_IsMapReady = false;
-
         bool xCorner = false;
 		List<SendMapData> mapdatas = new List<SendMapData>();
 		for (int y  = 0; y < m_mapHeight; ++y)
@@ -118,15 +114,15 @@ public class Create_Maze : MonoBehaviourPunCallbacks
 
 		SetEnemySpawn(mapdatas);
 
-		// マップ生成完了
-		photonView.RPC(nameof(SetReady), RpcTarget.All);
+        // マップ生成完了
+        photonView.RPC(nameof(SetReady), RpcTarget.All);
     }
 
 	[PunRPC]
 	void SetReady()
 	{
-		m_IsMapReady=true;
-	}
+        FlgMan.Instance.SetFlg(true);
+    }
 
     [PunRPC]
 	void RequestChangeLayer(int layerNum, int viewId)
@@ -209,7 +205,6 @@ public class Create_Maze : MonoBehaviourPunCallbacks
 	{
 		m_time += Time.deltaTime;
 		if (!PhotonNetwork.IsMasterClient) return;
-
 		// 最初のポータル出現
 		if (!m_firstCreatePortal && m_time >= firstPortalTime)
 		{

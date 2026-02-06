@@ -13,7 +13,7 @@ public class StartGameButton : MonoBehaviourPunCallbacks
 {
 	[SerializeField] TextMeshProUGUI m_startButtonText;
 	[SerializeField] TextMeshProUGUI m_roomMemberNum;
-	[SerializeField] int m_maxPlayerAmount;
+	const int MaxPlayerAmount = 4;
 	GameManager m_start;
 	bool gameScene = false;
 	bool clickStart = false;
@@ -57,7 +57,7 @@ public class StartGameButton : MonoBehaviourPunCallbacks
 	private void CreateRoom()
 	{
 		RoomOptions options = new RoomOptions();
-		options.MaxPlayers = m_maxPlayerAmount;
+		options.MaxPlayers = MaxPlayerAmount;
 
 		const string chars = "abcdefghijklmnopqrstuvwxyz0123456789";
 		int length = Random.Range(5, 16); // 5〜15文字
@@ -78,11 +78,10 @@ public class StartGameButton : MonoBehaviourPunCallbacks
 	{
 		if (PhotonNetwork.InRoom)
 		{
-			m_roomMemberNum.text = PhotonNetwork.PlayerList.Length.ToString() + "/" + m_maxPlayerAmount;
+			m_roomMemberNum.text = PhotonNetwork.PlayerList.Length.ToString() + "/" + MaxPlayerAmount;
 
 			if (gameScene) return;
-			if (PhotonNetwork.PlayerList.Length >= m_maxPlayerAmount ||
-				Input.GetKeyDown(KeyCode.F5))
+			if (PhotonNetwork.PlayerList.Length >= MaxPlayerAmount)
 			{
 				gameScene = true;
 				PhotonNetwork.CurrentRoom.IsOpen = false;
@@ -92,6 +91,8 @@ public class StartGameButton : MonoBehaviourPunCallbacks
 
 		m_roomMemberNum.gameObject.SetActive(PhotonNetwork.InRoom);
 	}
+
+	
 
 	// 部屋に入れなかった場合
 	public override void OnJoinRandomFailed(short returnCode, string message)

@@ -55,10 +55,11 @@ public class Enemy_Nav : MonoBehaviourPunCallbacks
     // Start is called before the first frame update
     async void Start()
 	{
-		// マップ生成が終わるまで待つ
-		await UniTask.WaitUntil(() => Create_Maze.IsMapReady);
+        await UniTask.WaitUntil(() => FlgMan.Instance != null);
+        // マップ生成が終わるまで待つ
+        await UniTask.WaitUntil(() => FlgMan.Instance.IsCreatedMaze);
 
-		m_agent = GetComponent<NavMeshAgent>();
+        m_agent = GetComponent<NavMeshAgent>();
 		m_charaCon = GetComponent<CharacterController>();
 
 		// 徘徊モード用にCharaconをアクティブ、Navmeshを非アクティブ
