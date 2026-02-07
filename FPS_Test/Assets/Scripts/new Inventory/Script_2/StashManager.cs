@@ -1446,7 +1446,7 @@ public class StashManager : MonoBehaviourPunCallbacks
 			// 売却した分の金額を追加する
 			m_infoMoney.AddMoney(add);
 
-			m_text.SetText("Money : " + m_infoMoney.GetCurrentMoney().ToString());
+			m_text.SetText("$ : " + m_infoMoney.GetCurrentMoney().ToString());
 
 			CalcSoldValue();
 		}
@@ -1504,7 +1504,7 @@ public class StashManager : MonoBehaviourPunCallbacks
 				ResetBuyItemInfo();
 			}
 
-			m_text.SetText("Money : " + m_infoMoney.GetCurrentMoney().ToString());
+			m_text.SetText("$ : " + m_infoMoney.GetCurrentMoney().ToString());
 		}
 		else if (m_infoMoney.GetCurrentMoney() < m_buyItem.GetActiveObject().GetComponent<Item_Object>().GetValue())
 		{
@@ -1683,7 +1683,7 @@ public class StashManager : MonoBehaviourPunCallbacks
 		m_stashHeight = m_infoStash.GetSize.y;
 		m_color = m_buyItemIcon.GetComponent<Image>().color;
 		CreateInventory(GridType.Stash);
-		m_text.SetText("Money : " + m_infoMoney.GetCurrentMoney().ToString());
+		m_text.SetText("$ : " + m_infoMoney.GetCurrentMoney().ToString());
 	}
 
 	// ロビーのスタッシュ画面を作成する
