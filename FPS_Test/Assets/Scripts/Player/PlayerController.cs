@@ -121,12 +121,6 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
         MiniMap();
 
-        //ジャンプ
-        if (m_characterController.isGrounded && Input.GetButton("Jump"))
-        {
-            m_moveDirection.y = m_jumpPower;
-        }
-
         //攻撃
         if (Input.GetMouseButtonDown(0))
         {
@@ -153,13 +147,6 @@ public class PlayerController : MonoBehaviourPunCallbacks
 			//プレイヤーUIに反映
 			m_playerViewUI.SetIcon(m_job.AttackType);
         }
-
-        // デバッグ用
-        if (Input.GetKeyDown("5"))
-		{
-			m_stashController.Save();
-			m_gameManager.ReturnLobby(photonView.IsMine);
-		}
     }
 
 	private void OnTriggerEnter(Collider other)

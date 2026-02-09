@@ -38,7 +38,7 @@ public class Thief : Job
     public override void Identity()
     {
         //㩂̐ݒu
-        Instantiate(m_trap, transform.position, Quaternion.identity);
+        //Instantiate(m_trap, transform.position, Quaternion.identity);
     }
 
     protected override void Passive1()
