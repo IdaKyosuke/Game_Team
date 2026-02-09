@@ -40,6 +40,8 @@ public class Button_Shop : Button_Function
 	public override void PushOther()
 	{
 		if (!m_isPushed) return;
+		Debug.Log("other");
+
         // ロビー画面に遷移する時にショップ情報をリセットする
         m_inventoryManager.ResetShop();
 		m_buttonForShop.SetActive(false);

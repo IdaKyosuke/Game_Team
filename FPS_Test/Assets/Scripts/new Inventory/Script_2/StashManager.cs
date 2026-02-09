@@ -164,6 +164,8 @@ public class StashManager : MonoBehaviourPunCallbacks
 	public bool IsLobby => m_isLobby;
 	public bool IsChangeShopItem => m_isChangeShopItem;
 
+	public bool IsShop => m_isShop;
+
 	// Start is called before the first frame update
 	void Start()
     {
@@ -529,6 +531,8 @@ public class StashManager : MonoBehaviourPunCallbacks
 			}
 		}
 
+		Debug.Log("fill");
+
 		// ショートカットで装備をした時にリストの内容を変更する
 		if(changeList)
 		{
@@ -631,9 +635,11 @@ public class StashManager : MonoBehaviourPunCallbacks
 		// スタッシュを作成
 		CreateInventory(GridType.Stash);
 
+		Debug.Log("create");
+
 		int count = 0;
 		// リストをUIに反映
-		foreach (ItemList item in m_otherItemList)
+		foreach (ItemList item in itemList)
 		{
 			CreateItem(count, item);
 			count++;
@@ -1328,13 +1334,15 @@ public class StashManager : MonoBehaviourPunCallbacks
 		m_price.SetText("");
 		if (m_buyItem)
 		{
-			// 元に戻す
-			//m_buyItem.GetActiveObject().GetComponent<Image>().color = new Color(255, 255, 255, 255);
-			//m_buyItem.GetActiveObject().transform.GetChild(0).GetComponent<Image>().color = new Color(255, 255, 255, 255);
 			if (m_isBuyMode)
 			{
-				// 解放したマス目を埋めなおす
-				m_buyItem.GetActiveObject().GetComponent<Item_Object>().FillGrid();
+				if(m_isShop)
+				{
+					// 解放したマス目を埋めなおす
+					//m_buyItem.GetActiveObject().GetComponent<Item_Object>().FillGrid();
+					m_buyItem.GetActiveObject().GetComponent<Item_Object>().ResetItem();
+
+				}
 			}
 			else
 			{
@@ -1616,8 +1624,8 @@ public class StashManager : MonoBehaviourPunCallbacks
 		}
 		// 購入モードフラグを折る（折らないとショートカットがバグる）
 		m_isBuyMode = false;
-		m_isShop = false;
 		m_isInventoryOpen = false;
+		m_isShop = false;
 	}
 
 	// 探索準備(選択されたGridType == 探索するGridType)
@@ -1700,6 +1708,7 @@ public class StashManager : MonoBehaviourPunCallbacks
 		m_isShop = true;
 		// 購入モードで開始する
 		ChangeBuyMode();
+		m_text.SetText("$ : " + m_infoMoney.GetCurrentMoney().ToString());
 	}
 
 	// スタッシュ <=> インベントリのやり取りを保存する

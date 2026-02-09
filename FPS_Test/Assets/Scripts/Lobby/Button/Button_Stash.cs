@@ -17,6 +17,8 @@ public class Button_Stash : Button_Function
 	public override void PushThis()
 	{
 		if (m_isPushed) return;
+
+		Debug.Log("this");
 		m_inventoryManager.CreateLobbyStash();
         m_shopUi.SetActive(true);
         m_isPushed = true;
